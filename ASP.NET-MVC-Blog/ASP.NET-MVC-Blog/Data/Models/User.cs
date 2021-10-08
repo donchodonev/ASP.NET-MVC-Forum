@@ -26,14 +26,12 @@
         public string FirstName { get; set; }
 
         [Required]
-        [MaxLength(FirstNameMaxLength)]
-        [MinLength(FirstNameMinLength)]
+        [MaxLength(LastNameMaxLength)]
+        [MinLength(LastNameMinLength)]
         public string LastName { get; set; }
 
         [Range(AgeFloor, AgeCeiling)]
         public int? Age { get; set; }
-
-        public bool? Gender { get; set; } //true for Male, false for Female
 
         public bool IsBanned { get; set; }
 

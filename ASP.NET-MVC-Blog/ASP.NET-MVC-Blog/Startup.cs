@@ -2,6 +2,8 @@ namespace ASP.NET_MVC_Blog
 {
     using ASP.NET_MVC_Blog.Data;
     using ASP.NET_MVC_Blog.Infrastructure.Extensions;
+    using ASP.NET_MVC_Blog.Services.Contracts;
+    using ASP.NET_MVC_Blog.Services.Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -26,6 +28,7 @@ namespace ASP.NET_MVC_Blog
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<IdentityUser>(options =>
@@ -35,6 +38,7 @@ namespace ASP.NET_MVC_Blog
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
+                options.User.RequireUniqueEmail = true;
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -44,6 +48,8 @@ namespace ASP.NET_MVC_Blog
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
+
+            services.AddTransient<IUsersService, UsersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,10 +69,15 @@ namespace ASP.NET_MVC_Blog
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
             app.UseRouting();
+
             app.UseAuthentication();
+
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

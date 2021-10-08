@@ -15,6 +15,10 @@
             public const int AgeFloor = 0;
 
             public const int AgeCeiling = 120;
+
+            public const int UsernameMaxLength = 20;
+
+            public const int UsernameMinLength = 4;
         }
 
         public class CategoryConstants
@@ -25,10 +29,12 @@
         public class PostConstants
         {
             public const int NameMaxLength = 100;
-            public const int NameMinLength = 10;
-            public const int HtmlContentMaxLength = 5000;
-            public const int HtmlContentMinLength = 100;
 
+            public const int NameMinLength = 10;
+
+            public const int HtmlContentMaxLength = 5000;
+
+            public const int HtmlContentMinLength = 100;
         }
 
         public class CommentConstants
