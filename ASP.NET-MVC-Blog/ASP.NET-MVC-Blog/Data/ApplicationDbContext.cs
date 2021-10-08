@@ -20,16 +20,5 @@
         public DbSet<Post> Posts { get; set; }
 
         public DbSet<Vote> Votes { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-/*
-            builder.Entity<User>()
-                .HasOne<IdentityUser>()
-                .WithOne()
-                .HasForeignKey<User>(u => u.IdenityUserId)
-                .OnDelete(DeleteBehavior.Restrict);*/
-        }
     }
 }

@@ -37,5 +37,12 @@
 
             public const int ContentMinLength = 1;
         }
+
+        public class RoleConstants
+        {
+            public const string AdminRoleName = "Administrator";
+
+            public const string ModeratorRoleName = "Moderator";
+        }
     }
 }
