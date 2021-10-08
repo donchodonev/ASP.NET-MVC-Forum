@@ -13,6 +13,6 @@ namespace ASP.NET_MVC_Blog.Services.Contracts
         /// <param name="firstName">BaseUser FirstName property</param>
         /// <param name="lastName">BaseUser LastName property</param>
         /// <returns></returns>
-        public Task<int> AddUserАsync(IdentityUser identityUser, string firstName, string lastName);
+        public Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null);
     }
 }

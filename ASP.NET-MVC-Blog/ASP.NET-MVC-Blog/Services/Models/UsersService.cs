@@ -15,14 +15,15 @@
             this.db = db;
         }
 
-        public async Task<int> AddUserАsync(IdentityUser identityUser, string firstName, string lastName)
+        public async Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null)
         {
             var user = new User
             {
                 IdentityUserId = identityUser.Id,
                 IdentityUser = identityUser,
                 FirstName = firstName,
-                LastName = lastName
+                LastName = lastName,
+                Age = age
             };
             await db.BaseUsers.AddAsync(user);
 

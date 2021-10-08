@@ -103,7 +103,7 @@ namespace ASP.NET_MVC_Blog.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await usersService.AddUserАsync(user,Input.FirstName,Input.LastName);
+                    await usersService.AddUserАsync(user,Input.FirstName,Input.LastName,Input.Age);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
