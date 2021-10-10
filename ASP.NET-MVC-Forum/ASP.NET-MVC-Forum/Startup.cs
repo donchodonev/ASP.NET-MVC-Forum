@@ -2,8 +2,10 @@ namespace ASP.NET_MVC_Forum
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Services.Contracts;
-    using ASP.NET_MVC_Forum.Services.Models;
+    using ASP.NET_MVC_Forum.Services.Category.Contracts;
+    using ASP.NET_MVC_Forum.Services.Category.Models;
+    using ASP.NET_MVC_Forum.Services.User.Contracts;
+    using ASP.NET_MVC_Forum.Services.User.Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -49,7 +51,8 @@ namespace ASP.NET_MVC_Forum
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
 
-            services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,20 +1,21 @@
-﻿using ASP.NET_MVC_Forum.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-
-namespace ASP.NET_MVC_Forum.Controllers
+﻿namespace ASP.NET_MVC_Forum.Controllers
 {
+    using ASP.NET_MVC_Forum.Models;
+    using ASP.NET_MVC_Forum.Services.Category.Contracts;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ICategoryService categories;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICategoryService categories)
         {
-            _logger = logger;
+            this.categories = categories;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }

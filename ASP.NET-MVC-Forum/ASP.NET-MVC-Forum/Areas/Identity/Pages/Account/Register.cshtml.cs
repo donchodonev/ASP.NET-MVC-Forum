@@ -1,7 +1,7 @@
 ﻿
 namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
 {
-    using ASP.NET_MVC_Forum.Services.Contracts;
+    using ASP.NET_MVC_Forum.Services.User.Contracts;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -24,13 +24,13 @@ namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IUsersService usersService;
+        private readonly IUserService usersService;
         private readonly UserManager<IdentityUser> _userManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IUsersService usersService
+            IUserService usersService
          )
         {
             _userManager = userManager;
