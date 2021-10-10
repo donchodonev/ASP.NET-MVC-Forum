@@ -20,13 +20,13 @@
         /// </summary>
         /// <param name="withCategory">True to include post's Category property, false for a null Category property</param>
         /// <returns></returns>
-        public async Task<IQueryable<Post>> AllAsync(bool withCategory = false)
+        public async Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false)
         {
             return await Task.Run(() => 
             {
                 var query = db.Posts.AsQueryable();
 
-                if (withCategory)
+                if (withCategoryIncluded)
                 {
                     query = query.Include(x => x.Category);
                 }

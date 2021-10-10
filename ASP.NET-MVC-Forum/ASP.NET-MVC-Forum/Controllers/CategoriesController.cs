@@ -11,7 +11,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class CategoriesController :  Controller
+    public class CategoriesController : Controller
     {
         private readonly ICategoryService categories;
         private readonly IMemoryCache memoryCache;
@@ -24,15 +24,25 @@
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> All()
+        public IActionResult All(string searchTerm)
         {
             var categories = mapper.Map<List<AllCategoryViewModel>>(GetCachedCategories());
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                categories = GetSearchedCategories(categories, searchTerm);
+            }
 
             return View(categories);
         }
 
-        public IActionResult CategoryContent()
+        public IActionResult CategoryContent([FromQuery] CategoryContentCategoryInputModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return View();
         }
 
@@ -57,6 +67,13 @@
             };
 
             return categoryList;
+        }
+
+        private List<AllCategoryViewModel> GetSearchedCategories(List<AllCategoryViewModel> categories, string searchTerm)
+        {
+            categories = categories.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+
+            return categories;
         }
     }
 }

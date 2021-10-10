@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -14,9 +15,19 @@
             this.db = db;
         }
 
-        public async Task<IQueryable<Category>> AllAsync()
+        public async Task<IQueryable<Category>> AllAsync(bool withPostsIncluded = false)
         {
-            return await Task.Run(() => db.Categories.Where(x => x.IsDeleted == false));
+            return await Task.Run(() =>
+            {
+                var query = db.Categories.AsQueryable();
+
+                if (withPostsIncluded)
+                {
+                    query = query.Include(x => x.Posts);
+                }
+
+                return query;
+            });
         }
     }
 }
