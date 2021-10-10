@@ -53,6 +53,7 @@ namespace ASP.NET_MVC_Forum
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IPostService, PostService>();
             services.AddMemoryCache();
         }
 
