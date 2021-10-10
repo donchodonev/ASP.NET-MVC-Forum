@@ -1,8 +1,7 @@
-﻿namespace ASP.NET_MVC_Forum.Services.User.Models
+﻿namespace ASP.NET_MVC_Forum.Services.User
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.User.Contracts;
     using Microsoft.AspNetCore.Identity;
     using System.Threading.Tasks;
 

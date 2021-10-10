@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Category.Contracts
+﻿namespace ASP.NET_MVC_Forum.Services.Post
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;
@@ -6,6 +6,6 @@
 
     public interface IPostService
     {
-        public Task<IQueryable<Post>> AllAsync (); 
+        public Task<IQueryable<Post>> AllAsync(bool withCategory = false); 
     }
 }

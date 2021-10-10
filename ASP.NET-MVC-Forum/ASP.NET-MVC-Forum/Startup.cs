@@ -2,10 +2,9 @@ namespace ASP.NET_MVC_Forum
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Services.Category.Contracts;
-    using ASP.NET_MVC_Forum.Services.Category.Models;
-    using ASP.NET_MVC_Forum.Services.User.Contracts;
-    using ASP.NET_MVC_Forum.Services.User.Models;
+    using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.User;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;

@@ -11,6 +11,7 @@
             :base()
         {
             Comments = new HashSet<Comment>();
+            Votes = new HashSet<Vote>();
             IsVisible = true;
         }
 
@@ -20,7 +21,7 @@
         [Required]
         [MaxLength(NameMaxLength)]
         [MinLength(NameMinLength)]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         [Required]
         [MaxLength(HtmlContentMaxLength)]

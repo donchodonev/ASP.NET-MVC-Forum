@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.User.Contracts
+namespace ASP.NET_MVC_Forum.Services.User
 {
 
     public interface IUserService

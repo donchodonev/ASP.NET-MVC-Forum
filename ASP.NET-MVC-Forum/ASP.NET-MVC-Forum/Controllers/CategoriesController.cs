@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Category;
-    using ASP.NET_MVC_Forum.Services.Category.Contracts;
+    using ASP.NET_MVC_Forum.Services.Category;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Category.Contracts
+﻿namespace ASP.NET_MVC_Forum.Services.Category
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;

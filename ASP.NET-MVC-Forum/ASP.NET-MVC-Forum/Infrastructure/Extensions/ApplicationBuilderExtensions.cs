@@ -106,7 +106,7 @@
             {
                 posts.Add(new Post()
                 {
-                    Name = $"{i}",
+                    Title = $"{i}",
                     CategoryId = categories[i].Id,
                     Category = categories[i],
                     HtmlContent = @"
