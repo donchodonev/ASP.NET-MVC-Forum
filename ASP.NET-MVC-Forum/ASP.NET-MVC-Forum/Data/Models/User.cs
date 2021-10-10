@@ -1,5 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
+    using ASP.NET_MVC_Forum.Data.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -8,7 +9,7 @@
     using static ASP.NET_MVC_Forum.Data.DataConstants.UserConstants;
 
     [Index(nameof(Id))]
-    public class User : BaseModel
+    public class User : BaseModel, IContainImage
     {
         public User()
             : base()
@@ -33,6 +34,8 @@
         public int? Age { get; set; }
 
         public bool IsBanned { get; set; }
+
+        public string ImageUrl { get; set; }
 
         public DateTime? BannedUntil { get; set; }
 

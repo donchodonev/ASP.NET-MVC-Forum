@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using static DataConstants.PostConstants;
 
-    public class Post : BaseModel
+    public class Post : BaseModel, IContainImage
     {
         public Post()
             :base()
@@ -32,6 +32,8 @@
 
         [Required]
         public virtual int CategoryId { get; set; }
+
+        public string ImageUrl { get; set; }
 
         [Required]
         public virtual Category Category { get; set; }

@@ -1,12 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
+    using ASP.NET_MVC_Forum.Data.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static DataConstants.CategoryConstants;
 
-    public class Category : BaseModel
+    public class Category : BaseModel, IContainImage
     {
         public Category()
             :base()
@@ -20,6 +21,8 @@
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
+
+        public string ImageUrl { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
     }
