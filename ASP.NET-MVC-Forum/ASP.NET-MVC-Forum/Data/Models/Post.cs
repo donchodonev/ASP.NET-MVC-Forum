@@ -22,7 +22,6 @@
         [MinLength(NameMinLength)]
         public string Name { get; set; }
 
-
         [Required]
         [MaxLength(HtmlContentMaxLength)]
         [MinLength(HtmlContentMinLength)]

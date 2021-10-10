@@ -33,9 +33,6 @@
 
         public IActionResult CategoryContent()
         {
-
-
-
             return View();
         }
 

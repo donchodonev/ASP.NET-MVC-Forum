@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using static Data.DataConstants.RoleConstants;
@@ -19,7 +20,7 @@
             var services = serviceScope.ServiceProvider;
 
             SeedCategories(services);
-            SeedAdministrator(services);
+            SeedAdministrators(services);
 
             return app;
         }
@@ -47,7 +48,7 @@
             data.SaveChanges();
         }
 
-        private static void SeedAdministrator(IServiceProvider services)
+        private static void SeedAdministrators(IServiceProvider services)
         {
             var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
@@ -85,6 +86,27 @@
             })
                 .GetAwaiter()
                 .GetResult();
+        }
+
+        private static void SeedPosts(ApplicationDbContext db)
+        {
+            if (db.Posts.Any())
+            {
+                return;
+            }
+
+            var categories = db.Categories.ToList();
+            var posts = new List<Post>();
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                posts.Add(new Post()
+                {
+                    Title = $"{i}",
+                    CategoryId = categories[i].Id,
+                    Category = categories[i]
+                });
+            }
         }
     }
 }
