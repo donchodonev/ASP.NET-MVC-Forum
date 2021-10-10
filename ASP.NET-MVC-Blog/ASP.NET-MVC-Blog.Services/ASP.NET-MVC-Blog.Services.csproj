@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>ASP.NET_MVC_Blog.Services</RootNamespace>
-  </PropertyGroup>
-
-</Project>
