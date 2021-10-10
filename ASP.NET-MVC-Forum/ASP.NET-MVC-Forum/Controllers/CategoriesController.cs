@@ -1,7 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Models.Category;
     using ASP.NET_MVC_Forum.Services.Category.Contracts;
+    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
     using System;
@@ -13,16 +15,28 @@
     {
         private readonly ICategoryService categories;
         private readonly IMemoryCache memoryCache;
+        private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categories, IMemoryCache memoryCache)
+        public CategoriesController(ICategoryService categories, IMemoryCache memoryCache, IMapper mapper)
         {
             this.categories = categories;
             this.memoryCache = memoryCache;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> All()
         {
-            return Json(GetCachedCategories());
+            var categories = mapper.Map<List<AllCategoryViewModel>>(GetCachedCategories());
+
+            return View(categories);
+        }
+
+        public IActionResult CategoryContent()
+        {
+
+
+
+            return View();
         }
 
         private List<Category> GetCachedCategories()

@@ -84,6 +84,17 @@ namespace ASP.NET_MVC_Forum
 
             app.UseEndpoints(endpoints =>
             {
+                //Categories/CategoryContent
+                endpoints.MapControllerRoute(
+                    name: "Category Info",
+                    pattern: "/Categories/Details/{categoryId}/{categoryName}",
+                    defaults: new
+                    {
+                        controller = "Categories",
+                        action = "CategoryContent",
+                    });
+
+                //Home-Index
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
