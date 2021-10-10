@@ -1,6 +1,5 @@
 ﻿namespace ASP.NET_MVC_Blog.Data.Models
 {
-    using ASP.NET_MVC_Blog.Data.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
