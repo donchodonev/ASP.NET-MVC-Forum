@@ -1,2 +1,2 @@
-# ASP.NET-MVC-Blog
-An ASP.NET(5) MVC Blog project
+# ASP.NET-MVC-Forum
+An ASP.NET(5) MVC Forum project
