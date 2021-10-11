@@ -3,8 +3,6 @@ using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
 using AutoMapper;
 using System.Web;
-using Ganss.XSS;
-using System.Text.RegularExpressions;
 
 
 
