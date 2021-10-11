@@ -15,6 +15,7 @@ namespace ASP.NET_MVC_Forum
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://donchodonev.com", "https://donchodonev.com");
                 });
     }
 }
