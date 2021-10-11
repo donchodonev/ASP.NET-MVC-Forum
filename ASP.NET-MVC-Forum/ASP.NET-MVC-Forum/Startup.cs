@@ -5,6 +5,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.User;
+    using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -53,6 +54,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
             services.AddMemoryCache();
         }
 

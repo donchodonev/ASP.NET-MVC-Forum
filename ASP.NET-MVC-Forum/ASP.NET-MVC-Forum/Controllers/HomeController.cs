@@ -1,8 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Models;
+    using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Post;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
     using System.Linq;
@@ -10,18 +13,27 @@
 
     public class HomeController : Controller
     {
-        private readonly ICategoryService categories;
-        private readonly IPostService posts;
+        private readonly ICategoryService categoryService;
+        private readonly IPostService postsService;
+        private readonly IMapper mapper;
 
-        public HomeController(ICategoryService categories, IPostService posts)
+        public HomeController(ICategoryService categories, IPostService postsService, IMapper mapper)
         {
-            this.categories = categories;
-            this.posts = posts;
+            this.categoryService = categories;
+            this.postsService = postsService;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            var vm = postsService
+                .AllAsync(withUserIncluded: true)
+                .GetAwaiter()
+                .GetResult()
+                .ProjectTo<PostViewModel>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            return View(vm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -8,6 +8,7 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using Ganss.XSS;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
@@ -21,13 +22,15 @@
         private readonly IPostService postService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
+        private readonly IHtmlSanitizer sanitizer;
 
-        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper)
+        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper, IHtmlSanitizer sanitizer)
         {
             this.userService = userService;
             this.postService = postService;
             this.categoryService = categoryService;
             this.mapper = mapper;
+            this.sanitizer = sanitizer;
         }
 
         public IActionResult All()
@@ -66,11 +69,13 @@
 
             newPost.UserId = baseUserId;
 
+            newPost.HtmlContent = sanitizer.Sanitize(newPost.HtmlContent);
+
             var postId = await postService.AddPostAsync(newPost);
 
             TempData["SuccessMessage"] = "Your post has been successfully created";
 
-            return RedirectToAction("All","Posts");
+            return RedirectToAction("Index","Home");
         }
     }
 }
