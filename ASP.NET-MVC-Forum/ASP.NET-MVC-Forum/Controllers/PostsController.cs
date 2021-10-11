@@ -1,19 +1,76 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
+    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Models.Category;
+    using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.User;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     public class PostsController : Controller
     {
+        private readonly IUserService userService;
+        private readonly IPostService postService;
+        private readonly ICategoryService categoryService;
+        private readonly IMapper mapper;
+
+        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper)
+        {
+            this.userService = userService;
+            this.postService = postService;
+            this.categoryService = categoryService;
+            this.mapper = mapper;
+        }
+
         public IActionResult All()
         {
             return View();
         }
 
         [Authorize]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            var addPostFormModel = new AddPostFormModel();
+
+            var categories = await categoryService.AllAsync();
+
+            var selectOptions = categories
+                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
+                .ToArray();
+                
+            addPostFormModel.Categories = selectOptions;
+
+            return View(addPostFormModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Add([FromForm]AddPostFormModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Add","Posts", data);
+            }
+
+            var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
+
+            var newPost = mapper.Map<Post>(data);
+
+            newPost.UserId = baseUserId;
+
+            var postId = await postService.AddPostAsync(newPost);
+
+            TempData["SuccessMessage"] = "Your post has been successfully created";
+
+            return RedirectToAction("All","Posts");
         }
     }
 }

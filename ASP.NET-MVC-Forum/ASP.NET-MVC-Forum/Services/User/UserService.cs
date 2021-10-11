@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.AspNetCore.Identity;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class UserService : IUserService
@@ -27,6 +28,15 @@
             await db.BaseUsers.AddAsync(user);
 
             return await db.SaveChangesAsync();
+        }
+
+        public async Task<int> GetBaseUserIdAsync(string identityUserId)
+        {
+             return await Task
+                .Run(() => db
+                .BaseUsers
+                .FirstOrDefault(x => x.IdentityUserId == identityUserId).Id
+                );
         }
     }
 }

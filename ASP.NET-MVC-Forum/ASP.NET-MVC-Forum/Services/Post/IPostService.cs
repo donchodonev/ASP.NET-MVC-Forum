@@ -7,5 +7,7 @@
     public interface IPostService
     {
         public Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false); 
+
+        public Task<int> AddPostAsync(Post post);
     }
 }

@@ -54,7 +54,6 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
             services.AddMemoryCache();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

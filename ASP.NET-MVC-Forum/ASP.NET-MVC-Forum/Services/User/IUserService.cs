@@ -14,5 +14,7 @@ namespace ASP.NET_MVC_Forum.Services.User
         /// <param name="lastName">BaseUser LastName property</param>
         /// <returns></returns>
         public Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null);
+
+        public Task<int> GetBaseUserIdAsync(string identityUserId);
     }
 }

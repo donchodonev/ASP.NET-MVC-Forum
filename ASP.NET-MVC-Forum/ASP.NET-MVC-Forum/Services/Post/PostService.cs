@@ -34,5 +34,15 @@
                 return query;
             });
         }
+        public async Task<int> AddPostAsync(Post post)
+        {
+            await db.Posts.AddAsync(post);
+
+            await db.SaveChangesAsync();
+
+            var postWithId = await db.Posts.FirstAsync();
+
+            return postWithId.Id;
+        }
     }
 }
