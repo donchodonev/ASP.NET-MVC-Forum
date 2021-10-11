@@ -30,7 +30,7 @@
                 .AllAsync(withUserIncluded: true)
                 .GetAwaiter()
                 .GetResult()
-                .ProjectTo<PostViewModel>(mapper.ConfigurationProvider)
+                .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider)
                 .ToArray();
 
             return View(vm);

@@ -1,12 +1,12 @@
 ﻿namespace ASP.NET_MVC_Forum.Models.Post
 {
-    public class PostViewModel
+    public class PostPreviewViewModel
     {
         public string Title { get; set; }
 
         public string HtmlContent { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string ShortDescription { get; set; }
 
         public string UserImageUrl { get; set; }
 
