@@ -69,7 +69,9 @@
 
             newPost.UserId = baseUserId;
 
-            newPost.HtmlContent = sanitizer.Sanitize(newPost.HtmlContent);
+            var sanitizedHtml = sanitizer.Sanitize(newPost.HtmlContent);
+
+            newPost.HtmlContent = sanitizedHtml;
 
             var postId = await postService.AddPostAsync(newPost);
 

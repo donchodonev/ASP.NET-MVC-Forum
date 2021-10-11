@@ -54,7 +54,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
+            services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddMemoryCache();
         }
 
