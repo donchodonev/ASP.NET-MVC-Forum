@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Add";
+}
+
+<div class="container">
+    <form>
+        <div class="form-row">
+            <div class="col-7">
+                <input type="text" class="form-control" placeholder="Title">
+            </div>
+            <div class="col">
+                <select id="inputState" class="form-control">
+                    <option selected>Category</option>
+                    <option>...</option>
+                </select>
+            </div>
+        </div>
+        <div class="mt-3 mb-3">
+            <textarea id="mytextarea" name="mytextarea">Hello, World!</textarea>
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="https://cdn.tiny.cloud/1/ryfd7q7om7n19zz5fdrtgusrzmzuzed8dr3x1zgq9ry96iie/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+    tinymce.init({
+        selector: '#mytextarea'
+    });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
