@@ -51,7 +51,7 @@
             if (!memoryCache.TryGetValue<List<Post>>(cacheKey, out List<Post> posts))
             {
                 posts = postsService
-                    .AllAsync()
+                    .AllAsync(withUserIncluded: true, withIdentityUserIncluded: true)
                     .GetAwaiter()
                     .GetResult()
                     .ToList();

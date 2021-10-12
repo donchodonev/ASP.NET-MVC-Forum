@@ -58,8 +58,8 @@
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = $"The length of the post must be between {HtmlContentMinLength} and {HtmlContentMaxLength} symbols";
-                return RedirectToAction("Add","Posts", data);
+                TempData["ErrorMessage"] = $"The length of the post must be longer than {HtmlContentMinLength} symbols";
+                return RedirectToAction("Add","Posts");
             }
 
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());

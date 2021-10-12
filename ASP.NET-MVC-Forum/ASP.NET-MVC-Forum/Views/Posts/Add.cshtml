@@ -24,20 +24,20 @@
             </div>
         </div>
         <div class="mt-3 mb-3">
-            <textarea id="mytextarea" asp-for="HtmlContent" placeholder="Once upon a time..."></textarea>
+            <textarea id="mytextarea" required pro asp-for="HtmlContent" placeholder="Once upon a time..."></textarea>
         </div>
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         <div class="text-center mt-3">
             <span class="text-center text-danger " asp-validation-for="Title"></span>
-
             @if (TempData.ContainsKey("ErrorMessage"))
             {
                 <div class="text-center mt-3">
                     <span class="text-center text-danger ">@TempData["ErrorMessage"]</span>
                 </div>
             }
+            @*HtmlContent property's validation error message is displayed via TempData as for some reason it refuses to display the traditional way*@
         </div>
     </form>
 </div>
@@ -69,5 +69,3 @@
 </script>
 
 <script src="prism.js"></script>
-
-

@@ -24,7 +24,6 @@
         public string Title { get; set; }
 
         [Required]
-        [MaxLength(HtmlContentMaxLength)]
         [MinLength(HtmlContentMinLength)]
         public string HtmlContent { get; set; }
 

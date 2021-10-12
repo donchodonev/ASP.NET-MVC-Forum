@@ -25,7 +25,7 @@
         /// </summary>
         /// <param name="withCategory">True to include post's Category property, false for a null Category property</param>
         /// <returns></returns>
-        public async Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false)
+        public async Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
         {
             return await Task.Run(() => 
             {
@@ -39,6 +39,11 @@
                 if (withUserIncluded)
                 {
                     query = query.Include(x => x.User);
+                }
+
+                if (withIdentityUserIncluded)
+                {
+                    query = query.Include(x => x.User.IdentityUser);
                 }
 
                 return query;

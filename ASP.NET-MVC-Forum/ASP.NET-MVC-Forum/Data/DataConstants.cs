@@ -32,8 +32,6 @@
 
             public const int TitleMinLength = 10;
 
-            public const int HtmlContentMaxLength = 10000;
-
             public const int HtmlContentMinLength = 100;
         }
 
@@ -49,6 +47,13 @@
             public const string AdminRoleName = "Administrator";
 
             public const string ModeratorRoleName = "Moderator";
+        }
+
+        public class DateTimeFormat
+        {
+            public const string DateFormat = "MM/dd/yyyy";
+
+            public const string DateAndTimeFormat = "MM/dd/yyyy HH:mm";
         }
     }
 }

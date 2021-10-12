@@ -97,7 +97,7 @@ namespace ASP.NET_MVC_Forum
 
                 endpoints.MapControllerRoute(
                     name: "Add post",
-                    pattern: "/Posts/Add/{title?}/{categoryId?}/{htmlContent?}",
+                    pattern: "/Posts/Add/{title?}/{categoryId?}",
                     defaults: new
                     {
                         controller = "Posts",

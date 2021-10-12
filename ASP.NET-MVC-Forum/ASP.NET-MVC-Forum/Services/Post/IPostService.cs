@@ -6,7 +6,7 @@
 
     public interface IPostService
     {
-        public Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false); 
+        public Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false); 
 
         public Task<int> AddPostAsync(Post post, int baseUserId);
     }
