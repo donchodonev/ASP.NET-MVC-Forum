@@ -33,6 +33,8 @@
         [Required]
         public virtual int CategoryId { get; set; }
 
+        public string ShortDescription { get; set; }
+
         public string ImageUrl { get; set; }
         
         public int? UserId { get; set; }

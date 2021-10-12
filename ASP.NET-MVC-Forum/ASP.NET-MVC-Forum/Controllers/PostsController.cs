@@ -12,6 +12,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
@@ -22,15 +23,13 @@
         private readonly IPostService postService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-        private readonly IHtmlSanitizer sanitizer;
 
-        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper, IHtmlSanitizer sanitizer)
+        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper)
         {
             this.userService = userService;
             this.postService = postService;
             this.categoryService = categoryService;
             this.mapper = mapper;
-            this.sanitizer = sanitizer;
         }
 
         public IActionResult All()
@@ -67,13 +66,7 @@
 
             var newPost = mapper.Map<Post>(data);
 
-            newPost.UserId = baseUserId;
-
-            var sanitizedHtml = sanitizer.Sanitize(newPost.HtmlContent);
-
-            newPost.HtmlContent = sanitizedHtml;
-
-            var postId = await postService.AddPostAsync(newPost);
+            var postId = await postService.AddPostAsync(newPost, baseUserId);
 
             TempData["SuccessMessage"] = "Your post has been successfully created";
 

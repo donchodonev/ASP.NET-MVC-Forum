@@ -13,13 +13,13 @@
 
     public class CategoriesController : Controller
     {
-        private readonly ICategoryService categories;
+        private readonly ICategoryService categoryService;
         private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categories, IMemoryCache memoryCache, IMapper mapper)
+        public CategoriesController(ICategoryService categoryService, IMemoryCache memoryCache, IMapper mapper)
         {
-            this.categories = categories;
+            this.categoryService = categoryService;
             this.memoryCache = memoryCache;
             this.mapper = mapper;
         }
@@ -52,7 +52,7 @@
 
             if (!memoryCache.TryGetValue<List<Category>>(cacheKey, out List<Category> categoryList))
             {
-                categoryList = categories
+                categoryList = categoryService
                     .AllAsync()
                     .GetAwaiter()
                     .GetResult()
