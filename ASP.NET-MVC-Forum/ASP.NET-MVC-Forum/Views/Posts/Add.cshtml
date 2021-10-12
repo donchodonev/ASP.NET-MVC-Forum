@@ -29,9 +29,23 @@
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
+        <div class="text-center mt-3">
+            <span class="text-center text-danger " asp-validation-for="Title"></span>
+
+            @if (TempData.ContainsKey("ErrorMessage"))
+            {
+                <div class="text-center mt-3">
+                    <span class="text-center text-danger ">@TempData["ErrorMessage"]</span>
+                </div>
+            }
+        </div>
     </form>
 </div>
 
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+}
 
 <script src="https://cdn.tiny.cloud/1/ryfd7q7om7n19zz5fdrtgusrzmzuzed8dr3x1zgq9ry96iie/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
@@ -54,10 +68,6 @@
     });
 </script>
 
-
 <script src="prism.js"></script>
 
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

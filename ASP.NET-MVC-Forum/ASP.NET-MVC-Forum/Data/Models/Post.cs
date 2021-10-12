@@ -19,8 +19,8 @@
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(NameMaxLength)]
-        [MinLength(NameMinLength)]
+        [MaxLength(TitleMaxLength)]
+        [MinLength(TitleMinLength)]
         public string Title { get; set; }
 
         [Required]

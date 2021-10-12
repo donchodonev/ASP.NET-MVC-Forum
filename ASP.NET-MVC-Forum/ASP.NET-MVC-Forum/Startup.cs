@@ -95,6 +95,15 @@ namespace ASP.NET_MVC_Forum
                         action = "CategoryContent",
                     });
 
+                endpoints.MapControllerRoute(
+                    name: "Add post",
+                    pattern: "/Posts/Add/{title?}/{categoryId?}/{htmlContent?}",
+                    defaults: new
+                    {
+                        controller = "Posts",
+                        action = "Add",
+                    });
+
                 //Home-Index
                 endpoints.MapControllerRoute(
                     name: "default",

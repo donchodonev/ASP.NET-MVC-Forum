@@ -6,14 +6,12 @@
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
@@ -30,7 +28,7 @@
             this.memoryCache = memoryCache;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var vm =
                  mapper.Map<List<PostPreviewViewModel>>(GetCachedPosts())

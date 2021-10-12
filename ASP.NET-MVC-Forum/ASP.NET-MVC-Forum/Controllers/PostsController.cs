@@ -8,13 +8,12 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
-    using Ganss.XSS;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     public class PostsController : Controller
@@ -59,6 +58,7 @@
         {
             if (!ModelState.IsValid)
             {
+                TempData["ErrorMessage"] = $"The length of the post must be between {HtmlContentMinLength} and {HtmlContentMaxLength} symbols";
                 return RedirectToAction("Add","Posts", data);
             }
 

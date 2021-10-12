@@ -28,11 +28,11 @@
 
         public class PostConstants
         {
-            public const int NameMaxLength = 100;
+            public const int TitleMaxLength = 100;
 
-            public const int NameMinLength = 10;
+            public const int TitleMinLength = 10;
 
-            public const int HtmlContentMaxLength = 5000;
+            public const int HtmlContentMaxLength = 10000;
 
             public const int HtmlContentMinLength = 100;
         }
