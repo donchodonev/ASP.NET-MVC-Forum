@@ -61,7 +61,8 @@
 
             if (await postService.PostExistsAsync(data.Title))
             {
-                TempData["ErrorMessage"] = $"A post with the title {data.Title} already exists";
+                TempData["ErrorMessage"] = $"A post with the title \"{data.Title}\" already exists";
+                TempData["HtmlContent"] = data.HtmlContent;
                 return RedirectToAction("Add", "Posts");
             }
 
@@ -82,6 +83,15 @@
                 .ToArray();
 
             addPostFormModel.Categories = selectOptions;
+
+            if (TempData.ContainsKey("HtmlContent"))
+            {
+                addPostFormModel.HtmlContent = TempData["HtmlContent"].ToString();
+            }
+            if (TempData.ContainsKey("Title"))
+            {
+                addPostFormModel.Title = TempData["Title"].ToString();
+            }
 
             return addPostFormModel;
         }

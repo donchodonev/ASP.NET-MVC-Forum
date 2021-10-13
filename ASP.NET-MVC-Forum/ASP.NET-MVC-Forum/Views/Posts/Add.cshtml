@@ -8,19 +8,9 @@
 <div class="container">
     <form method="post" asp-controller="Posts" asp-action="Add" formaction="SavePost">
         <div class="form-row">
-            @if (TempData.ContainsKey("Title"))
-            {
-                <div class="col-7">
-                    <input type="text" class="form-control" asp-for="Title" placeholder="Title" value="@TempData["Title"]">
-                </div>
-            }
-            else
-            {
                 <div class="col-7">
                     <input type="text" class="form-control" asp-for="Title" placeholder="Title">
                 </div>
-            }
-
             <div class="col">
                 <select asp-for="CategoryId" class="form-control">
                     @foreach (var category in Model.Categories)
