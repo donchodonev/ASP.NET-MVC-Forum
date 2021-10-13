@@ -8,34 +8,40 @@
 <link rel="stylesheet" href="~/css/postsAll.css" />
 
 
-    <div class="container-fluid mt-100">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-3 mt-3">
-                    <div class="card-footer d-flex flex-wrap justify-content-center align-items-center px-0 pt-0 pb-3">
-                        <div class="px-4 pt-3">
-                            <h5 class="text-dark font-weight-bold">@Model.Title</h5>
+<div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3 mt-3">
+                <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                    <div class="px-4 pt-3">
+                        <h5 class="text-dark font-weight-bold">@Model.Title</h5>
+                    </div>
+                    <div class="px-4 pt-3 text-center">
+                        <a type="button" href='javascript:history.go(-1)' class="btn btn-secondary float-sm-right"><i class="ion ion-md-create"></i>Go Back</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @Html.Raw(Model.HtmlContent)
+                </div>
+
+                <div class="card-header">
+                    <div class="media flex-wrap w-100 align-items-center">
+                        <img src="~/img/defaultUserImage.png" class="d-block ui-w-40 rounded-circle" alt="">
+
+                        <div class="media-body ml-3">
+                            <a href="javascript:void(0)" data-abc="true">@Model.UserUsername</a>
+                            <div class="text-muted small">@Model.PostCreationDate</div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        @Html.Raw(Model.HtmlContent)
-                    </div>
-
-                    <div class="card-header">
-                        <div class="media flex-wrap w-100 align-items-center">
-                            <img src="~/img/defaultUserImage.png" class="d-block ui-w-40 rounded-circle" alt="">
-
-                            <div class="media-body ml-3">
-                                <a href="javascript:void(0)" data-abc="true">@Model.UserUsername</a>
-                                <div class="text-muted small">@Model.PostCreationDate</div>
-                            </div>
-                            <div class="text-muted small ml-3">
-                                <div>Member since <strong>@Model.UserMemberSince</strong></div>
-                                <div><strong>@Model.UserPostsCount</strong> posts</div>
-                            </div>
+                        <div class="text-muted small ml-3">
+                            <div>Member since <strong>@Model.UserMemberSince</strong></div>
+                            <div><strong>@Model.UserPostsCount</strong> posts</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div class="px-4 pt-3 text-center">
+    <a type="button" href='javascript:history.go(-1)' class="btn btn-secondary justify-content-center"><i class="ion ion-md-create"></i>Go Back</a>
+</div>
