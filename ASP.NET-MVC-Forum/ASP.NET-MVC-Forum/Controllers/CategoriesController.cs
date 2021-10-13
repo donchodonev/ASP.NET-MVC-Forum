@@ -2,7 +2,9 @@
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Category;
+    using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
@@ -14,12 +16,14 @@
     public class CategoriesController : Controller
     {
         private readonly ICategoryService categoryService;
+        private readonly IPostService postService;
         private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categoryService, IMemoryCache memoryCache, IMapper mapper)
+        public CategoriesController(ICategoryService categoryService,IPostService postService, IMemoryCache memoryCache, IMapper mapper)
         {
             this.categoryService = categoryService;
+            this.postService = postService;
             this.memoryCache = memoryCache;
             this.mapper = mapper;
         }
@@ -36,14 +40,21 @@
             return View(categories);
         }
 
-        public IActionResult CategoryContent([FromQuery] CategoryContentCategoryInputModel model)
+        public async Task<IActionResult> CategoryContent([FromRoute] int categoryId, string categoryName)
         {
             if (!this.ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            return View();
+            var vm =
+                mapper
+                .Map<List<PostPreviewViewModel>>(postService.GetByCategory(categoryId, withUserIncluded:true, withIdentityUserIncluded:true)
+                .GetAwaiter()
+                .GetResult()
+                .ToList());
+
+            return View(vm);
         }
 
         private List<Category> GetCachedCategories()

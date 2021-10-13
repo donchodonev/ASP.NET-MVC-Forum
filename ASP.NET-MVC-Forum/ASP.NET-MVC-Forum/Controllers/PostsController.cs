@@ -31,7 +31,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> ViewPost(int postId)
+        public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
             var post = await postService.GetById(postId,withUserIncluded:true);
 

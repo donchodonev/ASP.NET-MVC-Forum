@@ -154,5 +154,25 @@
 
             return await query.FirstOrDefaultAsync(x => x.Id == postId);
         }
+
+        public async Task<IQueryable<Post>> GetByCategory(int categoryId, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        {
+            return await Task.Run(() =>
+            {
+                var query = db.Posts.Where(x => x.IsDeleted == false && x.CategoryId == categoryId);
+
+                if (withUserIncluded)
+                {
+                    query = query.Include(x => x.User);
+                }
+
+                if (withIdentityUserIncluded)
+                {
+                    query = query.Include(x => x.User.IdentityUser);
+                }
+
+                return query;
+            });
+        }
     }
 }

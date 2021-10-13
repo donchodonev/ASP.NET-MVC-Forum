@@ -85,10 +85,18 @@ namespace ASP.NET_MVC_Forum
 
             app.UseEndpoints(endpoints =>
             {
-                //Categories/CategoryContent
+                endpoints.MapControllerRoute(
+                name: "Post view",
+                pattern: "/Posts/ViewPost/{postId}/{postTitle}",
+                defaults: new
+                {
+                    controller = "Posts",
+                    action = "ViewPost",
+                });
+
                 endpoints.MapControllerRoute(
                     name: "Category Info",
-                    pattern: "/Categories/Details/{categoryId}/{categoryName}",
+                    pattern: "/Categories/CategoryContent/{categoryId}/{categoryName}",
                     defaults: new
                     {
                         controller = "Categories",
@@ -104,7 +112,6 @@ namespace ASP.NET_MVC_Forum
                         action = "Add",
                     });
 
-                //Home-Index
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

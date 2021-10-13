@@ -1,11 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Models.Category
 {
-    using Microsoft.AspNetCore.Mvc;
+    using System.ComponentModel.DataAnnotations;
 
     public class CategoryContentCategoryInputModel
     {
-        public int Id { get; set; }
+        [Required]
+        public int CategoryId { get; set; }
 
+        [Required]
         public int CategoryName { get; set; }
     }
 }
