@@ -14,7 +14,7 @@
                         <i class="fas fa-search h4 text-body"></i>
                     </div>
                     <div class="col">
-                        <input class="form-control form-control-lg form-control-borderless" name ="searchTerm" type="search" placeholder="Categories..." value="">
+                        <input class="form-control form-control-lg form-control-borderless" name="searchTerm" type="search" placeholder="Categories..." value="">
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-lg btn-success ml-1" type="submit">Search</button>
@@ -26,14 +26,12 @@
 </div>
 
 
-
-
 <div class="row justify-content-center">
 
     @foreach (var category in Model)
     {
         <div class="card col-auto justify-content-center m-1" style="width: 10rem;">
-            <a asp-controller="Categories" asp-action="CategoryContent" asp-route-categoryId="@category.Id" asp-route-categoryName="@category.Name">
+            <a type="button" asp-controller="Categories" asp-action="CategoryContent" asp-route-categoryId="@category.Id" asp-route-categoryName="@category.Name">
                 <img class="card-img-top w-100 h-100" src="@category.ImageUrl" alt="Card image cap">
             </a>
             <h6 class="card-footer text-center">@category.Name</h6>

@@ -31,9 +31,13 @@
             this.mapper = mapper;
         }
 
-        public IActionResult All()
+        public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            return View();
+            var post = await postService.GetById(postId,withUserIncluded:true);
+
+            var vm = mapper.Map<ViewPostViewModel>(post);
+
+            return View(vm);
         }
 
         [Authorize]
