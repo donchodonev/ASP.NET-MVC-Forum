@@ -12,26 +12,25 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
-        private readonly ICategoryService categoryService;
         private readonly IPostService postsService;
         private readonly IMapper mapper;
         private readonly IMemoryCache memoryCache;
 
-        public HomeController(ICategoryService categoryService, IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
+        public HomeController(IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
         {
-            this.categoryService = categoryService;
             this.postsService = postsService;
             this.mapper = mapper;
             this.memoryCache = memoryCache;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm =
-                 mapper.Map<List<PostPreviewViewModel>>(GetCachedPosts())
+                 mapper.Map<List<PostPreviewViewModel>>(await GetCachedPosts())
                 .ToList();
 
             return View(vm);
@@ -44,27 +43,32 @@
         }
 
 
-        private List<Post> GetCachedPosts()
+        private async Task<List<Post>> GetCachedPosts()
         {
-            string cacheKey = "allPosts";
+            return await Task.Run(() => {
 
-            if (!memoryCache.TryGetValue<List<Post>>(cacheKey, out List<Post> posts))
-            {
-                posts = postsService
-                    .AllAsync(withUserIncluded: true, withIdentityUserIncluded: true)
-                    .GetAwaiter()
-                    .GetResult()
-                    .ToList();
-            }
+                string cacheKey = "allPosts";
 
-            var cacheExpiryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
-                Priority = CacheItemPriority.High,
-                SlidingExpiration = TimeSpan.FromSeconds(50)
-            };
+                if (!memoryCache.TryGetValue<List<Post>>(cacheKey, out List<Post> posts))
+                {
+                    posts = postsService
+                        .AllAsync(withUserIncluded: true, withIdentityUserIncluded: true)
+                        .GetAwaiter()
+                        .GetResult()
+                        .ToList();
+                }
 
-            return posts;
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromSeconds(50)
+                };
+
+                memoryCache.Set(cacheKey, posts, cacheEntryOptions);
+
+                return posts;
+            });
         }
     }
 }

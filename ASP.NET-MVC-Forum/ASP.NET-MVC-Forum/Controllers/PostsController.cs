@@ -43,17 +43,9 @@
         [Authorize]
         public async Task<IActionResult> Add()
         {
-            var addPostFormModel = new AddPostFormModel();
+            var vm = await PrepareAddFormDataAsync();
 
-            var categories = await categoryService.AllAsync();
-
-            var selectOptions = categories
-                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
-                .ToArray();
-                
-            addPostFormModel.Categories = selectOptions;
-
-            return View(addPostFormModel);
+            return View(vm);
         }
 
         [HttpPost]
@@ -62,6 +54,7 @@
         {
             if (!ModelState.IsValid)
             {
+                TempData["Title"] = data.Title;
                 TempData["ErrorMessage"] = $"The length of the post must be longer than {HtmlContentMinLength} symbols";
                 return RedirectToAction("Add","Posts");
             }
@@ -72,13 +65,34 @@
                 return RedirectToAction("Add", "Posts");
             }
 
+
+            var postId = await AddPostAsync(data);
+
+            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
+        }
+
+        private async Task<AddPostFormModel> PrepareAddFormDataAsync()
+        {
+            var addPostFormModel = new AddPostFormModel();
+
+            var categories = await categoryService.AllAsync();
+
+            var selectOptions = categories
+                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            addPostFormModel.Categories = selectOptions;
+
+            return addPostFormModel;
+        }
+
+        private async Task<int> AddPostAsync(AddPostFormModel data)
+        {
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
 
             var newPost = mapper.Map<Post>(data);
 
-            var postId = await postService.AddPostAsync(newPost, baseUserId);
-
-            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
+            return await postService.AddPostAsync(newPost, baseUserId);
         }
     }
 }
