@@ -33,7 +33,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId,withUserIncluded:true);
+            var post = await postService.GetByIdAsync(postId,withUserIncluded:true,withIdentityUserIncluded:true);
 
             var vm = mapper.Map<ViewPostViewModel>(post);
 
