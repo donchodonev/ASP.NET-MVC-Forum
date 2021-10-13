@@ -60,7 +60,7 @@
         /// <param name="withUserIncluded">True to include post's User property, false for a null User property</param>
         /// <param name="withIdentityUserIncluded">True to include post's IdentityUser property, false for a null IdentityUser property</param>
         /// <returns></returns>
-        public async Task<IQueryable<Post>> AllAsyncAsNoTracking(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        public async Task<IQueryable<Post>> AllAsNoTrackingAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
         {
             return await Task.Run(() =>
             {
@@ -133,7 +133,7 @@
         /// <param name="withUserIncluded">True for Post's User property to be included, false for null</param>
         /// <param name="withIdentityUserIncluded">True for Post's User.IdentityUser property to be included, false for null</param>
         /// <returns></returns>
-        public async Task<Post> GetById(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        public async Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
         {
             var query = db.Posts.Where(x => x.IsDeleted == false);
 
@@ -155,7 +155,7 @@
             return await query.FirstOrDefaultAsync(x => x.Id == postId);
         }
 
-        public async Task<IQueryable<Post>> GetByCategory(int categoryId, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
         {
             return await Task.Run(() =>
             {
@@ -173,6 +173,11 @@
 
                 return query;
             });
+        }
+
+        public async Task<bool> PostExistsAsync(string postTitle)
+        {
+            return await db.Posts.AnyAsync(x => x.Title == postTitle);
         }
     }
 }

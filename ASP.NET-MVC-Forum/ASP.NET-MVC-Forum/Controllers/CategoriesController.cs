@@ -49,7 +49,7 @@
 
             var vm =
                 mapper
-                .Map<List<PostPreviewViewModel>>(postService.GetByCategory(categoryId, withUserIncluded:true, withIdentityUserIncluded:true)
+                .Map<List<PostPreviewViewModel>>(postService.GetByCategoryAsync(categoryId, withUserIncluded:true, withIdentityUserIncluded:true)
                 .GetAwaiter()
                 .GetResult()
                 .ToList());
