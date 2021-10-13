@@ -9,5 +9,7 @@
         public Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false); 
 
         public Task<int> AddPostAsync(Post post, int baseUserId);
+
+        public Task<Post> GetById(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
     }
 }

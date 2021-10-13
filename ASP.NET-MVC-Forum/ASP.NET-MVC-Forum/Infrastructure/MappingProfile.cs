@@ -19,13 +19,22 @@ namespace ASP.NET_MVC_Forum.Infrastructure
             this.CreateMap<AddPostFormModel, Post>();
 
             this.CreateMap<Post, PostPreviewViewModel>()
-                .ForMember(x => x.PostsCount, y => y.MapFrom(z => z.User.Posts.Count))
+                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count))
                 .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
-                .ForMember(x => x.MemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
-                .ForMember(x => x.Username, y => y.MapFrom(z => z.User.IdentityUser.UserName))
-                .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"));
+                .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
+                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
+                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
 
+            this.CreateMap<Post, ViewPostViewModel>()
+                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count))
+                .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
+                .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
+                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
+                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
         }
     }
 }

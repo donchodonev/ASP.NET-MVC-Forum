@@ -3,9 +3,6 @@
     ViewData["Title"] = "Add";
 }
 
-@using ASP.NET_MVC_Forum.Infrastructure.Extensions;
-
-
 <link rel="stylesheet" type="text/css" href="prism.css">
 
 <div class="container">
@@ -24,7 +21,7 @@
             </div>
         </div>
         <div class="mt-3 mb-3">
-            <textarea id="mytextarea" required pro asp-for="HtmlContent" placeholder="Once upon a time..."></textarea>
+            <textarea id="mytextarea" required asp-for="HtmlContent" placeholder="Once upon a time..."></textarea>
         </div>
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary">Submit</button>

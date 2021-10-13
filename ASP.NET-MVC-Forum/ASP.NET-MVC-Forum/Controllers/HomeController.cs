@@ -20,9 +20,9 @@
         private readonly IMapper mapper;
         private readonly IMemoryCache memoryCache;
 
-        public HomeController(ICategoryService categories, IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
+        public HomeController(ICategoryService categoryService, IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
         {
-            this.categoryService = categories;
+            this.categoryService = categoryService;
             this.postsService = postsService;
             this.mapper = mapper;
             this.memoryCache = memoryCache;
