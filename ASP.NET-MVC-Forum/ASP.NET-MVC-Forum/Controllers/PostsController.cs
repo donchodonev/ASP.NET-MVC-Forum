@@ -33,7 +33,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetById(postId,withUserIncluded:true);
+            var post = await postService.GetByIdAsync(postId,withUserIncluded:true);
 
             var vm = mapper.Map<ViewPostViewModel>(post);
 
@@ -66,15 +66,19 @@
                 return RedirectToAction("Add","Posts");
             }
 
+            if (await postService.PostExistsAsync(data.Title))
+            {
+                TempData["ErrorMessage"] = $"A post with the title {data.Title} already exists";
+                return RedirectToAction("Add", "Posts");
+            }
+
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
 
             var newPost = mapper.Map<Post>(data);
 
             var postId = await postService.AddPostAsync(newPost, baseUserId);
 
-            TempData["SuccessMessage"] = "Your post has been successfully created";
-
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
         }
     }
 }
