@@ -43,7 +43,7 @@
         [Authorize]
         public async Task<IActionResult> Add()
         {
-            var vm = await PrepareAddFormDataAsync();
+            var vm = await PrepareAddFormDataOnGetAsync();
 
             return View(vm);
         }
@@ -72,7 +72,7 @@
             return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
         }
 
-        private async Task<AddPostFormModel> PrepareAddFormDataAsync()
+        private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
         {
             var addPostFormModel = new AddPostFormModel();
 
