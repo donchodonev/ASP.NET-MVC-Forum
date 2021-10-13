@@ -43,17 +43,9 @@
         [Authorize]
         public async Task<IActionResult> Add()
         {
-            var addPostFormModel = new AddPostFormModel();
+            var vm = await PrepareAddFormDataOnGetAsync();
 
-            var categories = await categoryService.AllAsync();
-
-            var selectOptions = categories
-                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
-                .ToArray();
-                
-            addPostFormModel.Categories = selectOptions;
-
-            return View(addPostFormModel);
+            return View(vm);
         }
 
         [HttpPost]
@@ -62,23 +54,55 @@
         {
             if (!ModelState.IsValid)
             {
+                TempData["Title"] = data.Title;
                 TempData["ErrorMessage"] = $"The length of the post must be longer than {HtmlContentMinLength} symbols";
                 return RedirectToAction("Add","Posts");
             }
 
             if (await postService.PostExistsAsync(data.Title))
             {
-                TempData["ErrorMessage"] = $"A post with the title {data.Title} already exists";
+                TempData["ErrorMessage"] = $"A post with the title \"{data.Title}\" already exists";
+                TempData["HtmlContent"] = data.HtmlContent;
                 return RedirectToAction("Add", "Posts");
             }
 
+
+            var postId = await AddPostAsync(data);
+
+            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
+        }
+
+        private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
+        {
+            var addPostFormModel = new AddPostFormModel();
+
+            var categories = await categoryService.AllAsync();
+
+            var selectOptions = categories
+                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            addPostFormModel.Categories = selectOptions;
+
+            if (TempData.ContainsKey("HtmlContent"))
+            {
+                addPostFormModel.HtmlContent = TempData["HtmlContent"].ToString();
+            }
+            if (TempData.ContainsKey("Title"))
+            {
+                addPostFormModel.Title = TempData["Title"].ToString();
+            }
+
+            return addPostFormModel;
+        }
+
+        private async Task<int> AddPostAsync(AddPostFormModel data)
+        {
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
 
             var newPost = mapper.Map<Post>(data);
 
-            var postId = await postService.AddPostAsync(newPost, baseUserId);
-
-            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
+            return await postService.AddPostAsync(newPost, baseUserId);
         }
     }
 }

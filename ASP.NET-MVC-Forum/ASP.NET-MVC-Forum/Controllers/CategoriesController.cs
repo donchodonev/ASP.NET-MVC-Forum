@@ -20,7 +20,7 @@
         private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categoryService,IPostService postService, IMemoryCache memoryCache, IMapper mapper)
+        public CategoriesController(ICategoryService categoryService, IPostService postService, IMemoryCache memoryCache, IMapper mapper)
         {
             this.categoryService = categoryService;
             this.postService = postService;
@@ -40,7 +40,7 @@
             return View(categories);
         }
 
-        public async Task<IActionResult> CategoryContent([FromRoute] int categoryId, string categoryName)
+        public async Task<IActionResult> CategoryContent([FromRoute] int categoryId)
         {
             if (!this.ModelState.IsValid)
             {
@@ -49,12 +49,14 @@
 
             var vm =
                 mapper
-                .Map<List<PostPreviewViewModel>>(postService.GetByCategoryAsync(categoryId, withUserIncluded:true, withIdentityUserIncluded:true)
-                .GetAwaiter()
-                .GetResult()
-                .ToList());
+                .Map<List<PostPreviewViewModel>>(await postService
+                .GetByCategoryAsync(
+                    categoryId,
+                    withUserIncluded: true,
+                    withIdentityUserIncluded: true));
 
             return View(vm);
+
         }
 
         private List<Category> GetCachedCategories()
@@ -70,19 +72,23 @@
                     .ToList();
             }
 
-            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
                 Priority = CacheItemPriority.High,
                 SlidingExpiration = TimeSpan.FromSeconds(50)
             };
 
+            memoryCache.Set(cacheKey, categoryList, cacheEntryOptions);
+
             return categoryList;
         }
 
         private List<AllCategoryViewModel> GetSearchedCategories(List<AllCategoryViewModel> categories, string searchTerm)
         {
-            categories = categories.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+            categories = categories
+                .Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
+                .ToList();
 
             return categories;
         }

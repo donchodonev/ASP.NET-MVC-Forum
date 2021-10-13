@@ -16,7 +16,6 @@ namespace ASP.NET_MVC_Forum.Models.Post
 
         [Required]
         [MinLength(HtmlContentMinLength)]
-        [DataType(DataType.MultilineText)]
         public string HtmlContent { get; set; }
 
         [Required]
