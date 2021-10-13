@@ -64,21 +64,21 @@
         {
             return await Task.Run(() =>
             {
-                var query = db.Posts.Where(x => x.IsDeleted == false).AsNoTracking();
+                var query = db.Posts.Where(x => x.IsDeleted == false);
 
                 if (withCategoryIncluded)
                 {
-                    query = query.Include(x => x.Category).AsNoTracking();
+                    query = query.Include(x => x.Category);
                 }
 
                 if (withUserIncluded)
                 {
-                    query = query.Include(x => x.User).AsNoTracking();
+                    query = query.Include(x => x.User);
                 }
 
                 if (withIdentityUserIncluded)
                 {
-                    query = query.Include(x => x.User.IdentityUser).AsNoTracking();
+                    query = query.Include(x => x.User.IdentityUser);
                 }
 
                 return query.AsNoTracking();
