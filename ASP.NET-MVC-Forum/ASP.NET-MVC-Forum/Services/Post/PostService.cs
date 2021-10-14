@@ -145,6 +145,8 @@
             if (withUserIncluded)
             {
                 query = query.Include(x => x.User);
+                query = query.Include(x => x.User.Posts);
+                //so that the UserPostsCount property displays data for all posts not just the ones for the current category
             }
 
             if (withIdentityUserIncluded)
@@ -164,6 +166,8 @@
                 if (withUserIncluded)
                 {
                     query = query.Include(x => x.User);
+                    query = query.Include(x => x.User.Posts);
+                    //so that the UserPostsCount property displays data for all posts not just the ones for the current category
                 }
 
                 if (withIdentityUserIncluded)

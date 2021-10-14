@@ -16,5 +16,7 @@ namespace ASP.NET_MVC_Forum.Services.User
         public Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null);
 
         public Task<int> GetBaseUserIdAsync(string identityUserId);
+
+        public  Task<int> UserPostsCount(int userId);
     }
 }
