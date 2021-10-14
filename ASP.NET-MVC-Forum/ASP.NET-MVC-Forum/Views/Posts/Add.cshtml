@@ -3,14 +3,14 @@
     ViewData["Title"] = "Add";
 }
 
-<link rel="stylesheet" type="text/css" href="prism.css">
+<link rel="stylesheet" type="text/css" href="~/css/prism.css">
 
 <div class="container">
     <form method="post" asp-controller="Posts" asp-action="Add">
         <div class="form-row">
-                <div class="col-7">
-                    <input type="text" class="form-control" asp-for="Title" placeholder="Title">
-                </div>
+            <div class="col-7">
+                <input type="text" class="form-control" asp-for="Title" placeholder="Title">
+            </div>
             <div class="col">
                 <select asp-for="CategoryId" class="form-control">
                     @foreach (var category in Model.Categories)
@@ -65,4 +65,5 @@
     });
 </script>
 
-<script src="prism.js"></script>
+<script src="~/js/prism.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/prism.css">
