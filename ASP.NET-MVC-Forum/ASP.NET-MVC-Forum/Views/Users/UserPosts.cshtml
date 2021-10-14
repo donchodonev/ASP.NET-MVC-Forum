@@ -1,0 +1,33 @@
+﻿@model List<ASP.NET_MVC_Forum.Models.Post.PostPreviewViewModel>;
+@{
+    ViewData["Title"] = "Add";
+}
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Last Modified</th>
+            <th scope="col">Last Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="col-9" scope="row">
+                <a class="text-primary" href="">Обектно ориентирано програмиране</a>
+            </th>
+            <td class="badge badge-info rounded-pill mt-3 p-2 justify-content-center">11/12/2021</td>
+            <td>
+                <!-- Default dropleft button -->
+                <div class="btn-group dropleft">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropleft
+                    </button>
+                    <div class="dropdown-menu outl">
+                        <a class="dropdown-item bg-warning" href="#">Edit</a>
+                        <a class="dropdown-item bg-danger" href="#">Delete</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
