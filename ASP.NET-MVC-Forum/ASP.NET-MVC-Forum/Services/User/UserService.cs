@@ -38,5 +38,13 @@
                 .FirstOrDefault(x => x.IdentityUserId == identityUserId).Id
                 );
         }
+
+        public async Task<int> UserPostsCount(int userId)
+        {
+            return await Task.Run(() =>
+            {
+                return db.BaseUsers.FirstOrDefault(x => x.Id == userId).Posts.Count;
+            });
+        }
     }
 }

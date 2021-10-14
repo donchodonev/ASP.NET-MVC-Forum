@@ -23,7 +23,7 @@
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
 
-        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService,IMapper mapper)
+        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService, IMapper mapper)
         {
             this.userService = userService;
             this.postService = postService;
@@ -33,7 +33,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId,withUserIncluded:true,withIdentityUserIncluded:true);
+            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true);
 
             var vm = mapper.Map<ViewPostViewModel>(post);
 
@@ -50,13 +50,13 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add([FromForm]AddPostFormModel data)
+        public async Task<IActionResult> Add([FromForm] AddPostFormModel data)
         {
             if (!ModelState.IsValid)
             {
                 TempData["Title"] = data.Title;
                 TempData["ErrorMessage"] = $"The length of the post must be longer than {HtmlContentMinLength} symbols";
-                return RedirectToAction("Add","Posts");
+                return RedirectToAction("Add", "Posts");
             }
 
             if (await postService.PostExistsAsync(data.Title))
@@ -66,21 +66,68 @@
                 return RedirectToAction("Add", "Posts");
             }
 
-
             var postId = await AddPostAsync(data);
 
-            return RedirectToAction("ViewPost",new {postId = postId, postTitle = data.Title });
+            return RedirectToAction("ViewPost", new { postId = postId, postTitle = data.Title });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int postId)
+        {
+            await ValidatePostOwnership(postId);
+
+            var vm = mapper
+                .ProjectTo<EditPostFormModel>(await postService.GetByIdAsQueryableAsync(postId, withCategoryIncluded: true))
+                .First();
+
+            vm.Categories = await GetCategoryIdAndNameCombinations();
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] EditPostFormModel data)
+        {
+            await ValidatePostOwnership(data.PostId);
+
+            var originalPost = await postService.GetByIdAsync(data.PostId);
+
+            var postChanges = await postService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
+
+            if (postChanges.Count == 0)
+            {
+                return RedirectToAction("Edit", "Posts", new { postId = data.PostId });
+            }
+
+            foreach (var kvp in postChanges)
+            {
+                if (kvp.Key == "HtmlContent")
+                {
+                    originalPost.HtmlContent = data.HtmlContent;
+                }
+                if (kvp.Key == "Title")
+                {
+                    originalPost.Title = data.Title;
+                }
+                if (kvp.Key == "CategoryId")
+                {
+                    originalPost.CategoryId = data.CategoryId;
+                }
+            }
+
+            var userId = await userService.GetBaseUserIdAsync(this.User.Id());
+
+            await postService.EditPostAsync(originalPost);
+
+            return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
 
         private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
         {
             var addPostFormModel = new AddPostFormModel();
 
-            var categories = await categoryService.AllAsync();
-
-            var selectOptions = categories
-                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
-                .ToArray();
+            var selectOptions = await GetCategoryIdAndNameCombinations();
 
             addPostFormModel.Categories = selectOptions;
 
@@ -96,6 +143,17 @@
             return addPostFormModel;
         }
 
+        private async Task<CategoryIdAndName[]> GetCategoryIdAndNameCombinations()
+        {
+            var categories = await categoryService.AllAsync();
+
+            var selectOptions = categories
+                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            return selectOptions;
+        }
+
         private async Task<int> AddPostAsync(AddPostFormModel data)
         {
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
@@ -103,6 +161,16 @@
             var newPost = mapper.Map<Post>(data);
 
             return await postService.AddPostAsync(newPost, baseUserId);
+        }
+
+        private async Task ValidatePostOwnership(int postId)
+        {
+            var userId = await userService.GetBaseUserIdAsync(this.User.Id());
+
+            if (!await postService.UserCanEditAsync(userId, postId))
+            {
+                RedirectToAction("Index", "Home");
+            }
         }
     }
 }
