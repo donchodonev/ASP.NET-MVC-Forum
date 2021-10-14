@@ -16,7 +16,11 @@ namespace ASP.NET_MVC_Forum.Infrastructure
 
             this.CreateMap<Category, CategoryIdAndName>();
 
-            this.CreateMap<AddPostFormModel, Post>();
+            this.CreateMap<AddPostFormModel, Post>().ReverseMap();
+
+            this.CreateMap<Post, EditPostFormModel>()
+                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id))
+                .ReverseMap();
 
             this.CreateMap<Post, PostPreviewViewModel>()
                 .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count))

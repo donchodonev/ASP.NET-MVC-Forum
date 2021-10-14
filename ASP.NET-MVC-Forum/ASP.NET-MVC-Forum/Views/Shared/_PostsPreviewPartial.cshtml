@@ -4,26 +4,29 @@
 
 @foreach (var item in Model)
 {
-    <div class="container-fluid mt-100">
+    <div class="container mt-100">
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4 mt-4">
-                    <div class="card-footer d-flex justify-content-between align-items-center px-0 pt-0 pb-3">
-                        <div class="px-2 pt-3">
-                            <h5 class="text-dark font-weight-bold float-left">@item.Title</h5>
-                        </div>
-                        <div class="pt-3 text-center float-right position-sticky">
-                            <a type="button"  asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title" class="btn btn-primary mr-2"><i class="ion ion-md-create"></i>Read More</a>
+                    <div class="card-footer align-items-center px-0 pt-0 pb-3">
+                        <div class="px-2 pt-3 text-center">
+                            <a class="text-dark font-weight-bolder font-italic" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title ">@item.Title</a>
+
+                            @if (this.User.Identity.Name == item.UserIdentityUserUsername)
+                            {
+                                <a type="button" class="btn btn-warning m-1 float-right" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
+                            }
+
                         </div>
                     </div>
                     <div class="card-body">
-                        @Html.Raw(item.ShortDescription)
+                        <a class="text-dark" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title">@Html.Raw(item.ShortDescription)</a>
                     </div>
 
                     <div class="card-header">
                         <div class="media flex-wrap w-100 align-items-center">
                             <img src="~/img/defaultUserImage.png" class="d-block ui-w-40 rounded-circle" alt="">
-                            
+
                             <div class="media-body ml-3">
                                 <a href="javascript:void(0)" data-abc="true">@item.UserUsername</a>
                                 <div class="text-muted small">@item.PostCreationDate</div>

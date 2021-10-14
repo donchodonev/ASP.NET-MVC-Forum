@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -95,12 +96,12 @@
         {
             post.UserId = userId;
 
-            var sanitizedHtml = HttpUtility.HtmlDecode(sanitizer.Sanitize(post.HtmlContent));
+            var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
 
             var pattern = @"<.*?>";
             var replacement = string.Empty;
 
-            var postDescriptionWithoutHtml = Regex.Replace(sanitizedHtml, pattern, replacement);
+            var postDescriptionWithoutHtml = Regex.Replace(sanitizedAndDecodedHtml, pattern, replacement);
 
             string postShortDescription;
 
@@ -113,7 +114,7 @@
                 postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
             }
 
-            post.HtmlContent = sanitizedHtml;
+            post.HtmlContent = sanitizedAndDecodedHtml;
             post.ShortDescription = postShortDescription;
 
             await db.Posts.AddAsync(post);
@@ -133,7 +134,8 @@
         /// <param name="withUserIncluded">True for Post's User property to be included, false for null</param>
         /// <param name="withIdentityUserIncluded">True for Post's User.IdentityUser property to be included, false for null</param>
         /// <returns></returns>
-        public async Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        public async Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
+            bool withUserPostsIncluded = false)
         {
             var query = db.Posts.Where(x => x.IsDeleted == false);
 
@@ -145,8 +147,11 @@
             if (withUserIncluded)
             {
                 query = query.Include(x => x.User);
+            }
+
+            if (withUserPostsIncluded)
+            {
                 query = query.Include(x => x.User.Posts);
-                //so that the UserPostsCount property displays data for all posts not just the ones for the current category
             }
 
             if (withIdentityUserIncluded)
@@ -157,7 +162,8 @@
             return await query.FirstOrDefaultAsync(x => x.Id == postId);
         }
 
-        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
+            bool withUserPostsIncluded = false)
         {
             return await Task.Run(() =>
             {
@@ -166,8 +172,11 @@
                 if (withUserIncluded)
                 {
                     query = query.Include(x => x.User);
+                }
+
+                if (withUserPostsIncluded)
+                {
                     query = query.Include(x => x.User.Posts);
-                    //so that the UserPostsCount property displays data for all posts not just the ones for the current category
                 }
 
                 if (withIdentityUserIncluded)
@@ -207,6 +216,66 @@
 
                 return query;
             });
+        }
+
+        public async Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        {
+            return await Task.Run(() =>
+            {
+                var query = db.Posts.Where(x => x.IsDeleted == false && x.Id == postId);
+
+                if (withCategoryIncluded)
+                {
+                    query = query.Include(x => x.Category);
+                }
+
+                if (withUserIncluded)
+                {
+                    query = query.Include(x => x.User);
+                }
+
+                if (withIdentityUserIncluded)
+                {
+                    query = query.Include(x => x.User.IdentityUser);
+                }
+
+                return query;
+            });
+        }
+
+        public async Task<bool> UserCanEditAsync(int userId, int postId)
+        {
+            return await db.Posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
+        }
+
+        public async Task<Dictionary<string,bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
+        {
+            return await Task.Run(() =>
+            {
+                var kvp = new Dictionary<string, bool>();
+
+                if (originalPost.HtmlContent.Length != SanitizeAndDecodeHtmlContent(newHtmlContent).Length)
+                {
+                    kvp.Add("HtmlContent", true);
+                }
+
+                if (originalPost.Title != newTitle)
+                {
+                    kvp.Add("Title", true);
+                }
+
+                if (originalPost.CategoryId != newCategoryId)
+                {
+                    kvp.Add("CategoryId", true);
+                }
+
+                return kvp;
+            });
+        }
+
+        public string SanitizeAndDecodeHtmlContent(string html)
+        {
+            return HttpUtility.HtmlDecode(sanitizer.Sanitize(html));
         }
     }
 }

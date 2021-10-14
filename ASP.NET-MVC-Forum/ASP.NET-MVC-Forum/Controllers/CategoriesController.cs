@@ -53,7 +53,8 @@
                 .GetByCategoryAsync(
                     categoryId,
                     withUserIncluded: true,
-                    withIdentityUserIncluded: true));
+                    withIdentityUserIncluded: true,
+                    withUserPostsIncluded:true));
 
             return View("_PostsPreviewPartial", vm);
 
