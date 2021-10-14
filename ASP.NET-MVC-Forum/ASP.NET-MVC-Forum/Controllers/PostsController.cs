@@ -118,7 +118,7 @@
 
             var userId = await userService.GetBaseUserIdAsync(this.User.Id());
 
-            await postService.AddPostAsync(originalPost, userId);
+            await postService.EditPostAsync(originalPost);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }

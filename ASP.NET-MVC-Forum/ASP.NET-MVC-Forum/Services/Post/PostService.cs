@@ -126,6 +126,34 @@
             return postWithId.Id;
         }
 
+        public async Task EditPostAsync(Post post)
+        {
+            var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
+
+            var pattern = @"<.*?>";
+            var replacement = string.Empty;
+
+            var postDescriptionWithoutHtml = Regex.Replace(sanitizedAndDecodedHtml, pattern, replacement);
+
+            string postShortDescription;
+
+            if (postDescriptionWithoutHtml.Length < 300)
+            {
+                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
+            }
+            else
+            {
+                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
+            }
+
+            post.HtmlContent = sanitizedAndDecodedHtml;
+            post.ShortDescription = postShortDescription;
+
+            db.Posts.Update(post);
+
+            await db.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Returns a Post object with the given Id
         /// </summary>

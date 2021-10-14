@@ -29,5 +29,7 @@
         public Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
 
         public string SanitizeAndDecodeHtmlContent(string html);
+
+        public Task EditPostAsync(Post post);
     }
 }
