@@ -183,5 +183,30 @@
         {
             return await db.Posts.AnyAsync(x => x.Title == postTitle);
         }
+
+        public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        {
+            return await Task.Run(() =>
+            {
+                var query = db.Posts.Where(x => x.IsDeleted == false && x.UserId == userId);
+
+                if (withCategoryIncluded)
+                {
+                    query = query.Include(x => x.Category);
+                }
+
+                if (withUserIncluded)
+                {
+                    query = query.Include(x => x.User);
+                }
+
+                if (withIdentityUserIncluded)
+                {
+                    query = query.Include(x => x.User.IdentityUser);
+                }
+
+                return query;
+            });
+        }
     }
 }

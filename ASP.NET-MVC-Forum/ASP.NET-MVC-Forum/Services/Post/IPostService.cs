@@ -17,5 +17,7 @@
         public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
 
         public Task<bool> PostExistsAsync(string postTitle);
+
+        public  Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
     }
 }

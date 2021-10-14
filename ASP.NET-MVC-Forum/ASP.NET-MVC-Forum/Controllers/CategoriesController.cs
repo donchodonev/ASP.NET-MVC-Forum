@@ -55,7 +55,7 @@
                     withUserIncluded: true,
                     withIdentityUserIncluded: true));
 
-            return View(vm);
+            return View("_PostsPreviewPartial", vm);
 
         }
 
