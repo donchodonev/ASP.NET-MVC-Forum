@@ -35,7 +35,6 @@
 # TODO
 
 * Admin Area
-* Allow admin to delete and edit posts not created by himself
 * Refactor existing code
 * Post Votes
 * Post comments
