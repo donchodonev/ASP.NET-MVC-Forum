@@ -124,6 +124,7 @@
         }
 
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> Delete(int postId)
         {
             await ValidatePostOwnership(postId);
