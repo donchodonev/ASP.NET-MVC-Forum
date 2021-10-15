@@ -1,16 +1,18 @@
 # ASP.NET-MVC-Forum
-An ASP.NET(5) MVC Forum project
 
-* Main Technologies used
+* An ASP.NET(5) MVC Forum project
+* Deployed at https://donchodonev.com but still in active development
 
-ASP.NET 5
-MS SQL Server
-EF Core ORM
-HTML Sanitizer by Michael Ganss - https://github.com/mganss/HtmlSanitizer
-Automapper - Jimmy Bogard and others - https://automapper.org/
-HTML/CSS/JS
-Bootstrap
-IIS - for online deployment
+# Main Technologies used
+
+* ASP.NET 5
+* MS SQL Server
+* EF Core ORM
+* HTML Sanitizer by Michael Ganss - https://github.com/mganss/HtmlSanitizer
+* Automapper - Jimmy Bogard and others - https://automapper.org/
+* HTML/CSS/JS
+* Bootstrap
+* IIS - for online deployment
 
 # Functionalities implemented so far
 
@@ -25,9 +27,6 @@ IIS - for online deployment
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
-
-
-Deployed at https://donchodonev.com but still in development
 
 # TODO
 
