@@ -33,14 +33,16 @@ namespace ASP.NET_MVC_Forum
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 10;
+
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

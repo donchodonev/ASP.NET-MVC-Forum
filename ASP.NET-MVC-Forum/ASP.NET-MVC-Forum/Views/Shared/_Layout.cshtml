@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/footer.css" />
 </head>
 <body>
     <header>
@@ -44,5 +45,15 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
+<a class="text-decoration-none text-dark" href="https://github.com/donchodonev/ASP.NET-MVC-Forum">
+    <footer id="footer" class="bg-light text-center">
+        <p>
+            Developed and designed by Doncho Donev
+            <img src="~/img/GitHub-Mark-32px.png" />
+        </p>
+    </footer>
+</a>
 </body>
 </html>
