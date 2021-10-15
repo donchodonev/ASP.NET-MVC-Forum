@@ -320,9 +320,14 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task<bool> IsPostDeleted(int postId)
+        public async Task<bool?> IsPostDeleted(int postId, string postTitle)
         {
-            var post = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            var post = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId && x.Title == postTitle);
+
+            if (post == null)
+            {
+                return null;
+            }
 
             return post.IsDeleted;
         }

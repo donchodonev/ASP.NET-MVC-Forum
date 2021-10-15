@@ -125,16 +125,20 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Delete(int postId)
+        public async Task<IActionResult> Delete(int postId, string postTitle)
         {
             await ValidatePostOwnership(postId);
 
-            var isPostDeleted = await postService.IsPostDeleted(postId);
+            var isPostDeleted = await postService.IsPostDeleted(postId, postTitle);
 
-            if (isPostDeleted)
+            if (isPostDeleted == true)
             {
                 TempData["ErrorMessage"] = "Your post has already been successfully deleted. Please allow 60 seconds to pass after which will stop being displayed";
                 return RedirectToAction("Index", "Home");
+            }
+            else if (isPostDeleted == null)
+            {
+                BadRequest();
             }
 
             await postService.DeletePostAsync(postId);

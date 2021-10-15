@@ -33,7 +33,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                                                <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@item.PostId" method="post">
+                                                <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title" method="post">
                                                     <input type="submit" class="btn btn-success" value="Yes"/>
                                                 </form>
                                             </div>

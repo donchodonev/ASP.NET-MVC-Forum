@@ -88,6 +88,16 @@ namespace ASP.NET_MVC_Forum
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                name: "Post Delete",
+                pattern: "/Posts/Delete/{postId}/{postTitle}",
+                defaults: new
+                {
+                    controller = "Posts",
+                    action = "Delete",
+                });
+
+
+                endpoints.MapControllerRoute(
                 name: "Post view",
                 pattern: "/Posts/ViewPost/{postId}/{postTitle}",
                 defaults: new
