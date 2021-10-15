@@ -28,6 +28,10 @@
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
 
+* Per-category post filtration
+
+* In-Memory caching for the site's home page regenerated every 60 seconds
+
 # TODO
 
 * Admin Area

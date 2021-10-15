@@ -23,6 +23,10 @@
 
   <ItemGroup>
 
+    <Content Update="wwwroot\css\footer.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
     <Content Update="wwwroot\css\postsAll.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -36,6 +40,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\css\prism.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\img\GitHub-Mark-32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
