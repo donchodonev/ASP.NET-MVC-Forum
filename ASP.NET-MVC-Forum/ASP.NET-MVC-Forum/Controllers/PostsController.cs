@@ -123,6 +123,24 @@
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
 
+        [Authorize]
+        public async Task<IActionResult> Delete(int postId)
+        {
+            await ValidatePostOwnership(postId);
+
+            var isPostDeleted = await postService.IsPostDeleted(postId);
+
+            if (isPostDeleted)
+            {
+                TempData["ErrorMessage"] = "Your post has already been successfully deleted. Please allow 60 seconds to pass after which will stop being displayed";
+                return RedirectToAction("Index", "Home");
+            }
+
+            await postService.DeletePostAsync(postId);
+
+            return RedirectToAction("Index","Home");
+        }
+
         private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
         {
             var addPostFormModel = new AddPostFormModel();

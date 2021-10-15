@@ -56,16 +56,15 @@
                         .GetAwaiter()
                         .GetResult()
                         .ToList();
+
+                    var cacheEntryOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
+                    };
+
+                    memoryCache.Set(cacheKey, posts, cacheEntryOptions);
+
                 }
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
-                    Priority = CacheItemPriority.High,
-                    SlidingExpiration = TimeSpan.FromSeconds(50)
-                };
-
-                memoryCache.Set(cacheKey, posts, cacheEntryOptions);
 
                 return posts;
             });

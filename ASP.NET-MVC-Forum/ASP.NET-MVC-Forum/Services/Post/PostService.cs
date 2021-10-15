@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -148,6 +149,7 @@
 
             post.HtmlContent = sanitizedAndDecodedHtml;
             post.ShortDescription = postShortDescription;
+            post.ModifiedOn = DateTime.UtcNow;
 
             db.Posts.Update(post);
 
@@ -304,6 +306,25 @@
         public string SanitizeAndDecodeHtmlContent(string html)
         {
             return HttpUtility.HtmlDecode(sanitizer.Sanitize(html));
+        }
+
+        public async Task DeletePostAsync(int postId)
+        {
+            var postToMarkAsDeleted = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+
+            postToMarkAsDeleted.IsDeleted = true;
+            postToMarkAsDeleted.ModifiedOn = DateTime.UtcNow;
+
+            db.Update(postToMarkAsDeleted);
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsPostDeleted(int postId)
+        {
+            var post = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+
+            return post.IsDeleted;
         }
     }
 }

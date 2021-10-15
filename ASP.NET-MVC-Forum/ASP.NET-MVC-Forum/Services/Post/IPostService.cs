@@ -31,5 +31,10 @@
         public string SanitizeAndDecodeHtmlContent(string html);
 
         public Task EditPostAsync(Post post);
+
+        public Task DeletePostAsync(int postId);
+
+        public Task<bool> IsPostDeleted(int postId);
+
     }
 }
