@@ -1,5 +1,5 @@
 ﻿@model List<ASP.NET_MVC_Forum.Models.Post.PostPreviewViewModel>;
-
+@using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
 <link rel="stylesheet" href="~/css/postsAll.css" />
 
 @if (TempData.ContainsKey("ErrorMessage"))
@@ -17,7 +17,7 @@
                 <div class="card mb-4 mt-4">
                     <div class="card-footer align-items-center px-0 pt-0 pb-3">
                         <div class="px-2 pt-3 text-center">
-                            @if (this.User.Identity.Name == item.UserIdentityUserUsername)
+                            @if (this.User.Identity.Name == item.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
                             {
                                 <button type="button" class="btn btn-danger m-1 float-left" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
                                     Delete
@@ -42,7 +42,7 @@
 
                             <a class="text-dark font-weight-bolder font-italic" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title ">@item.Title</a>
 
-                            @if (this.User.Identity.Name == item.UserIdentityUserUsername)
+                            @if (this.User.Identity.Name == item.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
                             {
                                 <a type="button" class="btn btn-warning m-1 float-right" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
                             }

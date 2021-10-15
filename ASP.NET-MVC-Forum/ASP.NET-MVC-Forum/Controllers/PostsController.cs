@@ -185,7 +185,7 @@
         {
             var userId = await userService.GetBaseUserIdAsync(this.User.Id());
 
-            if (!await postService.UserCanEditAsync(userId, postId))
+            if (!await postService.UserCanEditAsync(userId, postId) || !this.User.IsAdmin())
             {
                 RedirectToAction("Index", "Home");
             }
