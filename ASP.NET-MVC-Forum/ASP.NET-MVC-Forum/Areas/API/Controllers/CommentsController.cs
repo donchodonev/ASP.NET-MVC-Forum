@@ -39,7 +39,7 @@
 
             await commentService.AddComment(commentData);
 
-            return NoContent();
+            return Ok(commentData);
         }
     }
 }

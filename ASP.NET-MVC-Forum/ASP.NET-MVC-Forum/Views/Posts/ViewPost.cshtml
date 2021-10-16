@@ -116,7 +116,7 @@
                         <div class="d-flex flex-row add-comment-section mt-4 mb-4">
                             <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/KLeobJk.jpg" width="38">
                             <input type="text" class="form-control mr-3" placeholder="Add comment" id="comment">
-                            <button id="sendComment" class="btn btn-primary">Comment</button>
+                            <button  id="sendComment" class="btn btn-primary">Comment</button>
                         </div>
                     </form>
                 }
@@ -148,7 +148,8 @@
 @section Scripts{
 
     <script>
-        $("button#sendComment").click(function () {
+        $("button#sendComment").click(function (e) {
+            e.preventDefault();
             var data = {
         CommentText: $("input#comment").val()
         , UserId:'0'
@@ -159,7 +160,12 @@
             contentType: 'application/json',
             url: '/api/comments',
             data: JSON.stringify(data),
-            dataType: "json"
+            dataType: "json",
+            success: function (data) {
+                if (data.Status === 'OK') {
+                    window.location.href = data.Url
+                }
+            }
         });
     });
     </script>
