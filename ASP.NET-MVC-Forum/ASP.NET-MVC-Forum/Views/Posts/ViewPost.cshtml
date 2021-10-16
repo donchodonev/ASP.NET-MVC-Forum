@@ -163,8 +163,11 @@
             dataType: "json",
             success: function (data) {
                 if (data.Status === 'OK') {
-                    window.location.href = data.Url
+
                 }
+            },
+            complete: function () {
+                $("input#comment").val('')
             }
         });
     });
