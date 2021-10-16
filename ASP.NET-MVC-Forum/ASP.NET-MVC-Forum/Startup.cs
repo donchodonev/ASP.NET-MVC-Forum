@@ -3,6 +3,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using Ganss.XSS;
@@ -56,6 +57,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<ICommentService, CommentService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddMemoryCache();
         }
@@ -88,6 +90,11 @@ namespace ASP.NET_MVC_Forum
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                name: "API",
+                pattern: "{area:exists}/{controller=Comments}");
+
+
+                endpoints.MapControllerRoute(
                 name: "Post Delete",
                 pattern: "/Posts/Delete/{postId}/{postTitle}",
                 defaults: new
@@ -95,7 +102,6 @@ namespace ASP.NET_MVC_Forum
                     controller = "Posts",
                     action = "Delete",
                 });
-
 
                 endpoints.MapControllerRoute(
                 name: "Post view",

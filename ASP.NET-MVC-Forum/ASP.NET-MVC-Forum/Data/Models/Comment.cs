@@ -1,8 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
-    using ASP.NET_MVC_Forum.Data.Interfaces;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using static DataConstants.CommentConstants;
     public class Comment : BaseModel
     {
@@ -23,7 +21,6 @@
         [Required]
         public int UserId { get; set; }
 
-        [Required]
         public virtual User User { get; set; }
 
         [Required]

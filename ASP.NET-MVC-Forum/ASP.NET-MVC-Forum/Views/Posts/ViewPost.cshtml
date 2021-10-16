@@ -1,12 +1,62 @@
 ﻿@model ASP.NET_MVC_Forum.Models.Post.ViewPostViewModel;
-
+@using System.Security.Claims;
 @{
     ViewData["Title"] = "View Post";
 }
 
 
-<link rel="stylesheet" href="~/css/postsAll.css" />
 
+
+<link rel="stylesheet" href="~/css/postsAll.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style>
+
+    body {
+        background: #eee
+    }
+
+    .bdge {
+        height: 21px;
+        background-color: orange;
+        color: #fff;
+        font-size: 11px;
+        padding: 8px;
+        border-radius: 4px;
+        line-height: 3px
+    }
+
+    .comments {
+        text-decoration: underline;
+        text-underline-position: under;
+        cursor: pointer
+    }
+
+    .dot {
+        height: 7px;
+        width: 7px;
+        margin-top: 3px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block
+    }
+
+    .hit-voting:hover {
+        color: blue
+    }
+
+    .hit-voting {
+        cursor: pointer
+    }
+
+    .servicedrop {
+        transition-delay: 1s
+    }
+
+    .action-collapse {
+        cursor: pointer
+    }
+</style>
 
 <div class="container-fluid mt-100">
     <div class="row">
@@ -42,6 +92,91 @@
         </div>
     </div>
 </div>
+
 <div class="px-4 pt-3 text-center">
     <a type="button" href='javascript:history.go(-1)' class="btn btn-secondary justify-content-center"><i class="ion ion-md-create"></i>Go Back</a>
 </div>
+
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+        <div class="d-flex flex-column col-md-8">
+            <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
+                <div class="profile-image"><img class="rounded-circle" src="https://i.imgur.com/06EM6Iy.jpg" width="70"></div>
+                <div class="d-flex flex-column-reverse flex-grow-0 align-items-center votings ml-1"><i class="fa fa-sort-up fa-2x hit-voting"></i><span>127</span><i class="fa fa-sort-down fa-2x hit-voting"></i></div>
+                <div class="d-flex flex-column ml-3">
+                    <div class="d-flex flex-row post-title">
+                    </div>
+                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">13 comments&nbsp;</span><span class="mr-2 dot"></span><span>6 hours ago</span></div>
+                </div>
+            </div>
+            <div class="coment-bottom bg-white p-2 px-4">
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    <form method="post" id="commentsForm">
+                        <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+                            <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/KLeobJk.jpg" width="38">
+                            <input type="text" class="form-control mr-3" placeholder="Add comment" id="comment">
+                            <button id="sendComment" class="btn btn-primary">Comment</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="text-center">
+                        <p>Please <a href="/Identity/Account/Login">Login</a> if you wish to post a comment</p>
+                    </div>
+                }
+                <div class="collapsable-comment">
+                    <div class="d-flex flex-row justify-content-between align-items-center action-collapse p-2" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1"><span>Comments</span><i class="fa fa-chevron-down servicedrop"></i></div>
+                    <div id="collapse-1" class="collapse">
+                        @*-------------COMMENT--------------*@
+                        <div class="commented-section mt-2">
+                            <div class="d-flex flex-row align-items-center commented-user">
+                                <h5 class="mr-2">Corey oates</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">4 hours ago</span>
+                            </div>
+                            <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
+                        </div>
+                        @*-------------COMMENT--------------*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $("button#sendComment").click(function () {
+            var data = {
+        CommentText: $("input#comment").val()
+        , UserId:'0'
+        , PostId: '@Model.PostId'
+    };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/comments',
+            data: JSON.stringify(data),
+            dataType: "json"
+        });
+    });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#collapse-1').on('shown.bs.collapse', function () {
+
+                $(".servicedrop").addClass('fa-chevron-up').removeClass('fa-chevron-down');
+            });
+
+            $('#collapse-1').on('hidden.bs.collapse', function () {
+                $(".servicedrop").addClass('fa-chevron-down').removeClass('fa-chevron-up');
+            });
+        });
+    </script>
+
+}
+
