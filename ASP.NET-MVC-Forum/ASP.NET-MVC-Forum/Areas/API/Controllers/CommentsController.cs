@@ -37,6 +37,7 @@
             var userId = await userService.GetBaseUserIdAsync(this.User.Id());
 
             commentData.UserId = userId;
+            commentData.Username = this.User.Identity.Name;
 
             await commentService.AddComment(commentData);
 

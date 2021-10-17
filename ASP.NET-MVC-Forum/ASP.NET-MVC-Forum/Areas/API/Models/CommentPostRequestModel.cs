@@ -7,5 +7,7 @@
         public int UserId { get; set; }
 
         public int PostId { get; set; }
+
+        public string Username { get; set; }
     }
 }
