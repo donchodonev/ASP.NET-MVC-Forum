@@ -11,7 +11,7 @@
     [ApiController]
     [Area("API")]
     [Route("api/[controller]")]
-    [IgnoreAntiforgeryToken(Order = 2000)]
+    [ValidateAntiForgeryToken]
     public class CommentsController : ControllerBase
     {
         private readonly IUserService userService;

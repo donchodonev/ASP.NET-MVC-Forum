@@ -59,6 +59,10 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN";
+            });
             services.AddMemoryCache();
         }
 

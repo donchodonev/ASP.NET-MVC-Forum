@@ -150,6 +150,7 @@
     <script>
         $("button#sendComment").click(function (e) {
             e.preventDefault();
+            var token = $("#commentsForm [name=__RequestVerificationToken]").val();
             var data = {
         CommentText: $("input#comment").val()
         , UserId:'0'
@@ -161,6 +162,7 @@
             url: '/api/comments',
             data: JSON.stringify(data),
             dataType: "json",
+            headers: { 'X-CSRF-TOKEN': token },
             success: function (data) {
                 if (data.Status === 'OK') {
 
