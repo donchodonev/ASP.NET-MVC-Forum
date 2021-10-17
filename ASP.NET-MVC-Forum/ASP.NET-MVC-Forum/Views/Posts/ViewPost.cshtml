@@ -165,11 +165,11 @@
             headers: { 'X-CSRF-TOKEN': token },
             success: function (data) {
                 if (data.Status === 'OK') {
-
                 }
             },
             complete: function () {
-                $("input#comment").val('')
+                $("input#comment").val(''),
+                    $('.collapse').collapse('show')
             }
         });
     });
