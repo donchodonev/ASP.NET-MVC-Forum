@@ -5,13 +5,14 @@
     using ASP.NET_MVC_Forum.Services.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [ApiController]
     [Area("API")]
     [Route("api/[controller]")]
-    [ValidateAntiForgeryToken]
+    [IgnoreAntiforgeryToken]
     public class CommentsController : ControllerBase
     {
         private readonly IUserService userService;
@@ -24,9 +25,9 @@
         }
 
         [HttpGet]
-        public ActionResult<string> GetComments(string commentText)
+        public async Task<IEnumerable<CommentGetRequestResponseModel>> GetComments(int postId)
         {
-            return commentText;
+            return await commentService.AllComments(postId);
         }
 
         [Authorize]

@@ -42,28 +42,28 @@
 @section Scripts {
 
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/ryfd7q7om7n19zz5fdrtgusrzmzuzed8dr3x1zgq9ry96iie/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: '#mytextarea',
+            menubar: 'view edit',
+            plugins: 'emoticons paste autosave preview fullscreen codesample code autolink',
+            toolbar: 'emoticons paste restoredraft preview fullscreen codesample undo redo styleselect bold italic alignleft aligncenter alignright alignjustify outdent indent',
+            paste_data_images: true,
+            smart_paste: true,
+            min_height: 500,
+            codesample_languages: [
+                { text: 'HTML/XML', value: 'markup' },
+                { text: 'JavaScript', value: 'javascript' },
+                { text: 'CSS', value: 'css' },
+                { text: 'C#', value: 'csharp' },
+            ],
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        });
+    </script>
+
+    <script src="~/js/prism.js"></script>
 }
 
-<script src="https://cdn.tiny.cloud/1/ryfd7q7om7n19zz5fdrtgusrzmzuzed8dr3x1zgq9ry96iie/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
-<script>
-    tinymce.init({
-        selector: '#mytextarea',
-        menubar: 'view edit',
-        plugins: 'emoticons paste autosave preview fullscreen codesample code autolink',
-        toolbar: 'emoticons paste restoredraft preview fullscreen codesample undo redo styleselect bold italic alignleft aligncenter alignright alignjustify outdent indent',
-        paste_data_images: true,
-        smart_paste: true,
-        min_height: 500,
-        codesample_languages: [
-            { text: 'HTML/XML', value: 'markup' },
-            { text: 'JavaScript', value: 'javascript' },
-            { text: 'CSS', value: 'css' },
-            { text: 'C#', value: 'csharp' },
-        ],
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-    });
-</script>
-
-<script src="~/js/prism.js"></script>
-<link rel="stylesheet" type="text/css" href="~/css/prism.css">

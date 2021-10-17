@@ -116,7 +116,7 @@
                         <div class="d-flex flex-row add-comment-section mt-4 mb-4">
                             <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/KLeobJk.jpg" width="38">
                             <input type="text" class="form-control mr-3" placeholder="Add comment" id="comment">
-                            <button  id="sendComment" class="btn btn-primary">Comment</button>
+                            <button id="sendComment" class="btn btn-primary">Comment</button>
                         </div>
                     </form>
                 }
@@ -131,10 +131,9 @@
                     <div id="collapse-1" class="collapse">
                         @*-------------COMMENT--------------*@
                         <div class="commented-section mt-2">
-                            <div class="d-flex flex-row align-items-center commented-user">
-                                <h5 class="mr-2">Corey oates</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">4 hours ago</span>
+                            <div class="commented-section mt-2 commentsArray">
+
                             </div>
-                            <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
                         </div>
                         @*-------------COMMENT--------------*@
                     </div>
@@ -146,8 +145,9 @@
 
 
 @section Scripts{
-
     <script>
+
+
         $("button#sendComment").click(function (e) {
             e.preventDefault();
             var token = $("#commentsForm [name=__RequestVerificationToken]").val();
@@ -169,7 +169,9 @@
             },
             complete: function () {
                 $("input#comment").val(''),
-                    $('.collapse').collapse('show')
+                    document
+                $('.collapse').collapse('show')
+               
             }
         });
     });
@@ -177,14 +179,24 @@
 
     <script>
         $(document).ready(function () {
-
             $('#collapse-1').on('shown.bs.collapse', function () {
+                 $.getJSON('/api/comments', { postId: '@Model.PostId' },
+                    function (comments) {
+                        for (var i = 0; i < comments.length; i++) {
+                            var currentComment = (comments[i].content);
+                            var currentCommentAuthor = comments[i].commentAuthor;
 
+                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mr-2">' + currentCommentAuthor + '</h5 ></div ><div class="comment-text-sm"><span>' + currentComment + '</span></div>').appendTo('.commentsArray');
+                        }
+                    }
+                )
                 $(".servicedrop").addClass('fa-chevron-up').removeClass('fa-chevron-down');
             });
 
             $('#collapse-1').on('hidden.bs.collapse', function () {
                 $(".servicedrop").addClass('fa-chevron-down').removeClass('fa-chevron-up');
+                $("div.comment-text-sm").remove();
+                $("div.commented-user").remove();
             });
         });
     </script>

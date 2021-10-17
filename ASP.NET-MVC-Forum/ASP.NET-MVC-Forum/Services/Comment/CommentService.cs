@@ -2,6 +2,8 @@
 using ASP.NET_MVC_Forum.Data;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ASP.NET_MVC_Forum.Services.Comment
@@ -23,6 +25,23 @@ namespace ASP.NET_MVC_Forum.Services.Comment
             await db.Comments.AddAsync(comment);
 
             await db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<CommentGetRequestResponseModel>> AllComments(int postId)
+        {
+            return await Task.Run(() =>
+            {
+                var comments = mapper
+                .ProjectTo<CommentGetRequestResponseModel>(db
+                    .Comments
+                    .Include(x => x.User)
+                    .ThenInclude(x => x.IdentityUser)
+                    .Where(x => x.PostId == postId && !x.IsDeleted))
+                .ToArray()
+                .Reverse(); // to show most recent comments first
+
+                return comments;
+            });
         }
     }
 }

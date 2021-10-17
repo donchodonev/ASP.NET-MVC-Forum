@@ -17,6 +17,9 @@ namespace ASP.NET_MVC_Forum.Infrastructure
 
             this.CreateMap<Category, CategoryIdAndName>();
 
+            this.CreateMap<Comment, CommentGetRequestResponseModel>()
+                .ForMember(x => x.CommentAuthor, y => y.MapFrom(z => z.User.IdentityUser.UserName));
+
             this.CreateMap<AddPostFormModel, Post>().ReverseMap();
 
             this.CreateMap<Post, EditPostFormModel>()
