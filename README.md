@@ -24,6 +24,8 @@
 * Post Reading
 * Post Updating (by post author)
 * Post Deleting (by post author)
+* Post commenting and viewing done via AJAX and comments API (with anti-CSRF token) (by authenticated users)
+
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
@@ -37,4 +39,3 @@
 * Admin Area
 * Refactor existing code
 * Post Votes
-* Post comments
