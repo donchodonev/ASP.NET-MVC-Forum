@@ -2,7 +2,9 @@
 {
     using ASP.NET_MVC_Forum.Areas.API.Models;
     using ASP.NET_MVC_Forum.Services.Comment;
+    using ASP.NET_MVC_Forum.Services.Comment.Models;
     using ASP.NET_MVC_Forum.Services.User;
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
@@ -17,11 +19,13 @@
     {
         private readonly IUserService userService;
         private readonly ICommentService commentService;
+        private readonly IMapper mapper;
 
-        public CommentsController(IUserService userService, ICommentService commentService)
+        public CommentsController(IUserService userService, ICommentService commentService, IMapper mapper)
         {
             this.userService = userService;
             this.commentService = commentService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -34,14 +38,21 @@
         [HttpPost]
         public async Task<ActionResult<CommentPostRequestModel>> AddComment(CommentPostRequestModel commentData)
         {
+            if (!ModelState.IsValid)
+            {
+                BadRequest();
+            }
+
             var userId = await userService.GetBaseUserIdAsync(this.User.Id());
 
-            commentData.UserId = userId;
-            commentData.Username = this.User.Identity.Name;
+            var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
 
-            await commentService.AddComment(commentData);
+            rawCommentData.UserId = userId;
+            rawCommentData.Username = this.User.Identity.Name;
 
-            return Ok(commentData);
+            await commentService.AddComment(rawCommentData);
+
+            return Ok(rawCommentData);
         }
     }
 }

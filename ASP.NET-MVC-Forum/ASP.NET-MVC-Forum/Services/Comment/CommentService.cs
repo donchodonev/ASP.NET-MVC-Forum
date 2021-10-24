@@ -1,5 +1,6 @@
 ﻿using ASP.NET_MVC_Forum.Areas.API.Models;
 using ASP.NET_MVC_Forum.Data;
+using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ASP.NET_MVC_Forum.Services.Comment
             this.mapper = mapper;
             this.db = db;
         }
-        public async Task AddComment(CommentPostRequestModel commentData)
+        public async Task AddComment(RawCommentServiceModel commentData)
         {
             var comment = mapper.Map<ASP.NET_MVC_Forum.Data.Models.Comment>(commentData);
 

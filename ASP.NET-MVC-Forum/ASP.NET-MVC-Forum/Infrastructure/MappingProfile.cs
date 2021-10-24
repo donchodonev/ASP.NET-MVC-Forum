@@ -2,6 +2,7 @@
 using ASP.NET_MVC_Forum.Data.Models;
 using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
+using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
 
 using static ASP.NET_MVC_Forum.Data.DataConstants.DateTimeFormat;
@@ -12,6 +13,8 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
+
             this.CreateMap<Category, AllCategoryViewModel>()
                 .ReverseMap();
 
@@ -44,7 +47,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
 
-            this.CreateMap<CommentPostRequestModel, Comment>()
+            this.CreateMap<RawCommentServiceModel, Comment>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.PostId))
                 .ForMember(x => x.Content, y => y.MapFrom(z => z.CommentText));

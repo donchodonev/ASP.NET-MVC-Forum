@@ -1,13 +1,16 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.API.Models
+﻿
+namespace ASP.NET_MVC_Forum.Areas.API.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.CommentConstants;
     public class CommentPostRequestModel
     {
+        [MinLength(ContentMinLength)]
+        [MaxLength(ContentMaxLength)]
+        [Required]
         public string CommentText { get; set; }
 
-        public int UserId { get; set; }
-
+        [Required]
         public int PostId { get; set; }
-
-        public string Username { get; set; }
     }
 }

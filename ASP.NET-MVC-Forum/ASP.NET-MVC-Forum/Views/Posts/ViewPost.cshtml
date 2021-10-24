@@ -145,7 +145,6 @@
 </div>
 
 @* I know this js is ugly but I know no JS or jQuery... yet*@
-
 @section Scripts{
     <script>
         $("button#sendComment").click(function (e) {
@@ -153,7 +152,6 @@
             var token = $("#commentsForm [name=__RequestVerificationToken]").val();
             var data = {
         CommentText: $("input#comment").val()
-        , UserId:'0'
         , PostId: '@Model.PostId'
     };
         $.ajax({
