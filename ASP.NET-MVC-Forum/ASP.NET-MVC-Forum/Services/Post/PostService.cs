@@ -165,7 +165,7 @@
         /// <param name="withIdentityUserIncluded">True for Post's User.IdentityUser property to be included, false for null</param>
         /// <returns></returns>
         public async Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
-            bool withUserPostsIncluded = false)
+            bool withUserPostsIncluded = false, bool withCommentsIncluded = false)
         {
             var query = db.Posts.Where(x => x.IsDeleted == false);
 
@@ -187,6 +187,10 @@
             if (withIdentityUserIncluded)
             {
                 query = query.Include(x => x.User.IdentityUser);
+            }
+            if (withCommentsIncluded)
+            {
+                query = query.Include(x => x.Comments);
             }
 
             return await query.FirstOrDefaultAsync(x => x.Id == postId);

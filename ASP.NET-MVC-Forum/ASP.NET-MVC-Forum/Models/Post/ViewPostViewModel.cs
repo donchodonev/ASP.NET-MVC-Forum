@@ -2,6 +2,11 @@
 {
     public class ViewPostViewModel
     {
+        public ViewPostViewModel()
+        {
+
+        }
+
         public string Title { get; set; }
 
         public string UserImageUrl { get; set; }
@@ -19,5 +24,9 @@
         public string UserIdentityUserUsername { get; set; }
 
         public int PostId { get; set; }
+
+        public int CommentsCount { get; set; }
+
+        public string LastCommentDateAndTime { get;set; }
     }
 }

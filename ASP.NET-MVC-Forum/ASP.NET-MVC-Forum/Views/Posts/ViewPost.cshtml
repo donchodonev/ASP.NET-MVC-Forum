@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "View Post";
     var userUsername = this.User.Identity.Name;
+    var lastCommentMadeOn = string.IsNullOrEmpty(Model.LastCommentDateAndTime) ? "" : $"Last comment made on: {Model.LastCommentDateAndTime} UTC";
 }
 
 
@@ -107,7 +108,7 @@
                 <div class="d-flex flex-column ml-3">
                     <div class="d-flex flex-row post-title">
                     </div>
-                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">13 comments&nbsp;</span><span class="mr-2 dot"></span><span>6 hours ago</span></div>
+                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">@Model.CommentsCount comments&nbsp;</span><span class="mr-2 dot"></span><span>@lastCommentMadeOn</span></div>
                 </div>
             </div>
             <div class="coment-bottom bg-white p-2 px-4">
