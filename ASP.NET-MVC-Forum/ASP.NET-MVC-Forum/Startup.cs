@@ -34,7 +34,6 @@ namespace ASP.NET_MVC_Forum
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
