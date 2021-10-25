@@ -106,7 +106,7 @@
                 <div class="d-flex flex-column ml-3">
                     <div class="d-flex flex-row post-title">
                     </div>
-                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">@Model.CommentsCount comments&nbsp;</span></div>
+                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span id="commentCount" class="mr-2 font-weight-bold">@Model.CommentsCount</span><span class="font-weight-bold">comments</span></div>
                 </div>
             </div>
             <div class="coment-bottom bg-white p-2 px-4">
@@ -127,7 +127,8 @@
                     </div>
                 }
                 <div class="collapsable-comment">
-                    <div class="d-flex flex-row justify-content-between align-items-center action-collapse p-2" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1"><span>Comments</span><i id="serviceDrop" class="fa fa-chevron-down servicedrop"></i></div>
+                    <div class="d-flex flex-row justify-content-between align-items-center action-collapse p-2" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1"><span>Comments</span><i id="serviceDrop" class="fa fa-chevron-down servicedrop"></i>
+                    </div>
                     <div id="collapse-1" class="collapse">
                         @*-------------COMMENT--------------*@
                         <div class="commented-section mt-2">
@@ -163,12 +164,15 @@
                     dataType: "json",
                     headers: { 'X-CSRF-TOKEN': token },
                     success: function (returnData) {
+                        let commentCountPlus1 = parseInt($("span#commentCount").text()) + 1;
+                        $("span#commentCount").text(commentCountPlus1);
                         var el = document.getElementById('serviceDrop');
                         $("input#comment").val(''),
                             $('.collapse').collapse('show')
                         if (el.classList.contains('fa-chevron-up')) {
                             $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + returnData.username + '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic mt-2">' + returnData.createdOnAsString + '</h6>' +'</h5></div ><div class="comment-text-sm"><span>' + returnData.commentText + '</span></div>').prependTo('.commentsArray');
                         }
+
                     }
                 });
             };
