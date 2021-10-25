@@ -26,7 +26,5 @@
         public int PostId { get; set; }
 
         public int CommentsCount { get; set; }
-
-        public string LastCommentDateAndTime { get;set; }
     }
 }

@@ -45,8 +45,8 @@ namespace ASP.NET_MVC_Forum.Infrastructure
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
                 .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
-                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id))
-                .ForMember(x => x.LastCommentDateAndTime, y => y.MapFrom(z => z.Comments.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn.ToString(DateAndTimeFormat)));
+                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
+
                 
             this.CreateMap<RawCommentServiceModel, Comment>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId))
