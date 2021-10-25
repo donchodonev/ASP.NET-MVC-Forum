@@ -33,7 +33,8 @@
         {
             return await Task.Run(() =>
             {
-                var query = db.Posts.Where(x => x.IsDeleted == false);
+                var query = db.Posts
+                .Where(x => x.IsDeleted == false);
 
                 if (withCategoryIncluded)
                 {
@@ -50,7 +51,7 @@
                     query = query.Include(x => x.User.IdentityUser);
                 }
 
-                return query;
+                return query.OrderByDescending(x => x.CreatedOn);
             });
         }
 
@@ -218,7 +219,7 @@
                     query = query.Include(x => x.User.IdentityUser);
                 }
 
-                return query;
+                return query.OrderByDescending(x => x.CreatedOn);
             });
         }
 
@@ -248,7 +249,7 @@
                     query = query.Include(x => x.User.IdentityUser);
                 }
 
-                return query;
+                return query.OrderByDescending(x => x.CreatedOn);
             });
         }
 

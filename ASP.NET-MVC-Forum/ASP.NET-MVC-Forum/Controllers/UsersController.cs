@@ -19,12 +19,11 @@
         private readonly IMapper mapper;
         private readonly UserManager<IdentityUser> userManager;
 
-        public UsersController(IPostService postService,IUserService userService, IMapper mapper, UserManager<IdentityUser> userManager)
+        public UsersController(IPostService postService,IUserService userService, IMapper mapper)
         {
             this.postService = postService;
             this.userService = userService;
             this.mapper = mapper;
-            this.userManager = userManager;
         }
 
         [Authorize]
