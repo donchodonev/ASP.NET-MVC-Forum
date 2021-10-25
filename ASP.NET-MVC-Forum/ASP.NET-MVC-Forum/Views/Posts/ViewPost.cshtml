@@ -167,7 +167,8 @@
                         var el = document.getElementById('serviceDrop');
                         $("input#comment").val(''),
                             $('.collapse').collapse('show')
-                        if (el.classList.contains('fa-chevron-up')) { '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic">' + returnData.createdOnAsString + '</h6>' + '</h5></div ><div class="comment-text-sm"><span>' + returnData.commentText + '</span></div>').prependTo('.commentsArray');
+                        if (el.classList.contains('fa-chevron-up')) {
+                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + returnData.username + '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic mt-2">' + returnData.createdOnAsString + '</h6>' +'</h5></div ><div class="comment-text-sm"><span>' + returnData.commentText + '</span></div>').prependTo('.commentsArray');
                         }
                     }
                 });
@@ -188,7 +189,7 @@
                             var currentCommentAuthor = comments[i].commentAuthor;
                             var createdOn = comments[i].createdOnAsString;
 
-                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + currentCommentAuthor + '<h6 class="dot mr-2 ml-2 mb-1 mt-1"></h6>' + '<span class="font-weight-normal font-italic">' + createdOn + '</span>' + '</h5></div ><div class="comment-text-sm"><span>' + currentComment + '</span></div>').appendTo('.commentsArray');
+                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + currentCommentAuthor + '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic mt-2">' + createdOn + '</h6>' + '</h5></div ><div class="comment-text-sm"><span>' + currentComment + '</span></div>').appendTo('.commentsArray');
                         }
                     }
                 )
