@@ -25,6 +25,9 @@
 * Post Updating (by post author)
 * Post Deleting (by post author)
 * Post commenting and viewing done via AJAX and comments API (with anti-CSRF token) (by authenticated users)
+* Post comment time elapsed since each comment is made in seconds/minutes/hours/days
+* Last post comment date and time of creation
+* Post comment count
 
 
 * Validation for all possible user input
@@ -38,4 +41,3 @@
 
 * Admin Area
 * Refactor existing code
-* Post Votes
