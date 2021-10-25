@@ -47,9 +47,25 @@
             rawCommentData.UserId = await userService.GetBaseUserIdAsync(this.User.Id());
             rawCommentData.Username = this.User.Identity.Name;
 
-            await commentService.AddComment(rawCommentData);
+            rawCommentData.Id = await commentService.AddComment(rawCommentData);
 
             return Ok(rawCommentData);
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCommentAsync(int commentId)
+        {
+            var comment = await commentService.GetCommentAsync(commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            await commentService.DeleteCommentAsync(comment);
+
+            return Ok();
         }
     }
 }

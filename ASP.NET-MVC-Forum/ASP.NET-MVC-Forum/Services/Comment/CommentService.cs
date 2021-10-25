@@ -19,13 +19,15 @@ namespace ASP.NET_MVC_Forum.Services.Comment
             this.mapper = mapper;
             this.db = db;
         }
-        public async Task AddComment(RawCommentServiceModel commentData)
+        public async Task<int> AddComment(RawCommentServiceModel commentData)
         {
             var comment = mapper.Map<ASP.NET_MVC_Forum.Data.Models.Comment>(commentData);
 
             await db.Comments.AddAsync(comment);
 
             await db.SaveChangesAsync();
+
+            return comment.Id;
         }
 
         public async Task<IEnumerable<CommentGetRequestResponseModel>> AllComments(int postId)
@@ -43,6 +45,17 @@ namespace ASP.NET_MVC_Forum.Services.Comment
 
                 return comments;
             });
+        }
+
+        public async Task<ASP.NET_MVC_Forum.Data.Models.Comment> GetCommentAsync(int id)
+        {
+            return await db.Comments.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task DeleteCommentAsync(ASP.NET_MVC_Forum.Data.Models.Comment comment)
+        {
+            db.Comments.Remove(comment);
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -7,8 +7,12 @@ namespace ASP.NET_MVC_Forum.Services.Comment
 {
     public interface ICommentService
     {
-        public Task AddComment(RawCommentServiceModel comment);
+        public Task<int> AddComment(RawCommentServiceModel comment);
 
         public Task<IEnumerable<CommentGetRequestResponseModel>> AllComments(int postId);
+
+        public Task<ASP.NET_MVC_Forum.Data.Models.Comment> GetCommentAsync(int id);
+
+        public Task DeleteCommentAsync(ASP.NET_MVC_Forum.Data.Models.Comment comment);
     }
 }

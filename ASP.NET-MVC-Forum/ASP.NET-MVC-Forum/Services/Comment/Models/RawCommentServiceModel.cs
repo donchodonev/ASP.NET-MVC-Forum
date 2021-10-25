@@ -8,6 +8,8 @@ namespace ASP.NET_MVC_Forum.Services.Comment.Models
         {
             CreatedOn = DateTime.UtcNow;
         }
+        public int Id { get; set; }
+
         public int PostId { get; set; }
 
         public string Username { get; set; }
