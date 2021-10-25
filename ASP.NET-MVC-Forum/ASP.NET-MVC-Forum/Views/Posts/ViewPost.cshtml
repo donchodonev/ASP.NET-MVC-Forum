@@ -103,8 +103,7 @@
     <div class="d-flex justify-content-center row">
         <div class="d-flex flex-column col-md-8">
             <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
-                <div class="profile-image"><img class="rounded-circle" src="https://i.imgur.com/06EM6Iy.jpg" width="70"></div>
-                <div class="d-flex flex-column-reverse flex-grow-0 align-items-center votings ml-1"><i class="fa fa-sort-up fa-2x hit-voting"></i><span>127</span><i class="fa fa-sort-down fa-2x hit-voting"></i></div>
+                <div class="d-flex flex-column-reverse flex-grow-0 align-items-center votings ml-1"></div>
                 <div class="d-flex flex-column ml-3">
                     <div class="d-flex flex-row post-title">
                     </div>
@@ -116,7 +115,7 @@
                 {
                     <form method="post" id="commentsForm">
                         <div class="d-flex flex-row add-comment-section mt-4 mb-4">
-                            <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/KLeobJk.jpg" width="38">
+                            <img class="img-fluid img-responsive rounded-circle mr-2" src="~/img/defaultUserImage.png" width="38">
                             <input type="text" class="form-control mr-3" placeholder="Add comment" id="comment">
                             <button id="sendComment" class="btn btn-primary">Comment</button>
                         </div>
@@ -154,27 +153,32 @@
             var data = {
         CommentText: $("input#comment").val()
         , PostId: '@Model.PostId'
-    };
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/api/comments',
-            data: JSON.stringify(data),
-            dataType: "json",
-            headers: { 'X-CSRF-TOKEN': token },
-            success: function (returnData) {
-                var el = document.getElementById('serviceDrop');
-                $("input#comment").val(''),
-                    $('.collapse').collapse('show')
-                if (el.classList.contains('fa-chevron-up')) {
-                    $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mr-2">' + returnData.username + '</h5 ></div ><div class="comment-text-sm"><span>' + returnData.commentText + '</span></div>').prependTo('.commentsArray');
-                }
-            }
-        });
+            };
+
+            function postComment() {
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: '/api/comments',
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    headers: { 'X-CSRF-TOKEN': token },
+                    success: function (returnData) {
+                        var el = document.getElementById('serviceDrop');
+                        $("input#comment").val(''),
+                            $('.collapse').collapse('show')
+                        if (el.classList.contains('fa-chevron-up')) { '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic">' + returnData.createdOnAsString + '</h6>' + '</h5></div ><div class="comment-text-sm"><span>' + returnData.commentText + '</span></div>').prependTo('.commentsArray');
+                        }
+                    }
+                });
+            };
+
+            postComment();
     });
     </script>
 
     <script>
+
         $(document).ready(function () {
             $('#collapse-1').on('shown.bs.collapse', function () {
                  $.getJSON('/api/comments', { postId: '@Model.PostId' },
@@ -182,7 +186,9 @@
                         for (var i = 0; i < comments.length; i++) {
                             var currentComment = (comments[i].content);
                             var currentCommentAuthor = comments[i].commentAuthor;
-                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mr-2">' + currentCommentAuthor + '</h5 ></div ><div class="comment-text-sm"><span>' + currentComment + '</span></div>').appendTo('.commentsArray');
+                            var createdOn = comments[i].createdOnAsString;
+
+                            $('<div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + currentCommentAuthor + '<h6 class="dot mr-2 ml-2 mb-1 mt-1"></h6>' + '<span class="font-weight-normal font-italic">' + createdOn + '</span>' + '</h5></div ><div class="comment-text-sm"><span>' + currentComment + '</span></div>').appendTo('.commentsArray');
                         }
                     }
                 )

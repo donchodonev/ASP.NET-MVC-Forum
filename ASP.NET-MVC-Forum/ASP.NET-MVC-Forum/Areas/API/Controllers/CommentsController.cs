@@ -43,11 +43,8 @@
                 BadRequest();
             }
 
-            var userId = await userService.GetBaseUserIdAsync(this.User.Id());
-
             var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
-
-            rawCommentData.UserId = userId;
+            rawCommentData.UserId = await userService.GetBaseUserIdAsync(this.User.Id());
             rawCommentData.Username = this.User.Identity.Name;
 
             await commentService.AddComment(rawCommentData);
