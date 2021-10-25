@@ -14,7 +14,6 @@
     [ApiController]
     [Area("API")]
     [Route("api/[controller]")]
-    [IgnoreAntiforgeryToken]
     public class CommentsController : ControllerBase
     {
         private readonly IUserService userService;
@@ -53,14 +52,14 @@
         }
 
         [Authorize]
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCommentAsync(int commentId)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteCommentAsync(int id)
         {
-            var comment = await commentService.GetCommentAsync(commentId);
+            var comment = await commentService.GetCommentAsync(id);
 
             if (comment == null)
             {
-                return NotFound();
+                return this.BadRequest();
             }
 
             await commentService.DeleteCommentAsync(comment);
