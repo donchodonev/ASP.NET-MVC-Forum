@@ -27,6 +27,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
+    <Content Update="wwwroot\css\comments.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
     <Content Update="wwwroot\css\postsAll.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
