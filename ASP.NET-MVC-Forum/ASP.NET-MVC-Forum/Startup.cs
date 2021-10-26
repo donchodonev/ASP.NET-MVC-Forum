@@ -9,6 +9,7 @@ namespace ASP.NET_MVC_Forum
     using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,16 @@ namespace ASP.NET_MVC_Forum
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews(options =>
@@ -81,6 +92,7 @@ namespace ASP.NET_MVC_Forum
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             }
+            app.UseCookiePolicy();
 
             app.UseStaticFiles();
 
