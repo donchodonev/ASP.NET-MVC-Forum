@@ -12,6 +12,7 @@
 * Automapper - Jimmy Bogard and others - https://automapper.org/
 * HTML/CSS/JS
 * Bootstrap
+* jQuery
 * IIS - for online deployment
 
 # Functionalities implemented so far
@@ -24,10 +25,12 @@
 * Post Reading
 * Post Updating (by post author)
 * Post Deleting (by post author)
+
 * Post commenting and viewing done via AJAX and comments API (with anti-CSRF token) (by authenticated users)
 * Post comment time elapsed since each comment is made in seconds/minutes/hours/days
-* Last post comment date and time of creation
 * Post comment count
+* Post comment deletion validation
+* Post comment deletion option shown only for comment author and admin
 
 
 * Validation for all possible user input
