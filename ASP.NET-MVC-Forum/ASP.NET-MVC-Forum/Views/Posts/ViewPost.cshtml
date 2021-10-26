@@ -5,7 +5,8 @@
     var userUsername = this.User.Identity.Name;
     @Html.HiddenFor(x => x.PostId)
 }
-
+<input type="hidden" value="@this.User.Identity.Name" id="currentUserUsername" />
+<input type="hidden" value="@this.User.IsInRole("Administrator").ToString()" id="isAdmin" />
 
 <link rel="stylesheet" href="~/css/comments.css" />
 <link rel="stylesheet" href="~/css/postsAll.css" />

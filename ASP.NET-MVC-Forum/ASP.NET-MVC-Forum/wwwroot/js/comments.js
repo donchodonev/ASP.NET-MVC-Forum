@@ -38,14 +38,22 @@ $(document).ready(function () {
         $.getJSON('/api/comments', { postId: $("#PostId").val() },
             function (comments) {
                 for (var i = 0; i < comments.length; i++) {
+                    var isAdmin = $("#isAdmin").val();
+                    var currentUserUsername = $("#currentUserUsername").val();
                     var currentCommentId = comments[i].id;
                     var currentComment = (comments[i].content);
                     var currentCommentAuthor = comments[i].commentAuthor;
                     var createdOn = comments[i].createdOnAsString;
+                    var trashButtonHtml = '';
+                    debugger;
+                    if (currentCommentAuthor == currentUserUsername || isAdmin == "True")
+                    {
+                        trashButtonHtml = '<i id="' + currentCommentId + '" onclick="removeComment(this);" type="button" class="bi bi-trash"></i>';
+                    }
 
                     $('<div id="' + currentCommentId + '"><div class="d-flex flex-row align-items-center commented-user"><h5 class="mb-1 mt-1">' + currentCommentAuthor +
                         '<span class="dot mr-2 ml-2 mb-1 mt-1"></span>' + '<h6 class="font-weight-normal font-italic mt-2">' + createdOn +
-                        '</h6>' + '</h5><div class="ml-auto"><i id="' + currentCommentId + '" onclick="removeComment(this);" type="button" class="bi bi-trash"></i></div></div><div class="comment-text-sm"><span>' + currentComment + '</span></div></div>').appendTo('.commentsArray');
+                        '</h6>' + '</h5><div class="ml-auto">' + trashButtonHtml + '</div></div><div class="comment-text-sm"><span>' + currentComment + '</span></div></div>').appendTo('.commentsArray');
                 }
             }
         )
@@ -76,7 +84,6 @@ function removeComment(comment) {
             if (httpObj.status == 401) {
                 alert(httpObj.responseText)
             }
-            debugger;
         }
     });
 }
