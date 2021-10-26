@@ -71,6 +71,12 @@ function removeComment(comment) {
             $("div#" + $(comment).attr("id").toString()).remove();
             let commentCountMinus1 = parseInt($("span#commentCount").text()) - 1;
             $("span#commentCount").text(commentCountMinus1);
+        },
+        error: function (httpObj, textStatus) {
+            if (httpObj.status == 401) {
+                alert(httpObj.responseText)
+            }
+            debugger;
         }
     });
 }

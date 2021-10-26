@@ -62,6 +62,11 @@
                 return this.BadRequest();
             }
 
+            if (comment.UserId != await userService.GetBaseUserIdAsync(this.User.Id()) && !this.User.IsAdmin())
+            {
+                return StatusCode(401,"Only the comment author or site administrator can delete this comment");
+            }
+
             await commentService.DeleteCommentAsync(comment);
 
             return Ok();
