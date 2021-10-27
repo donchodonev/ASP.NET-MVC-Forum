@@ -105,6 +105,10 @@ namespace ASP.NET_MVC_Forum
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                name: "Admin",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}");
+
+                endpoints.MapControllerRoute(
                 name: "API",
                 pattern: "{area:exists}/{controller=Comments}");
 

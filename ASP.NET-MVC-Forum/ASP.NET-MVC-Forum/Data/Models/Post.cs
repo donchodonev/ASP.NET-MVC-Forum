@@ -38,6 +38,10 @@
         
         public int? UserId { get; set; }
 
+        public bool IsReported { get; set; }
+
+        public string ReportReason { get; set; }
+
         public virtual User User { get; set; }
 
         public virtual Category Category { get; set; }

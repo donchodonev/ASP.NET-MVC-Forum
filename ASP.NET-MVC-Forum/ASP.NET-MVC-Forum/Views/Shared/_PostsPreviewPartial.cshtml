@@ -38,31 +38,36 @@
                             </div>
                         </div>
 
-                        @if (this.User.Identity.Name == item.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
-                        {
-                            <button type="button" class="btn btn-danger m-1 float-left" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
-                                Delete
-                            </button>
-                            <div class="modal fade" id="exampleModalCenter-@item.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this post ?</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                                            <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title" method="post">
-                                                <input type="submit" class="btn btn-success" value="Yes" />
-                                            </form>
+                        <div class="text-center">
+                            @if (this.User.Identity.Name == item.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
+                            {
+                                <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
+                                    Report
+                                </button>
+                                <div class="modal fade" id="exampleModalCenter-@item.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this post ?</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                                                <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title" method="post">
+                                                    <input type="submit" class="btn btn-success" value="Yes" />
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <a type="button" class="btn btn-warning m-1 float-right" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
-                        }
+                                <a type="button" class="btn btn-warning m-1" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
