@@ -31,6 +31,7 @@
 * Post comment count
 * Post comment deletion validation
 * Post comment deletion option shown only for comment author and admin
+* Post reporting
 
 
 * Validation for all possible user input
