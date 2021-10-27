@@ -2,13 +2,10 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
 
     [Area("Admin")]
-    [Authorize(Roles = "Administrator, Moderator")]
+    [Authorize(Roles = AdminOrModerator)]
     public class HomeController : Controller
     {
         public IActionResult Index()

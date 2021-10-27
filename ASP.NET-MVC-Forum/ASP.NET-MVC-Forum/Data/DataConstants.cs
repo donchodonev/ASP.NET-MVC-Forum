@@ -54,6 +54,8 @@
             public const string AdminRoleName = "Administrator";
 
             public const string ModeratorRoleName = "Moderator";
+
+            public const string AdminOrModerator = AdminRoleName + "," + ModeratorRoleName;
         }
 
         public class DateTimeFormat

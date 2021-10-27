@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="text-center">
-                        @if (this.User.Identity.Name == post.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
+                        @if (this.User.Identity.Name == post.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName) || this.User.IsInRole(ModeratorRoleName))
                         {
                             <button type="button" class="btn btn-danger m-2" data-toggle="modal" data-target="#exampleModalCenterDelete-@post.PostId">
                                 Delete

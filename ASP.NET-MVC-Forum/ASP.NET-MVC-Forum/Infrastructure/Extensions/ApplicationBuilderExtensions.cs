@@ -62,8 +62,17 @@
                     return;
                 }
 
-                var role = new IdentityRole() { Name = AdminRoleName };
-                await roleManager.CreateAsync(role);
+                if (await roleManager.RoleExistsAsync(ModeratorRoleName))
+                {
+                    return;
+                }
+
+                var adminRole = new IdentityRole() { Name = AdminRoleName };
+                var moderatorRole = new IdentityRole() { Name = ModeratorRoleName };
+
+                await roleManager.CreateAsync(adminRole);
+                await roleManager.CreateAsync(moderatorRole);
+
 
                 var user = new IdentityUser()
                 {
