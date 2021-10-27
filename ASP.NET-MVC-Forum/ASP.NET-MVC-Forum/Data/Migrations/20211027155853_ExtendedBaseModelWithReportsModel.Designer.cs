@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_MVC_Forum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211027073042_Post-Report-And-Report-Reason-Added")]
-    partial class PostReportAndReportReasonAdded
+    [Migration("20211027155853_ExtendedBaseModelWithReportsModel")]
+    partial class ExtendedBaseModelWithReportsModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,17 +112,11 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsReported")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ReportReason")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortDescription")
                         .HasColumnType("nvarchar(max)");
@@ -142,6 +136,37 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
@@ -465,6 +490,17 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Report", b =>
+                {
+                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
+                        .WithMany("Reports")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
@@ -554,6 +590,8 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("Votes");
                 });

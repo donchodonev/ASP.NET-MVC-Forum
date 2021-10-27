@@ -3,8 +3,14 @@
     using System.ComponentModel.DataAnnotations;
     using static DataConstants.ReportConstants;
 
-    public class Report
+    public class Report : BaseModel
     {
+        public Report()
+            :base()
+        {
+
+        }
+
         [Required]
         public int Id { get; set; }
 
