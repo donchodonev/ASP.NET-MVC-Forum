@@ -228,6 +228,11 @@
             return await db.Posts.AnyAsync(x => x.Title == postTitle);
         }
 
+        public async Task<bool> PostExistsAsync(int postId)
+        {
+            return await db.Posts.AnyAsync(x => x.Id == postId);
+        }
+
         public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
         {
             return await Task.Run(() =>
@@ -335,6 +340,13 @@
             }
 
             return post.IsDeleted;
+        }
+
+        public async Task AddPostReport(int postId, string reportReason)
+        {
+            db.Reports.Add(new Report() { PostId = postId, Reason = reportReason});
+
+            await db.SaveChangesAsync();
         }
     }
 }

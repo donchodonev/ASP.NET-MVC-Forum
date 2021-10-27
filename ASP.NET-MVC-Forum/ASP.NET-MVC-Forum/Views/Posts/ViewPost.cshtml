@@ -48,13 +48,10 @@
                     <div class="text-center">
                         @if (this.User.Identity.Name == Model.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
                         {
-                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#exampleModalCenter-@Model.PostId">
+                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#exampleModalCenterDelete-@Model.PostId">
                                 Delete
                             </button>
-                            <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#exampleModalCenter-@Model.PostId">
-                                Report
-                            </button>
-                            <div class="modal fade" id="exampleModalCenter-@Model.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal fade" id="exampleModalCenterDelete-@Model.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -74,9 +71,34 @@
                             </div>
                             <a type="button" class="btn btn-warning m-1" asp-action="Edit" asp-controller="Posts" asp-route-postId="@Model.PostId">Edit</a>
                         }
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterReport-@Model.PostId">
+                            Report
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenterReport-@Model.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Please provide a reason for the report</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="post" asp-controller="Posts" asp-action="Report" asp-route-postId="@Model.PostId">
+                                        <div class="modal-body">
+                                            <textarea name="content" class="p-4" placeholder="Enter your reason(s) here..."></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-primary">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

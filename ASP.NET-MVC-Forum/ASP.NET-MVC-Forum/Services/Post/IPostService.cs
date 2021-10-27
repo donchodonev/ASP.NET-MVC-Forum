@@ -20,6 +20,8 @@
 
         public Task<bool> PostExistsAsync(string postTitle);
 
+        public Task<bool> PostExistsAsync(int postId);
+
         public Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
 
         public Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
@@ -36,5 +38,6 @@
 
         public Task<bool?> IsPostDeleted(int postId, string postTitle);
 
+        public Task AddPostReport(int postId, string reportReason);
     }
 }

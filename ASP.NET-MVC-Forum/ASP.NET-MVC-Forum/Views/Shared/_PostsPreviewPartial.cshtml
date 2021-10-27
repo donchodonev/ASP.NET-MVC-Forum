@@ -2,47 +2,56 @@
 @using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
 <link rel="stylesheet" href="~/css/postsAll.css" />
 
-@if (TempData.ContainsKey("ErrorMessage"))
-{
-    <div class="alert alert-warning" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
+
+@{
+    if (TempData.ContainsKey("ErrorMessage"))
+    {
+        <div class="alert alert-warning" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData.ContainsKey("Message"))
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
 }
 
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var post in Model)
     {
         <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card mb-4 mt-4">
                 <div class="card-footer align-items-center px-0 pt-0 pb-3">
                     <div class="px-2 pt-3 text-center">
-                        <a class="text-dark font-weight-bolder font-italic" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title ">@item.Title</a>
+                        <a class="text-dark font-weight-bolder font-italic" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@post.PostId" asp-route-postTitle="@post.Title ">@post.Title</a>
                     </div>
                 </div>
                 <div class="card-body mb-2" style="max-height:230px">
-                    <a class="text-dark" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title">@Html.Raw(item.ShortDescription)</a>
+                    <a class="text-dark" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@post.PostId" asp-route-postTitle="@post.Title">@Html.Raw(post.ShortDescription)</a>
                 </div>
                 <div class="card-header">
                     <div class="media flex-wrap w-100 align-items-center">
                         <img src="~/img/defaultUserImage.png" class="d-block ui-w-40 rounded-circle" alt="">
 
                         <div class="media-body ml-3">
-                            <a href="javascript:void(0)" data-abc="true">@item.UserUsername</a>
-                            <div class="text-muted small">@item.PostCreationDate</div>
+                            <a href="javascript:void(0)" data-abc="true">@post.UserUsername</a>
+                            <div class="text-muted small">@post.PostCreationDate</div>
                         </div>
                         <div class="text-muted small ml-3">
-                            <div>Member since <strong>@item.UserMemberSince</strong></div>
-                            <div><strong>@item.UserPostsCount</strong> posts</div>
+                            <div>Member since <strong>@post.UserMemberSince</strong></div>
+                            <div><strong>@post.UserPostsCount</strong> posts</div>
                         </div>
                     </div>
 
                     <div class="text-center">
-                        @if (this.User.Identity.Name == item.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
+                        @if (this.User.Identity.Name == post.UserIdentityUserUsername || this.User.IsInRole(AdminRoleName))
                         {
-                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
+                            <button type="button" class="btn btn-danger m-2" data-toggle="modal" data-target="#exampleModalCenterDelete-@post.PostId">
                                 Delete
                             </button>
-                            <div class="modal fade" id="exampleModalCenter-@item.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal fade" id="exampleModalCenterDelete-@post.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -53,22 +62,22 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                                            <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title" method="post">
+                                            <form asp-action="Delete" asp-controller="Posts" asp-route-postId="@post.PostId" asp-route-postTitle="@post.Title" method="post">
                                                 <input type="submit" class="btn btn-success" value="Yes" />
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <a type="button" class="btn btn-warning m-1" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
+                            <a type="button" class="btn btn-warning m-4" asp-action="Edit" asp-controller="Posts" asp-route-postId="@post.PostId">Edit</a>
                         }
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenterReport-@post.PostId">
                             Report
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal fade" id="exampleModalCenterReport-@post.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -77,13 +86,15 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div class="modal-body">
-                                        <textarea class="p-4" placeholder="Enter your reason(s) here..."></textarea>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                    </div>
+                                    <form method="post" asp-controller="Posts" asp-action="Report" asp-route-postId="@post.PostId">
+                                        <div class="modal-body">
+                                            <textarea name="content" class="p-4" placeholder="Enter your reason(s) here..."></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-primary">
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

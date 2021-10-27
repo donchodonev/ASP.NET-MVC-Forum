@@ -10,6 +10,8 @@
             : base(options)
         {
         }
+        public DbSet<Report> Reports { get; set; }
+
         public DbSet<User> BaseUsers { get; set; }
 
         public DbSet<Category> Categories { get; set; }

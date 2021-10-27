@@ -33,7 +33,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded : true);
+            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded: true);
 
             var vm = mapper.Map<ViewPostViewModel>(post);
 
@@ -143,7 +143,22 @@
 
             await postService.DeletePostAsync(postId);
 
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        public async Task<IActionResult> Report([FromForm] string content, int postId)
+        {
+            if (!await postService.PostExistsAsync(postId))
+            {
+                return BadRequest();
+            }
+
+            await postService.AddPostReport(postId, content);
+
+            TempData["Message"] = "Thank you for your report, our moderators will review it as quickly as possible !";
+
+            return RedirectToAction("Index", "Home");
         }
 
         private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()

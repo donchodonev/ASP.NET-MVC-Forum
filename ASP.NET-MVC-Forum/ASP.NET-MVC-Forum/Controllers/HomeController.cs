@@ -47,7 +47,6 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
         private async Task<List<Post>> GetCachedPosts()
         {
             return await Task.Run(() => {
@@ -68,7 +67,6 @@
                     };
 
                     memoryCache.Set(cacheKey, posts, cacheEntryOptions);
-
                 }
 
                 return posts;
