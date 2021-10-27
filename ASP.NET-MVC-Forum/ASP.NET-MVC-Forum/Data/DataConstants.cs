@@ -35,6 +35,13 @@
             public const int HtmlContentMinLength = 100;
         }
 
+        public class ReportConstants
+        {
+            public const int ReportReasonMinLength = 10;
+
+            public const int ReportReasonMaxLength = 10000;
+        }
+
         public class CommentConstants
         {
             public const int ContentMaxLength = 500;

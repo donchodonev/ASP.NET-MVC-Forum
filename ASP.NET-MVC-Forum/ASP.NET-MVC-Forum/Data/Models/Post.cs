@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Data.Interfaces;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using static DataConstants.PostConstants;
 
     public class Post : BaseModel, IContainImage
@@ -12,6 +13,7 @@
         {
             Comments = new HashSet<Comment>();
             Votes = new HashSet<Vote>();
+            Reports = new HashSet<Report>();
             IsVisible = true;
         }
 
@@ -38,13 +40,14 @@
         
         public int? UserId { get; set; }
 
-        public bool IsReported { get; set; }
-
-        public string ReportReason { get; set; }
+        [NotMapped]
+        public bool IsReported => Reports.Count > 0;
 
         public virtual User User { get; set; }
 
         public virtual Category Category { get; set; }
+
+        public virtual ICollection<Report> Reports { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

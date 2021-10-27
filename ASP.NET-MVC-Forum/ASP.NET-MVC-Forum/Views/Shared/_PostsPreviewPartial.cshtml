@@ -13,7 +13,7 @@
     @foreach (var item in Model)
     {
         <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card mb-4 mt-4" >
+            <div class="card mb-4 mt-4">
                 <div class="card-footer align-items-center px-0 pt-0 pb-3">
                     <div class="px-2 pt-3 text-center">
                         <a class="text-dark font-weight-bolder font-italic" asp-action="ViewPost" asp-controller="Posts" asp-route-postId="@item.PostId" asp-route-postTitle="@item.Title ">@item.Title</a>
@@ -42,9 +42,6 @@
                             <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
                                 Delete
                             </button>
-                            <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#exampleModalCenter-@item.PostId">
-                                Report
-                            </button>
                             <div class="modal fade" id="exampleModalCenter-@item.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -65,6 +62,31 @@
                             </div>
                             <a type="button" class="btn btn-warning m-1" asp-action="Edit" asp-controller="Posts" asp-route-postId="@item.PostId">Edit</a>
                         }
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                            Report
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Please provide a reason for the report</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="p-4" placeholder="Enter your reason(s) here..."></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
