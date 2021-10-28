@@ -1,4 +1,5 @@
-﻿using ASP.NET_MVC_Forum.Areas.API.Models;
+﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.Report;
+using ASP.NET_MVC_Forum.Areas.API.Models;
 using ASP.NET_MVC_Forum.Data.Models;
 using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
@@ -13,6 +14,8 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<Report,ReportViewModel>();
+
             this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
 
             this.CreateMap<Category, AllCategoryViewModel>()

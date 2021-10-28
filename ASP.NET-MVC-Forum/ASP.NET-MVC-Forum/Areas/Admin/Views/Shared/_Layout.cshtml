@@ -2,14 +2,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Admin Area</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/footer.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="/Home/Index">ASP.NET Forum</a>
+    <a class="navbar-brand ps-3" asp-area="" asp-controller="Home" asp-action="Index">ASP.NET Forum</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar-->
@@ -36,11 +37,13 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="/Admin">
+                    <a class="nav-link" href="/Admin/Home/Index">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
                     </a>
+
                     @*=======Comments========*@
+
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
                         <div class="sb-nav-link-icon"><i class="far fa-comment"></i></div>
                         Comments
@@ -52,6 +55,7 @@
                             <a class="nav-link" href="layout-sidenav-light.html">Deleted</a>
                         </nav>
                     </div>
+
                     @*=======Comments========*@
 
                     @*=======Users========*@
@@ -67,6 +71,7 @@
                             <a class="nav-link" href="layout-sidenav-light.html">Banned</a>
                         </nav>
                     </div>
+
                     @*=======Users========*@
 
                     @*=======Reports========*@
@@ -78,10 +83,11 @@
                     </a>
                     <div class="collapse" id="collapseReports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="layout-static.html">Active</a>
-                            <a class="nav-link" href="layout-sidenav-light.html">Resolved</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Active">Active</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Deleted">Resolved</a>
                         </nav>
                     </div>
+
                     @*=======Reports========*@
 
                 </div>
@@ -106,6 +112,8 @@
         </p>
     </footer>
 </a>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script src="/js/scripts.js"></script>
