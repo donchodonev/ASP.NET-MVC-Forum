@@ -320,10 +320,24 @@
 
         public async Task DeletePostAsync(int postId)
         {
-            var postToMarkAsDeleted = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            var currentTime = DateTime.UtcNow;
+
+            var postToMarkAsDeleted = await db
+                .Posts
+                .Where(x => x.Id == postId)
+                .Include(x => x.Reports)
+                .FirstAsync();
 
             postToMarkAsDeleted.IsDeleted = true;
-            postToMarkAsDeleted.ModifiedOn = DateTime.UtcNow;
+
+            foreach (var report in postToMarkAsDeleted.Reports)
+            {
+                report.IsDeleted = true;
+                report.ModifiedOn = currentTime;
+            }
+
+            postToMarkAsDeleted.ModifiedOn = currentTime;
+
 
             db.Update(postToMarkAsDeleted);
 

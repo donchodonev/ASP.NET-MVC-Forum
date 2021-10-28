@@ -45,6 +45,9 @@
 
                                     @if (!report.IsDeleted)
                                     {
+                                        <form method="post">
+                                            <button type="submit" asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="btn btn-primary">Delete post and resolve</button>
+                                        </form>
                                         <a asp-area="Admin" asp-controller="Reports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-primary">Mark Resolved</a>
                                     }
                                     else
