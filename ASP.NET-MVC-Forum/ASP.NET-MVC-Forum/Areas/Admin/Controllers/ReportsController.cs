@@ -33,10 +33,38 @@
             }
             else
             {
-                vm = mapper.ProjectTo<ReportViewModel>(reportService.All(isDeleted:true)).ToList();
+                vm = mapper.ProjectTo<ReportViewModel>(reportService.All(isDeleted: true)).ToList();
             }
 
             return View(vm);
+        }
+
+        public IActionResult Delete(int reportId)
+        {
+            if (reportService.Delete(reportId))
+            {
+                TempData["Message"] = "Report has been marked as resolved !";
+            }
+            else
+            {
+                TempData["Message"] = "A report with such an ID does not exist";
+            }
+
+            return RedirectToAction("Index", "Reports");
+        }
+
+        public IActionResult Restore(int reportId)
+        {
+            if (reportService.Restore(reportId))
+            {
+                TempData["Message"] = "Report has been successfully restored !";
+            }
+            else
+            {
+                TempData["Message"] = "A report with such an ID does not exist";
+            }
+
+            return RedirectToAction("Index", "Reports", new { reportStatus = "Active" });
         }
     }
 }

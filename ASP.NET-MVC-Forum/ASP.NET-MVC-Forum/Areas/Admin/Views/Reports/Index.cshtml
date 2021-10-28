@@ -1,10 +1,16 @@
 ﻿@model List<ASP.NET_MVC_Forum.Areas.Admin.Models.Report.ReportViewModel>;
+@if (TempData.ContainsKey("Message"))
+{
+    <div class="alert alert-success text-center" role="alert">
+        @TempData["Message"]
+    </div>
+}
 
-<div class="row border-bottom-0 mr-0 mt-1 border-left">
+<div class="row border-bottom-0 mr-0 mt-1 border-left justify-content-center">
     @foreach (var report in @Model)
     {
         <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div  class="card text-center border-right border-left border-dark">
+            <div class="card text-center border-right border-left border-dark">
                 <div class="card-header bg-dark">
                     <a asp-area="" asp-controller="Posts" asp-action="ViewPost" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="text-light text-decoration-none">
                         @report.PostTitle
@@ -36,7 +42,16 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Mark Resolved</button>
+
+                                    @if (!report.IsDeleted)
+                                    {
+                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-primary">Mark Resolved</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore report</a>
+                                    }
+
                                 </div>
                             </div>
                         </div>

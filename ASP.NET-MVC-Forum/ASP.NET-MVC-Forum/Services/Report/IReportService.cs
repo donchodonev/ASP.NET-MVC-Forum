@@ -6,5 +6,11 @@
     public interface IReportService
     {
         public IQueryable<Report> All(bool isDeleted = false);
+
+        public bool Delete(int reportId);
+
+        public bool ReportExists(int reportId);
+
+        public bool Restore(int reportId);
     }
 }

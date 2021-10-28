@@ -63,5 +63,7 @@ namespace ASP.NET_MVC_Forum.Areas.Admin.Models.Report
                 return returnString;
             }
         }
+
+        public bool IsDeleted { get; set; }
     }
 }
