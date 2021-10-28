@@ -16,6 +16,19 @@ namespace ASP.NET_MVC_Forum.Areas.Admin.Models.Report
 
         public string PostTitle { get; set; }
 
+        public string PostShortTitle
+
+        {
+            get
+            {
+                if (PostTitle.Length >= 26)
+                {
+                    return PostTitle.Substring(0, 23) + "...";
+                }
+
+                return PostTitle;
+            }
+        }
         public string CreatedOnAsString
         {
             get

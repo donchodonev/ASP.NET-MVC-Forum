@@ -13,7 +13,7 @@
             <div class="card text-center border-right border-left border-dark">
                 <div class="card-header bg-dark">
                     <a asp-area="" asp-controller="Posts" asp-action="ViewPost" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="text-light text-decoration-none">
-                        @report.PostTitle
+                        @report.PostShortTitle
                     </a>
                 </div>
                 <div class="card-body d-flex flex-column" style="min-height:180px">
@@ -40,8 +40,8 @@
                                 <div class="modal-body">
                                     @report.Reason
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Exit</button>
 
                                     @if (!report.IsDeleted)
                                     {

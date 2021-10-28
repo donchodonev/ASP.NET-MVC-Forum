@@ -107,12 +107,16 @@ namespace ASP.NET_MVC_Forum
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "AreaAdmin",
+                    name: "AreaAdminHome",
                     pattern: "/{area:exists}/{controller=Home}/{action=Index}");
 
                 endpoints.MapControllerRoute(
                       name: "AreaAdminReports",
-                     pattern: "/{area:exists}/{controller=Reports}/{action=Index}/{reportStatus}/");
+                     pattern: "/{area:exists}/{controller=Reports}/{action=Index}/{reportStatus}");
+
+                endpoints.MapControllerRoute(
+                      name: "AreaAdminUsers",
+                     pattern: "/{area:exists}/{controller=Users}/{action=Index}");
 
                 endpoints.MapControllerRoute(
                     name: "default",

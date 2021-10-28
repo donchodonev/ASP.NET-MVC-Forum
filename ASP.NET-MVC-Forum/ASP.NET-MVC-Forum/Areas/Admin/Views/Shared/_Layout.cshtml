@@ -58,22 +58,6 @@
 
                     @*=======Comments========*@
 
-                    @*=======Users========*@
-
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="collapseLayouts">
-                        <div class="sb-nav-link-icon"><i class="far fa-user"></i></div>
-                        Users
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="layout-static.html">Active</a>
-                            <a class="nav-link" href="layout-sidenav-light.html">Banned</a>
-                        </nav>
-                    </div>
-
-                    @*=======Users========*@
-
                     @*=======Reports========*@
 
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseLayouts">
@@ -89,6 +73,19 @@
                     </div>
 
                     @*=======Reports========*@
+
+                    @*=======Users========*@
+
+                    <a class="nav-link collapsed" aria-expanded="false" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                        <div class="sb-nav-link-icon"><i class="far fa-user"></i></div>
+                        Users
+                        <div class="sb-sidenav-collapse-arrow"></div>
+                    </a>
+                    <div class="collapse" id="collapseUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+
+                    </div>
+
+                    @*=======Users========*@
 
                 </div>
             </div>
