@@ -36,7 +36,12 @@
 
         public IActionResult Ban(int userId)
         {
-            EnsureUserExists(userId);
+            if (!userService.UserExists(userId))
+            {
+                TempData["ErrorMessage"] = "User does NOT exist !";
+                return RedirectToAction("Index");
+            }
+
 
             if (userService.IsBanned(userId))
             {
@@ -53,7 +58,11 @@
 
         public IActionResult RemoveBan(int userId)
         {
-            EnsureUserExists(userId);
+            if (!userService.UserExists(userId))
+            {
+                TempData["ErrorMessage"] = "User does NOT exist !";
+                return RedirectToAction("Index");
+            }
 
             if (!userService.IsBanned(userId))
             {
@@ -68,13 +77,31 @@
             return RedirectToAction("Index");
         }
 
-        private void EnsureUserExists(int userId)
+        public IActionResult Promote(int userId)
         {
             if (!userService.UserExists(userId))
             {
                 TempData["ErrorMessage"] = "User does NOT exist !";
-                RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
+
+            var identityUser = userService
+                .GetUser(userId,true)
+                .IdentityUser;
+
+            bool isUserModerator = userManager.IsInRoleAsync(identityUser, ModeratorRoleName).GetAwaiter().GetResult();
+
+            if (isUserModerator)
+            {
+                TempData["ErrorMessage"] = $"{identityUser.UserName} is already in the {ModeratorRoleName} position !";
+                return RedirectToAction("Index");
+            }
+
+            userService.Promote(identityUser);
+
+            TempData["SuccessMessage"] = $"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}";
+
+            return RedirectToAction("Index");
         }
 
         private List<UserViewModel> ReturnUsersWithRoles(List<UserViewModel> users)

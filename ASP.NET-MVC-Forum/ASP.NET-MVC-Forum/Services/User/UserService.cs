@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext db;
@@ -36,11 +38,11 @@
 
         public async Task<int> GetBaseUserIdAsync(string identityUserId)
         {
-             return await Task
-                .Run(() => db
-                .BaseUsers
-                .FirstOrDefault(x => x.IdentityUserId == identityUserId).Id
-                );
+            return await Task
+               .Run(() => db
+               .BaseUsers
+               .FirstOrDefault(x => x.IdentityUserId == identityUserId).Id
+               );
         }
 
         public async Task<int> UserPostsCount(int userId)
@@ -132,12 +134,28 @@
 
         public void Unban(int userId)
         {
-            var user = GetUser(userId,true);
+            var user = GetUser(userId, true);
             user.IsBanned = false;
             user.IdentityUser.LockoutEnabled = false;
             db.Update<User>(user);
             db.Update<IdentityUser>(user.IdentityUser);
             db.SaveChanges();
+        }
+
+        public void Promote(IdentityUser user)
+        {
+            userManager
+                .AddToRoleAsync(user, ModeratorRoleName)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        public void Demote(IdentityUser user)
+        {
+            userManager
+                .RemoveFromRoleAsync(user,ModeratorRoleName)
+                .GetAwaiter()
+                .GetResult();
         }
     }
 }

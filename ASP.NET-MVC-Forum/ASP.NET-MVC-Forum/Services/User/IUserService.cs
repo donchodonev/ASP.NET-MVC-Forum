@@ -33,5 +33,8 @@
 
         public void Unban(int userId);
 
+        public void Promote(IdentityUser user);
+
+        public void Demote(IdentityUser user);
     }
 }

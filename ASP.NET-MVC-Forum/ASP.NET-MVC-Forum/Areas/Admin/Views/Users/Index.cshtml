@@ -59,7 +59,7 @@
                                                 @{
                                                     if (user.Roles.Count == 0)
                                                     {
-                                                        <button type="button" class="btn btn-success">Promote</button>
+                                                        <a asp-area="Admin" asp-controller="Users" asp-action="Promote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Promote</a>
                                                     }
 
                                                     if (user.IsBanned)
