@@ -11,10 +11,12 @@
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext db;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public UserService(ApplicationDbContext db)
+        public UserService(ApplicationDbContext db, UserManager<IdentityUser> userManager)
         {
             this.db = db;
+            this.userManager = userManager;
         }
 
         public async Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null)
@@ -113,9 +115,16 @@
         public void Ban(int userId)
         {
             var user = GetUser(userId, true);
+
             user.IsBanned = true;
             user.IdentityUser.LockoutEnd = DateTime.UtcNow.AddYears(100);
             user.IdentityUser.LockoutEnabled = true;
+
+            userManager
+                .UpdateSecurityStampAsync(user.IdentityUser)
+                .GetAwaiter()
+                .GetResult();
+
             db.Update<User>(user);
             db.Update<IdentityUser>(user.IdentityUser);
             db.SaveChanges();

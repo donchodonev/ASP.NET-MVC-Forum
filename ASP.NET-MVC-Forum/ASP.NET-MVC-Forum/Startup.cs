@@ -51,7 +51,6 @@ namespace ASP.NET_MVC_Forum
 
             services.Configure<SecurityStampValidatorOptions>(options =>
             {
-                // enables immediate logout, after updating the user's stat.
                 options.ValidationInterval = TimeSpan.Zero;
             });
 

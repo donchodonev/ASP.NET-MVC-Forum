@@ -38,6 +38,7 @@
 * Marking post report as resolved while marking the post itself as deleted automatically
 * User banning and unbanning
 * User banning leads to inability to login
+* User banning leads to immediate (banned)user log-out
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
