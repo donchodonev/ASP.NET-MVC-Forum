@@ -37,7 +37,12 @@
         public IActionResult Ban(int userId)
         {
             EnsureUserExists(userId);
-            EnsureIsNotBanned(userId);
+
+            if (userService.IsBanned(userId))
+            {
+                TempData["ErrorMessage"] = $"User with Id {userId} is already banned !";
+                return RedirectToAction("Index");
+            }
 
             userService.Ban(userId);
 
@@ -49,38 +54,18 @@
         public IActionResult RemoveBan(int userId)
         {
             EnsureUserExists(userId);
-            EnsureIsBanned(userId);
+
+            if (!userService.IsBanned(userId))
+            {
+                TempData["ErrorMessage"] = $"User with Id {userId} is not banned !";
+                return RedirectToAction("Index");
+            }
 
             userService.Unban(userId);
 
             TempData["SuccessMessage"] = $"User with Id {userId} has been successfully unbanned";
 
             return RedirectToAction("Index");
-        }
-
-        public IActionResult Promote(int userId)
-        {
-
-
-
-            return RedirectToAction("Index");
-        }
-        private void EnsureIsBanned(int userId)
-        {
-            if (!userService.IsBanned(userId))
-            {
-                TempData["ErrorMessage"] = $"User with Id {userId} is not banned !";
-                RedirectToAction("Index");
-            }
-        }
-
-        private void EnsureIsNotBanned(int userId)
-        {
-            if (userService.IsBanned(userId))
-            {
-                TempData["ErrorMessage"] = $"User with Id {userId} is already banned !";
-                RedirectToAction("Index");
-            }
         }
 
         private void EnsureUserExists(int userId)
