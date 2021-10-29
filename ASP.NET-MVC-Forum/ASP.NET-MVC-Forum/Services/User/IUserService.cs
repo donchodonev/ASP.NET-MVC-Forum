@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using System.Threading.Tasks;
-
 namespace ASP.NET_MVC_Forum.Services.User
 {
 
@@ -18,5 +18,7 @@ namespace ASP.NET_MVC_Forum.Services.User
         public Task<int> GetBaseUserIdAsync(string identityUserId);
 
         public  Task<int> UserPostsCount(int userId);
+
+        public IQueryable<ASP.NET_MVC_Forum.Data.Models.User> GetAll(bool withIdentityIncluded = false);
     }
 }

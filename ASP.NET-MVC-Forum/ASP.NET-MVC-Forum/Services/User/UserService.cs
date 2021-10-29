@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -45,6 +46,20 @@
             {
                 return db.BaseUsers.FirstOrDefault(x => x.Id == userId).Posts.Count;
             });
+        }
+
+        public IQueryable<User> GetAll(bool withIdentityIncluded = false)
+        {
+            var query = db
+                .BaseUsers
+                .AsQueryable<User>();
+
+            if (withIdentityIncluded)
+            {
+                query = query.Include(x => x.IdentityUser);
+            }
+
+            return query;
         }
     }
 }
