@@ -29,7 +29,42 @@
                     {
                         <tr>
                             <td>@user.Id</td>
-                            <td>@user.Username</td>
+                            <td>
+                                <!-- Button -->
+                                <button data-toggle="modal" data-target="#user@(user.Id)" class="p-1 rounded-pill bg-dark btn-outline-light text-white">
+                                    @user.Username
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="user@(user.Id)" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-footer bg-dark justify-content-center">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Exit</button>
+
+                                                @{
+                                                    if (user.Roles.Count == 0)
+                                                    {
+                                                        <button type="button" class="btn btn-success">Promote</button>
+                                                    }
+
+                                                    if (user.IsBanned)
+                                                    {
+                                                        <button type="button" class="btn btn-primary">Unban</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!user.Roles.Contains("Administrator"))
+                                                        {
+                                                            <button type="button" class="btn btn-danger">Ban</button>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                             <td>@user.CreatedOn.ToShortDateString()</td>
                             @{ if (user.Roles.Count == 0)
                                 {
