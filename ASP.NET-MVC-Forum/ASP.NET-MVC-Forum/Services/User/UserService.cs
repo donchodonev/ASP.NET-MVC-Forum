@@ -148,12 +148,22 @@
                 .AddToRoleAsync(user, ModeratorRoleName)
                 .GetAwaiter()
                 .GetResult();
+
+            userManager
+                .UpdateSecurityStampAsync(user)
+                .GetAwaiter()
+                .GetResult();
         }
 
         public void Demote(IdentityUser user)
         {
             userManager
-                .RemoveFromRoleAsync(user,ModeratorRoleName)
+                .RemoveFromRoleAsync(user, ModeratorRoleName)
+                .GetAwaiter()
+                .GetResult();
+
+            userManager
+                .UpdateSecurityStampAsync(user)
                 .GetAwaiter()
                 .GetResult();
         }

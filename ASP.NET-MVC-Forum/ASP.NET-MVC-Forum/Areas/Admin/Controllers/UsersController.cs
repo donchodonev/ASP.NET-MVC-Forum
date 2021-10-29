@@ -89,7 +89,10 @@
                 .GetUser(userId,true)
                 .IdentityUser;
 
-            bool isUserModerator = userManager.IsInRoleAsync(identityUser, ModeratorRoleName).GetAwaiter().GetResult();
+            bool isUserModerator = userManager
+                .IsInRoleAsync(identityUser, ModeratorRoleName)
+                .GetAwaiter()
+                .GetResult();
 
             if (isUserModerator)
             {
@@ -100,6 +103,33 @@
             userService.Promote(identityUser);
 
             TempData["SuccessMessage"] = $"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}";
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Demote(int userId)
+        {
+            if (!userService.UserExists(userId))
+            {
+                TempData["ErrorMessage"] = "User does NOT exist !";
+                return RedirectToAction("Index");
+            }
+
+            var identityUser = userService
+                .GetUser(userId, true)
+                .IdentityUser;
+
+            int userRolesCount = userManager.GetRolesAsync(identityUser).GetAwaiter().GetResult().Count;
+
+            if (userRolesCount == 0)
+            {
+                TempData["ErrorMessage"] = $"{identityUser.UserName} cannot be further demoted !";
+                return RedirectToAction("Index");
+            }
+
+            userService.Demote(identityUser);
+
+            TempData["SuccessMessage"] = $"{identityUser.UserName} has been successfully demoted !";
 
             return RedirectToAction("Index");
         }

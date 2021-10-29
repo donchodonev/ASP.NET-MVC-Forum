@@ -62,6 +62,11 @@
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="Promote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Promote</a>
                                                     }
 
+                                                    if (user.Roles.Contains("Moderator"))
+                                                    {
+                                                        <a asp-area="Admin" asp-controller="Users" asp-action="Demote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Demote</a>
+                                                    }
+
                                                     if (user.IsBanned)
                                                     {
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="RemoveBan" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Unban</a>
