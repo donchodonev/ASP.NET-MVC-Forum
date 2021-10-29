@@ -44,7 +44,11 @@
         {
             return await Task.Run(() =>
             {
-                return db.BaseUsers.FirstOrDefault(x => x.Id == userId).Posts.Count;
+                return db
+                .BaseUsers
+                .FirstOrDefault(x => x.Id == userId)
+                .Posts
+                .Count;
             });
         }
 
@@ -60,6 +64,51 @@
             }
 
             return query;
+        }
+
+        public bool UserExists(int userId)
+        {
+            return db
+                .BaseUsers
+                .Any(x => x.Id == userId);
+        }
+
+        public bool IsBanned(int userId)
+        {
+            return db
+                .BaseUsers
+                .First(x => x.Id == userId)
+                .IsBanned;
+        }
+
+        public User GetUser(int userId)
+        {
+            return db
+                .BaseUsers
+                .First(x => x.Id == userId);
+        }
+
+        public User GetUser(string identityUserId)
+        {
+            return db
+                .BaseUsers
+                .First(x => x.IdentityUserId == identityUserId);
+        }
+
+        public void Ban(int userId)
+        {
+            var user = GetUser(userId);
+            user.IsBanned = true;
+            db.Update<User>(user);
+            db.SaveChanges();
+        }
+
+        public void Unban(int userId)
+        {
+            var user = GetUser(userId);
+            user.IsBanned = false;
+            db.Update<User>(user);
+            db.SaveChanges();
         }
     }
 }

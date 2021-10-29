@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Linq;
-using System.Threading.Tasks;
-namespace ASP.NET_MVC_Forum.Services.User
+﻿namespace ASP.NET_MVC_Forum.Services.User
 {
-
+    using Microsoft.AspNetCore.Identity;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Data.Models;
     public interface IUserService
     {
         /// <summary>
@@ -19,6 +19,18 @@ namespace ASP.NET_MVC_Forum.Services.User
 
         public  Task<int> UserPostsCount(int userId);
 
-        public IQueryable<ASP.NET_MVC_Forum.Data.Models.User> GetAll(bool withIdentityIncluded = false);
+        public IQueryable<User> GetAll(bool withIdentityIncluded = false);
+
+        public bool UserExists(int userId);
+
+        public bool IsBanned(int userId);
+
+        public User GetUser(int userId);
+
+        public void Ban(int userId);
+
+        public void Unban(int userId);
+
+        public User GetUser(string identityUserId);
     }
 }

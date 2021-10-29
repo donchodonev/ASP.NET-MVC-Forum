@@ -12,6 +12,20 @@
     });
 </script>
 <div>
+
+    @if (TempData.ContainsKey("SuccessMessage"))
+    {
+        <div class="alert alert-success pb-2 mb-0 text-center" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    else if (TempData.ContainsKey("ErrorMessage"))
+    {
+        <div class="alert alert-danger pb-2 mb-0 text-center" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <div class="table-responsive p-0 m-0 bg-dark">
         <div class="table-wrapper p-0">
             <table class="table table-dark table-hover bg-dark">
@@ -50,13 +64,13 @@
 
                                                     if (user.IsBanned)
                                                     {
-                                                        <button type="button" class="btn btn-primary">Unban</button>
+                                                        <a asp-area="Admin" asp-controller="Users" asp-action="RemoveBan" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Unban</a>
                                                     }
                                                     else
                                                     {
                                                         if (!user.Roles.Contains("Administrator"))
                                                         {
-                                                            <button type="button" class="btn btn-danger">Ban</button>
+                                                            <a asp-area="Admin" asp-controller="Users" asp-action="Ban" asp-route-userId="@user.Id" type="button" class="btn btn-danger text-light">Ban</a>
                                                         }
                                                     }
                                                 }
