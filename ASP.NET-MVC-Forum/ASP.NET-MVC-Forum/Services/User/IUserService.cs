@@ -25,12 +25,13 @@
 
         public bool IsBanned(int userId);
 
-        public User GetUser(int userId);
+        public User GetUser(int userId, bool withIdentityUser = false);
+
+        public User GetUser(string identityUserId, bool withIdentityUser = false);
 
         public void Ban(int userId);
 
         public void Unban(int userId);
 
-        public User GetUser(string identityUserId);
     }
 }

@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -81,33 +82,52 @@
                 .IsBanned;
         }
 
-        public User GetUser(int userId)
+        public User GetUser(int userId, bool withIdentityUser = false)
         {
-            return db
+            var query = db
                 .BaseUsers
-                .First(x => x.Id == userId);
+                .Where(x => x.Id == userId);
+
+            if (withIdentityUser)
+            {
+                query = query.Include(x => x.IdentityUser);
+            }
+
+            return query.SingleOrDefault();
         }
 
-        public User GetUser(string identityUserId)
+        public User GetUser(string identityUserId, bool withIdentityUser = false)
         {
-            return db
+            var query = db
                 .BaseUsers
-                .First(x => x.IdentityUserId == identityUserId);
+                .Where(x => x.IdentityUserId == identityUserId);
+
+            if (withIdentityUser)
+            {
+                query = query.Include(x => x.IdentityUser);
+            }
+
+            return query.SingleOrDefault();
         }
 
         public void Ban(int userId)
         {
-            var user = GetUser(userId);
+            var user = GetUser(userId, true);
             user.IsBanned = true;
+            user.IdentityUser.LockoutEnd = DateTime.UtcNow.AddYears(100);
+            user.IdentityUser.LockoutEnabled = true;
             db.Update<User>(user);
+            db.Update<IdentityUser>(user.IdentityUser);
             db.SaveChanges();
         }
 
         public void Unban(int userId)
         {
-            var user = GetUser(userId);
+            var user = GetUser(userId,true);
             user.IsBanned = false;
+            user.IdentityUser.LockoutEnabled = false;
             db.Update<User>(user);
+            db.Update<IdentityUser>(user.IdentityUser);
             db.SaveChanges();
         }
     }

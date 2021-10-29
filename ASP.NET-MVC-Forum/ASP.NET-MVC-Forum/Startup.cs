@@ -17,6 +17,7 @@ namespace ASP.NET_MVC_Forum
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using System;
 
     public class Startup
     {
@@ -47,6 +48,12 @@ namespace ASP.NET_MVC_Forum
 
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                // enables immediate logout, after updating the user's stat.
+                options.ValidationInterval = TimeSpan.Zero;
+            });
 
             services.Configure<CookiePolicyOptions>(options =>
             {

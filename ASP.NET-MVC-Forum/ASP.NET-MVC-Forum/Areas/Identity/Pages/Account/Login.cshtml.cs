@@ -18,17 +18,14 @@
     public class LoginModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserService _userService;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<IdentityUser> userManager,
-            IUserService userService)
+            UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
-            _userService = userService;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -84,19 +81,6 @@
         
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-
-                // Custom login validation based on whether a user is marked as banned or not
-                var identityUser = await _userManager.FindByNameAsync(Input.Username);
-                var user = _userService.GetUser(identityUser.Id);
-
-                if (user.IsBanned)
-                {
-                    ModelState.AddModelError(string.Empty, "You are PERMANENTLY banned !");
-                    return Page();
-                }
-
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
