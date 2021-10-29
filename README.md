@@ -36,6 +36,8 @@
 * Admin area
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)
 * Marking post report as resolved while marking the post itself as deleted automatically
+* User banning and unbanning
+* User banning leads to inability to login
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
