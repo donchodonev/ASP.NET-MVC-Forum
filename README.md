@@ -34,6 +34,7 @@
 * Post comment deletion option shown only for comment author and admin
 * Post reporting
 * Post auto-reporting on-creation or edit, when profane words are contained in post title or content
+* Post censoring with Profanity Detector or with Regex pattern-matching
 
 * Admin area
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)
