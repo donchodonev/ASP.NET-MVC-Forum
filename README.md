@@ -10,6 +10,7 @@
 * EF Core ORM
 * HTML Sanitizer by Michael Ganss - https://github.com/mganss/HtmlSanitizer
 * Automapper - Jimmy Bogard and others - https://automapper.org/
+* Profanity Detector - Stephen Haunts -  https://github.com/stephenhaunts/ProfanityDetector
 * HTML/CSS/JS
 * Bootstrap
 * jQuery
@@ -32,6 +33,7 @@
 * Post comment deletion validation
 * Post comment deletion option shown only for comment author and admin
 * Post reporting
+* Post auto-reporting on-creation when profane words are contained in post title or content
 
 * Admin area
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)

@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Profanity.Detector" Version="0.1.8" />
   </ItemGroup>
 
   <ItemGroup>

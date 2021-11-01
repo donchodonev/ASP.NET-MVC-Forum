@@ -5,10 +5,11 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ASP.NET_MVC_Forum.Services.Comment
 {
+    using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Data.Models;
     public class CommentService : ICommentService
     {
         private readonly IMapper mapper;
@@ -21,7 +22,7 @@ namespace ASP.NET_MVC_Forum.Services.Comment
         }
         public async Task<int> AddComment(RawCommentServiceModel commentData)
         {
-            var comment = mapper.Map<ASP.NET_MVC_Forum.Data.Models.Comment>(commentData);
+            var comment = mapper.Map<Comment>(commentData);
 
             await db.Comments.AddAsync(comment);
 
@@ -47,12 +48,12 @@ namespace ASP.NET_MVC_Forum.Services.Comment
             });
         }
 
-        public async Task<ASP.NET_MVC_Forum.Data.Models.Comment> GetCommentAsync(int id)
+        public async Task<Comment> GetCommentAsync(int id)
         {
             return await db.Comments.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task DeleteCommentAsync(ASP.NET_MVC_Forum.Data.Models.Comment comment)
+        public async Task DeleteCommentAsync(Comment comment)
         {
             db.Comments.Remove(comment);
             await db.SaveChangesAsync();

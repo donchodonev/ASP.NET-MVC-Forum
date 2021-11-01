@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.Report;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -15,11 +16,13 @@
     {
         private readonly ApplicationDbContext db;
         private readonly IHtmlSanitizer sanitizer;
+        private readonly IReportService reportService;
 
-        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer)
+        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IReportService reportService)
         {
             this.db = db;
             this.sanitizer = sanitizer;
+            this.reportService = reportService;
         }
 
         /// <summary>
@@ -123,9 +126,11 @@
 
             await db.SaveChangesAsync();
 
-            var postWithId = await db.Posts.FirstAsync(x => x == post);
+            var savedPost = await db.Posts.FirstAsync(x => x == post);
 
-            return postWithId.Id;
+            reportService.AutoGeneratePostReport(savedPost.Title, savedPost.HtmlContent, savedPost.Id);
+
+            return savedPost.Id;
         }
 
         public async Task EditPostAsync(Post post)

@@ -12,5 +12,7 @@
         public bool ReportExists(int reportId);
 
         public bool Restore(int reportId);
+
+        public void AutoGeneratePostReport(string title, string content, int postId);
     }
 }

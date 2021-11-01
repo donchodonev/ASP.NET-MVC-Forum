@@ -17,6 +17,8 @@ namespace ASP.NET_MVC_Forum
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using ProfanityFilter;
+    using ProfanityFilter.Interfaces;
     using System;
 
     public class Startup
@@ -76,6 +78,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddAntiforgery(options =>
             {
