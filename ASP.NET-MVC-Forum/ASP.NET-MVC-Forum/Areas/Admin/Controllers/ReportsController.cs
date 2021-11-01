@@ -66,5 +66,21 @@
 
             return RedirectToAction("Index", "Reports", new { reportStatus = "Active" });
         }
+
+        public IActionResult Censor(int postId, bool withRegex)
+        {
+            if (withRegex)
+            {
+                reportService.HardCensorPost(postId);
+            }
+            else
+            {
+                reportService.CensorPost(postId);
+            }
+
+            TempData["Message"] = "The report has been successfully censored";
+
+            return RedirectToAction("Index", "Reports");
+        }
     }
 }

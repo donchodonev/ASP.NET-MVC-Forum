@@ -14,5 +14,9 @@
         public bool Restore(int reportId);
 
         public void AutoGeneratePostReport(string title, string content, int postId);
+
+        public void CensorPost(int postId);
+
+        public void HardCensorPost(int postId);
     }
 }

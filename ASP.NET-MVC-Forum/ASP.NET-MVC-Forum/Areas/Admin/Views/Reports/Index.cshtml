@@ -50,6 +50,8 @@
                                             <button type="submit" asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="btn btn-danger">Delete post and resolve</button>
                                         </form>
                                         <a asp-area="Admin" asp-controller="Reports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
+                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Censor" asp-route-postId="@report.PostId" class="btn btn-primary">Censor</a>
+                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Censor" asp-route-postId="@report.PostId" asp-route-withRegex="@true"class="btn btn-primary">Hard Censor</a>
                                     }
                                     else
                                     {
