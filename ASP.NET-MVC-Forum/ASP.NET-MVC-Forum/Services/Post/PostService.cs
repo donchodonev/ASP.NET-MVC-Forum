@@ -160,6 +160,8 @@
             db.Posts.Update(post);
 
             await db.SaveChangesAsync();
+
+            reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
         }
 
         /// <summary>
