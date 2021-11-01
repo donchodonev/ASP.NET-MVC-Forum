@@ -1,4 +1,6 @@
-﻿<head>
+﻿@using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Admin Area</title>
@@ -75,14 +77,17 @@
 
                     @*=======Users========*@
 
-                    <a class="nav-link collapsed" aria-expanded="false" asp-area="Admin" asp-controller="Users" asp-action="Index">
-                        <div class="sb-nav-link-icon"><i class="far fa-user"></i></div>
-                        Users
-                        <div class="sb-sidenav-collapse-arrow"></div>
-                    </a>
-                    <div class="collapse" id="collapseUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    @if (User.IsInRole(AdminRoleName))
+                    {
+                        <a class="nav-link collapsed" aria-expanded="false" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                            <div class="sb-nav-link-icon"><i class="far fa-user"></i></div>
+                            Users
+                            <div class="sb-sidenav-collapse-arrow"></div>
+                        </a>
+                        <div class="collapse" id="collapseUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 
-                    </div>
+                        </div>
+                    }
 
                     @*=======Users========*@
 
