@@ -31,7 +31,8 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">
-                                        <a>@report.PostTitle</a>
+                                        <a asp-area="" asp-controller="Posts" asp-action="ViewPost" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="text-dark text-decoration-none">
+                                            @report.PostTitle</a>
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
