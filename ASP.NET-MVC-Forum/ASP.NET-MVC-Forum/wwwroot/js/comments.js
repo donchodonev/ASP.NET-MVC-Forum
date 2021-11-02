@@ -45,7 +45,6 @@ $(document).ready(function () {
                     var currentCommentAuthor = comments[i].commentAuthor;
                     var createdOn = comments[i].createdOnAsString;
                     var trashButtonHtml = '';
-                    debugger;
                     if (currentCommentAuthor == currentUserUsername || isAdmin == "True")
                     {
                         trashButtonHtml = '<i id="' + currentCommentId + '" onclick="removeComment(this);" type="button" class="bi bi-trash"></i>';

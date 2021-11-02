@@ -10,15 +10,19 @@ namespace ASP.NET_MVC_Forum.Services.Comment
 {
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.CommentReport;
+
     public class CommentService : ICommentService
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext db;
+        private readonly ICommentReportService commentReportService;
 
-        public CommentService(IMapper mapper, ApplicationDbContext db)
+        public CommentService(IMapper mapper, ApplicationDbContext db, ICommentReportService commentReportService)
         {
             this.mapper = mapper;
             this.db = db;
+            this.commentReportService = commentReportService;
         }
         public async Task<int> AddComment(RawCommentServiceModel commentData)
         {
@@ -27,6 +31,8 @@ namespace ASP.NET_MVC_Forum.Services.Comment
             await db.Comments.AddAsync(comment);
 
             await db.SaveChangesAsync();
+
+            commentReportService.AutoGenerateCommentReport(comment.Content,comment.Id);
 
             return comment.Id;
         }

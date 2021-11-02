@@ -27,7 +27,7 @@
         {
             if (ReportExists(reportId))
             {
-                var report = db.PostReports.First(x => x.Id == reportId);
+                var report = db.CommentReports.First(x => x.Id == reportId);
 
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;

@@ -1,4 +1,5 @@
-﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
+﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
+using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
 using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
 using ASP.NET_MVC_Forum.Areas.API.Models;
 using ASP.NET_MVC_Forum.Data.Models;
@@ -14,6 +15,9 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<CommentReport, CommentReportViewModel>()
+                .ForMember(x => x.CommentContent, y => y.MapFrom(z => z.Comment.Content));
+
             this.CreateMap<User,UserViewModel>();
 
             this.CreateMap<PostReport,PostReportViewModel>();

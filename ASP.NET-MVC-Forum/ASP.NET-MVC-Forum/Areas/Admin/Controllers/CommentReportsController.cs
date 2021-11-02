@@ -1,5 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
     using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Services.CommentReport;
     using AutoMapper;
@@ -25,21 +26,21 @@
 
         public IActionResult Index(string reportStatus)
         {
-            List<PostReportViewModel> vm = new List<PostReportViewModel>();
+            List<CommentReportViewModel> vm = new List<CommentReportViewModel>();
 
             if (reportStatus == "Active")
             {
-                vm = mapper.ProjectTo<PostReportViewModel>(commentReportService.All()).ToList();
+                vm = mapper.ProjectTo<CommentReportViewModel>(commentReportService.All()).ToList();
             }
             else
             {
-                vm = mapper.ProjectTo<PostReportViewModel>(commentReportService.All(isDeleted: true)).ToList();
+                vm = mapper.ProjectTo<CommentReportViewModel>(commentReportService.All(isDeleted: true)).ToList();
             }
 
             return View(vm);
         }
 
-        public IActionResult Delete(int reportId)
+        public IActionResult Resolve(int reportId)
         {
             if (commentReportService.Delete(reportId))
             {
@@ -50,7 +51,7 @@
                 TempData["Message"] = "A report with such an ID does not exist";
             }
 
-            return RedirectToAction("Index", "Reports");
+            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
         }
 
         public IActionResult Restore(int reportId)
@@ -64,7 +65,7 @@
                 TempData["Message"] = "A report with such an ID does not exist";
             }
 
-            return RedirectToAction("Index", "Reports", new { reportStatus = "Active" });
+            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
         }
 
         public IActionResult Censor(int commentId, bool withRegex)
@@ -80,7 +81,7 @@
 
             TempData["Message"] = "The report has been successfully censored";
 
-            return RedirectToAction("Index", "Reports");
+            return RedirectToAction("Index", "CommentReports");
         }
     }
 }
