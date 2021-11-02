@@ -18,16 +18,16 @@
             this.db = db;
             this.filter = filter;
         }
-        public IQueryable<Report> All(bool isDeleted = false)
+        public IQueryable<PostReport> All(bool isDeleted = false)
         {
-            return db.Reports.Where(x => x.IsDeleted == isDeleted);
+            return db.PostReports.Where(x => x.IsDeleted == isDeleted);
         }
 
         public bool Delete(int reportId)
         {
             if (ReportExists(reportId))
             {
-                var report = db.Reports.First(x => x.Id == reportId);
+                var report = db.PostReports.First(x => x.Id == reportId);
 
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;
@@ -46,7 +46,7 @@
         {
             if (ReportExists(reportId))
             {
-                var report = db.Reports.First(x => x.Id == reportId);
+                var report = db.PostReports.First(x => x.Id == reportId);
 
                 report.IsDeleted = false;
                 report.ModifiedOn = DateTime.UtcNow;
@@ -63,7 +63,7 @@
 
         public bool ReportExists(int reportId)
         {
-            return db.Reports.Any(x => x.Id == reportId);
+            return db.PostReports.Any(x => x.Id == reportId);
         }
 
         public void AutoGeneratePostReport(string title, string content, int postId)
@@ -80,7 +80,7 @@
 
         public void ReportPost(int postId, string reasons)
         {
-            db.Reports.Add(new Report() { PostId = postId, Reason = reasons });
+            db.PostReports.Add(new PostReport() { PostId = postId, Reason = reasons });
 
             db.SaveChangesAsync().GetAwaiter();
         }

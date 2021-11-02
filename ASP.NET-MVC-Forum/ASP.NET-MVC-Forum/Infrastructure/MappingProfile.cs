@@ -18,7 +18,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
         {
             this.CreateMap<User,UserViewModel>();
 
-            this.CreateMap<Report,ReportViewModel>();
+            this.CreateMap<PostReport,ReportViewModel>();
 
             this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
 

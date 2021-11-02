@@ -365,7 +365,7 @@
 
         public async Task AddPostReport(int postId, string reportReason)
         {
-            db.Reports.Add(new Report() { PostId = postId, Reason = reportReason});
+            db.PostReports.Add(new PostReport() { PostId = postId, Reason = reportReason});
 
             await db.SaveChangesAsync();
         }

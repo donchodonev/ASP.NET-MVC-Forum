@@ -5,7 +5,6 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,7 +16,6 @@
         private readonly IPostService postService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
-        private readonly UserManager<IdentityUser> userManager;
 
         public UsersController(IPostService postService,IUserService userService, IMapper mapper)
         {

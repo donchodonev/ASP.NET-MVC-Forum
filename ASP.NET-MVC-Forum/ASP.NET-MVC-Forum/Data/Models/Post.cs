@@ -13,7 +13,7 @@
         {
             Comments = new HashSet<Comment>();
             Votes = new HashSet<Vote>();
-            Reports = new HashSet<Report>();
+            Reports = new HashSet<PostReport>();
             IsVisible = true;
         }
 
@@ -47,7 +47,7 @@
 
         public virtual Category Category { get; set; }
 
-        public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<PostReport> Reports { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

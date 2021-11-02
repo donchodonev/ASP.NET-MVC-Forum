@@ -1,13 +1,14 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
+    using ASP.NET_MVC_Forum.Data.Interfaces;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using static DataConstants.ReportConstants;
 
-    public class Report : BaseModel
+    public class PostReport : BaseModel, IReport
     {
-        public Report()
+        public PostReport()
             :base()
         {
 

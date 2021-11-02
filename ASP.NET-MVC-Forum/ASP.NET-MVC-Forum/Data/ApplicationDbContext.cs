@@ -10,7 +10,9 @@
             : base(options)
         {
         }
-        public DbSet<Report> Reports { get; set; }
+        public DbSet<CommentReport> CommentReports { get; set; }
+
+        public DbSet<PostReport> PostReports { get; set; }
 
         public DbSet<User> BaseUsers { get; set; }
 
