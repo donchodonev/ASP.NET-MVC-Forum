@@ -32,7 +32,8 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">
                                         <a asp-area="" asp-controller="Posts" asp-action="ViewPost" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="text-dark text-decoration-none">
-                                            @report.PostTitle</a>
+                                            @report.PostTitle
+                                        </a>
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -46,16 +47,17 @@
 
                                     @if (!report.IsDeleted)
                                     {
-                                        <form method="post">
-                                            <button type="submit" asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="btn btn-danger">Delete post and resolve</button>
-                                        </form>
+                                        <a type="submit" asp-area="Admin" asp-controller="PostReports" asp-action="DeleteAndResolve" asp-route-postId="@report.PostId" asp-route-reportId="@report.Id" class="btn btn-danger">Delete post and resolve</a>
+
                                         <a asp-area="Admin" asp-controller="PostReports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
+
                                         <a asp-area="Admin" asp-controller="PostReports" asp-action="Censor" asp-route-postId="@report.PostId" class="btn btn-primary">Censor</a>
-                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Censor" asp-route-postId="@report.PostId" asp-route-withRegex="@true"class="btn btn-primary">Hard Censor</a>
+
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Censor" asp-route-postId="@report.PostId" asp-route-withRegex="@true" class="btn btn-primary">Hard Censor</a>
                                     }
                                     else
                                     {
-                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore report</a>
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore post and report</a>
                                     }
 
                                 </div>

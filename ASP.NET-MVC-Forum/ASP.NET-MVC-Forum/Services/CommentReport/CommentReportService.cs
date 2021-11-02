@@ -32,7 +32,7 @@
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                db.SaveChangesAsync().GetAwaiter();
+                db.SaveChangesAsync().Wait();
 
                 return true;
             }
@@ -51,7 +51,14 @@
                 report.IsDeleted = false;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                db.SaveChangesAsync().GetAwaiter();
+                var comment = db.Comments.First(x => x.Id == report.CommentId);
+                comment.IsDeleted = false;
+                comment.ModifiedOn = DateTime.UtcNow;
+
+                db.Update(report);
+                db.Update(comment);
+
+                db.SaveChangesAsync().Wait();
 
                 return true;
             }
@@ -72,7 +79,7 @@
             {
                 List<string> profaneWordsFound = GetProfanities(content);
 
-                string reason = $"Profane words found in comment content: {string.Join(", ", profaneWordsFound)}";
+                string reason = string.Join(", ", profaneWordsFound);
 
                 ReportComment(commentId, reason);
             }
@@ -98,6 +105,24 @@
             db.Update(comment);
 
             db.SaveChangesAsync().GetAwaiter();
+        }
+
+        public void DeleteAndResolve(int commentId, int reportId)
+        {
+            var comment = db.Comments.First(x => x.Id == commentId);
+            
+            comment.IsDeleted = true;
+            comment.ModifiedOn = DateTime.UtcNow;
+
+            var report = db.CommentReports.First(x => x.Id == reportId);
+
+            report.IsDeleted = true;
+            report.ModifiedOn = DateTime.UtcNow;
+
+            db.Update(comment);
+            db.Update(report);
+
+            db.SaveChangesAsync().Wait();
         }
 
         public void HardCensorComment(int commentId)

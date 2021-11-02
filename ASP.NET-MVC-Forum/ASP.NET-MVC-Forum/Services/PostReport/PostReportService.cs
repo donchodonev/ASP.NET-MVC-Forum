@@ -32,7 +32,7 @@
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                db.SaveChangesAsync().GetAwaiter();
+                db.SaveChangesAsync().Wait();
 
                 return true;
             }
@@ -51,7 +51,14 @@
                 report.IsDeleted = false;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                db.SaveChangesAsync().GetAwaiter();
+                var post = db.Posts.First(x => x.Id == report.PostId);
+                post.IsDeleted = false;
+                post.ModifiedOn = DateTime.UtcNow;
+
+                db.Update(report);
+                db.Update(post);
+
+                db.SaveChangesAsync().Wait();
 
                 return true;
             }
@@ -127,7 +134,25 @@
 
             db.Update(post);
 
-            db.SaveChangesAsync().GetAwaiter();
+            db.SaveChangesAsync().Wait();
+        }
+
+        public void DeleteAndResolve(int postId, int reportId)
+        {
+            var post = db.Posts.First(x => x.Id == postId);
+
+            post.IsDeleted = true;
+            post.ModifiedOn = DateTime.UtcNow;
+
+            var report = db.PostReports.First(x => x.Id == reportId);
+
+            report.IsDeleted = true;
+            report.ModifiedOn = DateTime.UtcNow;
+
+            db.Update(post);
+            db.Update(report);
+
+            db.SaveChangesAsync().Wait();
         }
 
         private List<string> GetProfanities(string title, string content)

@@ -15,12 +15,12 @@ namespace ASP.NET_MVC_Forum.Data.Models
         {
             get
             {
-                if (Reason.Count() <= 70)
+                if (Reason.Count() <= 30)
                 {
                     return Reason;
                 }
 
-                return Reason.Substring(0, 70) + "...";
+                return Reason.Substring(0, 30);
             }
         }
 

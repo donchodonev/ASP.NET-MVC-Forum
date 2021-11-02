@@ -78,9 +78,18 @@
                 commentReportService.CensorComment(commentId);
             }
 
-            TempData["Message"] = "The report has been successfully censored";
+            TempData["Message"] = "The comment has been successfully censored";
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
+        }
+
+        public IActionResult DeleteAndResolve(int commentId, int reportId)
+        {
+            commentReportService.DeleteAndResolve(commentId,reportId);
+
+            TempData["Message"] = "The comment has been successfully censored and report was marked as resolved";
+
+            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
         }
     }
 }

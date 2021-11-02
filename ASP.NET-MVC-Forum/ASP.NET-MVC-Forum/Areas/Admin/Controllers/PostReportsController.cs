@@ -78,9 +78,18 @@
                 postReportService.CensorPost(postId);
             }
 
-            TempData["Message"] = "The report has been successfully censored";
+            TempData["Message"] = "The post has been successfully censored";
 
             return RedirectToAction("Index", "PostReports");
+        }
+
+        public IActionResult DeleteAndResolve(int postId, int reportId)
+        {
+            postReportService.DeleteAndResolve(postId, reportId);
+
+            TempData["Message"] = "The post has been successfully censored and report was marked as resolved";
+
+            return RedirectToAction("Index", "PostReports", new { reportStatus = "Deleted" });
         }
     }
 }

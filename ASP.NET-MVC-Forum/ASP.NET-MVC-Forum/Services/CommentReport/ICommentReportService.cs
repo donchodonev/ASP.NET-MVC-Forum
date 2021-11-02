@@ -18,5 +18,7 @@
         public void CensorComment(int postId);
 
         public void HardCensorComment(int postId);
+
+        public void DeleteAndResolve(int commentId, int reportId);
     }
 }
