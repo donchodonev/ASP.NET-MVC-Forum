@@ -7,6 +7,7 @@ using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
 using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
+using System.Linq;
 using static ASP.NET_MVC_Forum.Data.DataConstants.DateTimeFormat;
 
 namespace ASP.NET_MVC_Forum.Infrastructure
@@ -54,6 +55,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
                 .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
+                .ForMember(x => x.CommentsCount, y => y.MapFrom(z => z.Comments.Where(x => x.IsDeleted == false).Count()))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
 
                 
