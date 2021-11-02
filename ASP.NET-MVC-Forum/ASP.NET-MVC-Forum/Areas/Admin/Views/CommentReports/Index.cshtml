@@ -44,14 +44,14 @@
 
                                         <a asp-area="Admin" asp-controller="CommentReports" asp-action="Resolve" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
 
-                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Censor" asp-route-postId="@report.CommentId" class="btn btn-primary">Censor</a>
+                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Censor" asp-route-commentId="@report.CommentId" class="btn btn-primary">Censor</a>
 
-                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Censor" asp-route-postId="@report.CommentId" asp-route-withRegex="@true" class="btn btn-primary">Hard Censor</a>
+                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Censor" asp-route-commentId="@report.CommentId" asp-route-withRegex="@true" class="btn btn-primary">Hard Censor</a>
 
                                     }
                                     else
                                     {
-                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore comment</a>
+                                        <a asp-area="Admin" asp-controller="CommentReports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore comment report</a>
                                     }
 
                                 </div>

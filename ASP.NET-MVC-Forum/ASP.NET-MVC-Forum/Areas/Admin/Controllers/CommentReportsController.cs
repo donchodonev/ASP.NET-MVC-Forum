@@ -1,7 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Services.CommentReport;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -81,7 +80,7 @@
 
             TempData["Message"] = "The report has been successfully censored";
 
-            return RedirectToAction("Index", "CommentReports");
+            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
         }
     }
 }
