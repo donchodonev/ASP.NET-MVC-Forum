@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using Microsoft.EntityFrameworkCore;
     using ProfanityFilter.Interfaces;
     using System;
     using System.Collections.Generic;
@@ -89,7 +90,7 @@
         {
             db.PostReports.Add(new PostReport() { PostId = postId, Reason = reasons });
 
-            db.SaveChangesAsync().GetAwaiter();
+            db.SaveChangesAsync().Wait();
         }
 
         public void CensorPost(int postId)
@@ -137,20 +138,24 @@
             db.SaveChangesAsync().Wait();
         }
 
-        public void DeleteAndResolve(int postId, int reportId)
+        public void DeleteAndResolve(int postId)
         {
-            var post = db.Posts.First(x => x.Id == postId);
+            var post = db
+                .Posts
+                .Where(x => x.Id == postId)
+                .Include(x => x.Reports)
+                .First();
 
             post.IsDeleted = true;
             post.ModifiedOn = DateTime.UtcNow;
 
-            var report = db.PostReports.First(x => x.Id == reportId);
-
-            report.IsDeleted = true;
-            report.ModifiedOn = DateTime.UtcNow;
+            foreach (var report in post.Reports)
+            {
+                report.IsDeleted = true;
+                report.ModifiedOn = DateTime.UtcNow;
+            }
 
             db.Update(post);
-            db.Update(report);
 
             db.SaveChangesAsync().Wait();
         }

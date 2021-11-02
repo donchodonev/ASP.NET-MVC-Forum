@@ -35,6 +35,11 @@
         {
             var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded: true);
 
+            if (post == null)
+            {
+                return BadRequest();
+            }
+
             var vm = mapper.Map<ViewPostViewModel>(post);
 
             return View(vm);

@@ -14,7 +14,7 @@
 * HTML/CSS/JS
 * Bootstrap
 * jQuery
-* IIS - for online deployment
+* IIS - for deployment to WWW
 
 # Functionalities implemented so far
 
@@ -35,6 +35,8 @@
 * Post reporting
 * Post auto-reporting on-creation or edit, when profane words are contained in post title or content
 * Post censoring with Profanity Detector or with Regex pattern-matching
+* Post deletion/restoration along with report 
+* Post comment deletion/restoration along with report 
 
 * Admin area
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)
@@ -43,7 +45,6 @@
 * User banning and unbanning
 * User banning leads to inability to login
 * User banning leads to immediate (banned)user log-out
-
 * User promoting and demoting
 * User promoting/demoting leads to immediate (banned)user log-out to reset claims
 

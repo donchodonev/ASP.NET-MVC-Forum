@@ -83,9 +83,9 @@
             return RedirectToAction("Index", "PostReports");
         }
 
-        public IActionResult DeleteAndResolve(int postId, int reportId)
+        public IActionResult DeleteAndResolve(int postId)
         {
-            postReportService.DeleteAndResolve(postId, reportId);
+            postReportService.DeleteAndResolve(postId);
 
             TempData["Message"] = "The post has been successfully censored and report was marked as resolved";
 

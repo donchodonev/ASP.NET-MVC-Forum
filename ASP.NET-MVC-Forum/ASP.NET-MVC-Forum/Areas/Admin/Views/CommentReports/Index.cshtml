@@ -39,7 +39,7 @@
                                     @if (!report.IsDeleted)
                                     {
                                         <form method="post">
-                                            <button type="submit" asp-area="Admin" asp-controller="CommentReports" asp-action="Delete" asp-route-postId="@report.CommentId" class="btn btn-danger">Delete comment and resolve</button>
+                                            <button type="submit" asp-area="Admin" asp-controller="CommentReports" asp-action="DeleteAndResolve" asp-route-commentId="@report.CommentId" asp-route-reportId="@report.Id" class="btn btn-danger">Delete comment and resolve</button>
                                         </form>
 
                                         <a asp-area="Admin" asp-controller="CommentReports" asp-action="Resolve" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
