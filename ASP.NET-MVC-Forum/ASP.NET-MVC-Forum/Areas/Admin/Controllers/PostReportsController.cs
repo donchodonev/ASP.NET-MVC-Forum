@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.Report;
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -12,28 +12,28 @@
 
     [Area("Admin")]
     [Authorize(Roles = AdminOrModerator)]
-    public class ReportsController : Controller
+    public class PostReportsController : Controller
     {
-        private readonly IPostReportService reportService;
+        private readonly IPostReportService postReportService;
         private readonly IMapper mapper;
 
-        public ReportsController(IPostReportService reportService, IMapper mapper)
+        public PostReportsController(IPostReportService postReportService, IMapper mapper)
         {
-            this.reportService = reportService;
+            this.postReportService = postReportService;
             this.mapper = mapper;
         }
 
         public IActionResult Index(string reportStatus)
         {
-            List<ReportViewModel> vm = new List<ReportViewModel>();
+            List<PostReportViewModel> vm = new List<PostReportViewModel>();
 
             if (reportStatus == "Active")
             {
-                vm = mapper.ProjectTo<ReportViewModel>(reportService.All()).ToList();
+                vm = mapper.ProjectTo<PostReportViewModel>(postReportService.All()).ToList();
             }
             else
             {
-                vm = mapper.ProjectTo<ReportViewModel>(reportService.All(isDeleted: true)).ToList();
+                vm = mapper.ProjectTo<PostReportViewModel>(postReportService.All(isDeleted: true)).ToList();
             }
 
             return View(vm);
@@ -41,7 +41,7 @@
 
         public IActionResult Delete(int reportId)
         {
-            if (reportService.Delete(reportId))
+            if (postReportService.Delete(reportId))
             {
                 TempData["Message"] = "Report has been marked as resolved !";
             }
@@ -50,12 +50,12 @@
                 TempData["Message"] = "A report with such an ID does not exist";
             }
 
-            return RedirectToAction("Index", "Reports");
+            return RedirectToAction("Index", "PostReports");
         }
 
         public IActionResult Restore(int reportId)
         {
-            if (reportService.Restore(reportId))
+            if (postReportService.Restore(reportId))
             {
                 TempData["Message"] = "Report has been successfully restored !";
             }
@@ -64,23 +64,23 @@
                 TempData["Message"] = "A report with such an ID does not exist";
             }
 
-            return RedirectToAction("Index", "Reports", new { reportStatus = "Active" });
+            return RedirectToAction("Index", "PostReports", new { reportStatus = "Active" });
         }
 
         public IActionResult Censor(int postId, bool withRegex)
         {
             if (withRegex)
             {
-                reportService.HardCensorPost(postId);
+                postReportService.HardCensorPost(postId);
             }
             else
             {
-                reportService.CensorPost(postId);
+                postReportService.CensorPost(postId);
             }
 
             TempData["Message"] = "The report has been successfully censored";
 
-            return RedirectToAction("Index", "Reports");
+            return RedirectToAction("Index", "PostReports");
         }
     }
 }

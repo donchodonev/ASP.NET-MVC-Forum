@@ -43,23 +43,8 @@
                         Dashboard
                     </a>
 
-                    @*=======Comments========*@
-
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
-                        <div class="sb-nav-link-icon"><i class="far fa-comment"></i></div>
-                        Comments
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseComments" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="layout-static.html">Visible</a>
-                            <a class="nav-link" href="layout-sidenav-light.html">Deleted</a>
-                        </nav>
-                    </div>
-
-                    @*=======Comments========*@
-
                     @*=======Reports========*@
+                    @*=======PostReports========*@
 
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="far fa-flag"></i></div>
@@ -75,16 +60,24 @@
                         </a>
                         <div class="collapse" id="collapsePostReports" aria-labelledby="headingOne" data-bs-parent="#collapseReports">
                             <nav class="ml-4 sb-sidenav-menu-nested nav">
-                                <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Active"><i class="fas fa-toggle-on mr-2"></i>Active</a>
+                                <a class="nav-link" asp-area="Admin" asp-controller="PostReports" asp-action="Index" asp-route-reportStatus="Active"><i class="fas fa-exclamation-triangle mr-2"></i>Active</a>
+                                <a class="nav-link" asp-area="Admin" asp-controller="PostReports" asp-action="Index" asp-route-reportStatus="Deleted"><i class="fas fa-check mr-2"></i>Resolved</a>
+                            </nav>
+                        </div>
+                        @*=======CommentReports========*@
+
+                        <a class="nav-link collapsed ml-2" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCommentReports" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="far fa-comment"></i></div>
+                            Comments
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCommentReports" aria-labelledby="headingOne" data-bs-parent="#collapseReports">
+                            <nav class="ml-4 sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Active"><i class="fas fa-exclamation-triangle mr-2"></i>Active</a>
                                 <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Deleted"><i class="fas fa-check mr-2"></i>Resolved</a>
                             </nav>
                         </div>
                     </div>
-
-
-
-
-
 
                     @*=======Reports========*@
 

@@ -4,6 +4,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Comment;
+    using ASP.NET_MVC_Forum.Services.CommentReport;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
@@ -78,6 +79,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IPostReportService, PostReportService>();
+            services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddAntiforgery(options =>
@@ -120,8 +122,12 @@ namespace ASP.NET_MVC_Forum
                     pattern: "/{area:exists}/{controller=Home}/{action=Index}");
 
                 endpoints.MapControllerRoute(
-                      name: "AreaAdminReports",
-                     pattern: "/{area:exists}/{controller=Reports}/{action=Index}/{reportStatus}");
+                      name: "AreaAdminPostReports",
+                     pattern: "/{area:exists}/{controller=PostReports}/{action=Index}/{reportStatus}");
+
+                endpoints.MapControllerRoute(
+                      name: "AreaAdminCommentReports",
+                     pattern: "/{area:exists}/{controller=PostReports}/{action=Index}/{reportStatus}");
 
                 endpoints.MapControllerRoute(
                       name: "AreaAdminUsers",

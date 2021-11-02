@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ASP.NET_MVC_Forum.Areas.Admin.Models.Report
+namespace ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport
 {
-    public class ReportViewModel
+    public class PostReportViewModel
     {
         public int Id { get; set; }
 

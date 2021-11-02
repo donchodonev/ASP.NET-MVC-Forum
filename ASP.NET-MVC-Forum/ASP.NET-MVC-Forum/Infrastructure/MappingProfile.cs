@@ -1,4 +1,4 @@
-﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.Report;
+﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
 using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
 using ASP.NET_MVC_Forum.Areas.API.Models;
 using ASP.NET_MVC_Forum.Data.Models;
@@ -6,8 +6,6 @@ using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
 using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
 using static ASP.NET_MVC_Forum.Data.DataConstants.DateTimeFormat;
 
 namespace ASP.NET_MVC_Forum.Infrastructure
@@ -18,7 +16,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
         {
             this.CreateMap<User,UserViewModel>();
 
-            this.CreateMap<PostReport,ReportViewModel>();
+            this.CreateMap<PostReport,PostReportViewModel>();
 
             this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
 

@@ -1,4 +1,4 @@
-﻿@model List<ASP.NET_MVC_Forum.Areas.Admin.Models.Report.ReportViewModel>;
+﻿@model List<ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport.PostReportViewModel>;
 @if (TempData.ContainsKey("Message"))
 {
     <div class="alert alert-success text-center" role="alert">
@@ -39,7 +39,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    @report.Reason
+                                    <span class="text-danger">@report.Reason</span>
                                 </div>
                                 <div class="modal-footer justify-content-center">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Exit</button>
@@ -49,13 +49,13 @@
                                         <form method="post">
                                             <button type="submit" asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-postId="@report.PostId" asp-route-postTitle="@report.PostTitle" class="btn btn-danger">Delete post and resolve</button>
                                         </form>
-                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
-                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Censor" asp-route-postId="@report.PostId" class="btn btn-primary">Censor</a>
-                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Censor" asp-route-postId="@report.PostId" asp-route-withRegex="@true"class="btn btn-primary">Hard Censor</a>
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Delete" asp-route-reportId="@report.Id" class="btn btn-success">Mark Resolved</a>
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Censor" asp-route-postId="@report.PostId" class="btn btn-primary">Censor</a>
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Censor" asp-route-postId="@report.PostId" asp-route-withRegex="@true"class="btn btn-primary">Hard Censor</a>
                                     }
                                     else
                                     {
-                                        <a asp-area="Admin" asp-controller="Reports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore report</a>
+                                        <a asp-area="Admin" asp-controller="PostReports" asp-action="Restore" asp-route-reportId="@report.Id" class="btn btn-primary">Restore report</a>
                                     }
 
                                 </div>
