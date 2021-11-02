@@ -67,11 +67,24 @@
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse" id="collapseReports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Active">Active</a>
-                            <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Deleted">Resolved</a>
-                        </nav>
+
+                        <a class="nav-link collapsed ml-2" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePostReports" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
+                            Posts
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePostReports" aria-labelledby="headingOne" data-bs-parent="#collapseReports">
+                            <nav class="ml-4 sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Active"><i class="fas fa-toggle-on mr-2"></i>Active</a>
+                                <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index" asp-route-reportStatus="Deleted"><i class="fas fa-check mr-2"></i>Resolved</a>
+                            </nav>
+                        </div>
                     </div>
+
+
+
+
+
 
                     @*=======Reports========*@
 
