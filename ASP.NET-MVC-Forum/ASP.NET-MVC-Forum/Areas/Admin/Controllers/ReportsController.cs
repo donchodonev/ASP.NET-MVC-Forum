@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.Report;
-    using ASP.NET_MVC_Forum.Services.Report;
+    using ASP.NET_MVC_Forum.Services.PostReport;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,10 +14,10 @@
     [Authorize(Roles = AdminOrModerator)]
     public class ReportsController : Controller
     {
-        private readonly IReportService reportService;
+        private readonly IPostReportService reportService;
         private readonly IMapper mapper;
 
-        public ReportsController(IReportService reportService, IMapper mapper)
+        public ReportsController(IPostReportService reportService, IMapper mapper)
         {
             this.reportService = reportService;
             this.mapper = mapper;

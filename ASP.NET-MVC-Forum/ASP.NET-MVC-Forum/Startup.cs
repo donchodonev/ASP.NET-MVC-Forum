@@ -5,7 +5,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.Post;
-    using ASP.NET_MVC_Forum.Services.Report;
+    using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
@@ -77,7 +77,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IPostReportService, PostReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddAntiforgery(options =>

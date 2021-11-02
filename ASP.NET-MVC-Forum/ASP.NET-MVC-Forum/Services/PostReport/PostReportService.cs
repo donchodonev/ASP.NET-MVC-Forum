@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Report
+﻿namespace ASP.NET_MVC_Forum.Services.PostReport
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
@@ -8,12 +8,12 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    public class ReportService : IReportService
+    public class PostReportService : IPostReportService
     {
         private readonly ApplicationDbContext db;
         private readonly IProfanityFilter filter;
 
-        public ReportService(ApplicationDbContext db, IProfanityFilter filter)
+        public PostReportService(ApplicationDbContext db, IProfanityFilter filter)
         {
             this.db = db;
             this.filter = filter;

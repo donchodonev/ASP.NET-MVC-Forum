@@ -6,7 +6,7 @@
     using System.Linq;
     using static DataConstants.ReportConstants;
 
-    public class PostReport : BaseModel, IReport
+    public class PostReport : BaseModel
     {
         public PostReport()
             :base()

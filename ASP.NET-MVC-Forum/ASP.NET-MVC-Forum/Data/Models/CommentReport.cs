@@ -1,11 +1,10 @@
-﻿using ASP.NET_MVC_Forum.Data.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace ASP.NET_MVC_Forum.Data.Models
 {
-    public class CommentReport : IReport
+    public class CommentReport : BaseModel
     {
         public int Id { get; set; }
 

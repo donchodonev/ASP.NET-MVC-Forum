@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Report
+﻿namespace ASP.NET_MVC_Forum.Services.PostReport
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;
 
-    public interface IReportService
+    public interface IPostReportService
     {
         public IQueryable<PostReport> All(bool isDeleted = false);
 
