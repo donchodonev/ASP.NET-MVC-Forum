@@ -5,6 +5,7 @@
     using AutoMapper;
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
+    using System.Linq;
 
     public class VoteService : IVoteService
     {
@@ -17,15 +18,27 @@
             this.mapper = mapper;
         }
 
-        public int RegisterVote(VoteRequestModel incomingVote)
+        public VoteResponseModel RegisterVote(VoteRequestModel incomingVote)
         {
             var vote = mapper.Map<Vote>(incomingVote);
 
-            return vote.Id;
+            db.Votes.Add(vote);
+
+            db.SaveChangesAsync().Wait();
+
+            return GetPostVoteSum(incomingVote.PostId);
         }
 
+        public VoteResponseModel GetPostVoteSum(int postId)
+        {
+            var response = new VoteResponseModel();
 
+            response.VoteSum = db
+                .Votes
+                .Where(x => x.PostId == postId)
+                .Sum(x => (int)x.VoteType);
 
-
+            return response;
+        }
     }
 }
