@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models;
+    using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.Comment.Models;
     using ASP.NET_MVC_Forum.Services.User;

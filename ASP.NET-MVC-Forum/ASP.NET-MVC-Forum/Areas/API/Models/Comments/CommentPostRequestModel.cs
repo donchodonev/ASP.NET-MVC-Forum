@@ -1,5 +1,5 @@
 ﻿
-namespace ASP.NET_MVC_Forum.Areas.API.Models
+namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
 {
     using System.ComponentModel.DataAnnotations;
     using static ASP.NET_MVC_Forum.Data.DataConstants.CommentConstants;

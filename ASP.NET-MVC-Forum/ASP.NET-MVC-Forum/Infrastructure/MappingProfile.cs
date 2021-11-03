@@ -1,7 +1,8 @@
 ﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
 using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
 using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
-using ASP.NET_MVC_Forum.Areas.API.Models;
+using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
+using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
 using ASP.NET_MVC_Forum.Data.Models;
 using ASP.NET_MVC_Forum.Models.Category;
 using ASP.NET_MVC_Forum.Models.Post;
@@ -16,6 +17,9 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<VoteRequestModel, Vote>()
+                .ForMember(x => x.VoteType, y => y.MapFrom(z => z.PositiveVote ? 1 : -1));
+
             this.CreateMap<CommentReport, CommentReportViewModel>()
                 .ForMember(x => x.CommentContent, y => y.MapFrom(z => z.Comment.Content));
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ASP.NET_MVC_Forum.Areas.API.Models
+namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
 {
     public class CommentGetRequestResponseModel
     {

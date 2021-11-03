@@ -8,6 +8,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -81,6 +82,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IPostReportService, PostReportService>();
             services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
+            services.AddTransient<IVoteService, VoteService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddAntiforgery(options =>
             {
