@@ -181,37 +181,37 @@
             , bool withCommentsIncluded = false
             , bool withVotesIncluded = false)
         {
-            var query = db.Posts.Where(x => x.IsDeleted == false);
+            var query = db.Posts.Where(x => x.IsDeleted == false && x.Id == postId);
 
             if (withCategoryIncluded)
             {
-                query = query.Include(x => x.Category);
+                query.Select(x => x.Category).Load();
             }
 
             if (withUserIncluded)
             {
-                query = query.Include(x => x.User);
+                query.Select(x => x.User).Load();
             }
 
             if (withUserPostsIncluded)
             {
-                query = query.Include(x => x.User.Posts);
+                query.Select(x => x.User.Posts).Load();
             }
 
             if (withIdentityUserIncluded)
             {
-                query = query.Include(x => x.User.IdentityUser);
+                query.Select(x => x.User.IdentityUser).Load();
             }
             if (withCommentsIncluded)
             {
-                query = query.Include(x => x.Comments);
+                query.Select(x => x.Comments).Load();
             }
             if (withVotesIncluded)
             {
-                query = query.Include(x => x.Votes);
+                query.Select(x => x.Votes).Load();
             }
 
-            return await query.FirstOrDefaultAsync(x => x.Id == postId);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,

@@ -22,12 +22,6 @@
             this.userService = userService;
         }
 
-        [HttpGet]
-        public ActionResult<VoteResponseModel> GetVotesSum(int postId)
-        {
-            return voteService.GetPostVoteSum(postId);
-        }
-
         [HttpPost]
         public ActionResult<VoteResponseModel> CastVote(VoteRequestModel vote)
         {

@@ -9,6 +9,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
@@ -22,13 +23,15 @@
         private readonly IPostService postService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService, IMapper mapper)
+        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService, IMapper mapper, SignInManager<IdentityUser> signInManager)
         {
             this.userService = userService;
             this.postService = postService;
             this.categoryService = categoryService;
             this.mapper = mapper;
+            this.signInManager = signInManager;
         }
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
@@ -41,6 +44,17 @@
             }
 
             var vm = mapper.Map<ViewPostViewModel>(post);
+
+            if (signInManager.IsSignedIn(this.User))
+            {
+                int userId = await userService.GetBaseUserIdAsync(this.User.Id());
+                var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
+
+                if (userLastVote != null)
+                {
+                    vm.UserLastVoteChoice = (int)userLastVote.VoteType;
+                }
+            }
 
             return View(vm);
         }

@@ -28,5 +28,7 @@
         public int CommentsCount { get; set; }
 
         public int VoteSum { get; set; }
+
+        public int UserLastVoteChoice { get; set; }
     }
 }

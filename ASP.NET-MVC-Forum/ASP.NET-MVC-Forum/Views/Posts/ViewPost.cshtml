@@ -5,6 +5,18 @@
     ViewData["Title"] = "View Post";
     var userUsername = this.User.Identity.Name;
     @Html.HiddenFor(x => x.PostId)
+
+    string thumbsUpClass = "bi bi-hand-thumbs-up p-1 mr-4";
+    string thumbsDownClass = "bi bi-hand-thumbs-down p-1 mr-4";
+
+    if (Model.UserLastVoteChoice == 1)
+    {
+        thumbsUpClass = "bi bi-hand-thumbs-up-fill p-1 mr-4";
+    }
+    else if (Model.UserLastVoteChoice == -1)
+    {
+        thumbsDownClass = "bi bi-hand-thumbs-down-fill p-1 mr-4";
+    }
 }
 <input type="hidden" value="@userUsername" id="currentUserUsername" />
 <input type="hidden" value="@this.User.IsInRole("Administrator").ToString()" id="isAdmin" />
@@ -111,10 +123,11 @@
 
 
 <form id="votesForm" method="post"></form>
+
 <div class="px-4 pt-3 text-center mt-3">
-    <a href="#voteSum" onclick="sendVote(@Model.PostId, false)"><i style="color:red" class="bi bi-hand-thumbs-down p-1 mr-4"></i></a>
+    <a href="#voteSum" onclick="sendVote(@Model.PostId, false)"><i id="down" style="color:red" class="@thumbsDownClass p-1 mr-4"></i></a>
     <span id="voteSum">@Model.VoteSum</span>
-    <a href="#voteSum" onclick="sendVote(@Model.PostId, true)"><i style="color:green" class="bi bi-hand-thumbs-up p-1 ml-4 "></i></a>
+    <a href="#voteSum" onclick="sendVote(@Model.PostId, true)"><i id="up" style="color:green" class="@thumbsUpClass p-1 ml-4 "></i></a>
 </div>
 
 
