@@ -137,12 +137,6 @@ namespace ASP.NET_MVC_Forum
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-                endpoints.MapControllerRoute(
-                name: "API",
-                pattern: "{API}/{controller=Comments}");
-
-
                 endpoints.MapControllerRoute(
                 name: "Post Delete",
                 pattern: "/Posts/Delete/{postId}/{postTitle}",

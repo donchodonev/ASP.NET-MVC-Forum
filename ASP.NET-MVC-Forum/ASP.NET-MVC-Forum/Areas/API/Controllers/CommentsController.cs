@@ -12,7 +12,6 @@
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [ApiController]
-    [Area("API")]
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {
