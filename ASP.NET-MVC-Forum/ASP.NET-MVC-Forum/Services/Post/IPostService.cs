@@ -13,7 +13,7 @@
 
         public Task<int> AddPostAsync(Post post, int baseUserId);
 
-        public Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false, bool withUserPostsIncluded = false, bool withCommentsIncluded = false);
+        public Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false, bool withUserPostsIncluded = false, bool withCommentsIncluded = false, bool withVotesIncluded = false);
 
         public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
             bool withUserPostsIncluded = false);

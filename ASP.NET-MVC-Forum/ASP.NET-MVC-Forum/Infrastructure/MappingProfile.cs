@@ -18,7 +18,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
         public MappingProfile()
         {
             this.CreateMap<VoteRequestModel, Vote>()
-                .ForMember(x => x.VoteType, y => y.MapFrom(z => z.PositiveVote ? 1 : -1));
+                .ForMember(x => x.VoteType, y => y.MapFrom(z => z.IsPositiveVote ? 1 : -1));
 
             this.CreateMap<CommentReport, CommentReportViewModel>()
                 .ForMember(x => x.CommentContent, y => y.MapFrom(z => z.Comment.Content));
@@ -60,9 +60,10 @@ namespace ASP.NET_MVC_Forum.Infrastructure
                 .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
                 .ForMember(x => x.CommentsCount, y => y.MapFrom(z => z.Comments.Where(x => x.IsDeleted == false).Count()))
-                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
+                .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.VoteSum, y => y.MapFrom(z => z.Votes.Sum(x => (int)x.VoteType)));
 
-                
+
             this.CreateMap<RawCommentServiceModel, Comment>()
                 .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.PostId))

@@ -26,5 +26,7 @@
         public int PostId { get; set; }
 
         public int CommentsCount { get; set; }
+
+        public int VoteSum { get; set; }
     }
 }

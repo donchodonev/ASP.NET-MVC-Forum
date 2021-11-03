@@ -1,21 +1,25 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
+    using ASP.NET_MVC_Forum.Services.User;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [IgnoreAntiforgeryToken(Order = 2000)]////////////////////DONT FORGET/////////////////////
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+
     [Authorize]
     [Route("/api/[controller]")]
     [ApiController]
     public class VotesController : ControllerBase
     {
         private readonly IVoteService voteService;
+        private readonly IUserService userService;
 
-        public VotesController(IVoteService voteService)
+        public VotesController(IVoteService voteService,IUserService userService)
         {
             this.voteService = voteService;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -25,9 +29,14 @@
         }
 
         [HttpPost]
-        public ActionResult<VoteRequestModel> CastVote(VoteRequestModel vote)
+        public ActionResult<VoteResponseModel> CastVote(VoteRequestModel vote)
         {
-            var response = voteService.RegisterVote(vote);
+            int userId = userService
+                .GetBaseUserIdAsync(this.User.Id())
+                .GetAwaiter()
+                .GetResult();
+
+            var response = voteService.RegisterVote(vote, userId);
 
             return Ok(response);
         }

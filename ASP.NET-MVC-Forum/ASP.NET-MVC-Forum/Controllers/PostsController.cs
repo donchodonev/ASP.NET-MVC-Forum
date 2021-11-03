@@ -33,7 +33,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded: true);
+            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded: true, withVotesIncluded:true);
 
             if (post == null)
             {

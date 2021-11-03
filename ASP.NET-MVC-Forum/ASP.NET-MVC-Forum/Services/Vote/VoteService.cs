@@ -2,9 +2,8 @@
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
     using ASP.NET_MVC_Forum.Data;
-    using AutoMapper;
-    using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
+    using AutoMapper;
     using System.Linq;
 
     public class VoteService : IVoteService
@@ -18,11 +17,29 @@
             this.mapper = mapper;
         }
 
-        public VoteResponseModel RegisterVote(VoteRequestModel incomingVote)
+        public VoteResponseModel RegisterVote(VoteRequestModel incomingVote,int userId)
         {
-            var vote = mapper.Map<Vote>(incomingVote);
+            Vote vote = GetUserVote(userId, incomingVote.PostId);
 
-            db.Votes.Add(vote);
+            if (vote != null)
+            {
+                if (incomingVote.IsPositiveVote)
+                {
+                    vote.VoteType = VoteType.Like;
+                }
+                else
+                {
+                    vote.VoteType = VoteType.Dislike;
+                }
+
+                db.Update(vote);
+            }
+            else
+            {
+                vote = mapper.Map<Vote>(incomingVote);
+                vote.UserId = userId;
+                db.Votes.Add(vote);
+            }
 
             db.SaveChangesAsync().Wait();
 
@@ -39,6 +56,13 @@
                 .Sum(x => (int)x.VoteType);
 
             return response;
+        }
+
+        public Vote GetUserVote(int userId, int postId)
+        {
+            return db
+                .Votes
+                .FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
         }
     }
 }

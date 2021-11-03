@@ -172,8 +172,14 @@
         /// <param name="withUserIncluded">True for Post's User property to be included, false for null</param>
         /// <param name="withIdentityUserIncluded">True for Post's User.IdentityUser property to be included, false for null</param>
         /// <returns></returns>
-        public async Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
-            bool withUserPostsIncluded = false, bool withCommentsIncluded = false)
+        public async Task<Post> GetByIdAsync
+            (int postId
+            , bool withCategoryIncluded = false
+            , bool withUserIncluded = false
+            , bool withIdentityUserIncluded = false
+            , bool withUserPostsIncluded = false
+            , bool withCommentsIncluded = false
+            , bool withVotesIncluded = false)
         {
             var query = db.Posts.Where(x => x.IsDeleted == false);
 
@@ -199,6 +205,10 @@
             if (withCommentsIncluded)
             {
                 query = query.Include(x => x.Comments);
+            }
+            if (withVotesIncluded)
+            {
+                query = query.Include(x => x.Votes);
             }
 
             return await query.FirstOrDefaultAsync(x => x.Id == postId);
@@ -295,7 +305,7 @@
             return await db.Posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
-        public async Task<Dictionary<string,bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
+        public async Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
         {
             return await Task.Run(() =>
             {
@@ -365,7 +375,7 @@
 
         public async Task AddPostReport(int postId, string reportReason)
         {
-            db.PostReports.Add(new PostReport() { PostId = postId, Reason = reportReason});
+            db.PostReports.Add(new PostReport() { PostId = postId, Reason = reportReason });
 
             await db.SaveChangesAsync();
         }

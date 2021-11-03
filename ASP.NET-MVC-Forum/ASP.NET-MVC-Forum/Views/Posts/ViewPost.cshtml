@@ -6,7 +6,7 @@
     var userUsername = this.User.Identity.Name;
     @Html.HiddenFor(x => x.PostId)
 }
-<input type="hidden" value="@this.User.Identity.Name" id="currentUserUsername" />
+<input type="hidden" value="@userUsername" id="currentUserUsername" />
 <input type="hidden" value="@this.User.IsInRole("Administrator").ToString()" id="isAdmin" />
 
 <link rel="stylesheet" href="~/css/comments.css" />
@@ -109,10 +109,11 @@
     <a type="button" href='javascript:history.go(-1)' class="btn btn-secondary justify-content-center"><i class="ion ion-md-create"></i>Go Back</a>
 </div>
 
+<form id="votesForm" method="post"></form>
 <div class="px-4 pt-3 text-center mt-3">
-    <a href=""><i style="color:red" class="bi bi-hand-thumbs-down p-1 mr-4"></i></a>
-    <span>Rating: 213</span>
-    <a href=""><i style="color:green" class="bi bi-hand-thumbs-up p-1 ml-4 "></i></a>
+    <a onclick="sendVote(@Model.PostId, false)"><i style="color:red" class="bi bi-hand-thumbs-down p-1 mr-4"></i></a>
+    <span id="voteSum">@Model.VoteSum</span>
+    <a onclick="sendVote(@Model.PostId, true)"><i style="color:green" class="bi bi-hand-thumbs-up p-1 ml-4 "></i></a>
 </div>
 
 
@@ -162,3 +163,7 @@
     </div>
 </div>
 
+@section Scripts{
+    <script src="~/js/comments.js" asp-append-version="true"></script>
+    <script src="~/js/votes.js" asp-append-version="true"></script>
+}
