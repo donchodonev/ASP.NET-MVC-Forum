@@ -109,11 +109,12 @@
     <a type="button" href='javascript:history.go(-1)' class="btn btn-secondary justify-content-center"><i class="ion ion-md-create"></i>Go Back</a>
 </div>
 
+
 <form id="votesForm" method="post"></form>
 <div class="px-4 pt-3 text-center mt-3">
-    <a onclick="sendVote(@Model.PostId, false)"><i style="color:red" class="bi bi-hand-thumbs-down p-1 mr-4"></i></a>
+    <a href="#voteSum" onclick="sendVote(@Model.PostId, false)"><i style="color:red" class="bi bi-hand-thumbs-down p-1 mr-4"></i></a>
     <span id="voteSum">@Model.VoteSum</span>
-    <a onclick="sendVote(@Model.PostId, true)"><i style="color:green" class="bi bi-hand-thumbs-up p-1 ml-4 "></i></a>
+    <a href="#voteSum" onclick="sendVote(@Model.PostId, true)"><i style="color:green" class="bi bi-hand-thumbs-up p-1 ml-4 "></i></a>
 </div>
 
 

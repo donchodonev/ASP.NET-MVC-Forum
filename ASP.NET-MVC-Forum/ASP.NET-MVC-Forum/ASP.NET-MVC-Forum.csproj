@@ -53,6 +53,9 @@
     <Content Update="wwwroot\js\comments.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\js\votes.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
 
   </ItemGroup>
 

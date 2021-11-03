@@ -10,6 +10,12 @@
         headers: { 'X-CSRF-TOKEN': token },
         success: function (data) {
             $("#voteSum").html(data.voteSum);
+        },
+        error: function (xhr) {
+            if (xhr.status == 401) {
+                var loginUrl = xhr.getResponseHeader("location");
+                window.location.href = loginUrl;
+            }
         }
     });
 }

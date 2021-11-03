@@ -22,6 +22,7 @@ namespace ASP.NET_MVC_Forum
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
     using System;
+    using System.Net;
 
     public class Startup
     {
