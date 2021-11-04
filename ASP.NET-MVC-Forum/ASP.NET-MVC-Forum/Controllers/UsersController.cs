@@ -70,7 +70,9 @@
                 await file.CopyToAsync(stream);
             }
 
-            return RedirectToAction("Index", "Home");
+            TempData["Message"] = $"Your image has been successfully uploaded";
+
+            return LocalRedirect("/Identity/Account/Manage#message");
         }
     }
 }
