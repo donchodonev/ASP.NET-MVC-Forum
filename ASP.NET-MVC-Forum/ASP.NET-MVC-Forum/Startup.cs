@@ -85,7 +85,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddTransient<IVoteService, VoteService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton(Configuration);
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-CSRF-TOKEN";

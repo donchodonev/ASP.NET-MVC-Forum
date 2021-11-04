@@ -29,37 +29,9 @@
     </div>
 </div>
 
+
 @*Image upload*@
 
-
-
-<div class="row mt-5">
-    <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data"
-              asp-area="" asp-controller="Users" asp-action="UploadAvatar">
-            <div class="form-group">
-                <h5>User image</h5>
-                <input type="file" name="file" accept="image/png, image/jpeg, image/bmp, image/webp">
-            </div>
-            <button class="btn btn-primary" type="submit">Upload</button>
-        </form>
-        @if (TempData.ContainsKey("Message"))
-        {
-            if (TempData["Message"].ToString().Contains("successfully"))
-            {
-                <div id="message" class="alert alert-success mt-3" role="alert">
-                    @TempData["Message"]
-                </div>
-            }
-            else
-            {
-                <div id="message" class="alert alert-danger mt-3" role="alert">
-                    @TempData["Message"]
-                </div>
-            }
-        }
-    </div>
-</div>
 
 
 
