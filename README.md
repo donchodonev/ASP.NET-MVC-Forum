@@ -42,6 +42,7 @@
 * Post voting with AJAX and WebAPI
 
 * Admin area
+
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)
 * Marking post report as resolved while marking the post itself as deleted automatically
 
@@ -50,6 +51,7 @@
 * User banning leads to immediate (banned)user log-out
 * User promoting and demoting
 * User promoting/demoting leads to immediate (banned)user log-out to reset claims
+* Users can upload an image which would then be used as their avatar (image is stored locally as a physical file, type-checked, name GUIDified to prevent avatars for-eaching and for better user-image anonimity)
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
