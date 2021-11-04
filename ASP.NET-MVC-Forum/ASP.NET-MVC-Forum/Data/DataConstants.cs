@@ -1,4 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Data
+﻿using Microsoft.AspNetCore.Hosting;
+
+namespace ASP.NET_MVC_Forum.Data
 {
     public class DataConstants
     {
@@ -67,8 +69,8 @@
 
         public class WebConstants
         {
-            public const string AvatarUploadDirectory = "./wwwroot/avatar/";
             public const string AvatarWebPath = "/avatar/";
+            public const string AvatarDirectoryPath = "\\wwwroot\\avatar\\";
         }
     }
 }

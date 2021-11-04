@@ -16,6 +16,7 @@
 
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
+    using Microsoft.AspNetCore.Hosting;
 
     [Authorize]
     public class UsersController : Controller
@@ -24,13 +25,15 @@
         private readonly IUserService userService;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
+        private readonly IHostingEnvironment enviroment;
 
-        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IConfiguration configuration)
+        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IConfiguration configuration, IHostingEnvironment enviroment)
         {
             this.postService = postService;
             this.userService = userService;
             this.mapper = mapper;
             this.configuration = configuration;
+            this.enviroment = enviroment;
         }
 
         public async Task<IActionResult> UserPosts()
@@ -66,7 +69,9 @@
 
             var fileName = $"{guid}{fileExtension}";
 
-            var fullPath = Path.Combine(AvatarUploadDirectory, fileName);
+            string root = enviroment.ContentRootPath;
+
+            string fullPath = $"{root}{AvatarDirectoryPath}{fileName}";
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {

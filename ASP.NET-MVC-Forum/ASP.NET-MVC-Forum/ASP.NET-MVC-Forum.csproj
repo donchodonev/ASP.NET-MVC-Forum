@@ -62,8 +62,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\avatar\" />
-  </ItemGroup>
-
 </Project>
