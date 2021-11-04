@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -18,12 +19,14 @@
         private readonly IPostService postService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public UsersController(IPostService postService, IUserService userService, IMapper mapper)
+        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IConfiguration configuration)
         {
             this.postService = postService;
             this.userService = userService;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         [Authorize]
@@ -56,9 +59,11 @@
                 return LocalRedirect("/Identity/Account/Manage#message");
             }
 
-            var fileName = $"{this.User.Identity.Name}-avatar.jpg";
-            var filePath = @"C:\ASP.NET Forum Storage\";
+            var fileName = $"{this.User.Identity.Name}-avatar{fileExtension}";
+            var filePath = configuration.GetSection("FileUploadPath")["DefaultPath"];
             var fullPath = Path.Combine(filePath, fileName);
+
+            string test = configuration.GetSection("FileUploadPath")["DefaultPath"];
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
