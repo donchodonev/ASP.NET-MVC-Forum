@@ -64,5 +64,11 @@
 
             public const string DateAndTimeFormat = "MM/dd/yyyy HH:mm";
         }
+
+        public class WebConstants
+        {
+            public const string AvatarUploadDirectory = "./wwwroot/avatar/";
+            public const string AvatarWebPath = "/avatar/";
+        }
     }
 }

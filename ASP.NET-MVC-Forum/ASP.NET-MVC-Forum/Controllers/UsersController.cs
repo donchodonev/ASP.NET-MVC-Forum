@@ -9,11 +9,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.FileProviders;
+    using System;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
 
     [Authorize]
     public class UsersController : Controller
@@ -39,7 +41,7 @@
             return View("_PostsPreviewPartial", vm.ToList());
         }
 
-        public async Task<IActionResult> UploadAvatar(IFormFile file)
+        public IActionResult UploadAvatar(IFormFile file)
         {
             string[] allowedFileExtensions = new string[5] { ".jpg", ".jpeg", ".png", ".webp", ".bmp" };
 
@@ -60,51 +62,22 @@
                 return LocalRedirect("/Identity/Account/Manage#message");
             }
 
-            var fileName = $"{this.User.Identity.Name}-avatar{fileExtension}";
-            var filePath = configuration.GetSection("FileUploadPath")["DefaultPath"];
-            var fullPath = Path.Combine(filePath, fileName);
+            string guid = Guid.NewGuid().ToString();
 
-            string test = configuration.GetSection("FileUploadPath")["DefaultPath"];
+            var fileName = $"{guid}{fileExtension}";
+
+            var fullPath = Path.Combine(AvatarUploadDirectory, fileName);
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                file.CopyToAsync(stream).Wait();
             }
+
+            userService.AvatarUpdate(this.User.Id(), fileName);
 
             TempData["Message"] = $"Your image has been successfully uploaded";
 
             return LocalRedirect("/Identity/Account/Manage#message");
-        }
-
-        public async Task<IActionResult> GetAvatar([FromQuery]string username)
-        {
-            string[] allowedFileExtensions = new string[5] { ".jpg", ".jpeg", ".png", ".webp", ".bmp" };
-
-            var fileName = $"{this.User.Identity.Name}-avatar";
-            var directoryPath = configuration.GetSection("FileUploadPath")["DefaultPath"];
-            var fullPath = Path.Combine(directoryPath, fileName);
-
-            string expectedPathToAvatar = null;
-            string expectedFileExtension = null;
-
-            foreach (var fileExtension in allowedFileExtensions)
-            {
-                if (System.IO.File.Exists($"{fullPath}{fileExtension}"))
-                {
-                    expectedPathToAvatar = $"{fullPath}{fileExtension}";
-                    expectedFileExtension = fileExtension;
-                    break;
-                }
-            }
-
-            if (expectedPathToAvatar == null)
-            {
-                return BadRequest();
-            }
-
-            var mimeType = "image/jpeg"; 
-
-            return PhysicalFile(expectedPathToAvatar, mimeType, $"{fileName}{expectedFileExtension}");
         }
     }
 }

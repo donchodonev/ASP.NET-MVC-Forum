@@ -36,5 +36,9 @@
         public void Promote(IdentityUser user);
 
         public void Demote(IdentityUser user);
+
+        public void AvatarDelete(string identityUserId);
+
+        public void AvatarUpdate(string identityUserId, string imageUrl);
     }
 }

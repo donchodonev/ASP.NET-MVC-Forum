@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
 
     public class UserService : IUserService
     {
@@ -166,6 +167,28 @@
                 .UpdateSecurityStampAsync(user)
                 .GetAwaiter()
                 .GetResult();
+        }
+
+        public void AvatarDelete(string identityUserId)
+        {
+            var user = db.BaseUsers.First(x => x.IdentityUserId == identityUserId);
+
+            user.ImageUrl = $"{AvatarWebPath}defaultUserImage.png";
+
+            db.Update(user);
+
+            db.SaveChanges();
+        }
+
+        public void AvatarUpdate(string identityUserId, string fileName)
+        {
+            var user = db.BaseUsers.First(x => x.IdentityUserId == identityUserId);
+
+            user.ImageUrl = $"{AvatarWebPath}{fileName}";
+
+            db.Update(user);
+
+            db.SaveChanges();
         }
     }
 }
