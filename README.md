@@ -11,6 +11,7 @@
 * HTML Sanitizer by Michael Ganss - https://github.com/mganss/HtmlSanitizer
 * Automapper - Jimmy Bogard and others - https://automapper.org/
 * Profanity Detector - Stephen Haunts -  https://github.com/stephenhaunts/ProfanityDetector
+* Image Sharp -  [James Jackson-South](https://github.com/jimbobsquarepants), [Dirk Lemstra](https://github.com/dlemstra), [Anton Firsov](https://github.com/antonfirsov) , [Scott Williams](https://github.com/tocsoft) ,[Brian Popow](https://github.com/brianpopow) - https://github.com/SixLabors/ImageSharp
 * HTML/CSS/JS
 * Bootstrap
 * jQuery
@@ -52,6 +53,8 @@
 * User promoting and demoting
 * User promoting/demoting leads to immediate (banned)user log-out to reset claims
 * Users can upload an image which would then be used as their avatar (image is stored locally as a physical file, type-checked, name GUIDified to prevent avatars for-eaching and for better user-image anonimity)
+* User image resizing before upload to reduce site traffic and improve page-load time (default is 50x50px)
+
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
