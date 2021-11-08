@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
+    using Microsoft.AspNetCore.Http;
+
     public interface IUserService
     {
         /// <summary>
@@ -17,7 +19,7 @@
 
         public Task<int> GetBaseUserIdAsync(string identityUserId);
 
-        public  Task<int> UserPostsCount(int userId);
+        public Task<int> UserPostsCount(int userId);
 
         public IQueryable<User> GetAll(bool withIdentityIncluded = false);
 
@@ -39,10 +41,15 @@
 
         public void AvatarDelete(string identityUserId);
 
-        public void AvatarUpdate(string identityUserId, string imageUrl);
-
         public bool UserHasAvatar(int userId);
 
         public string GetUserAvatar(string identityUserId);
+
+        /// <summary>
+        /// Gets said image's extension if extension is amongst the allowed image extensions defined at ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions that are used in the implementation of the GetImageExtension() method in UserAvatarService
+        /// 
+        public string GetImageExtension(IFormFile image);
+
+        public void AvatarUpdate(string identityUserId, IFormFile image);
     }
 }

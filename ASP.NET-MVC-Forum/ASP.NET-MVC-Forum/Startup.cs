@@ -22,7 +22,8 @@ namespace ASP.NET_MVC_Forum
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
     using System;
-    using System.Net;
+    using SixLabors.ImageSharp;
+    using ASP.NET_MVC_Forum.Services.UserAvatarService;
 
     public class Startup
     {
@@ -84,6 +85,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddTransient<IVoteService, VoteService>();
+            services.AddTransient<IUserAvatarService, UserAvatarService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddSingleton(Configuration);
             services.AddAntiforgery(options =>

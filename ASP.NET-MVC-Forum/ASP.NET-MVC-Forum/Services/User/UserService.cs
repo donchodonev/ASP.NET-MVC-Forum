@@ -2,6 +2,8 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.UserAvatarService;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -15,11 +17,13 @@
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IUserAvatarService avatarService;
 
-        public UserService(ApplicationDbContext db, UserManager<IdentityUser> userManager)
+        public UserService(ApplicationDbContext db, UserManager<IdentityUser> userManager, IUserAvatarService avatarService)
         {
             this.db = db;
             this.userManager = userManager;
+            this.avatarService = avatarService;
         }
 
         public async Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null)
@@ -181,8 +185,13 @@
             db.SaveChanges();
         }
 
-        public void AvatarUpdate(string identityUserId, string fileName)
+        public void AvatarUpdate(string identityUserId, IFormFile image)
         {
+            string fileName = avatarService
+                .UploadAvatarAsync(image)
+                .GetAwaiter()
+                .GetResult();
+
             var user = db.BaseUsers.First(x => x.IdentityUserId == identityUserId);
 
             user.ImageUrl = $"{AvatarWebPath}{fileName}";
@@ -209,6 +218,13 @@
                  .BaseUsers
                  .First(x => x.Id == baseUserId)
                  .ImageUrl;
+        }
+
+        public string GetImageExtension(IFormFile image)
+        {
+            string imageExtension = avatarService.GetImageExtension(image);
+
+            return avatarService.GetImageExtension(image);
         }
     }
 }

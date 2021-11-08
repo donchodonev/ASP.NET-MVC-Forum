@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-
-namespace ASP.NET_MVC_Forum.Data
+﻿namespace ASP.NET_MVC_Forum.Data
 {
     public class DataConstants
     {
@@ -71,6 +69,16 @@ namespace ASP.NET_MVC_Forum.Data
         {
             public const string AvatarWebPath = "/avatar/";
             public const string AvatarDirectoryPath = "\\wwwroot\\avatar\\";
+        }
+
+        public class AllowedImageExtensions
+        {
+            public const string JPEG = ".jpeg";
+            public const string JPG = ".jpg";
+            public const string PNG = ".png";
+            public const string WEBP = ".webp";
+            public const string BMP = ".bmp";
+            public string[] AllowedImageExtensionsArray = new string[5] { JPEG, JPG, PNG, WEBP, BMP };
         }
     }
 }

@@ -5,14 +5,11 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
@@ -21,14 +18,12 @@
         private readonly IPostService postService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment enviroment;
 
-        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IWebHostEnvironment enviroment)
+        public UsersController(IPostService postService, IUserService userService, IMapper mapper)
         {
             this.postService = postService;
             this.userService = userService;
             this.mapper = mapper;
-            this.enviroment = enviroment;
         }
 
         public async Task<IActionResult> UserPosts()
@@ -41,39 +36,17 @@
 
         public IActionResult UploadAvatar(IFormFile file)
         {
-            string[] allowedFileExtensions = new string[5] { ".jpg", ".jpeg", ".png", ".webp", ".bmp" };
-
-            string fileExtension = null;
-
-            foreach (var currentFileExtension in allowedFileExtensions)
-            {
-                if (file.FileName.EndsWith(currentFileExtension))
-                {
-                    fileExtension = currentFileExtension;
-                    break;
-                }
-            }
+            string fileExtension = userService.GetImageExtension(file);
+            string identityUserId = this.User.Id();
 
             if (fileExtension == null)
             {
+                string[] allowedFileExtensions = new string[5] { JPG, JPEG, PNG, WEBP, BMP };
                 TempData["Message"] = $"The allowed image file formats are {string.Join(' ', allowedFileExtensions)}";
                 return LocalRedirect("/Identity/Account/Manage#message");
             }
 
-            string guid = Guid.NewGuid().ToString();
-
-            var fileName = $"{guid}{fileExtension}";
-
-            string root = enviroment.ContentRootPath;
-
-            string fullPath = $"{root}{AvatarDirectoryPath}{fileName}";
-
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                file.CopyToAsync(stream).Wait();
-            }
-
-            userService.AvatarUpdate(this.User.Id(), fileName);
+            userService.AvatarUpdate(identityUserId, file);
 
             TempData["Message"] = $"Your image has been successfully uploaded";
 
