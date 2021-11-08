@@ -40,5 +40,9 @@
         public void AvatarDelete(string identityUserId);
 
         public void AvatarUpdate(string identityUserId, string imageUrl);
+
+        public bool UserHasAvatar(int userId);
+
+        public string GetUserAvatar(string identityUserId);
     }
 }

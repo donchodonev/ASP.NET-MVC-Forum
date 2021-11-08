@@ -1,10 +1,15 @@
 ﻿@model ASP.NET_MVC_Forum.Models.Post.ViewPostViewModel;
 @using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+@using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+@inject ASP.NET_MVC_Forum.Services.User.IUserService userService;
 
 @{
     ViewData["Title"] = "View Post";
+    @Html.HiddenFor(x => x.PostId);
+
+    string currUserAvatar = userService.GetUserAvatar(this.User.Id());
+
     var userUsername = this.User.Identity.Name;
-    @Html.HiddenFor(x => x.PostId)
 
     string thumbsUpClass = "bi bi-hand-thumbs-up p-1 mr-4";
     string thumbsDownClass = "bi bi-hand-thumbs-down p-1 mr-4";
@@ -46,7 +51,7 @@
 
                 <div class="card-header">
                     <div class="media flex-wrap w-100 align-items-center">
-                        <img src="~/img/defaultUserImage.png" class="d-block ui-w-40 rounded-circle" alt="">
+                        <img src="@Model.UserImageUrl" class="avatarImage ui-w-40 rounded-circle" alt="">
 
                         <div class="media-body ml-3">
                             <a href="javascript:void(0)" data-abc="true">@Model.UserUsername</a>
@@ -147,7 +152,7 @@
                 {
                     <form method="post" id="commentsForm">
                         <div class="d-flex flex-row add-comment-section mt-4 mb-4">
-                            <img class="img-fluid img-responsive rounded-circle mr-2" src="~/img/defaultUserImage.png" width="38">
+                            <img class="avatarImage img-responsive rounded-circle mr-2" src="~/avatar/defaultUserImage.png" width="38">
                             <input type="text" class="form-control mr-3" placeholder="Add comment" id="comment">
                             <button id="sendComment" class="btn btn-primary">Comment</button>
                         </div>

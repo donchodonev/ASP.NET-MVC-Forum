@@ -5,18 +5,15 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.FileProviders;
     using System;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
-    using Microsoft.AspNetCore.Hosting;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
     public class UsersController : Controller
@@ -24,15 +21,13 @@
         private readonly IPostService postService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
-        private readonly IConfiguration configuration;
-        private readonly IHostingEnvironment enviroment;
+        private readonly IWebHostEnvironment enviroment;
 
-        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IConfiguration configuration, IHostingEnvironment enviroment)
+        public UsersController(IPostService postService, IUserService userService, IMapper mapper, IWebHostEnvironment enviroment)
         {
             this.postService = postService;
             this.userService = userService;
             this.mapper = mapper;
-            this.configuration = configuration;
             this.enviroment = enviroment;
         }
 

@@ -30,7 +30,8 @@
                 IdentityUser = identityUser,
                 FirstName = firstName,
                 LastName = lastName,
-                Age = age
+                Age = age,
+                ImageUrl = "/avatar/defaultUserImage.png"
             };
             await db.BaseUsers.AddAsync(user);
 
@@ -189,6 +190,25 @@
             db.Update(user);
 
             db.SaveChanges();
+        }
+
+        public bool UserHasAvatar(int userId)
+        {
+            return db
+                .BaseUsers
+                .First(x => x.Id != userId).ImageUrl != "wwwroot/avatar/defaultUserImage.png";
+        }
+
+        public string GetUserAvatar(string identityUserId)
+        {
+            int baseUserId = GetBaseUserIdAsync(identityUserId)
+                 .GetAwaiter()
+                 .GetResult();
+
+            return db
+                 .BaseUsers
+                 .First(x => x.Id == baseUserId)
+                 .ImageUrl;
         }
     }
 }
