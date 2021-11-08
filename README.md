@@ -3,7 +3,7 @@
 * An ASP.NET(5) MVC Forum project
 * Deployed at https://donchodonev.com but still in active development
 
-# Main Technologies used
+# Main Technologies / Nu-Get packages used
 
 * ASP.NET 5
 * MS SQL Server
