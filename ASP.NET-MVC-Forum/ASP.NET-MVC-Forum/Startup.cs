@@ -8,6 +8,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.UserAvatarService;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
@@ -22,8 +23,6 @@ namespace ASP.NET_MVC_Forum
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
     using System;
-    using SixLabors.ImageSharp;
-    using ASP.NET_MVC_Forum.Services.UserAvatarService;
 
     public class Startup
     {

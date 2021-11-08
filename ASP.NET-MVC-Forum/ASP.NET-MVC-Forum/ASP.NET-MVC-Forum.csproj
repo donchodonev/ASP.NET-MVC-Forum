@@ -28,6 +28,10 @@
 
   <ItemGroup>
 
+    <Content Update="wwwroot\css\avatar.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
     <Content Update="wwwroot\css\footer.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
