@@ -7,7 +7,7 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
     using SixLabors.ImageSharp.Processing;
     using System;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.ImageConstants;
     using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
     public class UserAvatarService : IUserAvatarService
     {
@@ -36,9 +36,20 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
             return imageExtensionName;
         }
 
-        public async Task<string> UploadAvatarAsync(IFormFile file,int width = 50,int height = 50)
+        public async Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50)
         {
+            if (!IsImageSizeValid(file.Length))
+            {
+                throw new ArgumentOutOfRangeException("The image must be up to 5 MB (megabytes) in size");
+            }
+
             string imageExtension = GetImageExtension(file);
+
+            if (imageExtension == null)
+            {
+                string[] allowedFileExtensions = new string[5] { JPG, JPEG, PNG, WEBP, BMP };
+                throw new ArgumentOutOfRangeException($"The allowed image file formats are {string.Join(' ', allowedFileExtensions)}");
+            }
 
             string guid = Guid.NewGuid().ToString();
 
@@ -50,11 +61,16 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
 
             using (Image image = Image.Load(file.OpenReadStream()))
             {
-                image.Mutate(x => x.Resize(width,height));
+                image.Mutate(x => x.Resize(width, height));
                 await image.SaveAsync(fullPath);
             }
 
             return fileName;
+        }
+
+        public bool IsImageSizeValid(long imageSize, long maxImageSize = ImageMaxSize)
+        {
+            return imageSize <= maxImageSize;
         }
     }
 }

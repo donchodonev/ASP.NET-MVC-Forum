@@ -7,9 +7,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.ImageConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
@@ -36,17 +37,17 @@
 
         public IActionResult UploadAvatar(IFormFile file)
         {
-            string fileExtension = userService.GetImageExtension(file);
             string identityUserId = this.User.Id();
 
-            if (fileExtension == null)
+            try
             {
-                string[] allowedFileExtensions = new string[5] { JPG, JPEG, PNG, WEBP, BMP };
-                TempData["Message"] = $"The allowed image file formats are {string.Join(' ', allowedFileExtensions)}";
+                userService.AvatarUpdate(identityUserId, file);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                TempData["Message"] = ex.ParamName;
                 return LocalRedirect("/Identity/Account/Manage#message");
             }
-
-            userService.AvatarUpdate(identityUserId, file);
 
             TempData["Message"] = $"Your image has been successfully uploaded";
 
