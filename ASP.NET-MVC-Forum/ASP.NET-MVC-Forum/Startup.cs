@@ -5,17 +5,18 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.CommentReport;
+    using ASP.NET_MVC_Forum.Services.EmailSender;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using ASP.NET_MVC_Forum.Services.UserAvatarService;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
-    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -24,9 +25,6 @@ namespace ASP.NET_MVC_Forum
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -64,6 +62,8 @@ namespace ASP.NET_MVC_Forum
                 facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
             });
 
+
+            services.Configure<AuthMessageSenderOptions>(Configuration);
             services.Configure<SecurityStampValidatorOptions>(options =>
             {
                 options.ValidationInterval = TimeSpan.Zero;
@@ -71,13 +71,9 @@ namespace ASP.NET_MVC_Forum
 
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential 
-                // cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                // requires using Microsoft.AspNetCore.Http;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -96,6 +92,7 @@ namespace ASP.NET_MVC_Forum
             services.AddTransient<IVoteService, VoteService>();
             services.AddTransient<IUserAvatarService, UserAvatarService>();
             services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddSingleton(Configuration);
             services.AddAntiforgery(options =>
             {
