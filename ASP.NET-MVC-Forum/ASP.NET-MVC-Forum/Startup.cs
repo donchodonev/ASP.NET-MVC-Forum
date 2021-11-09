@@ -62,25 +62,6 @@ namespace ASP.NET_MVC_Forum
             {
                 facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
                 facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                facebookOptions.SaveTokens = true;
-
-                facebookOptions.Events.OnCreatingTicket = ctx =>
-                {
-                    List<AuthenticationToken> tokens = ctx
-                    .Properties
-                    .GetTokens()
-                    .ToList();
-
-                    tokens.Add(new AuthenticationToken()
-                    {
-                        Name = "IsUserExternal",
-                        Value = "true"
-                    });
-
-                    ctx.Properties.StoreTokens(tokens);
-
-                    return Task.CompletedTask;
-                };
             });
 
             services.Configure<SecurityStampValidatorOptions>(options =>

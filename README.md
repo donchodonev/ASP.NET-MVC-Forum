@@ -19,9 +19,9 @@
 
 # Functionalities implemented so far
 
-* Registration - ASP.NET Identity
+* Registration - ASP.NET Identity, with the ability to register/login with Facebook
 * Login - ASP.NET Identity
-* Custom site user linked to Identity User (no Identity User pollution)
+* Custom site base-user linked to Identity User (no Identity User pollution)
 
 * Post Creation (via TinyMCE to make it look good)
 * Post Reading
