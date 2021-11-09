@@ -46,6 +46,7 @@ namespace ASP.NET_MVC_Forum
 
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
+                options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
