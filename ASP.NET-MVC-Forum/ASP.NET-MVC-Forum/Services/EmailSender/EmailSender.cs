@@ -25,7 +25,7 @@
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("admin@em3497.donchodonev.com", "Password Recovery"),
+                From = new EmailAddress("admin@em3497.donchodonev.com", "ASP.NET Forum"),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
