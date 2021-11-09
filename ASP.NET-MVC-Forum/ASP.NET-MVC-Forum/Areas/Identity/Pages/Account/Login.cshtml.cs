@@ -96,6 +96,12 @@
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
+
+                else if (!_userManager.Users.FirstOrDefault(x => x.UserName == Input.Username).EmailConfirmed)
+                {
+                    ModelState.AddModelError(string.Empty, "Please verify your email using the email we sent you upon registration. If you see no email in the email account you specified at login - please check your email account's SPAM folder too. You can also use the \"Resend email confirmation\" button to send a new confirmation email as well");
+                    return Page();
+                }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
