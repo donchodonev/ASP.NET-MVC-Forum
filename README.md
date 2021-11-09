@@ -12,6 +12,7 @@
 * Automapper - Jimmy Bogard and others - https://automapper.org/
 * Profanity Detector - Stephen Haunts -  https://github.com/stephenhaunts/ProfanityDetector
 * Image Sharp -  [James Jackson-South](https://github.com/jimbobsquarepants), [Dirk Lemstra](https://github.com/dlemstra), [Anton Firsov](https://github.com/antonfirsov) , [Scott Williams](https://github.com/tocsoft) ,[Brian Popow](https://github.com/brianpopow) - https://github.com/SixLabors/ImageSharp
+* SendGrid API
 * HTML/CSS/JS
 * Bootstrap
 * jQuery
