@@ -36,8 +36,8 @@
               asp-area="" asp-controller="Users" asp-action="UploadAvatar">
             <div class="form-group">
                 <hr class="mt-4 mb-3" />
-                <h5 class="mb-3">User image</h5>
-                <input type="file" name="file" accept="image/png, image/jpeg, image/bmp, image/webp, image/svg+xml">
+                <h5 class="mb-3">User image <a data-toggle="tooltip" data-placement="top" title="Allowed image formats: .PNG / .JPG / .JPEG / .BMP"><i class="bi bi-info-circle"></i></a></h5>
+                <input type="file" name="file" accept="image/png, image/jpeg, image/bmp">
             </div>
             <button class="btn btn-primary" type="submit">Upload</button>
         </form>

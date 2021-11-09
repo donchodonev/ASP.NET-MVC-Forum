@@ -80,10 +80,7 @@
             public const string JPEG = ".jpeg";
             public const string JPG = ".jpg";
             public const string PNG = ".png";
-            public const string WEBP = ".webp";
             public const string BMP = ".bmp";
-            public const string SVG = ".svg";
-            public string[] AllowedImageExtensionsArray = new string[5] { JPEG, JPG, PNG, WEBP, BMP };
         }
     }
 }
