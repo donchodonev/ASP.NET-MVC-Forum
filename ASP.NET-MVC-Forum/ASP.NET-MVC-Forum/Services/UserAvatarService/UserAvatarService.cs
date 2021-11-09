@@ -12,16 +12,16 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
     public class UserAvatarService : IUserAvatarService
     {
         private readonly IWebHostEnvironment enviroment;
+        private string[] validFileExtensions;
 
         public UserAvatarService(IWebHostEnvironment enviroment)
         {
             this.enviroment = enviroment;
+            validFileExtensions = new string[4] { JPG, JPEG, PNG, BMP};
         }
 
         public string GetImageExtension(IFormFile image)
         {
-            string[] validFileExtensions = new string[5] { JPG, JPEG, PNG, WEBP, BMP };
-
             string imageExtensionName = null;
 
             foreach (var currentFileExtension in validFileExtensions)
@@ -38,6 +38,11 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
 
         public async Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50)
         {
+            if (file == null)
+            {
+                throw new ArgumentOutOfRangeException("Please choose an image to upload before using the \"Upload\" button");
+            }
+
             if (!IsImageSizeValid(file.Length))
             {
                 throw new ArgumentOutOfRangeException("The image must be up to 5 MB (megabytes) in size");
@@ -47,8 +52,7 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
 
             if (imageExtension == null)
             {
-                string[] allowedFileExtensions = new string[5] { JPG, JPEG, PNG, WEBP, BMP };
-                throw new ArgumentOutOfRangeException($"The allowed image file formats are {string.Join(' ', allowedFileExtensions)}");
+                throw new ArgumentOutOfRangeException($"The allowed image file formats are {string.Join(' ', validFileExtensions)}");
             }
 
             string guid = Guid.NewGuid().ToString();

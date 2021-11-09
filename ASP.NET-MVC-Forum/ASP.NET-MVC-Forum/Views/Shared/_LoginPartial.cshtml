@@ -1,16 +1,24 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
-@inject SignInManager<IdentityUser> SignInManager
+﻿@inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ASP.NET_MVC_Forum.Services.User.IUserService userService;
+
+@{
+    @using Microsoft.AspNetCore.Identity
+    @using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+    @using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+}
 
 <ul class="navbar-nav">
 
     @if (SignInManager.IsSignedIn(User))
     {
+        string currentUserAvatar = userService.GetUserAvatar(this.User.Id()); // userAvatarSource
+
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle font-weight-bolder" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Hello <span class="font-italic">@User.Identity.Name</span>!
+                <img class="avatar-comment img-responsive rounded-circle mr-2" src="@currentUserAvatar" width="30" height="30"> <span class="font-italic">@User.Identity.Name</span>
             </a>
+
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 @if (User.IsInRole(AdminRoleName) || User.IsInRole(ModeratorRoleName))
                 {
