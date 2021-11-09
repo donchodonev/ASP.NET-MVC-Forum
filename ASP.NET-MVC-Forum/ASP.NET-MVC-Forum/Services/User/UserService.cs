@@ -8,6 +8,7 @@
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
@@ -28,6 +29,9 @@
 
         public async Task<int> AddАsync(IdentityUser identityUser, string firstName, string lastName, int? age = null)
         {
+            Claim localUserClaim = new Claim("IsUserLinkedToIdentity", "true");
+            await userManager.AddClaimAsync(identityUser,localUserClaim);
+
             var user = new User
             {
                 IdentityUserId = identityUser.Id,
@@ -44,6 +48,16 @@
 
         public async Task<int> GetBaseUserIdAsync(string identityUserId)
         {
+            var localUserClaim = await db
+                .UserClaims
+                .FirstOrDefaultAsync(x => x.UserId == identityUserId && x.ClaimType == "IsUserLinkedToIdentity");
+
+            if (localUserClaim == null)
+            {
+                var identityUser = await db.Users.FirstOrDefaultAsync(x => x.Id == identityUserId);
+                await AddАsync(identityUser,"","");
+            }
+
             return await Task
                .Run(() => db
                .BaseUsers

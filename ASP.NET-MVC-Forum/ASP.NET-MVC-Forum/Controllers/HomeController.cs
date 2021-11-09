@@ -5,6 +5,7 @@
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
@@ -19,12 +20,14 @@
         private readonly IPostService postsService;
         private readonly IMapper mapper;
         private readonly IMemoryCache memoryCache;
+        private readonly IUserService userService;
 
-        public HomeController(IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
+        public HomeController(IPostService postsService, IMapper mapper, IMemoryCache memoryCache,IUserService userService)
         {
             this.postsService = postsService;
             this.mapper = mapper;
             this.memoryCache = memoryCache;
+            this.userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -49,7 +52,8 @@
 
         private async Task<List<Post>> GetCachedPosts()
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
 
                 string cacheKey = "allPosts";
 

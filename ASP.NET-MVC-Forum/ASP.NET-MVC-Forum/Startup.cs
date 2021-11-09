@@ -11,6 +11,7 @@ namespace ASP.NET_MVC_Forum
     using ASP.NET_MVC_Forum.Services.UserAvatarService;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -23,6 +24,9 @@ namespace ASP.NET_MVC_Forum
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -53,6 +57,31 @@ namespace ASP.NET_MVC_Forum
 
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                facebookOptions.SaveTokens = true;
+
+                facebookOptions.Events.OnCreatingTicket = ctx =>
+                {
+                    List<AuthenticationToken> tokens = ctx
+                    .Properties
+                    .GetTokens()
+                    .ToList();
+
+                    tokens.Add(new AuthenticationToken()
+                    {
+                        Name = "IsUserExternal",
+                        Value = "true"
+                    });
+
+                    ctx.Properties.StoreTokens(tokens);
+
+                    return Task.CompletedTask;
+                };
+            });
 
             services.Configure<SecurityStampValidatorOptions>(options =>
             {
