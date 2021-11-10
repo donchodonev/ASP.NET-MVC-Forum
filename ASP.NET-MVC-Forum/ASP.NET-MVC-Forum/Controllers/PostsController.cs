@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Models.Category;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
@@ -36,7 +37,7 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId, withUserIncluded: true, withIdentityUserIncluded: true, withUserPostsIncluded: true, withCommentsIncluded: true, withVotesIncluded:true);
+            var post = await postService.GetByIdAsync(postId, PostQueryFilter.WithIdentityUser, PostQueryFilter.WithUserPosts,PostQueryFilter.WithComments, PostQueryFilter.WithVotes);
 
             if (post == null)
             {

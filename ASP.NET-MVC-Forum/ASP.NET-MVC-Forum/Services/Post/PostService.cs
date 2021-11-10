@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
@@ -26,69 +27,19 @@
         }
 
         /// <summary>
-        /// Returns all posts
+        /// Get all posts from database
         /// </summary>
-        /// <param name="withCategoryIncluded">True to include post's Category property, false for a null Category property</param>
-        /// <param name="withUserIncluded">True to include post's User property, false for a null User property</param>
-        /// <param name="withIdentityUserIncluded">True to include post's IdentityUser property, false for a null IdentityUser property</param>
-        /// <returns></returns>
-        public async Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        /// <param name="filters">A query filter enum used to materialize data from Post's navigational properties </param>
+        /// <returns>Returns IQueryable<Post></returns>
+        public async Task<IQueryable<Post>> AllAsync(params PostQueryFilter[] filters)
         {
-            return await Task.Run(() =>
-            {
-                var query = db.Posts
-                .Where(x => x.IsDeleted == false);
-
-                if (withCategoryIncluded)
+            return
+                await Task.Run(() =>
                 {
-                    query = query.Include(x => x.Category);
-                }
+                    var query = QueryBuilder(filters);
 
-                if (withUserIncluded)
-                {
-                    query = query.Include(x => x.User);
-                }
-
-                if (withIdentityUserIncluded)
-                {
-                    query = query.Include(x => x.User.IdentityUser);
-                }
-
-                return query.OrderByDescending(x => x.CreatedOn);
-            });
-        }
-
-
-        /// <summary>
-        /// Returns all posts with AsNoTracking for better performance. Only use with read-only operations
-        /// </summary>
-        /// <param name="withCategoryIncluded">True to include post's Category property, false for a null Category property</param>
-        /// <param name="withUserIncluded">True to include post's User property, false for a null User property</param>
-        /// <param name="withIdentityUserIncluded">True to include post's IdentityUser property, false for a null IdentityUser property</param>
-        /// <returns></returns>
-        public async Task<IQueryable<Post>> AllAsNoTrackingAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
-        {
-            return await Task.Run(() =>
-            {
-                var query = db.Posts.Where(x => x.IsDeleted == false);
-
-                if (withCategoryIncluded)
-                {
-                    query = query.Include(x => x.Category);
-                }
-
-                if (withUserIncluded)
-                {
-                    query = query.Include(x => x.User);
-                }
-
-                if (withIdentityUserIncluded)
-                {
-                    query = query.Include(x => x.User.IdentityUser);
-                }
-
-                return query.AsNoTracking();
-            });
+                    return query.OrderByDescending(x => x.CreatedOn);
+                });
         }
 
         /// <summary>
@@ -133,6 +84,12 @@
             return savedPost.Id;
         }
 
+
+        /// <summary>
+        /// Edits post
+        /// </summary>
+        /// <param name="post">The post to edit</param>
+        /// <returns>void</returns>
         public async Task EditPostAsync(Post post)
         {
             var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
@@ -164,52 +121,15 @@
             reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
         }
 
-        /// <summary>
-        /// Returns a Post object with the given Id
-        /// </summary>
-        /// <param name="postId">Post id</param>
-        /// <param name="withCategoryIncluded">True for Post's Category property to be included, false for null</param>
-        /// <param name="withUserIncluded">True for Post's User property to be included, false for null</param>
-        /// <param name="withIdentityUserIncluded">True for Post's User.IdentityUser property to be included, false for null</param>
-        /// <returns></returns>
-        public async Task<Post> GetByIdAsync
-            (int postId
-            , bool withCategoryIncluded = false
-            , bool withUserIncluded = false
-            , bool withIdentityUserIncluded = false
-            , bool withUserPostsIncluded = false
-            , bool withCommentsIncluded = false
-            , bool withVotesIncluded = false)
+
+        public async Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters)
         {
-            var query = db.Posts.Where(x => x.IsDeleted == false && x.Id == postId);
+            var query = 
+                 db
+                .Posts
+                .Where(x => x.Id == postId);
 
-            if (withCategoryIncluded)
-            {
-                query.Select(x => x.Category).Load();
-            }
-
-            if (withUserIncluded)
-            {
-                query.Select(x => x.User).Load();
-            }
-
-            if (withUserPostsIncluded)
-            {
-                query.Select(x => x.User.Posts).Load();
-            }
-
-            if (withIdentityUserIncluded)
-            {
-                query.Select(x => x.User.IdentityUser).Load();
-            }
-            if (withCommentsIncluded)
-            {
-                query.Select(x => x.Comments).Load();
-            }
-            if (withVotesIncluded)
-            {
-                query.Select(x => x.Votes).Load();
-            }
+            query = QueryBuilder(query, filters);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -378,6 +298,92 @@
             db.PostReports.Add(new PostReport() { PostId = postId, Reason = reportReason });
 
             await db.SaveChangesAsync();
+        }
+
+        private IQueryable<Post> QueryBuilder(params PostQueryFilter[] filters)
+        {
+            var query = db
+            .Posts
+            .AsQueryable();
+
+            foreach (var filter in filters)
+            {
+                switch (filter)
+                {
+                    case PostQueryFilter.WithoutDeleted:
+                        query = query.Where(x => x.IsDeleted == false);
+                        break;
+                    case PostQueryFilter.AsNoTracking:
+                        query = query.AsNoTracking();
+                        break;
+                    case PostQueryFilter.WithCategory:
+                        query = query.Include(x => x.Category);
+                        break;
+                    case PostQueryFilter.WithIdentityUser:
+                        query = query
+                            .Include(x => x.User)
+                            .ThenInclude(user => user.IdentityUser);
+                        break;
+                    case PostQueryFilter.WithUser:
+                        query = query.Include(x => x.User);
+                        break;
+                    case PostQueryFilter.WithComments:
+                        query = query.Include(x => x.Comments);
+                        break;
+                    case PostQueryFilter.WithUserPosts:
+                        query = query
+                            .Include(x => x.User)
+                            .ThenInclude(u => u.Posts);
+                        break;
+                    case PostQueryFilter.WithVotes:
+                        query = query
+                            .Include(x => x.Votes);
+                        break;
+                }
+            }
+
+            return query;
+        }
+
+        private IQueryable<Post> QueryBuilder(IQueryable<Post> posts,params PostQueryFilter[] filters)
+        {
+            foreach (var filter in filters)
+            {
+                switch (filter)
+                {
+                    case PostQueryFilter.WithoutDeleted:
+                        posts = posts.Where(x => x.IsDeleted == false);
+                        break;
+                    case PostQueryFilter.AsNoTracking:
+                        posts = posts.AsNoTracking();
+                        break;
+                    case PostQueryFilter.WithCategory:
+                        posts = posts.Include(x => x.Category);
+                        break;
+                    case PostQueryFilter.WithIdentityUser:
+                        posts = posts
+                            .Include(x => x.User)
+                            .ThenInclude(user => user.IdentityUser);
+                        break;
+                    case PostQueryFilter.WithUser:
+                        posts = posts.Include(x => x.User);
+                        break;
+                    case PostQueryFilter.WithComments:
+                        posts = posts.Include(x => x.Comments);
+                        break;
+                    case PostQueryFilter.WithUserPosts:
+                        posts = posts
+                            .Include(x => x.User)
+                            .ThenInclude(u => u.Posts);
+                        break;
+                    case PostQueryFilter.WithVotes:
+                        posts = posts
+                            .Include(x => x.Votes);
+                        break;
+                }
+            }
+
+            return posts;
         }
     }
 }

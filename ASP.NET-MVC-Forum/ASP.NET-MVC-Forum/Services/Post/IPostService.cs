@@ -1,19 +1,18 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Post
 {
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public interface IPostService
     {
-        public Task<IQueryable<Post>> AllAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
-
-        public Task<IQueryable<Post>> AllAsNoTrackingAsync(bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
+        public  Task<IQueryable<Post>> AllAsync(params PostQueryFilter[] filters);
 
         public Task<int> AddPostAsync(Post post, int baseUserId);
 
-        public Task<Post> GetByIdAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false, bool withUserPostsIncluded = false, bool withCommentsIncluded = false, bool withVotesIncluded = false);
+        public Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters);
 
         public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
             bool withUserPostsIncluded = false);
