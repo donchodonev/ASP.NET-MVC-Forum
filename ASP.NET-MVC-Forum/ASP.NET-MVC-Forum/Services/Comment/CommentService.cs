@@ -1,16 +1,15 @@
-﻿using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
-using ASP.NET_MVC_Forum.Data;
-using ASP.NET_MVC_Forum.Services.Comment.Models;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ASP.NET_MVC_Forum.Services.Comment
+﻿namespace ASP.NET_MVC_Forum.Services.Comment
 {
-    using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
+    using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.Comment.Models;
     using ASP.NET_MVC_Forum.Services.CommentReport;
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class CommentService : ICommentService
     {
@@ -32,7 +31,7 @@ namespace ASP.NET_MVC_Forum.Services.Comment
 
             await db.SaveChangesAsync();
 
-            commentReportService.AutoGenerateCommentReport(comment.Content,comment.Id);
+            commentReportService.AutoGenerateCommentReport(comment.Content, comment.Id);
 
             return comment.Id;
         }

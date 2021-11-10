@@ -90,7 +90,10 @@
         private List<AllCategoryViewModel> GetSearchedCategories(List<AllCategoryViewModel> categories, string searchTerm)
         {
             categories = categories
-                .Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()))
+                .Where(x => x
+                .Name
+                .ToLower()
+                .Contains(searchTerm.ToLower()))
                 .ToList();
 
             return categories;

@@ -12,7 +12,9 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
@@ -20,6 +22,9 @@
 
     public class PostsController : Controller
     {
+        private const string PostDeletedMessege = "Your post has already been successfully deleted. Please allow 60 seconds to pass after which will stop being displayed";
+        private const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
+
         private readonly IUserService userService;
         private readonly IPostService postService;
         private readonly ICategoryService categoryService;
@@ -50,15 +55,10 @@
 
             var vm = mapper.Map<ViewPostViewModel>(post);
 
+
             if (signInManager.IsSignedIn(this.User))
             {
-                int userId = await userService.GetBaseUserIdAsync(this.User.Id());
-                var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
-
-                if (userLastVote != null)
-                {
-                    vm.UserLastVoteChoice = (int)userLastVote.VoteType;
-                }
+               vm.UserLastVoteChoice = GetUserLastVote(post, vm, this.User);
             }
 
             return View(vm);
@@ -127,23 +127,7 @@
                 return RedirectToAction("Edit", "Posts", new { postId = data.PostId });
             }
 
-            foreach (var kvp in postChanges)
-            {
-                if (kvp.Key == "HtmlContent")
-                {
-                    originalPost.HtmlContent = data.HtmlContent;
-                }
-                if (kvp.Key == "Title")
-                {
-                    originalPost.Title = data.Title;
-                }
-                if (kvp.Key == "CategoryId")
-                {
-                    originalPost.CategoryId = data.CategoryId;
-                }
-            }
-
-            var userId = await userService.GetBaseUserIdAsync(this.User.Id());
+            AddPostChanges(originalPost,data,postChanges);
 
             await postService.EditPostAsync(originalPost);
 
@@ -160,10 +144,11 @@
 
             if (isPostDeleted == true)
             {
-                TempData["ErrorMessage"] = "Your post has already been successfully deleted. Please allow 60 seconds to pass after which will stop being displayed";
+                TempData["ErrorMessage"] = PostDeletedMessege;
+
                 return RedirectToAction("Index", "Home");
             }
-            else if (isPostDeleted == null)
+            else if (!isPostDeleted.HasValue)
             {
                 BadRequest();
             }
@@ -183,7 +168,7 @@
 
             await postService.AddPostReport(postId, content);
 
-            TempData["Message"] = "Thank you for your report, our moderators will review it as quickly as possible !";
+            TempData["Message"] = ReportThankYouMessage;
 
             return RedirectToAction("Index", "Home");
         }
@@ -235,6 +220,42 @@
             if (!await postService.UserCanEditAsync(userId, postId) || !this.User.IsAdmin())
             {
                 RedirectToAction("Index", "Home");
+            }
+        }
+
+        private int GetUserLastVote(Post post, ViewPostViewModel vm, ClaimsPrincipal user)
+        {
+            int userId = userService
+                .GetBaseUserIdAsync(user.Id())
+                .GetAwaiter()
+                .GetResult();
+
+            var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
+
+            if (userLastVote != null)
+            {
+                return (int)userLastVote.VoteType;
+            }
+
+            return 0;
+        }
+
+        private void AddPostChanges(Post originalPost,EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
+        {
+            foreach (var kvp in postChanges)
+            {
+                if (kvp.Key == "HtmlContent")
+                {
+                    originalPost.HtmlContent = newPostData.HtmlContent;
+                }
+                if (kvp.Key == "Title")
+                {
+                    originalPost.Title = newPostData.Title;
+                }
+                if (kvp.Key == "CategoryId")
+                {
+                    originalPost.CategoryId = newPostData.CategoryId;
+                }
             }
         }
     }

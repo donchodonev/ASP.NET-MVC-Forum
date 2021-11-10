@@ -161,7 +161,7 @@ namespace ASP.NET_MVC_Forum
 
                 endpoints.MapControllerRoute(
                 name: "Post view",
-                pattern: "/Posts/ViewPost/{postId}/{postTitle}",
+                pattern: "/Posts/ViewPost/{postId}",
                 defaults: new
                 {
                     controller = "Posts",
