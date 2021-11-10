@@ -7,7 +7,16 @@
     ViewData["Title"] = "View Post";
     @Html.HiddenFor(x => x.PostId);
 
-    string currUserAvatar = userService.GetUserAvatar(this.User.Id());
+    string currUserAvatar;
+
+    if (this.User.Identity.IsAuthenticated)
+    {
+        currUserAvatar = userService.GetUserAvatar(this.User.Id());
+    }
+    else
+    {
+        currUserAvatar = "/avatar/defaultUserImage.png";
+    }
 
     var userUsername = this.User.Identity.Name;
 
