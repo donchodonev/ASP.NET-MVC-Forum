@@ -125,8 +125,8 @@
         /// <summary>
         /// Gets post from database via it's Id
         /// </summary>
-        /// <param name="postId"></param>
-        /// <param name="filters"></param>
+        /// <param name="postId">Post Id</param>
+        /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<Post></returns>
         public async Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters)
         {
@@ -144,8 +144,8 @@
         /// <summary>
         /// Get all posts from category matching the category id given to the method, filtered by chosen filters (if any)
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <param name="filters"></param>
+        /// <param name="categoryId">Posts' category Id</param>
+        /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
         public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, params PostQueryFilter[] filters)
         {
@@ -164,7 +164,7 @@
         /// <summary>
         /// Checks if post exists by post title
         /// </summary>
-        /// <param name="postTitle"></param>
+        /// <param name="postTitle">Post's title</param>
         /// <returns>Task<bool></returns>
         public async Task<bool> PostExistsAsync(string postTitle)
         {
@@ -177,7 +177,7 @@
         /// <summary>
         /// Checks if post exists by post Id
         /// </summary>
-        /// <param name="postId"></param>
+        /// <param name="postId">Post's Id</param>
         /// <returns>async Task<bool></returns>
         public async Task<bool> PostExistsAsync(int postId)
         {
@@ -190,8 +190,8 @@
         /// <summary>
         /// Gets all user posts by user Id asynchronously
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="filters"></param>
+        /// <param name="userId">Post's author (user) Id</param>
+        /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
         public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters)
         {
@@ -208,8 +208,8 @@
         /// <summary>
         /// Get post by post id filtered by chosen filters
         /// </summary>
-        /// <param name="postId"></param>
-        /// <param name="filters"></param>
+        /// <param name="postId">Post's Id</param>
+        /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
         public async Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters)
         {
@@ -226,8 +226,8 @@
         /// <summary>
         /// Checks if a post belongs to a cerain user by id
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="postId"></param>
+        /// <param name="userId">User's Id (author)</param>
+        /// <param name="postId">Post's Id</param>
         /// <returns>Task<bool></returns>
         public async Task<bool> UserCanEditAsync(int userId, int postId)
         {
@@ -240,10 +240,10 @@
         /// <summary>
         /// Checks which parts of a post have been changed during edit (if any)
         /// </summary>
-        /// <param name="originalPost"></param>
-        /// <param name="newHtmlContent"></param>
-        /// <param name="newTitle"></param>
-        /// <param name="newCategoryId"></param>
+        /// <param name="originalPost">The source post</param>
+        /// <param name="newHtmlContent">The new post html content</param>
+        /// <param name="newTitle">The new post title</param>
+        /// <param name="newCategoryId">The new post category Id</param>
         /// <returns>Task<Dictionary<string, bool>></returns>
         public async Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
         {
@@ -273,7 +273,7 @@
         /// <summary>
         /// Sanitizes then decodes given raw HTML string
         /// </summary>
-        /// <param name="html"></param>
+        /// <param name="html">Post's raw HTML content</param>
         /// <returns>string</returns>
         public string SanitizeAndDecodeHtmlContent(string html)
         {
@@ -283,7 +283,7 @@
         /// <summary>
         /// Deletes post by post id
         /// </summary>
-        /// <param name="postId"></param>
+        /// <param name="postId">Post's Id</param>
         /// <returns>Task</returns>
         public async Task DeletePostAsync(int postId)
         {
@@ -313,8 +313,8 @@
         /// <summary>
         /// Checks if a post with this Id and Title is deleted
         /// </summary>
-        /// <param name="postId"></param>
-        /// <param name="postTitle"></param>
+        /// <param name="postId">Post's Id</param>
+        /// <param name="postTitle">Post's Title</param>
         /// <returns>Task<bool?></returns>
         public async Task<bool?> IsPostDeleted(int postId, string postTitle)
         {
@@ -400,7 +400,7 @@
         /// Builds a query according to provided filters with a source query of type IQueryable<Post>
         /// </summary>
         /// <param name="posts">User pre-defined posts query to the database</param>
-        /// <param name="filters">The array of filters of type PostQueryFilter</param>
+        /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns></returns>
         private IQueryable<Post> QueryBuilder(IQueryable<Post> posts, params PostQueryFilter[] filters)
         {
