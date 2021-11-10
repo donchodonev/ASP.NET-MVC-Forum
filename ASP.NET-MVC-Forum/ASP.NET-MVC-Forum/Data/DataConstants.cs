@@ -69,6 +69,7 @@
         {
             public const string AvatarWebPath = "/avatar/";
             public const string AvatarDirectoryPath = "\\wwwroot\\avatar\\";
+            public const string AvatarURL = "/avatar/defaultUserImage.png";
         }
 
         public class ImageConstants

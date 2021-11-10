@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.AspNetCore.Http;
+    using ASP.NET_MVC_Forum.Services.Enums;
 
     public interface IUserService
     {
@@ -21,15 +22,15 @@
 
         public Task<int> UserPostsCount(int userId);
 
-        public IQueryable<User> GetAll(bool withIdentityIncluded = false);
+        public IQueryable<User> GetAll(params UserQueryFilter[] filters);
 
         public bool UserExists(int userId);
 
         public bool IsBanned(int userId);
 
-        public User GetUser(int userId, bool withIdentityUser = false, bool withTracking = true);
+        public User GetUser(int userId, params UserQueryFilter[] filters);
 
-        public User GetUser(string identityUserId, bool withIdentityUser = false, bool withTracking = true);
+        public User GetUser(string identityUserId, params UserQueryFilter[] filters);
 
         public void Ban(int userId);
 

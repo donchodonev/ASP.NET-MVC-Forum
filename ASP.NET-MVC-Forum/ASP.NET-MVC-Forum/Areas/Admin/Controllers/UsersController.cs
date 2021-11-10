@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -27,11 +28,15 @@
         }
         public IActionResult Index()
         {
-            var users = mapper
-                .Map<List<UserViewModel>>(userService.GetAll(withIdentityIncluded: true))
+            var allUsers = userService.GetAll(UserQueryFilter.WithIdentityUser);
+
+            var vm = mapper
+                .Map<List<UserViewModel>>(allUsers)
                 .ToList();
 
-            return View(ReturnUsersWithRoles(users));
+            var vmWithRoles = ReturnUsersWithRoles(vm);
+
+            return View(vmWithRoles);
         }
 
         public IActionResult Ban(int userId)
@@ -86,7 +91,7 @@
             }
 
             var identityUser = userService
-                .GetUser(userId,true)
+                .GetUser(userId,UserQueryFilter.WithIdentityUser)
                 .IdentityUser;
 
             bool isUserModerator = userManager
@@ -116,7 +121,7 @@
             }
 
             var identityUser = userService
-                .GetUser(userId, true)
+                .GetUser(userId,UserQueryFilter.WithIdentityUser)
                 .IdentityUser;
 
             int userRolesCount = userManager.GetRolesAsync(identityUser).GetAwaiter().GetResult().Count;
