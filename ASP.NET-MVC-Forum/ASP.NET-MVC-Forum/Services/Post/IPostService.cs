@@ -14,16 +14,15 @@
 
         public Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters);
 
-        public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
-            bool withUserPostsIncluded = false);
+        public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, params PostQueryFilter[] filters);
 
         public Task<bool> PostExistsAsync(string postTitle);
 
         public Task<bool> PostExistsAsync(int postId);
 
-        public Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
+        public Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters);
 
-        public Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false);
+        public  Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters);
 
         public Task<bool> UserCanEditAsync(int userId, int postId);
 

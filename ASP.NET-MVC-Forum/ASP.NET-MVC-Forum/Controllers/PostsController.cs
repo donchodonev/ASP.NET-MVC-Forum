@@ -37,7 +37,11 @@
 
         public async Task<IActionResult> ViewPost(int postId, string postTitle)
         {
-            var post = await postService.GetByIdAsync(postId, PostQueryFilter.WithIdentityUser, PostQueryFilter.WithUserPosts,PostQueryFilter.WithComments, PostQueryFilter.WithVotes);
+            var post = await postService.GetByIdAsync(postId,
+                PostQueryFilter.WithIdentityUser,
+                PostQueryFilter.WithUserPosts,
+                PostQueryFilter.WithComments,
+                PostQueryFilter.WithVotes);
 
             if (post == null)
             {
@@ -96,8 +100,11 @@
         {
             await ValidatePostOwnership(postId);
 
+            var post = await postService
+                .GetByIdAsQueryableAsync(postId, PostQueryFilter.WithCategory);
+
             var vm = mapper
-                .ProjectTo<EditPostFormModel>(await postService.GetByIdAsQueryableAsync(postId, withCategoryIncluded: true))
+                .ProjectTo<EditPostFormModel>(post)
                 .First();
 
             vm.Categories = await GetCategoryIdAndNameCombinations();

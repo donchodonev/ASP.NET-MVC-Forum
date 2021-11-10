@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
@@ -29,7 +30,7 @@
         public async Task<IActionResult> UserPosts()
         {
             var userId = await userService.GetBaseUserIdAsync(this.User.Id());
-            var vm = mapper.ProjectTo<PostPreviewViewModel>(await postService.GetByUserIdAsync(userId, withUserIncluded: true, withIdentityUserIncluded: true));
+            var vm = mapper.ProjectTo<PostPreviewViewModel>(await postService.GetByUserIdAsync(userId, PostQueryFilter.WithIdentityUser, PostQueryFilter.WithoutDeleted));
 
             return View("_PostsPreviewPartial", vm.ToList());
         }

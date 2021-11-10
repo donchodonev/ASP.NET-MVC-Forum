@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Models.Category;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
@@ -40,21 +41,22 @@
             return View(categories);
         }
 
-        public async Task<IActionResult> CategoryContent([FromRoute] int categoryId)
+        public async Task<IActionResult> CategoryContent([FromQuery] int categoryId)
         {
             if (!this.ModelState.IsValid)
             {
                 return BadRequest();
             }
 
+            var postsByCategory = await postService.GetByCategoryAsync(
+                    categoryId,
+                    PostQueryFilter.WithoutDeleted,
+                    PostQueryFilter.WithIdentityUser,
+                    PostQueryFilter.WithUserPosts);
+
             var vm =
                 mapper
-                .Map<List<PostPreviewViewModel>>(await postService
-                .GetByCategoryAsync(
-                    categoryId,
-                    withUserIncluded: true,
-                    withIdentityUserIncluded: true,
-                    withUserPostsIncluded:true));
+                .Map<List<PostPreviewViewModel>>(postsByCategory);
 
             return View("_PostsPreviewPartial", vm);
 

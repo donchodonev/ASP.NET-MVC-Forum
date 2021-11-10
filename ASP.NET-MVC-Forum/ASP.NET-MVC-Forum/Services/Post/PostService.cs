@@ -122,9 +122,15 @@
         }
 
 
+        /// <summary>
+        /// Gets post from database via it's Id
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="filters"></param>
+        /// <returns>Task<Post></returns>
         public async Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters)
         {
-            var query = 
+            var query =
                  db
                 .Posts
                 .Where(x => x.Id == postId);
@@ -134,97 +140,111 @@
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false,
-            bool withUserPostsIncluded = false)
+
+        /// <summary>
+        /// Get all posts from category matching the category id given to the method, filtered by chosen filters (if any)
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="filters"></param>
+        /// <returns>Task<IQueryable<Post>></returns>
+        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, params PostQueryFilter[] filters)
         {
             return await Task.Run(() =>
             {
-                var query = db.Posts.Where(x => x.IsDeleted == false && x.CategoryId == categoryId);
+                var query = db
+                .Posts
+                .Where(x => x.CategoryId == categoryId);
 
-                if (withUserIncluded)
-                {
-                    query = query.Include(x => x.User);
-                }
-
-                if (withUserPostsIncluded)
-                {
-                    query = query.Include(x => x.User.Posts);
-                }
-
-                if (withIdentityUserIncluded)
-                {
-                    query = query.Include(x => x.User.IdentityUser);
-                }
+                query = QueryBuilder(query, filters);
 
                 return query.OrderByDescending(x => x.CreatedOn);
             });
         }
 
+        /// <summary>
+        /// Checks if post exists by post title
+        /// </summary>
+        /// <param name="postTitle"></param>
+        /// <returns>Task<bool></returns>
         public async Task<bool> PostExistsAsync(string postTitle)
         {
-            return await db.Posts.AnyAsync(x => x.Title == postTitle);
+            return await db
+                .Posts
+                .AsNoTracking()
+                .AnyAsync(x => x.Title == postTitle);
         }
 
+        /// <summary>
+        /// Checks if post exists by post Id
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns>async Task<bool></returns>
         public async Task<bool> PostExistsAsync(int postId)
         {
-            return await db.Posts.AnyAsync(x => x.Id == postId);
+            return await db
+                .Posts
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == postId);
         }
 
-        public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        /// <summary>
+        /// Gets all user posts by user Id asynchronously
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="filters"></param>
+        /// <returns>Task<IQueryable<Post>></returns>
+        public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters)
         {
             return await Task.Run(() =>
             {
-                var query = db.Posts.Where(x => x.IsDeleted == false && x.UserId == userId);
+                var query = db.Posts.Where(x => x.UserId == userId);
 
-                if (withCategoryIncluded)
-                {
-                    query = query.Include(x => x.Category);
-                }
-
-                if (withUserIncluded)
-                {
-                    query = query.Include(x => x.User);
-                }
-
-                if (withIdentityUserIncluded)
-                {
-                    query = query.Include(x => x.User.IdentityUser);
-                }
+                query = QueryBuilder(query, filters);
 
                 return query.OrderByDescending(x => x.CreatedOn);
             });
         }
 
-        public async Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, bool withCategoryIncluded = false, bool withUserIncluded = false, bool withIdentityUserIncluded = false)
+        /// <summary>
+        /// Get post by post id filtered by chosen filters
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="filters"></param>
+        /// <returns>Task<IQueryable<Post>></returns>
+        public async Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters)
         {
             return await Task.Run(() =>
             {
-                var query = db.Posts.Where(x => x.IsDeleted == false && x.Id == postId);
+                var query = db.Posts.Where(x => x.Id == postId);
 
-                if (withCategoryIncluded)
-                {
-                    query = query.Include(x => x.Category);
-                }
-
-                if (withUserIncluded)
-                {
-                    query = query.Include(x => x.User);
-                }
-
-                if (withIdentityUserIncluded)
-                {
-                    query = query.Include(x => x.User.IdentityUser);
-                }
+                query = QueryBuilder(query, filters);
 
                 return query;
             });
         }
 
+        /// <summary>
+        /// Checks if a post belongs to a cerain user by id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="postId"></param>
+        /// <returns>Task<bool></returns>
         public async Task<bool> UserCanEditAsync(int userId, int postId)
         {
-            return await db.Posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
+            return await db
+                .Posts
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
+        /// <summary>
+        /// Checks which parts of a post have been changed during edit (if any)
+        /// </summary>
+        /// <param name="originalPost"></param>
+        /// <param name="newHtmlContent"></param>
+        /// <param name="newTitle"></param>
+        /// <param name="newCategoryId"></param>
+        /// <returns>Task<Dictionary<string, bool>></returns>
         public async Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
         {
             return await Task.Run(() =>
@@ -250,11 +270,21 @@
             });
         }
 
+        /// <summary>
+        /// Sanitizes then decodes given raw HTML string
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns>string</returns>
         public string SanitizeAndDecodeHtmlContent(string html)
         {
             return HttpUtility.HtmlDecode(sanitizer.Sanitize(html));
         }
 
+        /// <summary>
+        /// Deletes post by post id
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns>Task</returns>
         public async Task DeletePostAsync(int postId)
         {
             var currentTime = DateTime.UtcNow;
@@ -275,15 +305,23 @@
 
             postToMarkAsDeleted.ModifiedOn = currentTime;
 
-
             db.Update(postToMarkAsDeleted);
 
             await db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Checks if a post with this Id and Title is deleted
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="postTitle"></param>
+        /// <returns>Task<bool?></returns>
         public async Task<bool?> IsPostDeleted(int postId, string postTitle)
         {
-            var post = await db.Posts.FirstOrDefaultAsync(x => x.Id == postId && x.Title == postTitle);
+            var post = await db
+                .Posts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == postId && x.Title == postTitle);
 
             if (post == null)
             {
@@ -293,13 +331,26 @@
             return post.IsDeleted;
         }
 
+        /// <summary>
+        /// Adds a new post report
+        /// </summary>
+        /// <param name="postId">The post Id</param>
+        /// <param name="reportReason">The reason for which the post is reported</param>
+        /// <returns>Task</returns>
         public async Task AddPostReport(int postId, string reportReason)
         {
-            db.PostReports.Add(new PostReport() { PostId = postId, Reason = reportReason });
+            db
+            .PostReports
+            .Add(new PostReport() { PostId = postId, Reason = reportReason });
 
             await db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Builds a query according to provided filters
+        /// </summary>
+        /// <param name="filters">The array of filters of type PostQueryFilter</param>
+        /// <returns>IQueryable<Post></returns>
         private IQueryable<Post> QueryBuilder(params PostQueryFilter[] filters)
         {
             var query = db
@@ -345,8 +396,19 @@
             return query;
         }
 
-        private IQueryable<Post> QueryBuilder(IQueryable<Post> posts,params PostQueryFilter[] filters)
+        /// <summary>
+        /// Builds a query according to provided filters with a source query of type IQueryable<Post>
+        /// </summary>
+        /// <param name="posts">User pre-defined posts query to the database</param>
+        /// <param name="filters">The array of filters of type PostQueryFilter</param>
+        /// <returns></returns>
+        private IQueryable<Post> QueryBuilder(IQueryable<Post> posts, params PostQueryFilter[] filters)
         {
+            if (posts.Count() == 0)
+            {
+                return posts;
+            }
+
             foreach (var filter in filters)
             {
                 switch (filter)

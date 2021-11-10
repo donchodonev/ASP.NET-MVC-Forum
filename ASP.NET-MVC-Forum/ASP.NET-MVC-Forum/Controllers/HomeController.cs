@@ -56,8 +56,11 @@
 
                 if (!memoryCache.TryGetValue<List<Post>>(cacheKey, out List<Post> posts))
                 {
-                    posts = postsService
-                        .AllAsync(PostQueryFilter.WithUser,PostQueryFilter.WithIdentityUser,PostQueryFilter.WithoutDeleted,PostQueryFilter.AsNoTracking)
+                    posts = postsService.AllAsync(
+                        PostQueryFilter.WithUser,
+                        PostQueryFilter.WithIdentityUser,
+                        PostQueryFilter.WithoutDeleted,
+                        PostQueryFilter.AsNoTracking)
                         .GetAwaiter()
                         .GetResult()
                         .ToList();
