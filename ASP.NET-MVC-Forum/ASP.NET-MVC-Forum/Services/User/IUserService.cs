@@ -27,9 +27,9 @@
 
         public bool IsBanned(int userId);
 
-        public User GetUser(int userId, bool withIdentityUser = false);
+        public User GetUser(int userId, bool withIdentityUser = false, bool withTracking = true);
 
-        public User GetUser(string identityUserId, bool withIdentityUser = false);
+        public User GetUser(string identityUserId, bool withIdentityUser = false, bool withTracking = true);
 
         public void Ban(int userId);
 

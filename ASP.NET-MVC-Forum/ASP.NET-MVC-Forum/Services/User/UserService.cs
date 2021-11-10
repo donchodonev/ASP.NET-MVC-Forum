@@ -8,7 +8,6 @@
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
@@ -48,8 +47,9 @@
             return await Task
                .Run(() => db
                .BaseUsers
-               .FirstOrDefault(x => x.IdentityUserId == identityUserId).Id
-               );
+               .AsNoTracking()
+               .FirstOrDefault(x => x.IdentityUserId == identityUserId)
+               .Id);
         }
 
         public async Task<int> UserPostsCount(int userId)
@@ -58,6 +58,7 @@
             {
                 return db
                 .BaseUsers
+                .AsNoTracking()
                 .FirstOrDefault(x => x.Id == userId)
                 .Posts
                 .Count;
@@ -68,7 +69,7 @@
         {
             var query = db
                 .BaseUsers
-                .AsQueryable<User>();
+                .AsNoTracking();
 
             if (withIdentityIncluded)
             {
@@ -82,6 +83,7 @@
         {
             return db
                 .BaseUsers
+                .AsNoTracking()
                 .Any(x => x.Id == userId);
         }
 
@@ -89,15 +91,23 @@
         {
             return db
                 .BaseUsers
+                .AsNoTracking()
                 .First(x => x.Id == userId)
                 .IsBanned;
         }
 
-        public User GetUser(int userId, bool withIdentityUser = false)
+        public User GetUser(int userId, bool withIdentityUser = false, bool withTracking = true)
         {
             var query = db
                 .BaseUsers
-                .Where(x => x.Id == userId);
+                .AsQueryable();
+
+            if (!withTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            query = query.Where(x => x.Id == userId);
 
             if (withIdentityUser)
             {
@@ -107,11 +117,18 @@
             return query.SingleOrDefault();
         }
 
-        public User GetUser(string identityUserId, bool withIdentityUser = false)
+        public User GetUser(string identityUserId, bool withIdentityUser = false, bool withTracking = true)
         {
             var query = db
                 .BaseUsers
-                .Where(x => x.IdentityUserId == identityUserId);
+                .AsQueryable();
+
+            if (!withTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            query = query.Where(x => x.IdentityUserId == identityUserId);
 
             if (withIdentityUser)
             {
