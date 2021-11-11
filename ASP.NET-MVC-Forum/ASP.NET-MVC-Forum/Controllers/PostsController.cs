@@ -40,7 +40,7 @@
             this.signInManager = signInManager;
         }
 
-        public async Task<IActionResult> ViewPost(int postId, string postTitle)
+        public async Task<IActionResult> ViewPost(int postId)
         {
             var post = await postService.GetByIdAsync(postId,
                 PostQueryFilter.WithIdentityUser,
@@ -54,7 +54,6 @@
             }
 
             var vm = mapper.Map<ViewPostViewModel>(post);
-
 
             if (signInManager.IsSignedIn(this.User))
             {

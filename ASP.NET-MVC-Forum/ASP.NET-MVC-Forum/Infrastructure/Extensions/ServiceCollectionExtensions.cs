@@ -17,6 +17,7 @@
     using ProfanityFilter.Interfaces;
     using ProfanityFilter;
     using ASP.NET_MVC_Forum.Services.EmailSender;
+    using ASP.NET_MVC_Forum.Services.Chart;
 
     public static class ServiceCollectionExtensions
     {
@@ -55,8 +56,9 @@
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddTransient<IVoteService, VoteService>();
             services.AddTransient<IUserAvatarService, UserAvatarService>();
-            services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IChartService, ChartService>();
+            services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

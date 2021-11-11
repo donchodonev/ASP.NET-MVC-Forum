@@ -1,20 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 {
+    using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Services.Chart;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class StatsController : ControllerBase
     {
-        public StatsController()
-        {
+        private readonly IChartService chartService;
 
+        public StatsController(IChartService chartService)
+        {
+            this.chartService = chartService;
         }
 
         [Route("most-commented-posts/{count:int?}")]
-        public ActionResult GetMostCommentedPosts(int resultCount = 5)
+        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostCommentedPosts(int resultCount = 7) // can be changed in the future
         {
-            return this.LocalRedirect("");
+            var chartData = chartService.GetMostCommentedPostsChartData(resultCount);
+
+            return Ok(new {chartData, fileDownLoadName = "Top posts ordered descending by comments count" });
         }
     }
 }
