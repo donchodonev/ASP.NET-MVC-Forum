@@ -3,20 +3,27 @@
 let myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['', '', '', '', '', '', '', ''],
+        labels: [],
         datasets: [{
             label: '',
             data: [],
             backgroundColor: [],
             borderColor: [],
             borderWidth: 1,
-            tooltip:[]
+            tooltip: []
         }]
     },
     options: {
         plugins: {
             legend: {
                 display: false
+            }
+        },
+        animation: {
+            onComplete: function () {
+                element = document.getElementById('download-chart-image');
+                element.href = this.toBase64Image();
+                element.download = 'chart image not generated yet.png';
             }
         },
         scales: {
@@ -34,7 +41,6 @@ function getChart() {
 
     $.get(selectedChartApiUrl,
         function (data) {
-
             while (myChart.data.labels.length > 0) {
                 myChart.data.labels.pop();
             };
@@ -52,10 +58,12 @@ function getChart() {
                 myChart.data.datasets[0].borderColor.push(data.chartData[i].color);
             }
 
-            let element = document.getElementById('download-chart-image');
-            element.href = myChart.toBase64Image();
-            element.download = data.fileDownLoadName;
-
+            myChart.options.animation.onComplete = function () {
+                let element = document.getElementById('download-chart-image');
+                element.href = this.toBase64Image();
+                element.download = data.fileDownLoadName;
+                $("#download-chart-image").removeClass("visually-hidden");
+            };
 
             myChart.update();
         });
