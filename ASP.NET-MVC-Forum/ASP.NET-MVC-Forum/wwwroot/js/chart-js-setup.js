@@ -19,13 +19,6 @@ let myChart = new Chart(ctx, {
                 display: false
             }
         },
-        animation: {
-            onComplete: function () {
-                element = document.getElementById('download-chart-image');
-                element.href = this.toBase64Image();
-                element.download = 'chart image not generated yet.png';
-            }
-        },
         scales: {
             y: {
                 beginAtZero: true
@@ -73,3 +66,4 @@ function getChart() {
 window.onload = function () {
     getChart();
 };
+
