@@ -26,6 +26,79 @@
             return app;
         }
 
+        public static void SetupRouting(this IApplicationBuilder app)
+        {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "AreaAdminHome",
+                    pattern: "/{area:exists}/{controller=Home}/{action=Index}");
+
+                endpoints.MapControllerRoute(
+                      name: "AreaAdminPostReports",
+                     pattern: "/{area:exists}/{controller=PostReports}/{action=Index}/{reportStatus}");
+
+                endpoints.MapControllerRoute(
+                      name: "AreaAdminCommentReports",
+                     pattern: "/{area:exists}/{controller=PostReports}/{action=Index}/{reportStatus}");
+
+                endpoints.MapControllerRoute(
+                      name: "AreaAdminUsers",
+                     pattern: "/{area:exists}/{controller=Users}/{action=Index}");
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                name: "Post Delete",
+                pattern: "/Posts/Delete/{postId}/{postTitle}",
+                defaults: new
+                {
+                    controller = "Posts",
+                    action = "Delete",
+                });
+
+                endpoints.MapControllerRoute(
+                name: "Post view",
+                pattern: "/Posts/ViewPost/{postId}",
+                defaults: new
+                {
+                    controller = "Posts",
+                    action = "ViewPost",
+                });
+
+                endpoints.MapControllerRoute(
+                name: "Post report",
+                pattern: "/Posts/Report/{postId}",
+                defaults: new
+                {
+                    controller = "Posts",
+                    action = "Report",
+                });
+
+                endpoints.MapControllerRoute(
+                    name: "Category Info",
+                    pattern: "/Categories/CategoryContent/{categoryId}/{categoryName}",
+                    defaults: new
+                    {
+                        controller = "Categories",
+                        action = "CategoryContent",
+                    });
+
+                endpoints.MapControllerRoute(
+                    name: "Add post",
+                    pattern: "/Posts/Add/{title?}/{categoryId?}",
+                    defaults: new
+                    {
+                        controller = "Posts",
+                        action = "Add",
+                    });
+
+                endpoints.MapRazorPages();
+            });
+        }
+
         private static void SeedCategories(IServiceProvider services)
         {
             var data = services.GetRequiredService<ApplicationDbContext>();
