@@ -16,6 +16,7 @@
 * HTML/CSS/JS
 * Bootstrap
 * jQuery
+* Chart.js
 * IIS - for deployment to WWW
 
 # Functionalities implemented so far
@@ -41,9 +42,12 @@
 * Post deletion/restoration along with report 
 * Post comment deletion/restoration along with report 
 
-* Post voting with AJAX and WebAPI
+* Post up/dpwn voting with AJAX and WebAPI
 
 * Admin area
+* Admin area dashboart with charts on the main page
+* Chart supplement data (post title, link to post title, count of entities)
+* Each chart represents real data and upon selecting a new chart from the dropdown menu - chart data is updated with AJAX and WebAPI, this also triggers the removal of supplement post data surrounding the chart and the chart image download button. Upon a successful chart data update - the html list elements are re-drawn , the same applies for the chart image download button
 
 * Post report resolving and restoring (admin has the option to visit Post from the report card and/or view report text content and how much time has passed since it's creation)
 * Marking post report as resolved while marking the post itself as deleted automatically
