@@ -22,6 +22,7 @@
 # Functionalities implemented so far
 
 * Registration - ASP.NET Identity, with the ability to register/login with Facebook
+* Email registration confirmation
 * Login - ASP.NET Identity
 * Custom site base-user linked to Identity User (no Identity User pollution)
 
@@ -59,7 +60,6 @@
 * User promoting/demoting leads to immediate (banned)user log-out to reset claims
 * Users can upload an image which would then be used as their avatar (image is stored locally as a physical file, type-checked, name GUIDified to prevent avatars for-eaching and for better user-image anonimity)
 * User image resizing before upload to reduce site traffic and improve page-load time (default is 50x50px)
-
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
