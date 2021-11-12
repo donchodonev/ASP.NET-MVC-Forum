@@ -34,5 +34,13 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by vote sum" });
         }
+
+        [Route("most-reported-posts/{count:int?}")]
+        public ActionResult<List<MostCommentedPostsResponeModel>> GetReportedPosts(int resultCount = 7) // count can be changed in the future
+        {
+            var chartData = chartService.GetMostReportedPostsChartData(resultCount);
+
+            return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by reports count" });
+        }
     }
 }

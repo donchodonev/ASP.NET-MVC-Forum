@@ -29,29 +29,31 @@ let myChart = new Chart(ctx, {
 });
 
 function getChart() {
+
     let selectedChartApiUrl = document.getElementById("select-chart").value;
 
-    clearUlChildren();
+    clearUlChildren(); // removes all ul childred (<li>) which show additional post data (post title with anchor tag and count span pill)
+
     $.get(selectedChartApiUrl,
         function (data) {
+
             clearChartData(myChart.data);
 
             fillChart(myChart.data, data.chartData);
 
-            $("#download-chart-image").addClass("visually-hidden");
+            $("#download-chart-image").addClass("visually-hidden"); //hide chart image download button
 
             myChart.options.animation.onComplete = function () {
                 let element = document.getElementById('download-chart-image');
                 element.href = this.toBase64Image();
                 element.download = data.fileDownLoadName;
 
-                $("#download-chart-image").removeClass("visually-hidden");
+                $("#download-chart-image").removeClass("visually-hidden"); //show chart image download button
             };
 
             myChart.update();
 
             generateHtmlDynamically(data.chartData, ulNode);
-
         });
 }
 

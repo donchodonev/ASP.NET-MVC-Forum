@@ -16,10 +16,7 @@
             { 
                 ( "Most commented posts", "/api/stats/most-commented-posts"),
                 ( "Most liked posts", "/api/stats/most-liked-posts"),
-                ( "Most disled posts", ""),
-                ( "Most reported posts", ""),
-                ( "Most commented posts5", ""),
-                ( "Most commented posts6", "")
+                ( "Most reported posts", "/api/stats/most-reported-posts"),
             };
         }
         public IActionResult Index()

@@ -390,6 +390,10 @@
                         query = query
                             .Include(x => x.Votes);
                         break;
+                    case PostQueryFilter.WithReports:
+                        query = query
+                            .Include(x => x.Reports);
+                        break;
                 }
             }
 
@@ -441,6 +445,10 @@
                     case PostQueryFilter.WithVotes:
                         posts = posts
                             .Include(x => x.Votes);
+                        break;
+                    case PostQueryFilter.WithReports:
+                        posts = posts
+                            .Include(x => x.Reports);
                         break;
                 }
             }

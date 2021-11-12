@@ -93,5 +93,42 @@
 
             return chartData;
         }
+
+        public List<MostReportedPostsResponeModel> GetMostReportedPostsChartData(int count)
+        {
+            var posts = postService.AllAsync(
+                PostQueryFilter.WithoutDeleted,
+                PostQueryFilter.AsNoTracking,
+                PostQueryFilter.WithReports)
+                .GetAwaiter().GetResult()
+                .OrderByDescending(x => x.Reports.Count)
+                .ToList();
+
+            int postsTotalCount = posts.Count();
+
+            if (postsTotalCount <= count && postsTotalCount <= colors.Length)
+            {
+                posts = posts
+                    .Take(postsTotalCount)
+                    .ToList();
+            }
+            else
+            {
+                posts = posts
+                    .Take(colors.Length)
+                    .ToList();
+            }
+
+            var chartData = new List<MostReportedPostsResponeModel>();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                var postData = mapper.Map<MostReportedPostsResponeModel>(posts[i]);
+                postData.Color = colors[i];
+                chartData.Add(postData);
+            }
+
+            return chartData;
+        }
     }
 }

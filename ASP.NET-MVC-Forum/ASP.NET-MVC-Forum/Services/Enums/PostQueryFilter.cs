@@ -9,6 +9,7 @@
         WithUser,
         WithUserPosts,
         WithVotes,
-        WithIdentityUser
+        WithIdentityUser,
+        WithReports
     }
 }
