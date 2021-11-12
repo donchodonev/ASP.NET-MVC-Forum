@@ -6,5 +6,6 @@ namespace ASP.NET_MVC_Forum.Services.Chart
     public interface IChartService
     {
         public List<MostCommentedPostsResponeModel> GetMostCommentedPostsChartData(int count);
+        public List<MostLikedPostsResponeModel> GetMostLikedPostsChartData(int count);
     }
 }

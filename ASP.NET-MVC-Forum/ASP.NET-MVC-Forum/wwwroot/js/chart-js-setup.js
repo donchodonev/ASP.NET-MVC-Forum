@@ -1,8 +1,6 @@
 ﻿const ctx = document.getElementById('myChart').getContext('2d');
 let ulNode = document.getElementById("itemslist");
 
-
-
 let myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -29,7 +27,6 @@ let myChart = new Chart(ctx, {
         }
     }
 });
-
 
 function getChart() {
     let selectedChartApiUrl = document.getElementById("select-chart").value;
@@ -95,7 +92,6 @@ function clearUlChildren() {
         ulNode.firstChild.remove();
     };
 }
-
 
 function generateHtmlDynamically(chartData, ulRootElement) {
     for (var i = 0; i < chartData.length; i++) {

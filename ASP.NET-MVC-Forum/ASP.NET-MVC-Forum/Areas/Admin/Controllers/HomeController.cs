@@ -15,7 +15,7 @@
             chartNameAndURL = new List<(string, string)>() 
             { 
                 ( "Most commented posts", "/api/stats/most-commented-posts"),
-                ( "Most liked posts", ""),
+                ( "Most liked posts", "/api/stats/most-liked-posts"),
                 ( "Most disled posts", ""),
                 ( "Most reported posts", ""),
                 ( "Most commented posts5", ""),

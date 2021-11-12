@@ -18,6 +18,9 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<Post, MostLikedPostsResponeModel>()
+                .ForMember(x => x.Count, y => y.MapFrom(y => y.Votes.Sum(x => (int)x.VoteType)));
+
             this.CreateMap<Post, MostCommentedPostsResponeModel>()
                 .ForMember(x => x.Count, y => y.MapFrom(y => y.Comments.Count));
 

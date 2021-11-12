@@ -20,11 +20,19 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
         }
 
         [Route("most-commented-posts/{count:int?}")]
-        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostCommentedPosts(int resultCount = 7) // can be changed in the future
+        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostCommentedPosts(int resultCount = 7) // count can be changed in the future
         {
             var chartData = chartService.GetMostCommentedPostsChartData(resultCount);
 
             return Ok(new {chartData, fileDownLoadName = "Top posts ordered descending by comments count" });
+        }
+
+        [Route("most-liked-posts/{count:int?}")]
+        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostLikedPosts(int resultCount = 7) // count can be changed in the future
+        {
+            var chartData = chartService.GetMostLikedPostsChartData(resultCount);
+
+            return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by vote sum" });
         }
     }
 }

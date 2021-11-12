@@ -56,5 +56,42 @@
 
             return chartData;
         }
+
+        public List<MostLikedPostsResponeModel> GetMostLikedPostsChartData(int count)
+        {
+            var posts = postService.AllAsync(
+                PostQueryFilter.WithoutDeleted,
+                PostQueryFilter.AsNoTracking,
+                PostQueryFilter.WithVotes)
+                .GetAwaiter().GetResult()
+                .OrderByDescending(x => x.Votes.Sum(x => (int)x.VoteType))
+                .ToList();
+
+            int postsTotalCount = posts.Count();
+
+            if (postsTotalCount <= count && postsTotalCount <= colors.Length)
+            {
+                posts = posts
+                    .Take(postsTotalCount)
+                    .ToList();
+            }
+            else
+            {
+                posts = posts
+                    .Take(colors.Length)
+                    .ToList();
+            }
+
+            var chartData = new List<MostLikedPostsResponeModel>();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                var postData = mapper.Map<MostLikedPostsResponeModel>(posts[i]);
+                postData.Color = colors[i];
+                chartData.Add(postData);
+            }
+
+            return chartData;
+        }
     }
 }
