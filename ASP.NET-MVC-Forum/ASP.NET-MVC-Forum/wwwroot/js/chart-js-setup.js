@@ -32,7 +32,7 @@ function getChart() {
     let selectedChartApiUrl = document.getElementById("select-chart").value;
 
     clearUlChildren();
-
+    $("#download-chart-image").addClass("visually-hidden");
     $.get(selectedChartApiUrl,
         function (data) {
             while (myChart.data.labels.length > 0) {
