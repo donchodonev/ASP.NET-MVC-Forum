@@ -2,7 +2,7 @@
 {
     public class MostCommentedPostsResponeModel
     {
-        public int CommentsCount { get; set; }
+        public int Count { get; set; }
 
         public int Id { get; set; }
 
