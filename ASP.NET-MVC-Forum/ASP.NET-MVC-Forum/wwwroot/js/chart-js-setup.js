@@ -32,21 +32,19 @@ function getChart() {
     let selectedChartApiUrl = document.getElementById("select-chart").value;
 
     clearUlChildren();
-    $("#download-chart-image").addClass("visually-hidden");
     $.get(selectedChartApiUrl,
         function (data) {
-            while (myChart.data.labels.length > 0) {
-                myChart.data.labels.pop();
-            };
-
-            clearChartData(myChart.data.datasets);
+            clearChartData(myChart.data);
 
             fillChart(myChart.data, data.chartData);
+
+            $("#download-chart-image").addClass("visually-hidden");
 
             myChart.options.animation.onComplete = function () {
                 let element = document.getElementById('download-chart-image');
                 element.href = this.toBase64Image();
                 element.download = data.fileDownLoadName;
+
                 $("#download-chart-image").removeClass("visually-hidden");
             };
 
@@ -61,7 +59,7 @@ window.onload = function () {
     getChart();
 };
 
-let fillChart = function (chartData, newData) {
+function fillChart (chartData, newData) {
     for (var i = 0; i < newData.length; i++) {
         chartData.labels.push(newData[i].count);
         chartData.datasets[0].data.push(newData[i].count);
@@ -70,11 +68,15 @@ let fillChart = function (chartData, newData) {
     }
 }
 
-let clearChartData = function (chartDataDatasets) {
-    while (chartDataDatasets[0].data.length > 0) {
-        chartDataDatasets[0].data.pop();
-        chartDataDatasets[0].backgroundColor.pop();
-        chartDataDatasets[0].borderColor.pop();
+function clearChartData(chartData) {
+    while (chartData.labels.length > 0) {
+        chartData.labels.pop();
+    };
+
+    while (chartData.datasets[0].data.length > 0) {
+        chartData.datasets[0].data.pop();
+        chartData.datasets[0].backgroundColor.pop();
+        chartData.datasets[0].borderColor.pop();
     }
 }
 

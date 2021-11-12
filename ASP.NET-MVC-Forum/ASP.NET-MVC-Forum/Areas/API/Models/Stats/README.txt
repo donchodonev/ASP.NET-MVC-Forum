@@ -1,0 +1,1 @@
+﻿It is IMPERATIVE future response models use the exact property names as existing one so that the js code that builds the chart and html elements works
