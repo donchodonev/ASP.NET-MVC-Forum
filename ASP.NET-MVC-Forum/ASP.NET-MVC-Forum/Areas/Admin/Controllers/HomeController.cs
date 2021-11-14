@@ -17,6 +17,7 @@
                 ( "Most commented posts", "/api/stats/most-commented-posts"),
                 ( "Most liked posts", "/api/stats/most-liked-posts"),
                 ( "Most reported posts", "/api/stats/most-reported-posts"),
+                ( "Most posts by category", "/api/stats/most-posts-by-category")
             };
         }
         public IActionResult Index()

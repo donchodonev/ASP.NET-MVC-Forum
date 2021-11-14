@@ -365,7 +365,7 @@
                         query = query.Where(x => x.IsDeleted == false);
                         break;
                     case PostQueryFilter.AsNoTracking:
-                        query = query.AsNoTracking();
+                        query = query.AsNoTracking().AsSplitQuery();
                         break;
                     case PostQueryFilter.WithCategory:
                         query = query.Include(x => x.Category);
@@ -421,7 +421,7 @@
                         posts = posts.Where(x => x.IsDeleted == false);
                         break;
                     case PostQueryFilter.AsNoTracking:
-                        posts = posts.AsNoTracking();
+                        posts = posts.AsNoTracking().AsSplitQuery();
                         break;
                     case PostQueryFilter.WithCategory:
                         posts = posts.Include(x => x.Category);
