@@ -3,24 +3,30 @@
     * Copyright 2013-2021 Start Bootstrap
     * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
     */
-    // 
+// 
 // Scripts
 // 
 
-window.addEventListener('DOMContentLoaded', event => {
 
-    // Toggle the side navigation
-    const sidebarToggle = document.body.querySelector('#sidebarToggle');
-    const sidenavContent = document.body.querySelector("#layoutSidenav_content");
-    if (sidebarToggle || sidenavContent) {
-        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-            document.body.classList.toggle('sb-sidenav-toggled');
+// Toggle the side navigation
+const sidebarToggle = document.body.querySelector('#sidebarToggle');
+const sidenavContent = document.body.querySelector("#layoutSidenav");
+
+if (sidebarToggle || sidenavContent) {
+    sidebarToggle.addEventListener('click', event => {
+        event.preventDefault();
+        document.body.classList.toggle('sb-sidenav-toggled');
+
+        let isToggled = document.body.classList.value == "sb-sidenav-toggled";
+
+        if (isToggled) {
+            sidenavContent.addEventListener('click', event => {
+                event.preventDefault();
+                if (isToggled) {
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                    isToggled = false;
+                }
+            });
         }
-
-        sidebarToggle.addEventListener('click', event => {
-            event.preventDefault();
-            document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-        });
-    }
-});
+    });
+}
