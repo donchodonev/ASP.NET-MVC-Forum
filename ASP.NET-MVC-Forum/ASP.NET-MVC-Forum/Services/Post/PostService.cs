@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;

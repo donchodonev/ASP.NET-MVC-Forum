@@ -25,7 +25,7 @@
 
         public IActionResult Index(string reportStatus)
         {
-            List<CommentReportViewModel> vm = new List<CommentReportViewModel>();
+            List<CommentReportViewModel> vm;
 
             if (reportStatus == "Active")
             {

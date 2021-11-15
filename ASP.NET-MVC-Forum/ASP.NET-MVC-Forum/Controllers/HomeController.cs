@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models;
     using ASP.NET_MVC_Forum.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var vm =
                  mapper.Map<List<PostPreviewViewModel>>(GetPosts())

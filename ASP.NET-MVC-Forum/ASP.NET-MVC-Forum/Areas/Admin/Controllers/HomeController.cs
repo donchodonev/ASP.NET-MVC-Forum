@@ -9,7 +9,7 @@
     [Authorize(Roles = AdminOrModerator)]
     public class HomeController : Controller
     {
-        private List<(string chartName,string url)> chartNameAndURL;
+        private readonly List<(string chartName,string url)> chartNameAndURL;
         public HomeController()
         {
             chartNameAndURL = new List<(string, string)>() 

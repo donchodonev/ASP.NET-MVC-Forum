@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Enums
+﻿namespace ASP.NET_MVC_Forum.Data.Enums
 {
     public enum UserQueryFilter
     {

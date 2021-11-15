@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace ASP.NET_MVC_Forum.Data.Migrations
+﻿namespace ASP.NET_MVC_Forum.Data.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddCommentReports : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

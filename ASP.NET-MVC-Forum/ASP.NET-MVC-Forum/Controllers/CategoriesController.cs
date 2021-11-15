@@ -4,7 +4,7 @@
     using ASP.NET_MVC_Forum.Models.Category;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;

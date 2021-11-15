@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;

@@ -25,7 +25,7 @@
 
         public IActionResult Index(string reportStatus)
         {
-            List<PostReportViewModel> vm = new List<PostReportViewModel>();
+            List<PostReportViewModel> vm;
 
             if (reportStatus == "Active")
             {

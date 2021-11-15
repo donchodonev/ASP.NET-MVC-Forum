@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;

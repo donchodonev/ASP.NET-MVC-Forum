@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Post
 {
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;

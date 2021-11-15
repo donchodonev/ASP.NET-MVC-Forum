@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account.Manage
+﻿namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account.Manage
 {
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System;
+
     public static class ManageNavPages
     {
         public static string Index => "Index";

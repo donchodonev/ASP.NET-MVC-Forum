@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
     using ASP.NET_MVC_Forum.Services.Category;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using System.Collections.Generic;

@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.AspNetCore.Http;
-    using ASP.NET_MVC_Forum.Services.Enums;
+    using ASP.NET_MVC_Forum.Data.Enums;
 
     public interface IUserService
     {
