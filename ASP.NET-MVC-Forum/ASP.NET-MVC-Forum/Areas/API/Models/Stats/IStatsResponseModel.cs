@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Stats
 {
-    public class MostCommentedPostsResponeModel : IStatsResponseModel
+    public interface IStatsResponseModel
     {
         public int Count { get; set; }
 

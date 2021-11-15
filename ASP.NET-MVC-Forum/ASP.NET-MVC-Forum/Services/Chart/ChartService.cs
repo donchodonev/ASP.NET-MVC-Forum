@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Chart
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Enums;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
@@ -11,12 +12,14 @@
     public class ChartService : IChartService
     {
         private readonly IPostService postService;
+        private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly string[] colors = new string[] { Blue, Navy, Green, Teal, Lime, Aqua, Olive, Purple, Maroon, Yellow };
 
-        public ChartService(IPostService postService, IMapper mapper)
+        public ChartService(IPostService postService,ICategoryService categoryService, IMapper mapper)
         {
             this.postService = postService;
+            this.categoryService = categoryService;
             this.mapper = mapper;
         }
 
@@ -124,6 +127,42 @@
             for (int i = 0; i < posts.Count; i++)
             {
                 var postData = mapper.Map<MostReportedPostsResponeModel>(posts[i]);
+                postData.Color = colors[i];
+                chartData.Add(postData);
+            }
+
+            return chartData;
+        }
+
+        public List<MostPostsPerCategoryResponseModel> GetMostPostsPerCategory(int count)
+        {
+            var categories = categoryService
+                .AllAsync(withPostsIncluded:true)
+                .GetAwaiter()
+                .GetResult()
+                .OrderByDescending(x => x.Posts.Count)
+                .ToList();
+
+            int categoriesTotalCount = categories.Count();
+
+            if (categoriesTotalCount <= count && categoriesTotalCount <= colors.Length)
+            {
+                categories = categories
+                    .Take(categoriesTotalCount)
+                    .ToList();
+            }
+            else
+            {
+                categories = categories
+                    .Take(colors.Length)
+                    .ToList();
+            }
+
+            var chartData = new List<MostPostsPerCategoryResponseModel>();
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                var postData = mapper.Map<MostPostsPerCategoryResponseModel>(categories[i]);
                 postData.Color = colors[i];
                 chartData.Add(postData);
             }

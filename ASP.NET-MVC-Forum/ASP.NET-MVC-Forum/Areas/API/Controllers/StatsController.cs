@@ -42,5 +42,13 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by reports count" });
         }
+
+        [Route("most-posts-by-category/{count:int?}")]
+        public ActionResult<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategory(int resultCount = 7) // count can be changed in the future
+        {
+            var chartData = chartService.GetMostPostsPerCategory(resultCount);
+
+            return Ok(new { chartData, fileDownLoadName = "Top categories ordered descending by posts count" });
+        }
     }
 }

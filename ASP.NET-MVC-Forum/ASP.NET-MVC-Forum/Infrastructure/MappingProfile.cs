@@ -18,6 +18,10 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<Category, MostPostsPerCategoryResponseModel>()
+                .ForMember(x => x.Count, y => y.MapFrom(y => y.Posts.Count))
+                .ForMember(x => x.Title, y => y.MapFrom(y => y.Name));
+
             this.CreateMap<Post, MostReportedPostsResponeModel>()
                 .ForMember(x => x.Count, y => y.MapFrom(y => y.Reports.Count));
 

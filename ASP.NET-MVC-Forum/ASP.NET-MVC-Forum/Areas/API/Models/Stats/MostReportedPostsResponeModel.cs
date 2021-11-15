@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Stats
 {
-    public class MostReportedPostsResponeModel
+    public class MostReportedPostsResponeModel : IStatsResponseModel
     {
         public int Count { get; set; }
 
