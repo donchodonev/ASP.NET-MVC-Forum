@@ -71,20 +71,16 @@ body {
 }
 
 
-@media (max-width: 576px) {
+
+
+@media only screen and (min-width: 200px) and (max-width: 767px) {
     #site-logo {
-        width: 12%;
-        height: 12%;
+        width: 10%;
+        height: 10%;
     }
 }
 
-@media (min-width: 576px) {
-    #site-logo {
-        width: 8%;
-        height: 8%;
-    }
-}
-@media (min-width: 768px) {
+@media only screen and (min-width: 767px) and (max-width: 1440px) {
     #site-logo {
         width: 7%;
         height: 7%;
