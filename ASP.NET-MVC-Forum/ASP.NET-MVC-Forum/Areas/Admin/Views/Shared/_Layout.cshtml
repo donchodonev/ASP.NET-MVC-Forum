@@ -106,10 +106,12 @@
         </nav>
     </div>
     <div id="layoutSidenav_content">
-        <main>
-            @RenderBody()
-            @RenderSection("Scripts")
-        </main>
+        <button id="sidebarToggle" href="#!">
+            <main>
+                @RenderBody()
+                @RenderSection("Scripts")
+            </main>
+        </button>
     </div>
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

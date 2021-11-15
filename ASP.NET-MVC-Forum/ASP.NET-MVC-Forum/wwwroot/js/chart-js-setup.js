@@ -41,14 +41,14 @@ function getChart() {
 
             fillChart(myChart.data, data.chartData);
 
-            $("#download-chart-image").addClass("visually-hidden"); //hide chart image download button
+            $("#download-chart-image").addClass("disabled"); //hide chart image download button
 
             myChart.options.animation.onComplete = function () {
                 let element = document.getElementById('download-chart-image');
                 element.href = this.toBase64Image();
                 element.download = data.fileDownLoadName;
 
-                $("#download-chart-image").removeClass("visually-hidden"); //show chart image download button
+                $("#download-chart-image").removeClass("disabled"); //show chart image download button
             };
 
             myChart.update();
@@ -107,6 +107,8 @@ function generateHtmlDynamically(chartData, ulRootElement) {
         a.href = "Posts/ViewPost?postId=" + chartData[i].id;
         a.textContent = chartData[i].title;
         a.className = 'text-decoration-none text-white';
+        a.setAttribute("display", "block");
+        a.style = "width: 100%";
 
         let span = document.createElement("span")
         span.className = "badge badge-primary badge-pill";
@@ -117,3 +119,4 @@ function generateHtmlDynamically(chartData, ulRootElement) {
         ulRootElement.append(listNode);
     }
 }
+
