@@ -7,8 +7,6 @@
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Caching.Memory;
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -18,19 +16,17 @@
     {
         private readonly IPostService postsService;
         private readonly IMapper mapper;
-        private readonly IMemoryCache memoryCache;
 
-        public HomeController(IPostService postsService, IMapper mapper, IMemoryCache memoryCache)
+        public HomeController(IPostService postsService, IMapper mapper)
         {
             this.postsService = postsService;
             this.mapper = mapper;
-            this.memoryCache = memoryCache;
         }
 
         public async Task<IActionResult> Index()
         {
             var vm =
-                 mapper.Map<List<PostPreviewViewModel>>(await GetCachedPosts())
+                 mapper.Map<List<PostPreviewViewModel>>(GetPosts())
                 .ToList();
 
             return View(vm);
@@ -47,34 +43,18 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<List<Post>> GetCachedPosts()
+        private List<Post> GetPosts()
         {
-            return await Task.Run(() =>
-            {
+            var posts = postsService.AllAsync(
+                    PostQueryFilter.WithUser,
+                    PostQueryFilter.WithIdentityUser,
+                    PostQueryFilter.WithoutDeleted,
+                    PostQueryFilter.AsNoTracking)
+                    .GetAwaiter()
+                    .GetResult()
+                    .ToList();
 
-                string cacheKey = "allPosts";
-
-                if (!memoryCache.TryGetValue<List<Post>>(cacheKey, out List<Post> posts))
-                {
-                    posts = postsService.AllAsync(
-                        PostQueryFilter.WithUser,
-                        PostQueryFilter.WithIdentityUser,
-                        PostQueryFilter.WithoutDeleted,
-                        PostQueryFilter.AsNoTracking)
-                        .GetAwaiter()
-                        .GetResult()
-                        .ToList();
-
-                    var cacheEntryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpiration = DateTime.UtcNow.AddSeconds(60),
-                    };
-
-                    memoryCache.Set(cacheKey, posts, cacheEntryOptions);
-                }
-
-                return posts;
-            });
+            return posts;
         }
     }
 }

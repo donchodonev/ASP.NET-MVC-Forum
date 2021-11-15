@@ -10,6 +10,7 @@
         WithUserPosts,
         WithVotes,
         WithIdentityUser,
-        WithReports
+        WithReports,
+        OrderByDescending
     }
 }
