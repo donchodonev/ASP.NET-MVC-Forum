@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -28,6 +29,15 @@
 
                 return query;
             });
+        }
+
+        public List<string> GetCategoryNames()
+        {
+            return db
+                .Categories
+                .AsNoTracking()
+                .Select(x => x.Name)
+                .ToList();
         }
     }
 }
