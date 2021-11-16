@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Models.Category;
+    using ASP.NET_MVC_Forum.Models.Home;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Data.Enums;
@@ -192,12 +192,12 @@
             return addPostFormModel;
         }
 
-        private async Task<CategoryIdAndName[]> GetCategoryIdAndNameCombinations()
+        private async Task<CategoryIdAndNameViewModel[]> GetCategoryIdAndNameCombinations()
         {
             var categories = await categoryService.AllAsync();
 
             var selectOptions = categories
-                .ProjectTo<CategoryIdAndName>(mapper.ConfigurationProvider)
+                .ProjectTo<CategoryIdAndNameViewModel>(mapper.ConfigurationProvider)
                 .ToArray();
 
             return selectOptions;

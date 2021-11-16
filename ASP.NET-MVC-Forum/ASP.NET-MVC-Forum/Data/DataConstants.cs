@@ -1,4 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Data
+﻿using System.Collections.Generic;
+
+namespace ASP.NET_MVC_Forum.Data
 {
     public class DataConstants
     {
@@ -99,6 +101,27 @@
             public const string Purple = "rgb(128,0,128,0.4)";
             public const string Olive = "rgb(128,0,128,0.4)";
             public const string Yellow = "rgb(255,255,0,0.4)";
+        }
+
+        public class PostSort
+        {
+            public static Dictionary<int, string> GetSortOptions()
+            {
+                return new Dictionary<int, string>()
+                 {
+                      {0,"Date" },
+                      { 1,"Post Title"}
+                 };
+            }
+
+            public static Dictionary<int, string> GetOrderType()
+            {
+                return new Dictionary<int, string>()
+                {
+                    {0,"Ascending" },
+                    { 1,"Descending"}
+                };
+            }
         }
     }
 }

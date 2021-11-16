@@ -1,4 +1,4 @@
-﻿using ASP.NET_MVC_Forum.Models.Category;
+﻿using ASP.NET_MVC_Forum.Models.Home;
 using System.ComponentModel.DataAnnotations;
 
 using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
@@ -6,7 +6,7 @@ namespace ASP.NET_MVC_Forum.Models.Post
 {
     public class AddPostFormModel
     {
-        public  CategoryIdAndName[] Categories { get; set; }
+        public CategoryIdAndNameViewModel[] Categories { get; set; }
 
         [Required]
         [MinLength(TitleMinLength)]

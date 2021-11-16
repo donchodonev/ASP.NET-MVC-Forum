@@ -5,7 +5,7 @@ using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
 using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
 using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
 using ASP.NET_MVC_Forum.Data.Models;
-using ASP.NET_MVC_Forum.Models.Category;
+using ASP.NET_MVC_Forum.Models.Home;
 using ASP.NET_MVC_Forum.Models.Post;
 using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
@@ -43,7 +43,7 @@ namespace ASP.NET_MVC_Forum.Infrastructure
 
             this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
 
-            this.CreateMap<Category, CategoryIdAndName>();
+            this.CreateMap<Category, CategoryIdAndNameViewModel>();
 
             this.CreateMap<Comment, CommentGetRequestResponseModel>()
                 .ForMember(x => x.CommentAuthor, y => y.MapFrom(z => z.User.IdentityUser.UserName));

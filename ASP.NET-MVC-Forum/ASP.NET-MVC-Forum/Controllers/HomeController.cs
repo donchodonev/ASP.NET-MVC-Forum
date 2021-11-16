@@ -14,13 +14,13 @@
     using System.Diagnostics;
     using System.Linq;
 
+    using static ASP.NET_MVC_Forum.Data.DataConstants.PostSort;
+
     public class HomeController : Controller
     {
         private readonly IPostService postsService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-        private Dictionary<int, string> sortTypeLibrary;
-        private Dictionary<int, string> sortOrderOptions;
         private IReadOnlyCollection<string> postCategoryNames;
 
         public HomeController(IPostService postsService, ICategoryService categoryService, IMapper mapper)
@@ -29,15 +29,13 @@
             this.categoryService = categoryService;
             this.mapper = mapper;
 
-            sortTypeLibrary = GetSortOptions();
-            sortOrderOptions = GetOrderOptions();
             postCategoryNames = categoryService.GetCategoryNames().Prepend("All").ToList();
         }
 
         public IActionResult Index(int sortType, int sortOrder, string searchTerm,string category)
         {
-            ViewBag.SortTypeLibrary = new SelectList(sortTypeLibrary, "Key", "Value", sortType);
-            ViewBag.SortOrderOptions = new SelectList(sortOrderOptions, "Key", "Value", sortOrder);
+            ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
+            ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
             ViewBag.CategoryNames = new SelectList(postCategoryNames, category);
             ViewBag.SearchTerm = searchTerm;
 
@@ -68,24 +66,6 @@
                     PostQueryFilter.AsNoTracking)
                     .GetAwaiter()
                     .GetResult();
-        }
-
-        private Dictionary<int, string> GetSortOptions()
-        {
-            return new Dictionary<int, string>()
-            {
-                {0,"Date" },
-                { 1,"Post Title"}
-            };
-        }
-
-        private Dictionary<int, string> GetOrderOptions()
-        {
-            return new Dictionary<int, string>()
-            {
-                {0,"Ascending" },
-                { 1,"Descending"}
-            };
         }
 
         private List<PostPreviewViewModel> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
