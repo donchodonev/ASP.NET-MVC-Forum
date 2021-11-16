@@ -37,20 +37,14 @@
             ViewBag.ViewCountOptions = new SelectList(GetViewCountOptions(), viewCount);
             ViewBag.SearchTerm = searchTerm;
 
-            var posts = GetPosts();
-
             var sortedPosts = postsService
-                .SortAndOrder(posts, sortType, sortOrder, searchTerm, category)
+                .SortAndOrder(GetPosts(), sortType, sortOrder, searchTerm, category)
                 .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
 
             var paginatedList = PaginatedList<PostPreviewViewModel>
                 .CreateAsync(sortedPosts, pageNumber, viewCount)
                 .GetAwaiter()
                 .GetResult();
-
-           var previous = paginatedList.HasPreviousPage;
-           var next = paginatedList.HasNextPage;
-
 
             return View(paginatedList);
         }
