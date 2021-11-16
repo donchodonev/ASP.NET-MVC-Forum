@@ -30,6 +30,7 @@
 * Post Reading
 * Post Updating (by post author)
 * Post Deleting (by post author)
+* Sorting / Searching / Filtering by category
 
 * Post commenting and viewing done via AJAX and comments API (with anti-CSRF token) (by authenticated users)
 * Post comment time elapsed since each comment is made in seconds/minutes/hours/days
@@ -63,6 +64,7 @@
 
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
+* Paging
 
 * Per-category post filtration
 
