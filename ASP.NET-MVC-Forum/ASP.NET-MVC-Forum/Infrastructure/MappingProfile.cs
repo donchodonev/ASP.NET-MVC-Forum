@@ -5,7 +5,6 @@ using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
 using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
 using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
 using ASP.NET_MVC_Forum.Data.Models;
-using ASP.NET_MVC_Forum.Models.Home;
 using ASP.NET_MVC_Forum.Models.Post;
 using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;

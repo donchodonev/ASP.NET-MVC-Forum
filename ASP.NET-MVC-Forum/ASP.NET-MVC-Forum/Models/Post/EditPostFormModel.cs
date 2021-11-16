@@ -1,9 +1,8 @@
-﻿using ASP.NET_MVC_Forum.Models.Home;
-using System.ComponentModel.DataAnnotations;
-
-using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
-namespace ASP.NET_MVC_Forum.Models.Post
+﻿namespace ASP.NET_MVC_Forum.Models.Post
 {
+    using System.ComponentModel.DataAnnotations;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
+
     public class EditPostFormModel
     {
         public CategoryIdAndNameViewModel[] Categories { get; set; }

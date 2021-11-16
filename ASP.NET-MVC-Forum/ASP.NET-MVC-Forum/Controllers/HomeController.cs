@@ -3,14 +3,11 @@
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models;
-    using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Post;
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostFilterConstants;
