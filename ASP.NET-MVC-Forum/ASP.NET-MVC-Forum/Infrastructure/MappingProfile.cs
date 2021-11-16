@@ -43,9 +43,6 @@ namespace ASP.NET_MVC_Forum.Infrastructure
 
             this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
 
-            this.CreateMap<Category, AllCategoryViewModel>()
-                .ReverseMap();
-
             this.CreateMap<Category, CategoryIdAndName>();
 
             this.CreateMap<Comment, CommentGetRequestResponseModel>()
