@@ -107,7 +107,7 @@ namespace ASP.NET_MVC_Forum.Data
 
         public class PostSortConstants
         {
-            public static IReadOnlyDictionary <int, string> GetSortOptions()
+            public static IReadOnlyDictionary<int, string> GetSortOptions()
             {
                 return new Dictionary<int, string>()
                  {
@@ -120,8 +120,8 @@ namespace ASP.NET_MVC_Forum.Data
             {
                 return new Dictionary<int, string>()
                 {
-                    {0,"Ascending" },
-                    { 1,"Descending"}
+                    { 0,"Descending"},
+                    {1,"Ascending" }
                 };
             }
         }
@@ -140,6 +140,14 @@ namespace ASP.NET_MVC_Forum.Data
                     .Prepend("All")
                     .ToList()
                     .AsReadOnly();
+            }
+        }
+
+        public class PostViewCountOptionsConstants
+        {
+            public static IReadOnlyCollection<int> GetViewCountOptions()
+            {
+                return new List<int> { 10, 20, 30 }.AsReadOnly();
             }
         }
     }

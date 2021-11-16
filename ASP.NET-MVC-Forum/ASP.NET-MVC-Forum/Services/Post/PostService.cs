@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Post
 {
     using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Data.Enums;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
@@ -12,23 +12,19 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
-    using ASP.NET_MVC_Forum.Models.Post;
-    using AutoMapper.QueryableExtensions;
-    using AutoMapper;
-
+    using static ASP.NET_MVC_Forum.Data.DataConstants.PostFilterConstants;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.PostSortConstants;
     public class PostService : IPostService
     {
         private readonly ApplicationDbContext db;
         private readonly IHtmlSanitizer sanitizer;
         private readonly IPostReportService reportService;
-        private readonly IMapper mapper;
 
-        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IPostReportService reportService, IMapper mapper)
+        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IPostReportService reportService)
         {
             this.db = db;
             this.sanitizer = sanitizer;
             this.reportService = reportService;
-            this.mapper = mapper;
         }
 
         /// <summary>
@@ -351,8 +347,12 @@
             await db.SaveChangesAsync();
         }
 
-        public List<PostPreviewViewModel> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
+        public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
         {
+            //uncomment two variables underneath to view in debug possible order and sort options
+            //var orderOptions = GetOrderType();
+            //var sortOptions = GetSortOptions();
+
             if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
             {
                 posts = posts.Where(post => post.Title.Contains(searchTerm));
@@ -364,26 +364,25 @@
             }
 
 
+
             if (sortOrder == 0 && sortType == 0)
-            {
-                posts = posts.OrderBy(x => x.CreatedOn);
-            }
-            else if (sortOrder == 0 && sortType == 1)
-            {
-                posts = posts.OrderBy(x => x.Title);
-            }
-            else if (sortOrder == 1 && sortType == 0)
             {
                 posts = posts.OrderByDescending(x => x.CreatedOn);
             }
-            else if (sortOrder == 1 && sortType == 1)
+            else if (sortOrder == 0 && sortType == 1)
             {
                 posts = posts.OrderByDescending(x => x.Title);
             }
+            else if (sortOrder == 1 && sortType == 0)
+            {
+                posts = posts.OrderBy(x => x.CreatedOn);
+            }
+            else if (sortOrder == 1 && sortType == 1)
+            {
+                posts = posts.OrderBy(x => x.Title);
+            }
 
-            return posts
-                .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider)
-                .ToList();
+            return posts;
         }
 
         /// <summary>
