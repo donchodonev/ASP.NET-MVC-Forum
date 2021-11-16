@@ -5,9 +5,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Models.Post;
 
     public interface IPostService
     {
+        public List<PostPreviewViewModel> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category);
+
         public  Task<IQueryable<Post>> AllAsync(params PostQueryFilter[] filters);
 
         public Task<int> AddPostAsync(Post post, int baseUserId);

@@ -12,18 +12,23 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
+    using ASP.NET_MVC_Forum.Models.Post;
+    using AutoMapper.QueryableExtensions;
+    using AutoMapper;
 
     public class PostService : IPostService
     {
         private readonly ApplicationDbContext db;
         private readonly IHtmlSanitizer sanitizer;
         private readonly IPostReportService reportService;
+        private readonly IMapper mapper;
 
-        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IPostReportService reportService)
+        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IPostReportService reportService, IMapper mapper)
         {
             this.db = db;
             this.sanitizer = sanitizer;
             this.reportService = reportService;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -344,6 +349,41 @@
             .Add(new PostReport() { PostId = postId, Reason = reportReason });
 
             await db.SaveChangesAsync();
+        }
+
+        public List<PostPreviewViewModel> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
+        {
+            if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
+            {
+                posts = posts.Where(post => post.Title.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrEmpty(category) && !string.IsNullOrWhiteSpace(category) && category != "All")
+            {
+                posts = posts.Where(post => post.Category.Name == category);
+            }
+
+
+            if (sortOrder == 0 && sortType == 0)
+            {
+                posts = posts.OrderBy(x => x.CreatedOn);
+            }
+            else if (sortOrder == 0 && sortType == 1)
+            {
+                posts = posts.OrderBy(x => x.Title);
+            }
+            else if (sortOrder == 1 && sortType == 0)
+            {
+                posts = posts.OrderByDescending(x => x.CreatedOn);
+            }
+            else if (sortOrder == 1 && sortType == 1)
+            {
+                posts = posts.OrderByDescending(x => x.Title);
+            }
+
+            return posts
+                .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider)
+                .ToList();
         }
 
         /// <summary>

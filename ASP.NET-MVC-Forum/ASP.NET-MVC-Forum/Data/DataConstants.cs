@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ASP.NET_MVC_Forum.Services.Category;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ASP.NET_MVC_Forum.Data
 {
@@ -103,9 +105,9 @@ namespace ASP.NET_MVC_Forum.Data
             public const string Yellow = "rgb(255,255,0,0.4)";
         }
 
-        public class PostSort
+        public class PostSortConstants
         {
-            public static Dictionary<int, string> GetSortOptions()
+            public static IReadOnlyDictionary <int, string> GetSortOptions()
             {
                 return new Dictionary<int, string>()
                  {
@@ -114,13 +116,25 @@ namespace ASP.NET_MVC_Forum.Data
                  };
             }
 
-            public static Dictionary<int, string> GetOrderType()
+            public static IReadOnlyDictionary<int, string> GetOrderType()
             {
                 return new Dictionary<int, string>()
                 {
                     {0,"Ascending" },
                     { 1,"Descending"}
                 };
+            }
+        }
+
+        public class PostFilterConstants
+        {
+            public static IReadOnlyCollection<string> GetCategories(ICategoryService categoryService)
+            {
+                return categoryService
+                    .GetCategoryNames()
+                    .Prepend("All")
+                    .ToList()
+                    .AsReadOnly();
             }
         }
     }
