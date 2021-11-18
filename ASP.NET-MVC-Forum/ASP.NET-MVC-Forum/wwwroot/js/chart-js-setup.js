@@ -104,10 +104,11 @@ function generateHtmlDynamically(chartData, ulRootElement) {
         listNode.style.backgroundColor = chartData[i].color;
 
         let a = document.createElement("a");
-        a.href = "Posts/ViewPost?postId=" + chartData[i].id;
+        a.href = "/Posts/ViewPost?postId=" + chartData[i].id;
         a.textContent = chartData[i].title;
         a.className = 'text-decoration-none text-white';
         a.setAttribute("display", "block");
+        a.setAttribute("asp-area", "");
         a.style = "width: 100%";
 
         let span = document.createElement("span")
