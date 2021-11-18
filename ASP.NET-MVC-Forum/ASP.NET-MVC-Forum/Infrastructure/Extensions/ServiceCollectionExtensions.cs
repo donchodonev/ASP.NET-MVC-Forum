@@ -58,7 +58,7 @@
             services.AddTransient<IUserAvatarService, UserAvatarService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChartService, ChartService>();
-            services.AddSingleton<IHtmlSanitizer>(s => new HtmlSanitizer());
+            services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

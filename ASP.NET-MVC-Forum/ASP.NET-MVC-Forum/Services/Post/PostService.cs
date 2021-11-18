@@ -12,8 +12,6 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostFilterConstants;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostSortConstants;
     public class PostService : IPostService
     {
         private readonly ApplicationDbContext db;

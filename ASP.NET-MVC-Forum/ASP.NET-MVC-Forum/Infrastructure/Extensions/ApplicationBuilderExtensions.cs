@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Hubs;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
@@ -94,6 +95,12 @@
                         controller = "Posts",
                         action = "Add",
                     });
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Chat}/{action=Chat}");
+
+                endpoints.MapHub<ChatHub>("/mychat");
 
                 endpoints.MapRazorPages();
             });

@@ -50,6 +50,8 @@ namespace ASP.NET_MVC_Forum
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSignalR();
+
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();

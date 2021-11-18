@@ -5,6 +5,10 @@
     {
       "library": "Chart.js@3.6.0",
       "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "library": "microsoft-signalr@6.0.0",
+      "destination": "wwwroot/lib/signalr/"
     }
   ]
 }
