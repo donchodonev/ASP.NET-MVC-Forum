@@ -1,12 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
-    using ASP.NET_MVC_Forum.Data.Interfaces;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static DataConstants.PostConstants;
 
-    public class Post : BaseModel, IContainImage
+    public class Post : BaseModel
     {
         public Post()
             :base()
@@ -36,8 +35,6 @@
 
         public string ShortDescription { get; set; }
 
-        public string ImageUrl { get; set; }
-        
         public int? UserId { get; set; }
 
         [NotMapped]
