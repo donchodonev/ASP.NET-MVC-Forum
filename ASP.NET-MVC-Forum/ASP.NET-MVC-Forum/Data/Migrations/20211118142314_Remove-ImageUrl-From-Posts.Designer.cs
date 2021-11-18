@@ -4,14 +4,16 @@ using ASP.NET_MVC_Forum.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ASP.NET_MVC_Forum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211118142314_Remove-ImageUrl-From-Posts")]
+    partial class RemoveImageUrlFromPosts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,32 +48,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserA")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserB")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Comment", b =>
@@ -140,28 +116,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.HasIndex("CommentId");
 
                     b.ToTable("CommentReports");
-                });
-
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Message", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ChatId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(10000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
@@ -526,13 +480,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
-                {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", null)
-                        .WithMany("Chats")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Comment", b =>
                 {
                     b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
@@ -561,17 +508,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Comment");
-                });
-
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Message", b =>
-                {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
@@ -699,8 +635,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

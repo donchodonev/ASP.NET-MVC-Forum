@@ -15,6 +15,7 @@
             : base()
         {
             Posts = new HashSet<Post>();
+            Chats = new HashSet<Chat>();
         }
 
         [Required]
@@ -46,5 +47,7 @@
         public virtual IdentityUser IdentityUser { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
+
+        public virtual ICollection<Chat> Chats { get; set; }
     }
 }

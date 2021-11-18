@@ -53,6 +53,12 @@ namespace ASP.NET_MVC_Forum.Data
             public const int ContentMinLength = 1;
         }
 
+        public class ChatConstants
+        {
+            public const int ChatMessageMinLength = 1;
+            public const int ChatMessageMaxLength = 10000;
+        }
+
         public class RoleConstants
         {
             public const string AdminRoleName = "Administrator";

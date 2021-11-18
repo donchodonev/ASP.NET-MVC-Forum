@@ -2,7 +2,8 @@
 {
     using System;
 
-    public interface IMetaData : ICreatedOn, IModifiedOn
+    public interface ICreatedOn
     {
+        public DateTime CreatedOn { get; init; }
     }
 }

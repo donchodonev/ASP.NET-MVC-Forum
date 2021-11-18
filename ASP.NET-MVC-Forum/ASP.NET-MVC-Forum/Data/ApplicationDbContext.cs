@@ -23,5 +23,9 @@
         public DbSet<Post> Posts { get; set; }
 
         public DbSet<Vote> Votes { get; set; }
+
+        public DbSet<Chat> Chats { get; set; }
+
+        public DbSet<Message> Messages{ get; set; }
     }
 }

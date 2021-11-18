@@ -4,14 +4,16 @@ using ASP.NET_MVC_Forum.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ASP.NET_MVC_Forum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211118154539_Added-Chats-And-Messages")]
+    partial class AddedChatsAndMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,26 +52,13 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("UserA")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserB")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UserA")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserB")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
+                    b.HasKey("UserA", "UserB");
 
                     b.ToTable("Chats");
                 });
@@ -149,17 +138,19 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ChatId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ChatUserA")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ChatUserB")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("ChatUserA", "ChatUserB");
 
                     b.ToTable("Messages");
                 });
@@ -526,13 +517,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
-                {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", null)
-                        .WithMany("Chats")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Comment", b =>
                 {
                     b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
@@ -566,10 +550,8 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Message", b =>
                 {
                     b.HasOne("ASP.NET_MVC_Forum.Data.Models.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatUserA", "ChatUserB");
 
                     b.Navigation("Chat");
                 });
@@ -688,6 +670,11 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("Posts");
                 });
 
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -699,8 +686,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

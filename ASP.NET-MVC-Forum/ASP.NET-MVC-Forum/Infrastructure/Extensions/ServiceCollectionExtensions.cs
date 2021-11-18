@@ -18,6 +18,7 @@
     using ProfanityFilter;
     using ASP.NET_MVC_Forum.Services.EmailSender;
     using ASP.NET_MVC_Forum.Services.Chart;
+    using ASP.NET_MVC_Forum.Services.Chat;
 
     public static class ServiceCollectionExtensions
     {
@@ -59,6 +60,7 @@
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChartService, ChartService>();
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
+            services.AddTransient<IChatService, ChatService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

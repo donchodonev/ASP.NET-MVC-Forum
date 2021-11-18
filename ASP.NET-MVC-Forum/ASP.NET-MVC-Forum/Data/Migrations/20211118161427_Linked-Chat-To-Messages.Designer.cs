@@ -4,14 +4,16 @@ using ASP.NET_MVC_Forum.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ASP.NET_MVC_Forum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211118161427_Linked-Chat-To-Messages")]
+    partial class LinkedChatToMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,7 +151,10 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ChatId")
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ChatId1")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Text")
@@ -159,7 +164,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("ChatId1");
 
                     b.ToTable("Messages");
                 });
@@ -567,9 +572,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                 {
                     b.HasOne("ASP.NET_MVC_Forum.Data.Models.Chat", "Chat")
                         .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId1");
 
                     b.Navigation("Chat");
                 });
