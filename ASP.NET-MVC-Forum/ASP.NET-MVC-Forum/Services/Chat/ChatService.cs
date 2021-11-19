@@ -21,7 +21,7 @@ namespace ASP.NET_MVC_Forum.Services.Chat
         {
             Message chatMessage = new Message()
             {
-                Id = chatId,
+                ChatId = chatId,
                 Text = message
             };
 
@@ -71,6 +71,7 @@ namespace ASP.NET_MVC_Forum.Services.Chat
             Chat chat = new Chat() { UserA = userA, UserB = userB };
 
             await db.Chats.AddAsync(chat);
+            await db.SaveChangesAsync();
 
             return chat.Id;
         }

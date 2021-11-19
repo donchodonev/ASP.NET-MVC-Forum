@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ASP.NET_MVC_Forum.Models.Chat.ChatConversationViewModel;
+
+@{
     this.ViewBag.Title = "Chat";
 }
 
@@ -18,18 +20,35 @@
                 .withUrl("/mychat")
                 .build();
 
-        connection.on("NewMessage",
+        connection.on("ReceiveHistory",
+            function (messages) {
+                for (var i = 0; i < messages.length ; i++) {
+                    var chatInfo = `<div>${messages[i].text}</div>`;
+                    $("#messagesList").append(chatInfo);
+                    autoscroll();
+                };
+            }
+        );
+
+        connection.on("ReceiveMessage",
             function (message) {
-                var chatInfo = `<div>[${message.user}]: ${message.text}</div>`;
+                var chatInfo = `<div>[${message.sender}]: ${message.text}</div>`;
                 $("#messagesList").append(chatInfo);
                 autoscroll();
             });
 
+
+
         $("#sendButton").click(function () {
             var message = $("#messageInput").val();
-            connection.invoke("Send", message);
+            console.log(message);
+
+            connection.invoke("SendMessageToGroup", "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId", `${message}`, @Model.ChatId);
+
+
             $("#messageInput").val("");
         });
+
 
         connection.start().catch(function (err) {
             return console.error(err.toString());
@@ -42,6 +61,15 @@
             const lastMessageHeight = messages.lastElementChild.scrollHeight;
             window.scrollBy(0, lastMessageHeight + 50);
         }
+
+        window.onload = function () {
+            while (true) {
+                if (connection.q == "Connected") {
+                    connection.invoke("GetHistory", @Model.ChatId, "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId");
+                    break;
+                };
+            }
+        };
 
     </script>
 }

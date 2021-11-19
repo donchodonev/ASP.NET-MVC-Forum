@@ -1,8 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Hubs
 {
+    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Services.Chat;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Authorize]
@@ -15,17 +18,36 @@
             this.chatService = chatService;
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-            Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
-            return base.OnConnectedAsync();
+            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Id());
+            await base.OnConnectedAsync();
         }
 
-        public async Task SendMessageToGroup(string sender, string receiver, string message)
+        public async Task SendMessageToGroup(string sender, string receiver, string message, long chatId)
         {
-            await Clients.Group(sender).SendAsync("SendMessage", sender, message);
-            await Clients.Group(receiver).SendAsync("SendMessage", sender, message);
-            return;
+            await chatService.PersistMessageAsync(chatId,message);
+
+            await Clients.Group(sender).SendAsync("ReceiveMessage", new TestMessage { Sender = sender, Text = message });
+
+            await Clients.Group(receiver).SendAsync("ReceiveMessage", new TestMessage { Sender = sender, Text = message });
         }
+
+        public async Task GetHistory(long chatId, string sender, string receiver)
+        {
+            var messages = await chatService
+                .GetLastMessages(chatId)
+                .ToListAsync();
+
+            await Clients.Group(sender).SendAsync("ReceiveHistory", messages);
+
+            await Clients.Group(receiver).SendAsync("ReceiveHistory", messages);
+        }
+
+    }
+    public class TestMessage
+    {
+        public string Sender { get; set; }
+        public string Text { get; set; }
     }
 }

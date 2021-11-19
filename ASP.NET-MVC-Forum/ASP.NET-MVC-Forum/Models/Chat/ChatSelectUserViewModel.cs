@@ -8,6 +8,8 @@
 
         public string Username { get; set; }
 
-        public string IdentityUserId { get; set; }
+        public string RecipientIdentityUserId { get; set; }
+
+        public string SenderIdentityUserId { get; set; }
     }
 }

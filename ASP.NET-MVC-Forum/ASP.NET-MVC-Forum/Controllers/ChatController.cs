@@ -1,6 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
+    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
+    using ASP.NET_MVC_Forum.Services.Chat;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -16,16 +18,21 @@
         private readonly IUserService userService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IMapper mapper;
+        private readonly IChatService chatService;
 
-        public ChatController(IUserService userService, UserManager<IdentityUser> userManager,IMapper mapper)
+        public ChatController(IUserService userService, UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService)
         {
             this.userService = userService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.chatService = chatService;
         }
-        public IActionResult ChatConversation()
+        public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId)
         {
-            return View();
+            var chatId = await GetChatId(senderIdentityUserId, recipientIdentityUserId);
+            var vm = new ChatConversationViewModel(chatId,senderIdentityUserId,recipientIdentityUserId);
+
+            return View(vm);
         }
 
         public async Task<IActionResult> SelectUser(string username)
@@ -53,9 +60,19 @@
                 .First();
 
             vm.Username = identityUser.UserName;
-            vm.IdentityUserId = identityUser.Id;
+            vm.RecipientIdentityUserId = identityUser.Id;
+            vm.SenderIdentityUserId = this.User.Id();
 
             return View(vm);
+        }
+        private async Task<long> GetChatId(string sender, string receiver)
+        {
+            if (!await chatService.ChatExistsAsync(sender, receiver))
+            {
+                return await chatService.CreateChatAsync(sender, receiver);
+            }
+
+            return await chatService.GetChatIdAsync(sender, receiver);
         }
     }
 }
