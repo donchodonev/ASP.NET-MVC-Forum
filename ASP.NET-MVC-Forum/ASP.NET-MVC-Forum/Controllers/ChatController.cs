@@ -23,7 +23,7 @@
             this.userManager = userManager;
             this.mapper = mapper;
         }
-        public IActionResult Chat()
+        public IActionResult ChatConversation()
         {
             return View();
         }

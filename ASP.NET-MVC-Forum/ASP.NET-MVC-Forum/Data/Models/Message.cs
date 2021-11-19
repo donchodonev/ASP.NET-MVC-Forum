@@ -1,11 +1,18 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
+    using ASP.NET_MVC_Forum.Data.Interfaces;
+    using System;
     using System.ComponentModel.DataAnnotations;
     using static ASP.NET_MVC_Forum.Data.DataConstants.ChatConstants;
 
 
-    public class Message
+    public class Message : ICreatedOn
     {
+        public Message()
+        {
+            CreatedOn = DateTime.UtcNow;
+        }
+
         [Required]
         public long Id { get; set; }
 
@@ -18,5 +25,7 @@
         public long ChatId { get; set; }
 
         public virtual Chat Chat { get; set; }
+
+        public DateTime CreatedOn { get; init; }
     }
 }

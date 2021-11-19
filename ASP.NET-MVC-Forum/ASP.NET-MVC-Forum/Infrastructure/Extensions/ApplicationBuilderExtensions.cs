@@ -98,7 +98,7 @@
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Chat}/{action=Chat}");
+                    pattern: "{controller=Chat}/{action=ChatConversation}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
