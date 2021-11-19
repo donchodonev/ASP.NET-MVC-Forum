@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -18,15 +19,10 @@
             this.chatService = chatService;
         }
 
-        public override async Task OnConnectedAsync()
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Id());
-            await base.OnConnectedAsync();
-        }
 
         public async Task SendMessageToGroup(string sender, string receiver, string message, long chatId)
         {
-            await chatService.PersistMessageAsync(chatId,message);
+            await chatService.PersistMessageAsync(chatId, message);
 
             await Clients.Group(sender).SendAsync("ReceiveMessage", new TestMessage { Sender = sender, Text = message });
 
@@ -42,6 +38,24 @@
             await Clients.Group(sender).SendAsync("ReceiveHistory", messages);
 
             await Clients.Group(receiver).SendAsync("ReceiveHistory", messages);
+        }
+
+        public void Disconnect()
+        {
+            Dispose();
+        }
+
+        public async override Task OnDisconnectedAsync(Exception exception)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, Context.User.Id());
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Id());
+            await base.OnConnectedAsync();
         }
 
     }

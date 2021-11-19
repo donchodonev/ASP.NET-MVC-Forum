@@ -5,11 +5,12 @@
 }
 
 <div class="container">
-    <div id="messagesList" style="font-size: 28px;" class="mb-5 overflow-auto h-50">
+    <div id="messagesList" style="font-size: 28px;">
     </div>
-    <div id="message-holder" class="container row mt-3 justify-content-center" style="width:100%;position: fixed; bottom: 10%;">
-        <input class="col-10" type="text" id="messageInput" placeholder="Message..." />
-        <button id="sendButton" class="ml-2 col-1 btn btn-dark ">Send</button>
+    <div class="mb-5 mt-5"></div>
+    <div id="message-holder" class="container row justify-content-center" style="width:100%; bottom: 10%;">
+        <input class="col-10 mt-3" type="text" id="messageInput" placeholder="Message..." />
+        <button id="sendButton" class="ml-2 col-1 btn btn-dark mt-3">Send</button>
     </div>
 </div>
 
@@ -62,14 +63,27 @@
             window.scrollBy(0, lastMessageHeight + 50);
         }
 
+
         window.onload = function () {
-            while (true) {
-                if (connection.q == "Connected") {
-                    connection.invoke("GetHistory", @Model.ChatId, "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId");
-                    break;
-                };
-            }
+            getOldMessages();
         };
 
+        window.onbeforeunload = function () {
+            connection.invoke("Disconnect");
+        }
+
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
+
+        var getOldMessages = async () => {
+
+            while (connection.q != "Connected") {
+                await sleep(1000)
+            }
+
+            connection.invoke("GetHistory", @Model.ChatId, "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId");
+        };
+       
     </script>
 }
