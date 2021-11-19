@@ -10,7 +10,7 @@
     {
         public async Task Send(string message)
         {
-            await this.Clients.All.SendAsync(
+            await Clients.All.SendAsync(
                 "NewMessage",
                 new Message { User = this.Context.User.Identity.Name, Text = message, });
         }

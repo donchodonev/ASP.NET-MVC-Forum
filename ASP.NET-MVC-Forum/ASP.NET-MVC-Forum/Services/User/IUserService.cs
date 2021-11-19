@@ -28,9 +28,9 @@
 
         public bool IsBanned(int userId);
 
-        public User GetUser(int userId, params UserQueryFilter[] filters);
+        public IQueryable<User> GetUser(int userId, params UserQueryFilter[] filters);
 
-        public User GetUser(string identityUserId, params UserQueryFilter[] filters);
+        public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters);
 
         public void Ban(int userId);
 

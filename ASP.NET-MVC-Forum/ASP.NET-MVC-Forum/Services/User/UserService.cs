@@ -129,15 +129,13 @@
         /// <param name="userId">User's Id</param>
         /// <param name="filters">Zero or more filters which include more user data</param>
         /// <returns>User</returns>
-        public User GetUser(int userId, params UserQueryFilter[] filters)
+        public IQueryable<User> GetUser(int userId, params UserQueryFilter[] filters)
         {
             var query = db
                 .BaseUsers
                 .Where(x => x.Id == userId);
 
-            query = QueryBuilder(query, filters);
-
-            return query.SingleOrDefault();
+            return QueryBuilder(query, filters);
         }
 
         /// <summary>
@@ -146,15 +144,13 @@
         /// <param name="userId">User's Id</param>
         /// <param name="filters">Zero or more filters which include more user data</param>
         /// <returns>User</returns>
-        public User GetUser(string identityUserId, params UserQueryFilter[] filters)
+        public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters)
         {
             var query = db
                 .BaseUsers
                 .Where(x => x.IdentityUserId == identityUserId);
 
-            query = QueryBuilder(query, filters);
-
-            return query.FirstOrDefault();
+            return QueryBuilder(query, filters);
         }
 
         /// <summary>
@@ -163,7 +159,7 @@
         /// <param name="userId">BaseUser's Id</param>
         public void Ban(int userId)
         {
-            var user = GetUser(userId, UserQueryFilter.WithIdentityUser);
+            var user = GetUser(userId, UserQueryFilter.WithIdentityUser).First();
 
             user.IsBanned = true;
             user.IdentityUser.LockoutEnd = DateTime.UtcNow.AddYears(100);
@@ -185,7 +181,7 @@
         /// <param name="userId">BaseUser's Id</param>
         public void Unban(int userId)
         {
-            var user = GetUser(userId, UserQueryFilter.WithIdentityUser);
+            var user = GetUser(userId, UserQueryFilter.WithIdentityUser).First();
             user.IsBanned = false;
             user.IdentityUser.LockoutEnabled = false;
             db.Update<User>(user);

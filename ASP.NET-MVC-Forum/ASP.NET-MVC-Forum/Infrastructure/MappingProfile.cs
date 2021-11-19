@@ -5,6 +5,7 @@ using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
 using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
 using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
 using ASP.NET_MVC_Forum.Data.Models;
+using ASP.NET_MVC_Forum.Models.Chat;
 using ASP.NET_MVC_Forum.Models.Post;
 using ASP.NET_MVC_Forum.Services.Comment.Models;
 using AutoMapper;
@@ -17,6 +18,8 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<User, ChatSelectUserViewModel>();
+
             this.CreateMap<Category, MostPostsPerCategoryResponseModel>()
                 .ForMember(x => x.Count, y => y.MapFrom(y => y.Posts.Count))
                 .ForMember(x => x.Title, y => y.MapFrom(y => y.Name));

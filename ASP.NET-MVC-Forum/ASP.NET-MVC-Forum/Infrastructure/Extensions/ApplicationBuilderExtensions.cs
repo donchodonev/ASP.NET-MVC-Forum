@@ -100,6 +100,10 @@
                     name: "default",
                     pattern: "{controller=Chat}/{action=Chat}");
 
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Chat}/{action=SelectUser}/{username?}");
+
                 endpoints.MapHub<ChatHub>("/mychat");
 
                 endpoints.MapRazorPages();

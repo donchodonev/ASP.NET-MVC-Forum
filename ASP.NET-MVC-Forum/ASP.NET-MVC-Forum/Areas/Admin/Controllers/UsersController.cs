@@ -92,6 +92,7 @@
 
             var identityUser = userService
                 .GetUser(userId,UserQueryFilter.WithIdentityUser)
+                .First()
                 .IdentityUser;
 
             bool isUserModerator = userManager
@@ -122,6 +123,7 @@
 
             var identityUser = userService
                 .GetUser(userId,UserQueryFilter.WithIdentityUser)
+                .First()
                 .IdentityUser;
 
             int userRolesCount = userManager.GetRolesAsync(identityUser).GetAwaiter().GetResult().Count;

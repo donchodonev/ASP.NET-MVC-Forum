@@ -1,0 +1,34 @@
+﻿@model ASP.NET_MVC_Forum.Models.Chat.ChatSelectUserViewModel;
+
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger mt-2 mb-2 text-center" role="alert">
+    @TempData["ErrorMessage"]
+</div>}
+
+<form method="get" asp-controller="Chat" asp-action="SelectUser" asp-area="">
+    <div class="form-row mt-3 justify-content-center">
+        <div class="col-lg-9 col-md-9 col-sm-7 m-1">
+            <input name="username" class="form-control text-center" type="search" placeholder="username" aria-label="Search">
+        </div>
+        <div class="float-right m-1">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
+@if (Model != null)
+{
+<div class="row justify-content-center mt-2">
+    <div class="card col-sm-4 col-md-3 col-lg-2 justify-content-center" style="width: 14rem;">
+        <div class="text-center mt-2">
+            <img class="" src="@Model.ImageUrl" style="width:50px; height:50px;" alt="Card image cap">
+        </div>
+        <div class="card-body text-center">
+            <h5 class="card-title">@Model.Username</h5>
+            <a href="#" class="btn btn-primary">Chat</a>
+        </div>
+    </div>
+</div>
+}
+
