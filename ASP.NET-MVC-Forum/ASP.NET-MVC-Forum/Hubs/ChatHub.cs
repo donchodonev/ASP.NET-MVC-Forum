@@ -44,8 +44,6 @@
                 .ToListAsync();
 
             await Clients.Group(sender).SendAsync("ReceiveHistory", messages); //chat history bug fix should be implemented here somewhere
-
-            await Clients.Group(receiver).SendAsync("ReceiveHistory", messages);
         }
 
         public void Disconnect()
