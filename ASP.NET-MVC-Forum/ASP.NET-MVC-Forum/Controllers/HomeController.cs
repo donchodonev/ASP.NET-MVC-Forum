@@ -29,13 +29,17 @@
             this.mapper = mapper;
         }
 
-        public IActionResult Index(int sortType, int sortOrder, string searchTerm,string category, int viewCount, int pageNumber = 1)
+        public IActionResult Index(
+            int sortType,
+            int sortOrder,
+            string searchTerm,
+            string category,
+            int viewCount,
+            string personalOnly,
+            int pageNumber = 1)
         {
-            ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
-            ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
-            ViewBag.CategoryNames = new SelectList(GetCategories(categoryService), category);
-            ViewBag.ViewCountOptions = new SelectList(GetViewCountOptions(), viewCount);
-            ViewBag.SearchTerm = searchTerm;
+
+            UpdateViewBag(sortType,sortOrder,category,viewCount,searchTerm,personalOnly);
 
             var sortedPosts = postsService
                 .SortAndOrder(GetPosts(), sortType, sortOrder, searchTerm, category)
@@ -69,6 +73,22 @@
                     PostQueryFilter.AsNoTracking)
                     .GetAwaiter()
                     .GetResult();
+        }
+
+        private void UpdateViewBag(int sortType, int sortOrder,string category, int viewCount, string searchTerm, string personalOnly)
+        {
+            ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
+            ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
+            ViewBag.CategoryNames = new SelectList(GetCategories(categoryService), category);
+            ViewBag.ViewCountOptions = new SelectList(GetViewCountOptions(), viewCount);
+
+            if (personalOnly == "checked")
+            {
+                ViewBag.PersonalOnly = "checked";
+            }
+
+            ViewBag.PersonalOnly = "";
+            ViewBag.SearchTerm = searchTerm;
         }
     }
 }
