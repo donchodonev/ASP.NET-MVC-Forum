@@ -8,6 +8,7 @@
 * ASP.NET 5
 * MS SQL Server
 * EF Core ORM
+* WebSockets (SignalR)
 * HTML Sanitizer by Michael Ganss - https://github.com/mganss/HtmlSanitizer
 * Automapper - Jimmy Bogard and others - https://automapper.org/
 * Profanity Detector - Stephen Haunts -  https://github.com/stephenhaunts/ProfanityDetector
@@ -65,6 +66,8 @@
 * Validation for all possible user input
 * User-friendly feedback with alert messages where needed
 * Paging
+
+* User-To-User chat through SignalR
 
 * Per-category post filtration
 
