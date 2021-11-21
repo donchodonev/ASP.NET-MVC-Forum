@@ -71,11 +71,15 @@
 
 
         window.onload = function () {
+            connectUsers("@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId")
             getOldMessages();
         };
 
         window.onbeforeunload = function () {
             connection.invoke("Disconnect");
+            disconnectUsers("@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId")
+
+            connection.invoke("DisconnectUserGroups", "@Model.SenderIdentityUserId","@Model.ReceiverIdentityUserId");
         }
 
         const sleep = (milliseconds) => {
@@ -90,6 +94,19 @@
 
             connection.invoke("GetHistory", @Model.ChatId, "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId");
         };
+
+        var disconnectUsers = function (sender, recipient) {
+              connection.invoke("DisconnectUserGroups", sender,recipient);
+        }
+
+        var connectUsers = async (sender, recipient) => {
+
+            while (connection.q != "Connected") {
+                await sleep(1000)
+            }
+
+             connection.invoke("ConnectUserGroups", sender,recipient);
+        }
 
     </script>
 }

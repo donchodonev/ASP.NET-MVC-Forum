@@ -32,9 +32,9 @@
 
             var response = new ChatMessageResponseData(senderUsername, time, message);
 
-            await Clients.Group(senderIdentityId).SendAsync("ReceiveMessage", response);
+            await Clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
 
-            await Clients.Group(receiverIdentityId).SendAsync("ReceiveMessage", response);
+            await Clients.Group(receiverIdentityId + senderIdentityId).SendAsync("ReceiveMessage", response);
         }
 
         public async Task GetHistory(long chatId, string sender, string receiver)
@@ -43,7 +43,7 @@
                 .GetLastMessages(chatId)
                 .ToListAsync();
 
-            await Clients.Group(sender).SendAsync("ReceiveHistory", messages); //chat history bug fix should be implemented here somewhere
+            await Clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
         }
 
         public void Disconnect()
@@ -51,18 +51,14 @@
             Dispose();
         }
 
-        public async override Task OnDisconnectedAsync(Exception exception)
+        public async Task ConnectUserGroups (string senderIdentityId, string recipientIdentityId)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, Context.User.Id());
-
-            await base.OnDisconnectedAsync(exception);
+            await Groups.AddToGroupAsync(Context.ConnectionId,senderIdentityId + recipientIdentityId);
         }
 
-        public override async Task OnConnectedAsync()
+        public async Task DisconnectUserGroups(string senderIdentityId, string recipientIdentityId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Id());
-            await base.OnConnectedAsync();
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, senderIdentityId + recipientIdentityId);
         }
-
     }
 }
