@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Hubs
 {
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
+    using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Services.Chat;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
@@ -20,13 +21,20 @@
         }
 
 
-        public async Task SendMessageToGroup(string sender, string receiver, string message, long chatId,string senderUsername)
+        public async Task SendMessageToGroup(string senderIdentityId, string receiverIdentityId, string message, long chatId, string senderUsername)
         {
-            await chatService.PersistMessageAsync(chatId, message,senderUsername);
+            var persistedMessage = await chatService.PersistMessageAsync(chatId, message, senderUsername);
 
-            await Clients.Group(sender).SendAsync("ReceiveMessage", new TestMessage { Sender = senderUsername, Text = message });
+            var time = persistedMessage
+                .CreatedOn
+                .AddHours(2) // FOR GMT+2
+                .ToString("HH:mm:ss");
 
-            await Clients.Group(receiver).SendAsync("ReceiveMessage", new TestMessage { Sender = senderUsername, Text = message });
+            var response = new ChatMessageResponseData(senderUsername, time, message);
+
+            await Clients.Group(senderIdentityId).SendAsync("ReceiveMessage", response);
+
+            await Clients.Group(receiverIdentityId).SendAsync("ReceiveMessage", response);
         }
 
         public async Task GetHistory(long chatId, string sender, string receiver)
@@ -35,7 +43,7 @@
                 .GetLastMessages(chatId)
                 .ToListAsync();
 
-            await Clients.Group(sender).SendAsync("ReceiveHistory", messages);
+            await Clients.Group(sender).SendAsync("ReceiveHistory", messages); //chat history bug fix should be implemented here somewhere
 
             await Clients.Group(receiver).SendAsync("ReceiveHistory", messages);
         }
@@ -58,10 +66,5 @@
             await base.OnConnectedAsync();
         }
 
-    }
-    public class TestMessage
-    {
-        public string Sender { get; set; }
-        public string Text { get; set; }
     }
 }

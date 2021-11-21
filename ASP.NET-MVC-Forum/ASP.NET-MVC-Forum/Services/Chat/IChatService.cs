@@ -6,7 +6,7 @@
 
     public interface IChatService
     {
-        public Task PersistMessageAsync(long chatId, string message, string senderUsername);
+        public Task<Message> PersistMessageAsync(long chatId, string message, string senderUsername);
 
         public Task<bool> ChatExistsAsync(string identityUserA, string identityUserB);
 

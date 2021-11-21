@@ -33,7 +33,7 @@
 
         connection.on("ReceiveMessage",
             function (message) {
-                var chatInfo = `<div>[${message.sender}]: ${message.text}</div>`;
+                var chatInfo = `<div>[${message.time}] [${message.senderUsername}]: ${message.text}</div>`;
                 $("#messagesList").append(chatInfo);
                 autoscroll();
             });

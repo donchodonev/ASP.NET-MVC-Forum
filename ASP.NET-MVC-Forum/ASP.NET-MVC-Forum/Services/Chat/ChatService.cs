@@ -17,7 +17,7 @@ namespace ASP.NET_MVC_Forum.Services.Chat
             this.db = db;
             this.userService = userService;
         }
-        public async Task PersistMessageAsync(long chatId, string message, string senderUsername)
+        public async Task<Message> PersistMessageAsync(long chatId, string message, string senderUsername)
         {
             Message chatMessage = new Message()
             {
@@ -29,6 +29,8 @@ namespace ASP.NET_MVC_Forum.Services.Chat
             await db.Messages.AddAsync(chatMessage);
 
             await db.SaveChangesAsync();
+
+            return chatMessage;
         }
 
         public async Task<bool> ChatExistsAsync(string identityUserA, string identityUserB)
