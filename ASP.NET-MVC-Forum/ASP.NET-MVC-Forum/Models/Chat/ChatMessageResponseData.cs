@@ -2,6 +2,11 @@
 {
     public class ChatMessageResponseData
     {
+        public ChatMessageResponseData()
+        {
+
+        }
+
         public ChatMessageResponseData(string senderUsername, string time, string text)
         {
             SenderUsername = senderUsername;

@@ -18,6 +18,11 @@ namespace ASP.NET_MVC_Forum.Infrastructure
     {
         public MappingProfile()
         {
+            this.CreateMap<Message, ChatMessageResponseData>()
+                .ForMember(x => x.SenderUsername, y => y.MapFrom(y => y.SenderUsername))
+                .ForMember(x => x.Time, y => y.MapFrom(y => y.CreatedOn.AddHours(2) // FOR GMT+2
+                .ToString("MM/dd/yyyy H:mm")));
+
             this.CreateMap<User, ChatSelectUserViewModel>();
 
             this.CreateMap<Category, MostPostsPerCategoryResponseModel>()

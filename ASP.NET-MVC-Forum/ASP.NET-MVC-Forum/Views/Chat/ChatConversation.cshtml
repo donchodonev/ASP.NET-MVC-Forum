@@ -24,7 +24,7 @@
         connection.on("ReceiveHistory",
             function (messages) {
                 for (var i = 0; i < messages.length ; i++) {
-                    var chatInfo = `<div>${messages[i].text}</div>`;
+                    var chatInfo = `<div>[${messages[i].time}] [${messages[i].senderUsername}]: ${messages[i].text}</div>`;
                     $("#messagesList").append(chatInfo);
                     autoscroll();
                 };

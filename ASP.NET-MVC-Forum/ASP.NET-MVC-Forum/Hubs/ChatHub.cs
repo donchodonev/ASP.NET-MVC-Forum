@@ -3,6 +3,8 @@
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Services.Chat;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@
     public class ChatHub : Hub
     {
         private readonly IChatService chatService;
+        private readonly IMapper mapper;
 
-        public ChatHub(IChatService chatService)
+        public ChatHub(IChatService chatService, IMapper mapper)
         {
             this.chatService = chatService;
+            this.mapper = mapper;
         }
 
 
@@ -39,11 +43,18 @@
 
         public async Task GetHistory(long chatId, string sender, string receiver)
         {
-            var messages = await chatService
+            try
+            {
+                var messages = await chatService
                 .GetLastMessages(chatId)
+                .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            await Clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
+                await Clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
+            }
+            catch (Exception ex)
+            {
+                string msg  = ex.Message;
+            }
         }
 
         public void Disconnect()
@@ -51,9 +62,9 @@
             Dispose();
         }
 
-        public async Task ConnectUserGroups (string senderIdentityId, string recipientIdentityId)
+        public async Task ConnectUserGroups(string senderIdentityId, string recipientIdentityId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId,senderIdentityId + recipientIdentityId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, senderIdentityId + recipientIdentityId);
         }
 
         public async Task DisconnectUserGroups(string senderIdentityId, string recipientIdentityId)
