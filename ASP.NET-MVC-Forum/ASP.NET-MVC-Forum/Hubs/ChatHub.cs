@@ -20,13 +20,13 @@
         }
 
 
-        public async Task SendMessageToGroup(string sender, string receiver, string message, long chatId)
+        public async Task SendMessageToGroup(string sender, string receiver, string message, long chatId,string senderUsername)
         {
-            await chatService.PersistMessageAsync(chatId, message);
+            await chatService.PersistMessageAsync(chatId, message,senderUsername);
 
-            await Clients.Group(sender).SendAsync("ReceiveMessage", new TestMessage { Sender = sender, Text = message });
+            await Clients.Group(sender).SendAsync("ReceiveMessage", new TestMessage { Sender = senderUsername, Text = message });
 
-            await Clients.Group(receiver).SendAsync("ReceiveMessage", new TestMessage { Sender = sender, Text = message });
+            await Clients.Group(receiver).SendAsync("ReceiveMessage", new TestMessage { Sender = senderUsername, Text = message });
         }
 
         public async Task GetHistory(long chatId, string sender, string receiver)

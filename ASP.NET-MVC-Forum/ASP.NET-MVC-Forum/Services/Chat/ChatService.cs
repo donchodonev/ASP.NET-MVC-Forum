@@ -17,12 +17,13 @@ namespace ASP.NET_MVC_Forum.Services.Chat
             this.db = db;
             this.userService = userService;
         }
-        public async Task PersistMessageAsync(long chatId, string message)
+        public async Task PersistMessageAsync(long chatId, string message, string senderUsername)
         {
             Message chatMessage = new Message()
             {
                 ChatId = chatId,
-                Text = message
+                Text = message,
+                SenderUsername = senderUsername
             };
 
             await db.Messages.AddAsync(chatMessage);
@@ -82,7 +83,7 @@ namespace ASP.NET_MVC_Forum.Services.Chat
                 .Messages
                 .AsNoTracking()
                 .Where(x => x.ChatId == chatId)
-                .OrderByDescending(x => x.CreatedOn)
+                .OrderBy(x => x.CreatedOn)
                 .Take(count);
         }
     }

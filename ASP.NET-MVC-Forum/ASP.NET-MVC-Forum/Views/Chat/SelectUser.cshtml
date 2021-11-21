@@ -25,8 +25,13 @@
             <img class="" src="@Model.ImageUrl" style="width:50px; height:50px;" alt="Card image cap">
         </div>
         <div class="card-body text-center">
-            <h5 class="card-title">@Model.Username</h5>
-            <a asp-area="" asp-controller="Chat" asp-action="ChatConversation" asp-route-senderIdentityUserId="@Model.SenderIdentityUserId" asp-route-recipientIdentityUserId="@Model.RecipientIdentityUserId" class="btn btn-primary">Chat</a>
+            <h5 class="card-title">@Model.RecipientUsername</h5>
+            <a asp-area="" asp-controller="Chat" asp-action="ChatConversation"
+               asp-route-senderIdentityUserId="@Model.SenderIdentityUserId"
+               asp-route-recipientIdentityUserId="@Model.RecipientIdentityUserId"
+               asp-route-senderUsername="@Model.SenderUsername"
+               asp-route-recipientUsername ="@Model.RecipientUsername"
+               class="btn btn-primary">Chat</a>
         </div>
     </div>
 </div>

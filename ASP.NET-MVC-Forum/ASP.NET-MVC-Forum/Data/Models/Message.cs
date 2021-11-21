@@ -5,7 +5,6 @@
     using System.ComponentModel.DataAnnotations;
     using static ASP.NET_MVC_Forum.Data.DataConstants.ChatConstants;
 
-
     public class Message : ICreatedOn
     {
         public Message()
@@ -24,8 +23,11 @@
         [Required]
         public long ChatId { get; set; }
 
-        public virtual Chat Chat { get; set; }
+        [Required]
+        public string SenderUsername { get; set; }
 
         public DateTime CreatedOn { get; init; }
+
+        public virtual Chat Chat { get; set; }
     }
 }

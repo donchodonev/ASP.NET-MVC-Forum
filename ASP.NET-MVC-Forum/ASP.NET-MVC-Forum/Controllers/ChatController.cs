@@ -27,10 +27,14 @@
             this.mapper = mapper;
             this.chatService = chatService;
         }
-        public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId)
+        public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
             var chatId = await GetChatId(senderIdentityUserId, recipientIdentityUserId);
-            var vm = new ChatConversationViewModel(chatId,senderIdentityUserId,recipientIdentityUserId);
+            var vm = new ChatConversationViewModel(
+                chatId,
+                senderIdentityUserId,
+                recipientIdentityUserId,
+                senderUsername);
 
             return View(vm);
         }
@@ -59,8 +63,9 @@
                 .ProjectTo<ChatSelectUserViewModel>(userService.GetUser(identityUser.Id))
                 .First();
 
-            vm.Username = identityUser.UserName;
+
             vm.RecipientIdentityUserId = identityUser.Id;
+            vm.SenderUsername = this.User.Identity.Name;
             vm.SenderIdentityUserId = this.User.Id();
 
             return View(vm);

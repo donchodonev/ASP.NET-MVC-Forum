@@ -44,7 +44,13 @@
             var message = $("#messageInput").val();
             console.log(message);
 
-            connection.invoke("SendMessageToGroup", "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId", `${message}`, @Model.ChatId);
+            connection.invoke(
+                "SendMessageToGroup",
+                "@Model.SenderIdentityUserId",
+                "@Model.ReceiverIdentityUserId",
+                `${message}`,
+                @Model.ChatId,
+                "@Model.SenderUsername");
 
 
             $("#messageInput").val("");
@@ -84,6 +90,6 @@
 
             connection.invoke("GetHistory", @Model.ChatId, "@Model.SenderIdentityUserId", "@Model.ReceiverIdentityUserId");
         };
-       
+
     </script>
 }
