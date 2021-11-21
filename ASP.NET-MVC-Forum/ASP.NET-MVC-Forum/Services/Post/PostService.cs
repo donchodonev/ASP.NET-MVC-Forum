@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,14 @@
     public class PostService : IPostService
     {
         private readonly ApplicationDbContext db;
-        private readonly IHtmlSanitizer sanitizer;
         private readonly IPostReportService reportService;
+        private readonly IHtmlManipulator htmlManipulator;
 
-        public PostService(ApplicationDbContext db, IHtmlSanitizer sanitizer, IPostReportService reportService)
+        public PostService(ApplicationDbContext db, IPostReportService reportService, IHtmlManipulator htmlManipulator)
         {
             this.db = db;
-            this.sanitizer = sanitizer;
             this.reportService = reportService;
+            this.htmlManipulator = htmlManipulator;
         }
 
         /// <summary>
@@ -53,10 +54,7 @@
 
             var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
 
-            var pattern = @"<.*?>";
-            var replacement = string.Empty;
-
-            var postDescriptionWithoutHtml = Regex.Replace(sanitizedAndDecodedHtml, pattern, replacement);
+            var postDescriptionWithoutHtml = htmlManipulator.Escape(sanitizedAndDecodedHtml);
 
             string postShortDescription;
 
@@ -276,7 +274,8 @@
         /// <returns>string</returns>
         public string SanitizeAndDecodeHtmlContent(string html)
         {
-            return HttpUtility.HtmlDecode(sanitizer.Sanitize(html));
+            return htmlManipulator
+                .Decode(htmlManipulator.Sanitize(html));
         }
 
         /// <summary>

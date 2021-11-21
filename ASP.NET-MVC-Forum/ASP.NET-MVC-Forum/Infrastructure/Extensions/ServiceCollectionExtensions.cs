@@ -19,6 +19,7 @@
     using ASP.NET_MVC_Forum.Services.EmailSender;
     using ASP.NET_MVC_Forum.Services.Chart;
     using ASP.NET_MVC_Forum.Services.Chat;
+    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
 
     public static class ServiceCollectionExtensions
     {
@@ -61,6 +62,7 @@
             services.AddTransient<IChartService, ChartService>();
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<IHtmlManipulator, HtmlManipulator>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

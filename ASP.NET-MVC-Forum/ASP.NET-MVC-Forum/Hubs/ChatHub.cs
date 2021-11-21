@@ -1,6 +1,5 @@
 ﻿namespace ASP.NET_MVC_Forum.Hubs
 {
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Services.Chat;
     using AutoMapper;
@@ -9,7 +8,6 @@
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     [Authorize]
@@ -27,6 +25,7 @@
 
         public async Task SendMessageToGroup(string senderIdentityId, string receiverIdentityId, string message, long chatId, string senderUsername)
         {
+
             var persistedMessage = await chatService.PersistMessageAsync(chatId, message, senderUsername);
 
             var time = persistedMessage
@@ -34,7 +33,7 @@
                 .AddHours(2) // FOR GMT+2
                 .ToString("HH:mm:ss");
 
-            var response = new ChatMessageResponseData(senderUsername, time, message);
+            var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
 
             await Clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
 

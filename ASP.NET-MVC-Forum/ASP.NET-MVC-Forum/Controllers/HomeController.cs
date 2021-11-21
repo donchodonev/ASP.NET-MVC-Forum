@@ -21,7 +21,7 @@
         private readonly IPostService postsService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-
+         
         public HomeController(IPostService postsService, ICategoryService categoryService, IMapper mapper)
         {
             this.postsService = postsService;

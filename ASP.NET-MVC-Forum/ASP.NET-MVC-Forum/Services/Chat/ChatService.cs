@@ -1,8 +1,9 @@
-﻿using ASP.NET_MVC_Forum.Data;
-using ASP.NET_MVC_Forum.Services.User;
-namespace ASP.NET_MVC_Forum.Services.Chat
+﻿namespace ASP.NET_MVC_Forum.Services.Chat
 {
+    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Services.User;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
@@ -11,18 +12,23 @@ namespace ASP.NET_MVC_Forum.Services.Chat
     {
         private readonly ApplicationDbContext db;
         private readonly IUserService userService;
+        private readonly IHtmlManipulator htmlManipulator;
 
-        public ChatService(ApplicationDbContext db, IUserService userService)
+        public ChatService(ApplicationDbContext db, IUserService userService,IHtmlManipulator htmlManipulator)
         {
             this.db = db;
             this.userService = userService;
+            this.htmlManipulator = htmlManipulator;
         }
         public async Task<Message> PersistMessageAsync(long chatId, string message, string senderUsername)
         {
+            var sanitizedMessage = htmlManipulator.Sanitize(message);
+            var htmlEscapedMessage = htmlManipulator.Escape(sanitizedMessage);
+
             Message chatMessage = new Message()
             {
                 ChatId = chatId,
-                Text = message,
+                Text = htmlEscapedMessage,
                 SenderUsername = senderUsername
             };
 
