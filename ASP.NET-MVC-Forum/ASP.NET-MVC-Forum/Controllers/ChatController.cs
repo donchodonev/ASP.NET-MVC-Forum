@@ -59,14 +59,7 @@
                 return View();
             }
 
-            var vm = mapper
-                .ProjectTo<ChatSelectUserViewModel>(userService.GetUser(identityUser.Id))
-                .First();
-
-
-            vm.RecipientIdentityUserId = identityUser.Id;
-            vm.SenderUsername = this.User.Identity.Name;
-            vm.SenderIdentityUserId = this.User.Id();
+            var vm = GetViewModelWithData(identityUser);
 
             return View(vm);
         }
@@ -78,6 +71,22 @@
             }
 
             return await chatService.GetChatIdAsync(sender, receiver);
+        }
+
+
+        private ChatSelectUserViewModel GetViewModelWithData(IdentityUser identityUser)
+        {
+            var vm = mapper
+                .ProjectTo<ChatSelectUserViewModel>(userService.GetUser(identityUser.Id))
+                .First();
+
+
+            vm.RecipientUsername = identityUser.UserName;
+            vm.RecipientIdentityUserId = identityUser.Id;
+            vm.SenderUsername = this.User.Identity.Name;
+            vm.SenderIdentityUserId = this.User.Id();
+
+            return vm;
         }
     }
 }
