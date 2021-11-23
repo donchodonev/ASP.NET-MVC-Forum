@@ -4,7 +4,6 @@
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.PostReport;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -15,13 +14,11 @@
     public class PostDataService : IPostDataService
     {
         private readonly ApplicationDbContext db;
-        private readonly IPostReportService reportService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public PostDataService(ApplicationDbContext db, IPostReportService reportService, IHtmlManipulator htmlManipulator)
+        public PostDataService(ApplicationDbContext db, IHtmlManipulator htmlManipulator)
         {
             this.db = db;
-            this.reportService = reportService;
             this.htmlManipulator = htmlManipulator;
         }
 
@@ -49,13 +46,11 @@
 
             await db.SaveChangesAsync();
 
-            var savedPost = await db.Posts.FirstAsync(x => x == post);
-
             return post.Id;
         }
 
         /// <summary>
-        /// Edits post
+        /// Updates existing post
         /// </summary>
         /// <param name="post">The post to edit</param>
         /// <returns>void</returns>
@@ -66,7 +61,6 @@
             await db.SaveChangesAsync();
 
         }
-
 
         /// <summary>
         /// Gets post from database via it's Id
@@ -86,7 +80,6 @@
             return await query.FirstOrDefaultAsync();
         }
 
-
         /// <summary>
         /// Get all posts from category matching the category id given to the method, filtered by chosen filters (if any)
         /// </summary>
@@ -101,9 +94,7 @@
                 .Posts
                 .Where(x => x.CategoryId == categoryId);
 
-                query = QueryBuilder(query, filters);
-
-                return query.OrderByDescending(x => x.CreatedOn);
+                return QueryBuilder(query, filters);
             });
         }
 
@@ -399,7 +390,7 @@
                         posts = posts.Where(x => x.IsDeleted == false);
                         break;
                     case PostQueryFilter.AsNoTracking:
-                        posts = posts.AsNoTracking().AsSplitQuery();
+                        posts = posts.AsNoTracking();
                         break;
                     case PostQueryFilter.WithCategory:
                         posts = posts.Include(x => x.Category);
