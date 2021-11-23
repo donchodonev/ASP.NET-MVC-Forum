@@ -13,15 +13,15 @@
 
         public Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters);
 
-        public Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, params PostQueryFilter[] filters);
+        public IQueryable<Post> GetByCategory(int categoryId, params PostQueryFilter[] filters);
 
         public Task<bool> PostExistsAsync(string postTitle);
 
         public Task<bool> PostExistsAsync(int postId);
 
-        public Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters);
+        public IQueryable<Post> GetByUserId(int userId, params PostQueryFilter[] filters);
 
-        public  Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters);
+        public IQueryable<Post> GetByIdAsQueryable(int postId, params PostQueryFilter[] filters);
 
         public Task UpdatePostAsync(Post post);
 

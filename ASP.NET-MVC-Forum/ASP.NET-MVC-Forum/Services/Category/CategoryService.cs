@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public class CategoryService : ICategoryService
     {
@@ -16,19 +15,18 @@
             this.db = db;
         }
 
-        public async Task<IQueryable<Category>> AllAsync(bool withPostsIncluded = false)
+        public IQueryable<Category> All(bool withPostsIncluded = false)
         {
-            return await Task.Run(() =>
+            var query = db
+                .Categories
+                .AsQueryable();
+
+            if (withPostsIncluded)
             {
-                var query = db.Categories.AsQueryable();
+                query = query.Include(x => x.Posts);
+            }
 
-                if (withPostsIncluded)
-                {
-                    query = query.Include(x => x.Posts);
-                }
-
-                return query;
-            });
+            return query;
         }
 
         public List<string> GetCategoryNames()

@@ -78,16 +78,13 @@
         /// <param name="categoryId">Posts' category Id</param>
         /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
-        public async Task<IQueryable<Post>> GetByCategoryAsync(int categoryId, params PostQueryFilter[] filters)
+        public IQueryable<Post> GetByCategory(int categoryId, params PostQueryFilter[] filters)
         {
-            return await Task.Run(() =>
-            {
-                var query = db
-                .Posts
-                .Where(x => x.CategoryId == categoryId);
+            var query = db
+            .Posts
+            .Where(x => x.CategoryId == categoryId);
 
-                return QueryBuilder(query, filters);
-            });
+            return QueryBuilder(query, filters);
         }
 
         /// <summary>
@@ -122,14 +119,13 @@
         /// <param name="userId">Post's author (user) Id</param>
         /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
-        public async Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters)
+        public IQueryable<Post> GetByUserId(int userId, params PostQueryFilter[] filters)
         {
-            return await Task.Run(() =>
-            {
-                var query = db.Posts.Where(x => x.UserId == userId);
+            var query = db
+                .Posts
+                .Where(x => x.UserId == userId);
 
-                return QueryBuilder(query, filters);
-            });
+            return QueryBuilder(query, filters);
         }
 
         /// <summary>
@@ -138,14 +134,13 @@
         /// <param name="postId">Post's Id</param>
         /// <param name="filters">Array of comma-separated filters of type PostQueryFilter</param>
         /// <returns>Task<IQueryable<Post>></returns>
-        public async Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters)
+        public IQueryable<Post> GetByIdAsQueryable(int postId, params PostQueryFilter[] filters)
         {
-            return await Task.Run(() =>
-            {
-                var query = db.Posts.Where(x => x.Id == postId);
+            var query = db
+                .Posts
+                .Where(x => x.Id == postId);
 
-                return QueryBuilder(query, filters);
-            });
+            return QueryBuilder(query, filters);
         }
 
         /// <summary>

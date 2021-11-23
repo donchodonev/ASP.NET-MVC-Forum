@@ -134,9 +134,7 @@
         public List<MostPostsPerCategoryResponseModel> GetMostPostsPerCategory(int count)
         {
             var categories = categoryService
-                .AllAsync(withPostsIncluded: true)
-                .GetAwaiter()
-                .GetResult()
+                .All(withPostsIncluded: true)
                 .OrderByDescending(x => x.Posts.Count)
                 .ToList();
 

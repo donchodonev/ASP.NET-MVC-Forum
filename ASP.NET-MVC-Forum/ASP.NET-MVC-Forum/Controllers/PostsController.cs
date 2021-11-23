@@ -76,9 +76,9 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
-            var vm = await PrepareAddFormDataOnGetAsync();
+            var vm = PrepareAddFormDataOnGetAsync();
 
             return View(vm);
         }
@@ -113,14 +113,14 @@
         {
             await ValidatePostOwnership(postId, this.User);
 
-            var post = await postDataService
-                .GetByIdAsQueryableAsync(postId, PostQueryFilter.WithCategory);
+            var post = postDataService
+                .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
 
             var vm = mapper
                 .ProjectTo<EditPostFormModel>(post)
                 .First();
 
-            vm.Categories = await GetCategoryIdAndNameCombinations();
+            vm.Categories = GetCategoryIdAndNameCombinations();
 
             return View(vm);
         }
@@ -181,11 +181,11 @@
             return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
         }
 
-        private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
+        private AddPostFormModel PrepareAddFormDataOnGetAsync()
         {
             var addPostFormModel = new AddPostFormModel();
 
-            var selectOptions = await GetCategoryIdAndNameCombinations();
+            var selectOptions = GetCategoryIdAndNameCombinations();
 
             addPostFormModel.Categories = selectOptions;
 
@@ -201,9 +201,9 @@
             return addPostFormModel;
         }
 
-        private async Task<CategoryIdAndNameViewModel[]> GetCategoryIdAndNameCombinations()
+        private CategoryIdAndNameViewModel[] GetCategoryIdAndNameCombinations()
         {
-            var categories = await categoryService.AllAsync();
+            var categories = categoryService.All();
 
             var selectOptions = categories
                 .ProjectTo<CategoryIdAndNameViewModel>(mapper.ConfigurationProvider)
