@@ -3,21 +3,16 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     public class PostDataService : IPostDataService
     {
         private readonly ApplicationDbContext db;
-        private readonly IHtmlManipulator htmlManipulator;
 
-        public PostDataService(ApplicationDbContext db, IHtmlManipulator htmlManipulator)
+        public PostDataService(ApplicationDbContext db)
         {
             this.db = db;
-            this.htmlManipulator = htmlManipulator;
         }
 
         /// <summary>
@@ -57,7 +52,6 @@
             db.Posts.Update(post);
 
             await db.SaveChangesAsync();
-
         }
 
         /// <summary>
@@ -155,36 +149,6 @@
         }
 
         /// <summary>
-        /// Deletes post by post id
-        /// </summary>
-        /// <param name="postId">Post's Id</param>
-        /// <returns>Task</returns>
-        public async Task DeletePostAsync(int postId)
-        {
-            var currentTime = DateTime.UtcNow;
-
-            var postToMarkAsDeleted = await db
-                .Posts
-                .Where(x => x.Id == postId)
-                .Include(x => x.Reports)
-                .FirstAsync();
-
-            postToMarkAsDeleted.IsDeleted = true;
-
-            foreach (var report in postToMarkAsDeleted.Reports)
-            {
-                report.IsDeleted = true;
-                report.ModifiedOn = currentTime;
-            }
-
-            postToMarkAsDeleted.ModifiedOn = currentTime;
-
-            db.Update(postToMarkAsDeleted);
-
-            await db.SaveChangesAsync();
-        }
-
-        /// <summary>
         /// Checks if a post with this Id and Title is deleted
         /// </summary>
         /// <param name="postId">Post's Id</param>
@@ -211,14 +175,6 @@
         /// <param name="postId">The post Id</param>
         /// <param name="reportReason">The reason for which the post is reported</param>
         /// <returns>Task</returns>
-        public async Task AddPostReport(int postId, string reportReason)
-        {
-            db
-            .PostReports
-            .Add(new PostReport() { PostId = postId, Reason = reportReason });
-
-            await db.SaveChangesAsync();
-        }
 
         public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
         {

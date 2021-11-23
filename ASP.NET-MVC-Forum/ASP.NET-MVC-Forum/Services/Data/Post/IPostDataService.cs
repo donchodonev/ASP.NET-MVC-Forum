@@ -2,7 +2,6 @@
 {
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -28,10 +27,6 @@
 
         public Task UpdatePostAsync(Post post);
 
-        public Task DeletePostAsync(int postId);
-
         public Task<bool?> IsPostDeleted(int postId, string postTitle);
-
-        public Task AddPostReport(int postId, string reportReason);
     }
 }

@@ -6,6 +6,7 @@
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -26,31 +27,34 @@
         private const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
 
         private readonly IUserService userService;
-        private readonly IPostDataService postService;
+        private readonly IPostDataService postDataService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
+        private readonly IPostReportService postReportService;
 
         public PostsController(
             IUserService userService,
-            IPostDataService postService,
+            IPostDataService postDataService,
             ICategoryService categoryService,
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
-            IPostBusinessService postBusinessService)
+            IPostBusinessService postBusinessService,
+            IPostReportService postReportService)
         {
             this.userService = userService;
-            this.postService = postService;
+            this.postDataService = postDataService;
             this.categoryService = categoryService;
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
+            this.postReportService = postReportService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postService.GetByIdAsync(postId,
+            var post = await postDataService.GetByIdAsync(postId,
                 PostQueryFilter.WithIdentityUser,
                 PostQueryFilter.WithUserPosts,
                 PostQueryFilter.WithComments,
@@ -90,7 +94,7 @@
                 return RedirectToAction("Add", "Posts");
             }
 
-            if (await postService.PostExistsAsync(data.Title))
+            if (await postDataService.PostExistsAsync(data.Title))
             {
                 TempData["ErrorMessage"] = $"A post with the title \"{data.Title}\" already exists";
                 TempData["HtmlContent"] = data.HtmlContent;
@@ -107,7 +111,7 @@
         {
             await ValidatePostOwnership(postId, this.User);
 
-            var post = await postService
+            var post = await postDataService
                 .GetByIdAsQueryableAsync(postId, PostQueryFilter.WithCategory);
 
             var vm = mapper
@@ -125,7 +129,7 @@
         {
             await ValidatePostOwnership(data.PostId, this.User);
 
-            var originalPost = await postService.GetByIdAsync(data.PostId);
+            var originalPost = await postDataService.GetByIdAsync(data.PostId);
 
             var postChanges = postBusinessService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
 
@@ -147,7 +151,7 @@
         {
             await ValidatePostOwnership(postId, this.User);
 
-            var isPostDeleted = await postService.IsPostDeleted(postId, postTitle);
+            var isPostDeleted = await postDataService.IsPostDeleted(postId, postTitle);
 
             if (isPostDeleted.Value == true)
             {
@@ -158,19 +162,19 @@
                 BadRequest();
             }
 
-            await postService.DeletePostAsync(postId);
+            await postBusinessService.Delete(postId);
 
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
         {
-            if (!await postService.PostExistsAsync(postId))
+            if (!await postDataService.PostExistsAsync(postId))
             {
                 return BadRequest();
             }
 
-            await postService.AddPostReport(postId, content);
+            await postReportService.ReportPost(postId, content);
 
             return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
         }

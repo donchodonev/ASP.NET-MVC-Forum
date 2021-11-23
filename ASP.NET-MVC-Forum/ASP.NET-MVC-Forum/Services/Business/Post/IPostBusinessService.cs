@@ -16,5 +16,7 @@
         public Task<bool> IsAuthor(int userId, int postId);
 
         public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
+
+        public Task Delete(int postId);
     }
 }

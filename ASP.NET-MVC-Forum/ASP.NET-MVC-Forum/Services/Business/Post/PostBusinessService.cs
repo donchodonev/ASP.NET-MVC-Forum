@@ -52,9 +52,33 @@
 
             var postId = await postDataService.AddPostAsync(post);
 
-            reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, postId);
+            await reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, postId);
 
             return postId;
+        }
+
+        /// <summary>
+        /// Deletes post by post id
+        /// </summary>
+        /// <param name="postId">Post's Id</param>
+        /// <returns>Task</returns>
+        public async Task Delete(int postId)
+        {
+            var currentTime = DateTime.UtcNow;
+
+            var postToMarkAsDeleted = await postDataService
+                .GetByIdAsync(postId,PostQueryFilter.WithReports);
+
+            postToMarkAsDeleted.IsDeleted = true;
+            postToMarkAsDeleted.ModifiedOn = currentTime;
+
+            foreach (var report in postToMarkAsDeleted.Reports)
+            {
+                report.IsDeleted = true;
+                report.ModifiedOn = currentTime;
+            }
+
+            await postDataService.UpdatePostAsync(postToMarkAsDeleted);
         }
 
         public async Task Edit(Post post)
@@ -84,9 +108,8 @@
 
             await postDataService.UpdatePostAsync(post);
 
-            reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
+            await reportService .AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
         }
-
 
         /// <summary>
         /// Checks which parts of a post have been changed during edit (if any)

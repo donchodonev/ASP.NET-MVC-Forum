@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     public class PostReportService : IPostReportService
     {
@@ -74,7 +75,7 @@
             return db.PostReports.Any(x => x.Id == reportId);
         }
 
-        public void AutoGeneratePostReport(string title, string content, int postId)
+        public async Task AutoGeneratePostReport(string title, string content, int postId)
         {
             if (filter.ContainsProfanity(content))
             {
@@ -82,15 +83,15 @@
 
                 string reason = $"Profane words found in post title and content: {string.Join(", ", profaneWordsFound)}";
 
-                ReportPost(postId, reason);
+                await ReportPost(postId, reason);
             }
         }
 
-        public void ReportPost(int postId, string reasons)
+        public async Task ReportPost(int postId, string reasons)
         {
             db.PostReports.Add(new PostReport() { PostId = postId, Reason = reasons });
 
-            db.SaveChangesAsync().Wait();
+            await db.SaveChangesAsync();
         }
 
         public void CensorPost(int postId)
