@@ -16,7 +16,7 @@
         private readonly IMapper mapper;
         private readonly string[] colors = new string[] { Blue, Navy, Green, Teal, Lime, Aqua, Olive, Purple, Maroon, Yellow };
 
-        public ChartService(IPostService postService,ICategoryService categoryService, IMapper mapper)
+        public ChartService(IPostService postService, ICategoryService categoryService, IMapper mapper)
         {
             this.postService = postService;
             this.categoryService = categoryService;
@@ -25,11 +25,10 @@
 
         public List<MostCommentedPostsResponeModel> GetMostCommentedPostsChartData(int count)
         {
-            var posts = postService.AllAsync(
+            var posts = postService.All(
                PostQueryFilter.WithoutDeleted,
                PostQueryFilter.AsNoTracking,
                PostQueryFilter.WithComments)
-               .GetAwaiter().GetResult()
                .OrderByDescending(x => x.Comments.Count)
                .ToList();
 
@@ -62,11 +61,10 @@
 
         public List<MostLikedPostsResponeModel> GetMostLikedPostsChartData(int count)
         {
-            var posts = postService.AllAsync(
+            var posts = postService.All(
                 PostQueryFilter.WithoutDeleted,
                 PostQueryFilter.AsNoTracking,
                 PostQueryFilter.WithVotes)
-                .GetAwaiter().GetResult()
                 .OrderByDescending(x => x.Votes.Sum(x => (int)x.VoteType))
                 .ToList();
 
@@ -99,11 +97,10 @@
 
         public List<MostReportedPostsResponeModel> GetMostReportedPostsChartData(int count)
         {
-            var posts = postService.AllAsync(
+            var posts = postService.All(
                 PostQueryFilter.WithoutDeleted,
                 PostQueryFilter.AsNoTracking,
                 PostQueryFilter.WithReports)
-                .GetAwaiter().GetResult()
                 .OrderByDescending(x => x.Reports.Count)
                 .ToList();
 
@@ -137,7 +134,7 @@
         public List<MostPostsPerCategoryResponseModel> GetMostPostsPerCategory(int count)
         {
             var categories = categoryService
-                .AllAsync(withPostsIncluded:true)
+                .AllAsync(withPostsIncluded: true)
                 .GetAwaiter()
                 .GetResult()
                 .OrderByDescending(x => x.Posts.Count)

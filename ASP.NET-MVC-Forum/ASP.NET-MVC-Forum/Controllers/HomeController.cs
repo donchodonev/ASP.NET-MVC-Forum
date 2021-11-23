@@ -30,7 +30,7 @@
             this.mapper = mapper;
         }
 
-        public async Task <IActionResult> Index(
+        public async Task<IActionResult> Index(
             int sortType,
             int sortOrder,
             string searchTerm,
@@ -43,13 +43,11 @@
             UpdateViewBag(sortType, sortOrder, category, viewCount, searchTerm, personalOnly);
 
             var sortedPosts = postsService
-                .SortAndOrder(await GetPosts(), sortType, sortOrder, searchTerm, category)
+                .SortAndOrder(GetPosts(), sortType, sortOrder, searchTerm, category)
                 .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
 
-            var paginatedList = PaginatedList<PostPreviewViewModel>
-                .CreateAsync(sortedPosts, pageNumber, viewCount)
-                .GetAwaiter()
-                .GetResult();
+            var paginatedList = await PaginatedList<PostPreviewViewModel>
+                .CreateAsync(sortedPosts, pageNumber, viewCount);
 
             return View(paginatedList);
         }
@@ -65,9 +63,9 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<IQueryable<Post>> GetPosts()
+        private IQueryable<Post> GetPosts()
         {
-            return await postsService.AllAsync(
+            return postsService.All(
                     PostQueryFilter.WithUser,
                     PostQueryFilter.WithIdentityUser,
                     PostQueryFilter.WithoutDeleted,

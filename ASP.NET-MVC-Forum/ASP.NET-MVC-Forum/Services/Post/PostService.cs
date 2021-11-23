@@ -31,15 +31,11 @@
         /// </summary>
         /// <param name="filters">A query filter enum used to materialize data from Post's navigational properties </param>
         /// <returns>Returns IQueryable<Post></returns>
-        public async Task<IQueryable<Post>> AllAsync(params PostQueryFilter[] filters)
+        public IQueryable<Post> All(params PostQueryFilter[] filters)
         {
-            return
-                await Task.Run(() =>
-                {
-                    var query = QueryBuilder(filters);
+            var query = QueryBuilder(filters);
 
-                    return query.OrderByDescending(x => x.CreatedOn);
-                });
+            return query.OrderByDescending(x => x.CreatedOn);
         }
 
         /// <summary>
