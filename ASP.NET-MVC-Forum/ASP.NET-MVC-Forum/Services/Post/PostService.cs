@@ -246,29 +246,26 @@
         /// <param name="newTitle">The new post title</param>
         /// <param name="newCategoryId">The new post category Id</param>
         /// <returns>Task<Dictionary<string, bool>></returns>
-        public async Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
+        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
         {
-            return await Task.Run(() =>
+            var kvp = new Dictionary<string, bool>();
+
+            if (originalPost.HtmlContent.Length != SanitizeAndDecodeHtmlContent(newHtmlContent).Length)
             {
-                var kvp = new Dictionary<string, bool>();
+                kvp.Add("HtmlContent", true);
+            }
 
-                if (originalPost.HtmlContent.Length != SanitizeAndDecodeHtmlContent(newHtmlContent).Length)
-                {
-                    kvp.Add("HtmlContent", true);
-                }
+            if (originalPost.Title != newTitle)
+            {
+                kvp.Add("Title", true);
+            }
 
-                if (originalPost.Title != newTitle)
-                {
-                    kvp.Add("Title", true);
-                }
+            if (originalPost.CategoryId != newCategoryId)
+            {
+                kvp.Add("CategoryId", true);
+            }
 
-                if (originalPost.CategoryId != newCategoryId)
-                {
-                    kvp.Add("CategoryId", true);
-                }
-
-                return kvp;
-            });
+            return kvp;
         }
 
         /// <summary>

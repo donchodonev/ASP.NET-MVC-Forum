@@ -33,7 +33,7 @@
 
         public PostsController(
             IUserService userService,
-            IPostService postService, 
+            IPostService postService,
             ICategoryService categoryService,
             IMapper mapper,
             SignInManager<IdentityUser> signInManager)
@@ -62,7 +62,7 @@
 
             if (signInManager.IsSignedIn(this.User))
             {
-               vm.UserLastVoteChoice = GetUserLastVote(post, vm, this.User);
+                vm.UserLastVoteChoice = await GetUserLastVote(post, vm, this.User);
             }
 
             return View(vm);
@@ -102,7 +102,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            await ValidatePostOwnership(postId,this.User);
+            await ValidatePostOwnership(postId, this.User);
 
             var post = await postService
                 .GetByIdAsQueryableAsync(postId, PostQueryFilter.WithCategory);
@@ -120,18 +120,18 @@
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            await ValidatePostOwnership(data.PostId,this.User);
+            await ValidatePostOwnership(data.PostId, this.User);
 
             var originalPost = await postService.GetByIdAsync(data.PostId);
 
-            var postChanges = await postService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
+            var postChanges = postService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
 
             if (postChanges.Count == 0)
             {
                 return RedirectToAction("Edit", "Posts", new { postId = data.PostId });
             }
 
-            AddPostChanges(originalPost,data,postChanges);
+            AddPostChanges(originalPost, data, postChanges);
 
             await postService.EditPostAsync(originalPost);
 
@@ -142,13 +142,13 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            await ValidatePostOwnership(postId,this.User);
+            await ValidatePostOwnership(postId, this.User);
 
             var isPostDeleted = await postService.IsPostDeleted(postId, postTitle);
 
             if (isPostDeleted.Value == true)
             {
-                this.RedirectToActionWithErrorMessage(PostDeletedMessege,"Index","Home");
+                this.RedirectToActionWithErrorMessage(PostDeletedMessege, "Index", "Home");
             }
             else if (!isPostDeleted.HasValue)
             {
@@ -169,7 +169,7 @@
 
             await postService.AddPostReport(postId, content);
 
-            return this.RedirectToActionWithMessage(ReportThankYouMessage,"Home","Index");
+            return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
         }
 
         private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
@@ -216,18 +216,17 @@
         {
             var userId = await userService.GetBaseUserIdAsync(User.Id());
 
-            if (!await postService.UserCanEditAsync(userId, postId,principal))
+            if (!await postService.UserCanEditAsync(userId, postId, principal))
             {
                 RedirectToAction("Index", "Home");
             }
         }
 
-        private int GetUserLastVote(Post post, ViewPostViewModel vm, ClaimsPrincipal user)
+        private async Task<int> GetUserLastVote(Post post, ViewPostViewModel vm, ClaimsPrincipal user)
         {
-            int userId = userService
-                .GetBaseUserIdAsync(user.Id())
-                .GetAwaiter()
-                .GetResult();
+            int userId = await userService
+                .GetBaseUserIdAsync(user.Id());
+
 
             var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
 
@@ -239,7 +238,7 @@
             return 0;
         }
 
-        private void AddPostChanges(Post originalPost,EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
+        private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
         {
             foreach (var kvp in postChanges)
             {

@@ -29,7 +29,7 @@
 
         public Task<bool> UserCanEditAsync(int userId, int postId, ClaimsPrincipal principal);
 
-        public Task<Dictionary<string, bool>> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
+        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
 
         public string SanitizeAndDecodeHtmlContent(string html);
 
