@@ -7,6 +7,7 @@
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Microsoft.EntityFrameworkCore;
     using System;
+    using System.Collections.Generic;
     using System.Security.Claims;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -84,6 +85,41 @@
             await postDataService.UpdatePostAsync(post);
 
             reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
+        }
+
+
+        /// <summary>
+        /// Checks which parts of a post have been changed during edit (if any)
+        /// </summary>
+        /// <param name="originalPost">The source post</param>
+        /// <param name="newHtmlContent">The new post html content</param>
+        /// <param name="newTitle">The new post title</param>
+        /// <param name="newCategoryId">The new post category Id</param>
+        /// <returns>Task<Dictionary<string, bool>></returns>
+
+        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
+        {
+            var kvp = new Dictionary<string, bool>();
+
+            var sanitizedAndDecodedHtml = htmlManipulator
+                .Decode(htmlManipulator.Sanitize(newHtmlContent));
+
+            if (originalPost.HtmlContent.Length != sanitizedAndDecodedHtml.Length)
+            {
+                kvp.Add("HtmlContent", true);
+            }
+
+            if (originalPost.Title != newTitle)
+            {
+                kvp.Add("Title", true);
+            }
+
+            if (originalPost.CategoryId != newCategoryId)
+            {
+                kvp.Add("CategoryId", true);
+            }
+
+            return kvp;
         }
 
         public async Task<bool> IsAuthor(int userId, int postId)

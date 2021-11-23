@@ -26,8 +26,6 @@
 
         public  Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters);
 
-        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
-
         public Task UpdatePostAsync(Post post);
 
         public Task DeletePostAsync(int postId);

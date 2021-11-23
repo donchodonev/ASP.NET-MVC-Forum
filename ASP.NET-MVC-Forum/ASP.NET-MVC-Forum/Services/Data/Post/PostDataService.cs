@@ -155,39 +155,6 @@
         }
 
         /// <summary>
-        /// Checks which parts of a post have been changed during edit (if any)
-        /// </summary>
-        /// <param name="originalPost">The source post</param>
-        /// <param name="newHtmlContent">The new post html content</param>
-        /// <param name="newTitle">The new post title</param>
-        /// <param name="newCategoryId">The new post category Id</param>
-        /// <returns>Task<Dictionary<string, bool>></returns>
-        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
-        {
-            var kvp = new Dictionary<string, bool>();
-
-            var sanitizedAndDecodedHtml = htmlManipulator
-                .Decode(htmlManipulator.Sanitize(newHtmlContent));
-
-            if (originalPost.HtmlContent.Length != sanitizedAndDecodedHtml.Length)
-            {
-                kvp.Add("HtmlContent", true);
-            }
-
-            if (originalPost.Title != newTitle)
-            {
-                kvp.Add("Title", true);
-            }
-
-            if (originalPost.CategoryId != newCategoryId)
-            {
-                kvp.Add("CategoryId", true);
-            }
-
-            return kvp;
-        }
-
-        /// <summary>
         /// Deletes post by post id
         /// </summary>
         /// <param name="postId">Post's Id</param>

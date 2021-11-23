@@ -127,7 +127,7 @@
 
             var originalPost = await postService.GetByIdAsync(data.PostId);
 
-            var postChanges = postService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
+            var postChanges = postBusinessService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
 
             if (postChanges.Count == 0)
             {
