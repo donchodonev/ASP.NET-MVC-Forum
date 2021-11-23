@@ -18,6 +18,7 @@
 
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
     public class PostsController : Controller
     {
@@ -30,7 +31,12 @@
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public PostsController(IUserService userService, IPostService postService, ICategoryService categoryService, IMapper mapper, SignInManager<IdentityUser> signInManager)
+        public PostsController(
+            IUserService userService,
+            IPostService postService, 
+            ICategoryService categoryService,
+            IMapper mapper,
+            SignInManager<IdentityUser> signInManager)
         {
             this.userService = userService;
             this.postService = postService;
@@ -96,7 +102,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            await ValidatePostOwnership(postId);
+            await ValidatePostOwnership(postId,this.User);
 
             var post = await postService
                 .GetByIdAsQueryableAsync(postId, PostQueryFilter.WithCategory);
@@ -114,7 +120,7 @@
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            await ValidatePostOwnership(data.PostId);
+            await ValidatePostOwnership(data.PostId,this.User);
 
             var originalPost = await postService.GetByIdAsync(data.PostId);
 
@@ -136,15 +142,13 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            await ValidatePostOwnership(postId);
+            await ValidatePostOwnership(postId,this.User);
 
             var isPostDeleted = await postService.IsPostDeleted(postId, postTitle);
 
-            if (isPostDeleted == true)
+            if (isPostDeleted.Value == true)
             {
-                TempData["ErrorMessage"] = PostDeletedMessege;
-
-                return RedirectToAction("Index", "Home");
+                this.RedirectToActionWithErrorMessage(PostDeletedMessege,"Index","Home");
             }
             else if (!isPostDeleted.HasValue)
             {
@@ -156,7 +160,6 @@
             return RedirectToAction("Index", "Home");
         }
 
-
         public async Task<IActionResult> Report([FromForm] string content, int postId)
         {
             if (!await postService.PostExistsAsync(postId))
@@ -166,9 +169,7 @@
 
             await postService.AddPostReport(postId, content);
 
-            TempData["Message"] = ReportThankYouMessage;
-
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToActionWithMessage(ReportThankYouMessage,"Home","Index");
         }
 
         private async Task<AddPostFormModel> PrepareAddFormDataOnGetAsync()
@@ -211,11 +212,11 @@
             return await postService.AddPostAsync(newPost, baseUserId);
         }
 
-        private async Task ValidatePostOwnership(int postId)
+        private async Task ValidatePostOwnership(int postId, ClaimsPrincipal principal)
         {
-            var userId = await userService.GetBaseUserIdAsync(this.User.Id());
+            var userId = await userService.GetBaseUserIdAsync(User.Id());
 
-            if (!await postService.UserCanEditAsync(userId, postId) || !this.User.IsAdmin())
+            if (!await postService.UserCanEditAsync(userId, postId,principal))
             {
                 RedirectToAction("Index", "Home");
             }

@@ -5,14 +5,14 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.PostReport;
-    using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using System.Web;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     public class PostService : IPostService
     {
         private readonly ApplicationDbContext db;
@@ -226,12 +226,16 @@
         /// <param name="userId">User's Id (author)</param>
         /// <param name="postId">Post's Id</param>
         /// <returns>Task<bool></returns>
-        public async Task<bool> UserCanEditAsync(int userId, int postId)
+        public async Task<bool> UserCanEditAsync(int userId, int postId, ClaimsPrincipal principal)
         {
-            return await db
+            bool isAuthor = await db
                 .Posts
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == postId && x.UserId == userId);
+
+            bool isAdminOrModerator = principal.IsAdminOrModerator();
+
+            return isAuthor || isAdminOrModerator;
         }
 
         /// <summary>

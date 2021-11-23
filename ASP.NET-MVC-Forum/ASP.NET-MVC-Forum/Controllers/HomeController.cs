@@ -12,6 +12,7 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostFilterConstants;
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostSortConstants;
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostViewCountOptionsConstants;
@@ -21,7 +22,7 @@
         private readonly IPostService postsService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-         
+
         public HomeController(IPostService postsService, ICategoryService categoryService, IMapper mapper)
         {
             this.postsService = postsService;
@@ -29,7 +30,7 @@
             this.mapper = mapper;
         }
 
-        public IActionResult Index(
+        public async Task <IActionResult> Index(
             int sortType,
             int sortOrder,
             string searchTerm,
@@ -39,10 +40,10 @@
             int pageNumber = 1)
         {
 
-            UpdateViewBag(sortType,sortOrder,category,viewCount,searchTerm,personalOnly);
+            UpdateViewBag(sortType, sortOrder, category, viewCount, searchTerm, personalOnly);
 
             var sortedPosts = postsService
-                .SortAndOrder(GetPosts(), sortType, sortOrder, searchTerm, category)
+                .SortAndOrder(await GetPosts(), sortType, sortOrder, searchTerm, category)
                 .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
 
             var paginatedList = PaginatedList<PostPreviewViewModel>
@@ -64,18 +65,16 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private IQueryable<Post> GetPosts()
+        private async Task<IQueryable<Post>> GetPosts()
         {
-            return postsService.AllAsync(
+            return await postsService.AllAsync(
                     PostQueryFilter.WithUser,
                     PostQueryFilter.WithIdentityUser,
                     PostQueryFilter.WithoutDeleted,
-                    PostQueryFilter.AsNoTracking)
-                    .GetAwaiter()
-                    .GetResult();
+                    PostQueryFilter.AsNoTracking);
         }
 
-        private void UpdateViewBag(int sortType, int sortOrder,string category, int viewCount, string searchTerm, string personalOnly)
+        private void UpdateViewBag(int sortType, int sortOrder, string category, int viewCount, string searchTerm, string personalOnly)
         {
             ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
             ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
