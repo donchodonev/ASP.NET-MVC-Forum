@@ -6,5 +6,7 @@
     public interface IPostBusinessService
     {
         public Task<int> CreateNew(Post post, int userId);
+
+        public Task Edit (Post post);
     }
 }

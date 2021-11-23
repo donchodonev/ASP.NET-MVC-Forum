@@ -31,7 +31,7 @@
 
         public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
 
-        public Task EditPostAsync(Post post);
+        public Task UpdatePostAsync(Post post);
 
         public Task DeletePostAsync(int postId);
 

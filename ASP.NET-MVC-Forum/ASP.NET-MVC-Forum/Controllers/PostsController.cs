@@ -136,7 +136,7 @@
 
             AddPostChanges(originalPost, data, postChanges);
 
-            await postService.EditPostAsync(originalPost);
+            await postBusinessService.Edit(originalPost);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }

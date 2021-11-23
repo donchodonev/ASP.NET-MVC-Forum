@@ -10,7 +10,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     public class PostDataService : IPostDataService
@@ -55,42 +54,17 @@
             return post.Id;
         }
 
-
         /// <summary>
         /// Edits post
         /// </summary>
         /// <param name="post">The post to edit</param>
         /// <returns>void</returns>
-        public async Task EditPostAsync(Post post)
+        public async Task UpdatePostAsync(Post post)
         {
-            var sanitizedHtml = htmlManipulator.Sanitize(post.HtmlContent);
-            var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
-
-            var pattern = @"<.*?>";
-            var replacement = string.Empty;
-
-            var postDescriptionWithoutHtml = Regex.Replace(decodedHtml, pattern, replacement);
-
-            string postShortDescription;
-
-            if (postDescriptionWithoutHtml.Length < 300)
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
-            }
-            else
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
-            }
-
-            post.HtmlContent = decodedHtml;
-            post.ShortDescription = postShortDescription;
-            post.ModifiedOn = DateTime.UtcNow;
-
             db.Posts.Update(post);
 
             await db.SaveChangesAsync();
 
-            reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
         }
 
 

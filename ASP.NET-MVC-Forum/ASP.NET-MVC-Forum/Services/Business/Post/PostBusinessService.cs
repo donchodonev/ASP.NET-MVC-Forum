@@ -5,6 +5,7 @@
     using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using System;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class PostBusinessService : IPostBusinessService
@@ -51,6 +52,34 @@
             return postId;
         }
 
+        public async Task Edit(Post post)
+        {
+            var sanitizedHtml = htmlManipulator.Sanitize(post.HtmlContent);
+            var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
 
+            var pattern = @"<.*?>";
+            var replacement = string.Empty;
+
+            var postDescriptionWithoutHtml = Regex.Replace(decodedHtml, pattern, replacement);
+
+            string postShortDescription;
+
+            if (postDescriptionWithoutHtml.Length < 300)
+            {
+                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
+            }
+            else
+            {
+                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
+            }
+
+            post.HtmlContent = decodedHtml;
+            post.ShortDescription = postShortDescription;
+            post.ModifiedOn = DateTime.UtcNow;
+
+            await postDataService.UpdatePostAsync(post);
+
+            reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
+        }
     }
 }
