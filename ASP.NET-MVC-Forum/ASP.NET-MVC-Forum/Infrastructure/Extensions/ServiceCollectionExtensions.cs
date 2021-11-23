@@ -20,6 +20,11 @@
     using ASP.NET_MVC_Forum.Services.Chart;
     using ASP.NET_MVC_Forum.Services.Chat;
     using ASP.NET_MVC_Forum.Services.HtmlManipulator;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
 
     public static class ServiceCollectionExtensions
     {
@@ -47,7 +52,7 @@
             });
         }
 
-        public static void DependenciesSetup(this IServiceCollection services, IConfiguration configuration)
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
@@ -69,6 +74,45 @@
                 options.HeaderName = "X-CSRF-TOKEN";
             });
             services.AddMemoryCache();
+        }
+
+        public static void AddDatabase (this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlServer(
+                   configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
+        }
+
+        public static void SetupSendgrindConnectionKey(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<AuthMessageSenderOptions>(configuration);
+        }
+
+        public static void ConfigureSecurityStampValidation(this IServiceCollection services)
+        {
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.Zero;
+            });
+        }
+
+        public static void ConfigureCookiePolicy(this IServiceCollection services)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+        }
+
+        public static void SetupControllersWithViews(this IServiceCollection services)
+        {
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
         }
     }
 }
