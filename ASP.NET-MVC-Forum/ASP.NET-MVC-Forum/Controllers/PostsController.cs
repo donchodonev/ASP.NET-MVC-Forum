@@ -219,7 +219,7 @@
         {
             var userId = await userService.GetBaseUserIdAsync(User.Id());
 
-            if (!await postService.UserCanEditAsync(userId, postId, principal))
+            if (!await postBusinessService.UserCanEdit(userId, postId, principal))
             {
                 RedirectToAction("Index", "Home");
             }

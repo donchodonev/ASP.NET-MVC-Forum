@@ -8,9 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     public class PostDataService : IPostDataService
     {
         private readonly ApplicationDbContext db;
@@ -31,7 +29,7 @@
         {
             var query = QueryBuilder(filters);
 
-            return query.OrderByDescending(x => x.CreatedOn);
+            return query;
         }
 
         /// <summary>
@@ -136,9 +134,7 @@
             {
                 var query = db.Posts.Where(x => x.UserId == userId);
 
-                query = QueryBuilder(query, filters);
-
-                return query.OrderByDescending(x => x.CreatedOn);
+                return QueryBuilder(query, filters);
             });
         }
 
@@ -154,28 +150,8 @@
             {
                 var query = db.Posts.Where(x => x.Id == postId);
 
-                query = QueryBuilder(query, filters);
-
-                return query;
+                return QueryBuilder(query, filters);
             });
-        }
-
-        /// <summary>
-        /// Checks if a post belongs to a cerain user by id
-        /// </summary>
-        /// <param name="userId">User's Id (author)</param>
-        /// <param name="postId">Post's Id</param>
-        /// <returns>Task<bool></returns>
-        public async Task<bool> UserCanEditAsync(int userId, int postId, ClaimsPrincipal principal)
-        {
-            bool isAuthor = await db
-                .Posts
-                .AsNoTracking()
-                .AnyAsync(x => x.Id == postId && x.UserId == userId);
-
-            bool isAdminOrModerator = principal.IsAdminOrModerator();
-
-            return isAuthor || isAdminOrModerator;
         }
 
         /// <summary>

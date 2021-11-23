@@ -4,7 +4,6 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IPostDataService
@@ -26,8 +25,6 @@
         public Task<IQueryable<Post>> GetByUserIdAsync(int userId, params PostQueryFilter[] filters);
 
         public  Task<IQueryable<Post>> GetByIdAsQueryableAsync(int postId, params PostQueryFilter[] filters);
-
-        public Task<bool> UserCanEditAsync(int userId, int postId, ClaimsPrincipal principal);
 
         public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
 
