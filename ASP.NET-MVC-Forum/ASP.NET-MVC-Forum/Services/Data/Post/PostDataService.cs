@@ -170,51 +170,6 @@
         }
 
         /// <summary>
-        /// Adds a new post report
-        /// </summary>
-        /// <param name="postId">The post Id</param>
-        /// <param name="reportReason">The reason for which the post is reported</param>
-        /// <returns>Task</returns>
-
-        public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
-        {
-            //uncomment two variables underneath to view in debug possible order and sort options
-            //var orderOptions = GetOrderType();
-            //var sortOptions = GetSortOptions();
-
-            if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
-            {
-                posts = posts.Where(post => post.Title.Contains(searchTerm));
-            }
-
-            if (!string.IsNullOrEmpty(category) && !string.IsNullOrWhiteSpace(category) && category != "All")
-            {
-                posts = posts.Where(post => post.Category.Name == category);
-            }
-
-
-
-            if (sortOrder == 0 && sortType == 0)
-            {
-                posts = posts.OrderByDescending(x => x.CreatedOn);
-            }
-            else if (sortOrder == 0 && sortType == 1)
-            {
-                posts = posts.OrderByDescending(x => x.Title);
-            }
-            else if (sortOrder == 1 && sortType == 0)
-            {
-                posts = posts.OrderBy(x => x.CreatedOn);
-            }
-            else if (sortOrder == 1 && sortType == 1)
-            {
-                posts = posts.OrderBy(x => x.Title);
-            }
-
-            return posts;
-        }
-
-        /// <summary>
         /// Builds a query according to provided filters
         /// </summary>
         /// <param name="filters">The array of filters of type PostQueryFilter</param>

@@ -7,8 +7,6 @@
 
     public interface IPostDataService
     {
-        public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category);
-
         public  IQueryable<Post> All(params PostQueryFilter[] filters);
 
         public Task<int> AddPostAsync(Post post);

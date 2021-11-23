@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models;
     using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using AutoMapper;
@@ -19,13 +20,15 @@
 
     public class HomeController : Controller
     {
-        private readonly IPostDataService postsService;
+        private readonly IPostDataService postDataService;
+        private readonly IPostBusinessService postBusinessService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
 
-        public HomeController(IPostDataService postsService, ICategoryService categoryService, IMapper mapper)
+        public HomeController(IPostBusinessService postBusinessService, ICategoryService categoryService, IMapper mapper)
         {
-            this.postsService = postsService;
+            this.postDataService = postDataService;
+            this.postBusinessService = postBusinessService;
             this.categoryService = categoryService;
             this.mapper = mapper;
         }
@@ -42,7 +45,7 @@
 
             UpdateViewBag(sortType, sortOrder, category, viewCount, searchTerm, personalOnly);
 
-            var sortedPosts = postsService
+            var sortedPosts = postBusinessService
                 .SortAndOrder(GetPosts(), sortType, sortOrder, searchTerm, category)
                 .ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
 
@@ -65,7 +68,7 @@
 
         private IQueryable<Post> GetPosts()
         {
-            return postsService.All(
+            return postDataService.All(
                     PostQueryFilter.WithUser,
                     PostQueryFilter.WithIdentityUser,
                     PostQueryFilter.WithoutDeleted,
