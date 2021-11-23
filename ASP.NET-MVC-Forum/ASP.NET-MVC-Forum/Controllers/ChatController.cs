@@ -10,7 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
     [Authorize]
 
     public class ChatController : Controller
@@ -30,6 +30,7 @@
         public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
             var chatId = await GetChatId(senderIdentityUserId, recipientIdentityUserId);
+
             var vm = new ChatConversationViewModel(
                 chatId,
                 senderIdentityUserId,
@@ -47,16 +48,14 @@
             }
             else if (username.Length < 4)
             {
-                TempData["ErrorMessage"] = $"Username must be at least 4 symbols long";
-                return View();
+                return this.ViewWithErrorMessage($"Username must be at least 4 symbols long");
             }
 
             var identityUser = await userManager.FindByNameAsync(username);
 
             if (identityUser == null)
             {
-                TempData["ErrorMessage"] = $"No users found with the username \"{username}\"";
-                return View();
+                return this.ViewWithErrorMessage($"No users found with the username \"{username}\"");
             }
 
             var vm = GetViewModelWithData(identityUser);
@@ -79,7 +78,6 @@
             var vm = mapper
                 .ProjectTo<ChatSelectUserViewModel>(userService.GetUser(identityUser.Id))
                 .First();
-
 
             vm.RecipientUsername = identityUser.UserName;
             vm.RecipientIdentityUserId = identityUser.Id;
