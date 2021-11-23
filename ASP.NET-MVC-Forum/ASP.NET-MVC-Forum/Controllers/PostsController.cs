@@ -101,9 +101,11 @@
                 return RedirectToAction("Add", "Posts");
             }
 
-            var postId = await AddPostAsync(data);
+            var newPost = await AddPostAsync(data);
 
-            return RedirectToAction("ViewPost", new { postId = postId, postTitle = data.Title });
+            await postReportService.AutoGeneratePostReport(newPost.Title, newPost.HtmlContent, newPost.Id);
+
+            return RedirectToAction("ViewPost", new { postId = newPost.Id, postTitle = newPost.Title });
         }
 
         [Authorize]
@@ -210,13 +212,15 @@
             return selectOptions;
         }
 
-        private async Task<int> AddPostAsync(AddPostFormModel data)
+        private async Task<Post> AddPostAsync(AddPostFormModel data)
         {
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
 
             var newPost = mapper.Map<Post>(data);
 
-            return await postBusinessService.CreateNew(newPost, baseUserId);
+            await postBusinessService.CreateNew(newPost, baseUserId);
+
+            return newPost;
         }
 
         private async Task ValidatePostOwnership(int postId, ClaimsPrincipal principal)

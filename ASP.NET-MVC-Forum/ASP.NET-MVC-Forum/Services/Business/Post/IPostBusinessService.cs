@@ -21,5 +21,7 @@
         public Task Delete(int postId);
 
         public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category);
+
+        public string GenerateShortDescription(string escapedHtml);
     }
 }

@@ -33,29 +33,31 @@
 
             var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
             var decodedHtml = htmlManipulator.Decode(sanitizedhtml);
-
-            var postDescriptionWithoutHtml = htmlManipulator.Escape(decodedHtml);
+            var escapedHtml = htmlManipulator.Escape(decodedHtml);
 
             post.HtmlContent = decodedHtml;
 
-            string postShortDescription;
-
-            if (postDescriptionWithoutHtml.Length < 300)
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
-            }
-            else
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
-            }
-
-            post.ShortDescription = postShortDescription;
+            post.ShortDescription = GenerateShortDescription(escapedHtml);
 
             var postId = await postDataService.AddPostAsync(post);
 
-            await reportService.AutoGeneratePostReport(post.Title, post.HtmlContent, postId);
-
             return postId;
+        }
+
+        public string GenerateShortDescription(string escapedHtml)
+        {
+            string postShortDescription;
+
+            if (escapedHtml.Length < 300)
+            {
+                postShortDescription = escapedHtml.Substring(0, escapedHtml.Length) + "...";
+            }
+            else
+            {
+                postShortDescription = escapedHtml.Substring(0, 300) + "...";
+            }
+
+            return postShortDescription;
         }
 
         /// <summary>
