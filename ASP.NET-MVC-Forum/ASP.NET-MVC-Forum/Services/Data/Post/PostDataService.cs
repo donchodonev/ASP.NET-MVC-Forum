@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Post
+﻿namespace ASP.NET_MVC_Forum.Services.Data.Post
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Enums;
@@ -13,13 +13,13 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
-    public class PostService : IPostService
+    public class PostDataService : IPostDataService
     {
         private readonly ApplicationDbContext db;
         private readonly IPostReportService reportService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public PostService(ApplicationDbContext db, IPostReportService reportService, IHtmlManipulator htmlManipulator)
+        public PostDataService(ApplicationDbContext db, IPostReportService reportService, IHtmlManipulator htmlManipulator)
         {
             this.db = db;
             this.reportService = reportService;
@@ -44,37 +44,15 @@
         /// <param name="post">Object of type Post</param>
         /// <param name="userId">Post's author user id</param>
         /// <returns>The newly added post's Id</returns>
-        public async Task<int> AddPostAsync(Post post, int userId)
+        public async Task<int> AddPostAsync(Post post)
         {
-            post.UserId = userId;
-
-            var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
-
-            var postDescriptionWithoutHtml = htmlManipulator.Escape(sanitizedAndDecodedHtml);
-
-            string postShortDescription;
-
-            if (postDescriptionWithoutHtml.Length < 300)
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
-            }
-            else
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
-            }
-
-            post.HtmlContent = sanitizedAndDecodedHtml;
-            post.ShortDescription = postShortDescription;
-
             await db.Posts.AddAsync(post);
 
             await db.SaveChangesAsync();
 
             var savedPost = await db.Posts.FirstAsync(x => x == post);
 
-            reportService.AutoGeneratePostReport(savedPost.Title, savedPost.HtmlContent, savedPost.Id);
-
-            return savedPost.Id;
+            return post.Id;
         }
 
 
@@ -85,12 +63,13 @@
         /// <returns>void</returns>
         public async Task EditPostAsync(Post post)
         {
-            var sanitizedAndDecodedHtml = SanitizeAndDecodeHtmlContent(post.HtmlContent);
+            var sanitizedHtml = htmlManipulator.Sanitize(post.HtmlContent);
+            var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
 
             var pattern = @"<.*?>";
             var replacement = string.Empty;
 
-            var postDescriptionWithoutHtml = Regex.Replace(sanitizedAndDecodedHtml, pattern, replacement);
+            var postDescriptionWithoutHtml = Regex.Replace(decodedHtml, pattern, replacement);
 
             string postShortDescription;
 
@@ -103,7 +82,7 @@
                 postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
             }
 
-            post.HtmlContent = sanitizedAndDecodedHtml;
+            post.HtmlContent = decodedHtml;
             post.ShortDescription = postShortDescription;
             post.ModifiedOn = DateTime.UtcNow;
 
@@ -164,7 +143,7 @@
             return await db
                 .Posts
                 .AsNoTracking()
-                .AnyAsync(x => x.Title == postTitle);
+                .AnyAsync(x => x.Title == postTitle && !x.IsDeleted);
         }
 
         /// <summary>
@@ -177,7 +156,7 @@
             return await db
                 .Posts
                 .AsNoTracking()
-                .AnyAsync(x => x.Id == postId);
+                .AnyAsync(x => x.Id == postId && !x.IsDeleted);
         }
 
         /// <summary>
@@ -246,7 +225,10 @@
         {
             var kvp = new Dictionary<string, bool>();
 
-            if (originalPost.HtmlContent.Length != SanitizeAndDecodeHtmlContent(newHtmlContent).Length)
+            var sanitizedAndDecodedHtml = htmlManipulator
+                .Decode(htmlManipulator.Sanitize(newHtmlContent));
+
+            if (originalPost.HtmlContent.Length != sanitizedAndDecodedHtml.Length)
             {
                 kvp.Add("HtmlContent", true);
             }
@@ -262,17 +244,6 @@
             }
 
             return kvp;
-        }
-
-        /// <summary>
-        /// Sanitizes then decodes given raw HTML string
-        /// </summary>
-        /// <param name="html">Post's raw HTML content</param>
-        /// <returns>string</returns>
-        public string SanitizeAndDecodeHtmlContent(string html)
-        {
-            return htmlManipulator
-                .Decode(htmlManipulator.Sanitize(html));
         }
 
         /// <summary>

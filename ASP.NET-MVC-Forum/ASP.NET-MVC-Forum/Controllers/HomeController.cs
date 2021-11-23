@@ -5,7 +5,7 @@
     using ASP.NET_MVC_Forum.Models;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Category;
-    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Mvc;
@@ -19,11 +19,11 @@
 
     public class HomeController : Controller
     {
-        private readonly IPostService postsService;
+        private readonly IPostDataService postsService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
 
-        public HomeController(IPostService postsService, ICategoryService categoryService, IMapper mapper)
+        public HomeController(IPostDataService postsService, ICategoryService categoryService, IMapper mapper)
         {
             this.postsService = postsService;
             this.categoryService = categoryService;

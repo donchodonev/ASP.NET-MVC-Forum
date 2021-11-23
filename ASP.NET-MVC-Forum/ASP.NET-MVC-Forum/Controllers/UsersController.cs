@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
-    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -14,7 +14,7 @@
     {
         private readonly IUserService userService;
 
-        public UsersController(IPostService postService, IUserService userService, IMapper mapper)
+        public UsersController(IPostDataService postService, IUserService userService, IMapper mapper)
         {
             this.userService = userService;
         }

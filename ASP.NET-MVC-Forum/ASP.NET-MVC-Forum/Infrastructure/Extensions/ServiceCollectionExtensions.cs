@@ -1,30 +1,31 @@
 ﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Chart;
+    using ASP.NET_MVC_Forum.Services.Chat;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Services.EmailSender;
+    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using ASP.NET_MVC_Forum.Services.UserAvatarService;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using ProfanityFilter.Interfaces;
-    using ProfanityFilter;
-    using ASP.NET_MVC_Forum.Services.EmailSender;
-    using ASP.NET_MVC_Forum.Services.Chart;
-    using ASP.NET_MVC_Forum.Services.Chat;
-    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
-    using Microsoft.EntityFrameworkCore;
-    using System;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using ProfanityFilter;
+    using ProfanityFilter.Interfaces;
+    using System;
 
     public static class ServiceCollectionExtensions
     {
@@ -56,7 +57,8 @@
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IPostBusinessService, PostBusinessService>();
+            services.AddTransient<IPostDataService, PostDataService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IPostReportService, PostReportService>();
             services.AddTransient<ICommentReportService, CommentReportService>();

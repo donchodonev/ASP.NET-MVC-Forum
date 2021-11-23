@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Post
+﻿namespace ASP.NET_MVC_Forum.Services.Data.Post
 {
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
@@ -7,13 +7,13 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public interface IPostService
+    public interface IPostDataService
     {
         public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category);
 
         public  IQueryable<Post> All(params PostQueryFilter[] filters);
 
-        public Task<int> AddPostAsync(Post post, int baseUserId);
+        public Task<int> AddPostAsync(Post post);
 
         public Task<Post> GetByIdAsync(int postId, params PostQueryFilter[] filters);
 
@@ -30,8 +30,6 @@
         public Task<bool> UserCanEditAsync(int userId, int postId, ClaimsPrincipal principal);
 
         public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
-
-        public string SanitizeAndDecodeHtmlContent(string html);
 
         public Task EditPostAsync(Post post);
 

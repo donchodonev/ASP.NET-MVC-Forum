@@ -1,9 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Chart
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
-    using ASP.NET_MVC_Forum.Services.Category;
     using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using AutoMapper;
     using System.Collections.Generic;
     using System.Linq;
@@ -11,12 +11,12 @@
 
     public class ChartService : IChartService
     {
-        private readonly IPostService postService;
+        private readonly IPostDataService postService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly string[] colors = new string[] { Blue, Navy, Green, Teal, Lime, Aqua, Olive, Purple, Maroon, Yellow };
 
-        public ChartService(IPostService postService, ICategoryService categoryService, IMapper mapper)
+        public ChartService(IPostDataService postService, ICategoryService categoryService, IMapper mapper)
         {
             this.postService = postService;
             this.categoryService = categoryService;

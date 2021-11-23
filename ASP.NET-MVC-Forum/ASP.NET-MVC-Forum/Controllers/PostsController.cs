@@ -1,10 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Category;
-    using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Services.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -15,7 +16,6 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
     using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
@@ -26,23 +26,26 @@
         private const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
 
         private readonly IUserService userService;
-        private readonly IPostService postService;
+        private readonly IPostDataService postService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly IPostBusinessService postBusinessService;
 
         public PostsController(
             IUserService userService,
-            IPostService postService,
+            IPostDataService postService,
             ICategoryService categoryService,
             IMapper mapper,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IPostBusinessService postBusinessService)
         {
             this.userService = userService;
             this.postService = postService;
             this.categoryService = categoryService;
             this.mapper = mapper;
             this.signInManager = signInManager;
+            this.postBusinessService = postBusinessService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
@@ -209,7 +212,7 @@
 
             var newPost = mapper.Map<Post>(data);
 
-            return await postService.AddPostAsync(newPost, baseUserId);
+            return await postBusinessService.CreateNew(newPost, baseUserId);
         }
 
         private async Task ValidatePostOwnership(int postId, ClaimsPrincipal principal)
