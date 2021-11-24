@@ -7,5 +7,7 @@
         public Task Delete(int id);
 
         public Task Restore(int id);
+
+        public Task AutoGeneratePostReport(string title, string content, int postId);
     }
 }

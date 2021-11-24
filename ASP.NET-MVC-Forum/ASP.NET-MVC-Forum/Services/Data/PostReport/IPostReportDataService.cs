@@ -12,12 +12,6 @@
 
         public Task<bool> ReportExists(int reportId);
 
-        public Task AutoGeneratePostReport(string title, string content, int postId);
-
-        public void CensorPost(int postId);
-
-        public void HardCensorPost(int postId);
-
         public void DeleteAndResolve(int postId);
 
         public Task ReportPost(int postId, string reasons);
