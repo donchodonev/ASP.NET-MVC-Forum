@@ -7,16 +7,18 @@
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
-    using ASP.NET_MVC_Forum.Services.Chart;
     using ASP.NET_MVC_Forum.Services.Chat;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.CommentReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Services.Data.Chart;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using ASP.NET_MVC_Forum.Services.Vote;
+
     using Ganss.XSS;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -25,8 +27,10 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+
     using ProfanityFilter;
     using ProfanityFilter.Interfaces;
+
     using System;
 
     public static class ServiceCollectionExtensions
@@ -70,7 +74,7 @@
             services.AddTransient<IVoteService, VoteService>();
             services.AddTransient<IUserAvatarService, UserAvatarService>();
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<IChartService, ChartService>();
+            services.AddTransient<IChartDataService, ChartDataService>();
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();

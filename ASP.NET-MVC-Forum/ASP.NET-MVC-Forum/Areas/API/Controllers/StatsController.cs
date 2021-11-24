@@ -1,8 +1,7 @@
-﻿
-namespace ASP.NET_MVC_Forum.Areas.API.Controllers
+﻿namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
-    using ASP.NET_MVC_Forum.Services.Chart;
+    using ASP.NET_MVC_Forum.Services.Data.Chart;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
@@ -13,9 +12,9 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
     [Route("api/[controller]")]
     public class StatsController : ControllerBase
     {
-        private readonly IChartService chartService;
+        private readonly IChartDataService chartService;
 
-        public StatsController(IChartService chartService)
+        public StatsController(IChartDataService chartService)
         {
             this.chartService = chartService;
         }

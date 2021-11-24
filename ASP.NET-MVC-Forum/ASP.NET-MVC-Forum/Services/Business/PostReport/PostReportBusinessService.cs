@@ -1,15 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Business.PostReport
 {
+    using ASP.NET_MVC_Forum.Data.Enums;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Business.Censor;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using System.Linq;
-    using Microsoft.EntityFrameworkCore;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Data.Enums;
 
     public class PostReportBusinessService : IPostReportBusinessService
     {
