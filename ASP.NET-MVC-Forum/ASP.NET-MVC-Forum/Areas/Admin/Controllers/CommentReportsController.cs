@@ -41,8 +41,9 @@
 
         public IActionResult Resolve(int reportId)
         {
-            if (commentReportService.Delete(reportId))
+            if (commentReportService.ReportExists(reportId))
             {
+                commentReportService.Delete(reportId);
                 TempData["Message"] = "Report has been marked as resolved !";
             }
             else

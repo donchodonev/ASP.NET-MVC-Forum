@@ -1,18 +1,18 @@
 ﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Services.Business.EmailSender;
+    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using ASP.NET_MVC_Forum.Services.Chart;
     using ASP.NET_MVC_Forum.Services.Chat;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.CommentReport;
+    using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Business.EmailSender;
-    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
-    using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using ASP.NET_MVC_Forum.Services.Vote;
     using Ganss.XSS;
     using Microsoft.AspNetCore.Builder;
@@ -60,7 +60,7 @@
             services.AddTransient<IPostBusinessService, PostBusinessService>();
             services.AddTransient<IPostDataService, PostDataService>();
             services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<IPostReportService, PostReportService>();
+            services.AddTransient<IPostReportDataService, PostReportDataService>();
             services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddTransient<IVoteService, VoteService>();

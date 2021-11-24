@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.PostReport
+﻿namespace ASP.NET_MVC_Forum.Services.Data.PostReport
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
@@ -10,64 +10,45 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    public class PostReportService : IPostReportService
+    public class PostReportDataService : IPostReportDataService
     {
         private readonly ApplicationDbContext db;
         private readonly IProfanityFilter filter;
 
-        public PostReportService(ApplicationDbContext db, IProfanityFilter filter)
+        public PostReportDataService(ApplicationDbContext db, IProfanityFilter filter)
         {
             this.db = db;
             this.filter = filter;
         }
         public IQueryable<PostReport> All(bool isDeleted = false)
         {
-            return db.PostReports.Where(x => x.IsDeleted == isDeleted);
+            return db
+                .PostReports
+                .Where(x => x.IsDeleted == isDeleted);
         }
 
-        public bool Delete(int reportId)
+        public async Task Update(PostReport report)
         {
-            if (ReportExists(reportId))
-            {
-                var report = db.PostReports.First(x => x.Id == reportId);
+            db.Update(report);
 
-                report.IsDeleted = true;
-                report.ModifiedOn = DateTime.UtcNow;
-
-                db.SaveChangesAsync().Wait();
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            await db.SaveChangesAsync();
         }
 
-        public bool Restore(int reportId)
+        public void Restore(int reportId)
         {
-            if (ReportExists(reportId))
-            {
-                var report = db.PostReports.First(x => x.Id == reportId);
+            var report = db.PostReports.First(x => x.Id == reportId);
 
-                report.IsDeleted = false;
-                report.ModifiedOn = DateTime.UtcNow;
+            report.IsDeleted = false;
+            report.ModifiedOn = DateTime.UtcNow;
 
-                var post = db.Posts.First(x => x.Id == report.PostId);
-                post.IsDeleted = false;
-                post.ModifiedOn = DateTime.UtcNow;
+            var post = db.Posts.First(x => x.Id == report.PostId);
+            post.IsDeleted = false;
+            post.ModifiedOn = DateTime.UtcNow;
 
-                db.Update(report);
-                db.Update(post);
+            db.Update(report);
+            db.Update(post);
 
-                db.SaveChangesAsync().Wait();
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            db.SaveChangesAsync().Wait();
         }
 
         public bool ReportExists(int reportId)
@@ -117,7 +98,7 @@
         {
             var post = db.Posts.First(x => x.Id == postId);
 
-            var profanities = GetProfanities(post.Title, post.HtmlContent,post.ShortDescription);
+            var profanities = GetProfanities(post.Title, post.HtmlContent, post.ShortDescription);
 
             var censoredTitle = post.Title;
             var censoredShortDescription = post.ShortDescription;
@@ -175,13 +156,20 @@
         private List<string> GetProfanities(string title, string content, string shortDescription)
         {
             List<string> profaneWordsFound = filter
-                .DetectAllProfanities(content.Substring(3,content.Length-3))
+                .DetectAllProfanities(content.Substring(3, content.Length - 3))
                 .ToList();
 
             profaneWordsFound.AddRange(filter.DetectAllProfanities(title));
             profaneWordsFound.AddRange(filter.DetectAllProfanities(shortDescription));
 
             return profaneWordsFound;
+        }
+
+        public async Task<PostReport> GetById(int reportId)
+        {
+            return await db
+                .PostReports
+                .FirstOrDefaultAsync(x => x.Id == reportId);
         }
     }
 }

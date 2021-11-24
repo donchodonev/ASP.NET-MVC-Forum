@@ -4,7 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -17,10 +17,10 @@
     public class PostBusinessService : IPostBusinessService
     {
         private readonly IPostDataService postDataService;
-        private readonly IPostReportService reportService;
+        private readonly IPostReportDataService reportService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public PostBusinessService(IPostDataService postDataService, IPostReportService reportService, IHtmlManipulator htmlManipulator)
+        public PostBusinessService(IPostDataService postDataService, IPostReportDataService reportService, IHtmlManipulator htmlManipulator)
         {
             this.postDataService = postDataService;
             this.reportService = reportService;

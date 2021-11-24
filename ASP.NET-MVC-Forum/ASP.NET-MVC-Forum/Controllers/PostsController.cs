@@ -6,7 +6,7 @@
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -32,7 +32,7 @@
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
-        private readonly IPostReportService postReportService;
+        private readonly IPostReportDataService postReportService;
 
         public PostsController(
             IUserService userService,
@@ -41,7 +41,7 @@
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
-            IPostReportService postReportService)
+            IPostReportDataService postReportService)
         {
             this.userService = userService;
             this.postDataService = postDataService;

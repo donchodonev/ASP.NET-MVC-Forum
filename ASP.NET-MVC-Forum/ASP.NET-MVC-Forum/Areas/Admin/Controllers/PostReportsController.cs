@@ -1,12 +1,14 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
-    using ASP.NET_MVC_Forum.Services.PostReport;
+    using ASP.NET_MVC_Forum.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
 
 
@@ -14,12 +16,14 @@
     [Authorize(Roles = AdminOrModerator)]
     public class PostReportsController : Controller
     {
-        private readonly IPostReportService postReportService;
+        private readonly IPostReportDataService postReportDataService;
+        private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IMapper mapper;
 
-        public PostReportsController(IPostReportService postReportService, IMapper mapper)
+        public PostReportsController(IPostReportDataService postReportDataService,IPostReportBusinessService postReportBusinessService, IMapper mapper)
         {
-            this.postReportService = postReportService;
+            this.postReportDataService = postReportDataService;
+            this.postReportBusinessService = postReportBusinessService;
             this.mapper = mapper;
         }
 
@@ -29,20 +33,21 @@
 
             if (reportStatus == "Active")
             {
-                vm = mapper.ProjectTo<PostReportViewModel>(postReportService.All()).ToList();
+                vm = mapper.ProjectTo<PostReportViewModel>(postReportDataService.All()).ToList();
             }
             else
             {
-                vm = mapper.ProjectTo<PostReportViewModel>(postReportService.All(isDeleted: true)).ToList();
+                vm = mapper.ProjectTo<PostReportViewModel>(postReportDataService.All(isDeleted: true)).ToList();
             }
 
             return View(vm);
         }
 
-        public IActionResult Delete(int reportId)
+        public async Task<IActionResult> Delete(int reportId)
         {
-            if (postReportService.Delete(reportId))
+            if (postReportDataService.ReportExists(reportId))
             {
+                await postReportBusinessService.Delete(reportId);
                 TempData["Message"] = "Report has been marked as resolved !";
             }
             else
@@ -55,8 +60,9 @@
 
         public IActionResult Restore(int reportId)
         {
-            if (postReportService.Restore(reportId))
+            if (postReportDataService.ReportExists(reportId))
             {
+                postReportDataService.Restore(reportId);
                 TempData["Message"] = "Report has been successfully restored !";
             }
             else
@@ -71,11 +77,11 @@
         {
             if (withRegex)
             {
-                postReportService.HardCensorPost(postId);
+                postReportDataService.HardCensorPost(postId);
             }
             else
             {
-                postReportService.CensorPost(postId);
+                postReportDataService.CensorPost(postId);
             }
 
             TempData["Message"] = "The post has been successfully censored";
@@ -85,7 +91,7 @@
 
         public IActionResult DeleteAndResolve(int postId)
         {
-            postReportService.DeleteAndResolve(postId);
+            postReportDataService.DeleteAndResolve(postId);
 
             TempData["Message"] = "The post has been successfully censored and report was marked as resolved";
 
