@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Services.UserAvatarService;
+    using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;

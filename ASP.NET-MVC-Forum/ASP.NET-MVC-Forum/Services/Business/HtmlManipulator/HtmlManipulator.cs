@@ -1,9 +1,8 @@
-﻿using Ganss.XSS;
-using System.Text.RegularExpressions;
-using System.Web;
-
-namespace ASP.NET_MVC_Forum.Services.HtmlManipulator
+﻿namespace ASP.NET_MVC_Forum.Services.Business.HtmlManipulator
 {
+    using Ganss.XSS;
+    using System.Text.RegularExpressions;
+    using System.Web;
     public class HtmlManipulator : IHtmlManipulator
     {
         private readonly IHtmlSanitizer sanitizer;
@@ -21,7 +20,7 @@ namespace ASP.NET_MVC_Forum.Services.HtmlManipulator
 
         public string Sanitize(string html)
         {
-           return sanitizer.Sanitize(html);
+            return sanitizer.Sanitize(html);
         }
 
         public string Decode(string html)

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-
-namespace ASP.NET_MVC_Forum.Services.UserAvatarService
+﻿namespace ASP.NET_MVC_Forum.Services.Business.UserAvatar
 {
+    using Microsoft.AspNetCore.Http;
+    using System.Threading.Tasks;
+    using static ASP.NET_MVC_Forum.Data.DataConstants.ImageConstants;
+
     public interface IUserAvatarService
     {
         /// <summary>
@@ -21,5 +22,10 @@ namespace ASP.NET_MVC_Forum.Services.UserAvatarService
         /// <param name="height">Desired image height - default is 50px</param>
         /// <returns></returns>
         public Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50);
+
+        public bool IsImageSizeValid(long imageSize, long maxImageSize = ImageMaxSize)
+        {
+            return imageSize <= maxImageSize;
+        }
     }
 }

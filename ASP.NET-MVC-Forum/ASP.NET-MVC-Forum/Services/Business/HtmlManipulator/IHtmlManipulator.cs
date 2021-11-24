@@ -1,6 +1,4 @@
-﻿using Ganss.XSS;
-
-namespace ASP.NET_MVC_Forum.Services.HtmlManipulator
+﻿namespace ASP.NET_MVC_Forum.Services.Business.HtmlManipulator
 {
     public interface IHtmlManipulator
     {

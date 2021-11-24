@@ -5,7 +5,7 @@
     using ASP.NET_MVC_Forum.Models;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Services.Category;
+    using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;

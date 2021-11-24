@@ -1,5 +1,4 @@
-﻿
-namespace ASP.NET_MVC_Forum.Services.UserAvatarService
+﻿namespace ASP.NET_MVC_Forum.Services.Business.UserAvatar
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;

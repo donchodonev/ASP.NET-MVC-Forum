@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Category
+﻿namespace ASP.NET_MVC_Forum.Services.Data.Category
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Collections.Generic;

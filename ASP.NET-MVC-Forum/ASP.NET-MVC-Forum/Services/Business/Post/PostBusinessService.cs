@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.HtmlManipulator;
+    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.PostReport;
     using Microsoft.EntityFrameworkCore;
     using System;
