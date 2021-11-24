@@ -99,8 +99,15 @@
         private List<T> TakeValidCountOf<T>(ICollection<T> posts, int requestedCount)
         {
             int postsTotalCount = posts.Count();
-            int lowestCountBetweenTotalPostCountAndTheCountOfColors = Math.Min(postsTotalCount, Colors.Length);
-            int lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount = Math.Min(lowestCountBetweenTotalPostCountAndTheCountOfColors, requestedCount);
+
+            int lowestCountBetweenTotalPostCountAndTheCountOfColors = 
+                Math.Min(postsTotalCount,
+                Colors.Length);
+
+            int lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount =
+                Math.Min(
+                    lowestCountBetweenTotalPostCountAndTheCountOfColors,
+                    requestedCount);
 
             if (lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount >= requestedCount)
             {

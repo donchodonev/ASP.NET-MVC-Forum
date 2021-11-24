@@ -15,7 +15,7 @@
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
-    using ASP.NET_MVC_Forum.Services.Vote;
+    using ASP.NET_MVC_Forum.Services.Data.Vote;
 
     using Ganss.XSS;
 
@@ -32,6 +32,7 @@
     using ProfanityFilter.Interfaces;
 
     using System;
+    using ASP.NET_MVC_Forum.Services.Business.Vote;
 
     public static class ServiceCollectionExtensions
     {
@@ -71,7 +72,8 @@
             services.AddTransient<ICensorService, CensorService>();
             services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
-            services.AddTransient<IVoteService, VoteService>();
+            services.AddTransient<IVoteBusinessService, VoteBusinessService>();
+            services.AddTransient<IVoteDataService, VoteDataService>();
             services.AddTransient<IUserAvatarService, UserAvatarService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChartDataService, ChartDataService>();
