@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     public class PostDataService : IPostDataService
@@ -272,6 +273,14 @@
             }
 
             return posts;
+        }
+
+        public async Task Delete(Post post)
+        {
+            post.IsDeleted = true;
+            post.ModifiedOn = DateTime.UtcNow;
+            db.Update(post);
+            await db.SaveChangesAsync();
         }
     }
 }

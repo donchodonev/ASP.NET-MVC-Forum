@@ -26,5 +26,7 @@
         public Task UpdatePostAsync(Post post);
 
         public Task<bool?> IsPostDeleted(int postId, string postTitle);
+
+        public Task Delete(Post post);
     }
 }

@@ -6,21 +6,27 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using ASP.NET_MVC_Forum.Data.Models;
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Data.Enums;
 
     public class PostReportBusinessService : IPostReportBusinessService
     {
         private readonly IPostReportDataService data;
+        private readonly IPostDataService postDataService;
         private readonly ICensorService censorService;
 
-        public PostReportBusinessService(IPostReportDataService data, ICensorService censorService)
+        public PostReportBusinessService(IPostReportDataService data, IPostDataService postDataService, ICensorService censorService)
         {
             this.data = data;
+            this.postDataService = postDataService;
             this.censorService = censorService;
         }
 
         public async Task ReportAsync(int postId, string reason)
         {
-            var report = new PostReport() { PostId = postId, Reason = reason};
+            var report = new PostReport() { PostId = postId, Reason = reason };
             await data.AddReport(report);
         }
 
@@ -56,6 +62,29 @@
 
                 await ReportAsync(postId, reason);
             }
+        }
+
+        public async Task DeletePostAndResolveReports(int postId)
+        {
+            var postWithAllReports = await postDataService
+                .GetByIdAsync(postId, PostQueryFilter.WithReports);
+
+            await postDataService.Delete(postWithAllReports); // deletes just the post
+
+            DeleteAllPostReports(postWithAllReports.Reports);
+
+            await data.UpdateAll(postWithAllReports.Reports);
+        }
+
+        private ICollection<PostReport> DeleteAllPostReports(ICollection<PostReport> reports)
+        {
+            foreach (var report in reports)
+            {
+                report.IsDeleted = true;
+                report.ModifiedOn = DateTime.UtcNow;
+            }
+
+            return reports;
         }
     }
 }

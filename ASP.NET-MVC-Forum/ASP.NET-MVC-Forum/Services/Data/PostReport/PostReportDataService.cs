@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -29,6 +29,13 @@
             await db.SaveChangesAsync();
         }
 
+        public async Task UpdateAll(ICollection<PostReport> reports)
+        {
+            db.UpdateRange(reports);
+
+            await db.SaveChangesAsync();
+        }
+
         public async Task<bool> ReportExists(int reportId)
         {
             return await db
@@ -43,28 +50,6 @@
             .Add(report);
 
             await db.SaveChangesAsync();
-        }
-
-        public void DeleteAndResolve(int postId)
-        {
-            var post = db
-                .Posts
-                .Where(x => x.Id == postId)
-                .Include(x => x.Reports)
-                .First();
-
-            post.IsDeleted = true;
-            post.ModifiedOn = DateTime.UtcNow;
-
-            foreach (var report in post.Reports)
-            {
-                report.IsDeleted = true;
-                report.ModifiedOn = DateTime.UtcNow;
-            }
-
-            db.Update(post);
-
-            db.SaveChangesAsync().Wait();
         }
 
         public async Task<PostReport> GetByIdAsync(int reportId, bool includePost = false)

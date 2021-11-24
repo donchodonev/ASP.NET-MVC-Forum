@@ -95,11 +95,11 @@
             return RedirectToAction("Index", "PostReports");
         }
 
-        public IActionResult DeleteAndResolve(int postId)
+        public async Task<IActionResult> DeleteAndResolve(int postId)
         {
-            postReportDataService.DeleteAndResolve(postId);
+            await postReportBusinessService.DeletePostAndResolveReports(postId);
 
-            TempData["Message"] = "The post has been successfully censored and report was marked as resolved";
+            TempData["Message"] = "The post has been successfully censored and all of it's reports were marked as resolved";
 
             return RedirectToAction("Index", "PostReports", new { reportStatus = "Deleted" });
         }

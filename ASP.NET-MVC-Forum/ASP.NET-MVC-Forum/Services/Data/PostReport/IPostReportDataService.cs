@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Data.PostReport
 {
     using ASP.NET_MVC_Forum.Data.Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -10,9 +11,9 @@
 
         public Task Update(PostReport report);
 
-        public Task<bool> ReportExists(int reportId);
+        public Task UpdateAll(ICollection<PostReport> report);
 
-        public void DeleteAndResolve(int postId);
+        public Task<bool> ReportExists(int reportId);
 
         public Task AddReport(PostReport report);
 
