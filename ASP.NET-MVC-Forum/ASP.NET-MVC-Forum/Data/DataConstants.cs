@@ -103,7 +103,7 @@ namespace ASP.NET_MVC_Forum.Data
             public static readonly string[] Colors = new string[] {
 
             "rgb(0,0,128,0.4)",
-            "rgb(0,0,255,0.4)}",
+            "rgb(0,0,255,0.4)",
             "rgb(0,128,0,0.4)",
             "rgb(0,128,128,0.4)",
             "rgb(0,255,0,0.4)",
