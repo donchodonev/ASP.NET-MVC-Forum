@@ -5,8 +5,10 @@
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.DataConstants.ColorConstants;
 
     public class ChartService : IChartService
@@ -23,14 +25,14 @@
             this.mapper = mapper;
         }
 
-        public List<MostCommentedPostsResponeModel> GetMostCommentedPostsChartData(int count)
+        public async Task<List<MostCommentedPostsResponeModel>> GetMostCommentedPostsChartDataAsync(int count)
         {
-            var posts = postService.All(
+            var posts = await postService.All(
                PostQueryFilter.WithoutDeleted,
                PostQueryFilter.AsNoTracking,
                PostQueryFilter.WithComments)
                .OrderByDescending(x => x.Comments.Count)
-               .ToList();
+               .ToListAsync();
 
             int postsTotalCount = posts.Count();
 
@@ -59,14 +61,14 @@
             return chartData;
         }
 
-        public List<MostLikedPostsResponeModel> GetMostLikedPostsChartData(int count)
+        public async Task<List<MostLikedPostsResponeModel>> GetMostLikedPostsChartDataAsync(int count)
         {
-            var posts = postService.All(
+            var posts = await postService.All(
                 PostQueryFilter.WithoutDeleted,
                 PostQueryFilter.AsNoTracking,
                 PostQueryFilter.WithVotes)
                 .OrderByDescending(x => x.Votes.Sum(x => (int)x.VoteType))
-                .ToList();
+                .ToListAsync();
 
             int postsTotalCount = posts.Count();
 
@@ -95,14 +97,14 @@
             return chartData;
         }
 
-        public List<MostReportedPostsResponeModel> GetMostReportedPostsChartData(int count)
+        public async Task<List<MostReportedPostsResponeModel>> GetMostReportedPostsChartDataAsync(int count)
         {
-            var posts = postService.All(
+            var posts = await postService.All(
                 PostQueryFilter.WithoutDeleted,
                 PostQueryFilter.AsNoTracking,
                 PostQueryFilter.WithReports)
                 .OrderByDescending(x => x.Reports.Count)
-                .ToList();
+                .ToListAsync();
 
             int postsTotalCount = posts.Count();
 
@@ -131,12 +133,12 @@
             return chartData;
         }
 
-        public List<MostPostsPerCategoryResponseModel> GetMostPostsPerCategory(int count)
+        public async Task<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategoryAsync(int count)
         {
-            var categories = categoryService
+            var categories = await categoryService
                 .All(withPostsIncluded: true)
                 .OrderByDescending(x => x.Posts.Count)
-                .ToList();
+                .ToListAsync();
 
             int categoriesTotalCount = categories.Count();
 

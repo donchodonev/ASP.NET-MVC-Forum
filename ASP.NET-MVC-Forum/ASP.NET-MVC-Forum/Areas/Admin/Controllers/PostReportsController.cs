@@ -97,7 +97,7 @@
 
         public async Task<IActionResult> DeleteAndResolve(int postId)
         {
-            await postReportBusinessService.DeletePostAndResolveReports(postId);
+            await postReportBusinessService.DeletePostAndResolveReportsAsync(postId);
 
             TempData["Message"] = "The post has been successfully censored and all of it's reports were marked as resolved";
 

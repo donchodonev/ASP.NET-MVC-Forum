@@ -275,12 +275,12 @@
             return posts;
         }
 
-        public async Task Delete(Post post)
+        public async Task DeleteAsync(Post post)
         {
             post.IsDeleted = true;
             post.ModifiedOn = DateTime.UtcNow;
-            db.Update(post);
-            await db.SaveChangesAsync();
+
+            await UpdatePostAsync(post);
         }
     }
 }

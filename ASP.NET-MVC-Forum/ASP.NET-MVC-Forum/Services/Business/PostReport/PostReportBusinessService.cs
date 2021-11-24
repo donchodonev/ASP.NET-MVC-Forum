@@ -64,12 +64,12 @@
             }
         }
 
-        public async Task DeletePostAndResolveReports(int postId)
+        public async Task DeletePostAndResolveReportsAsync(int postId)
         {
             var postWithAllReports = await postDataService
                 .GetByIdAsync(postId, PostQueryFilter.WithReports);
 
-            await postDataService.Delete(postWithAllReports); // deletes just the post
+            await postDataService.DeleteAsync(postWithAllReports); // deletes just the post
 
             DeleteAllPostReports(postWithAllReports.Reports);
 

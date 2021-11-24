@@ -6,6 +6,7 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     [Authorize]
     [ApiController]
@@ -20,33 +21,33 @@ namespace ASP.NET_MVC_Forum.Areas.API.Controllers
         }
 
         [Route("most-commented-posts/{count:int?}")]
-        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostCommentedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostCommentedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = chartService.GetMostCommentedPostsChartData(resultCount);
+            var chartData = await chartService.GetMostCommentedPostsChartDataAsync(resultCount);
 
-            return Ok(new {chartData, fileDownLoadName = "Top posts ordered descending by comments count" });
+            return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by comments count" });
         }
 
         [Route("most-liked-posts/{count:int?}")]
-        public ActionResult<List<MostCommentedPostsResponeModel>> GetMostLikedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostLikedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = chartService.GetMostLikedPostsChartData(resultCount);
+            var chartData = await chartService.GetMostLikedPostsChartDataAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by vote sum" });
         }
 
         [Route("most-reported-posts/{count:int?}")]
-        public ActionResult<List<MostCommentedPostsResponeModel>> GetReportedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetReportedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = chartService.GetMostReportedPostsChartData(resultCount);
+            var chartData = await chartService.GetMostReportedPostsChartDataAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by reports count" });
         }
 
         [Route("most-posts-by-category/{count:int?}")]
-        public ActionResult<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategory(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostPostsPerCategoryResponseModel>>> GetMostPostsPerCategory(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = chartService.GetMostPostsPerCategory(resultCount);
+            var chartData = await chartService.GetMostPostsPerCategoryAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top categories ordered descending by posts count" });
         }

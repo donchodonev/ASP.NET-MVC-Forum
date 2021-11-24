@@ -8,7 +8,7 @@
 
         public Task DeleteAsync(int id);
 
-        public Task DeletePostAndResolveReports(int id);
+        public Task DeletePostAndResolveReportsAsync(int id);
 
         public Task RestoreAsync(int id);
 
