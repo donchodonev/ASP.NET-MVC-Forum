@@ -99,18 +99,20 @@ namespace ASP.NET_MVC_Forum.Data
             /// <summary>
             /// Color RGB Values
             /// </summary>
-            public const string Navy = "rgb(0,0,128,0.4)";
-            public const string Blue = "rgb(0,0,255,0.4)";
-            public const string Green = "rgb(0,128,0,0.4)";
-            public const string Teal = "rgb(0,128,128,0.4)";
-            public const string Lime = "rgb(0,255,0,0.4)";
-            public const string Aqua = "rgb(0,255,255,0.4)";
-            public const string Maroon = "rgb(128,0,0,0.4)";
-            public const string Purple = "rgb(128,0,128,0.4)";
-            public const string Olive = "rgb(128,0,128,0.4)";
-            public const string Yellow = "rgb(255,255,0,0.4)";
-        }
 
+            public static readonly string[] Colors = new string[] {
+
+            "rgb(0,0,128,0.4)",
+            "rgb(0,0,255,0.4)}",
+            "rgb(0,128,0,0.4)",
+            "rgb(0,128,128,0.4)",
+            "rgb(0,255,0,0.4)",
+            "rgb(0,255,255,0.4)",
+            "rgb(128,0,0,0.4)",
+            "rgb(128,0,128,0.4)",
+            "rgb(128,0,128,0.4)",
+            "rgb(255,255,0,0.4)" };
+        }
         public class PostSortConstants
         {
             public static IReadOnlyDictionary<int, string> GetSortOptions()
@@ -149,7 +151,7 @@ namespace ASP.NET_MVC_Forum.Data
             }
         }
 
-        public class PostViewCountOptionsConstants
+        public class PostViewCountOptions
         {
             public static IReadOnlyCollection<int> GetViewCountOptions()
             {

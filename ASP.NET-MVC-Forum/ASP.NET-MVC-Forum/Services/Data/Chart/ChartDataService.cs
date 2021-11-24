@@ -18,7 +18,6 @@
         private readonly IPostDataService postDataService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-        private readonly string[] colors = new string[] { Blue, Navy, Green, Teal, Lime, Aqua, Olive, Purple, Maroon, Yellow };
 
         public ChartDataService(IPostDataService postDataService, ICategoryService categoryService, IMapper mapper)
         {
@@ -100,7 +99,7 @@
         private List<T> TakeValidCountOf<T>(ICollection<T> posts, int requestedCount)
         {
             int postsTotalCount = posts.Count();
-            int lowestCountBetweenTotalPostCountAndTheCountOfColors = Math.Min(postsTotalCount, colors.Length);
+            int lowestCountBetweenTotalPostCountAndTheCountOfColors = Math.Min(postsTotalCount, Colors.Length);
             int lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount = Math.Min(lowestCountBetweenTotalPostCountAndTheCountOfColors, requestedCount);
 
             if (lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount >= requestedCount)
@@ -143,7 +142,7 @@
         {
             for (int i = 0; i < posts.Count; i++)
             {
-                posts[i].Color = colors[i];
+                posts[i].Color = Colors[i];
             }
 
             return posts;
