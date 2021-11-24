@@ -14,7 +14,7 @@
 
         public void DeleteAndResolve(int postId);
 
-        public Task ReportPost(int postId, string reasons);
+        public Task AddReport(PostReport report);
 
         public Task<PostReport> GetByIdAsync(int reportId, bool includePost = false);
     }

@@ -36,11 +36,11 @@
                 .AnyAsync(x => x.Id == reportId);
         }
 
-        public async Task ReportPost(int postId, string reasons)
+        public async Task AddReport(PostReport report)
         {
             db
             .PostReports
-            .Add(new PostReport() { PostId = postId, Reason = reasons });
+            .Add(report);
 
             await db.SaveChangesAsync();
         }

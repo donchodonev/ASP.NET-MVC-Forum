@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.Post;
+    using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
@@ -33,6 +34,7 @@
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportDataService postReportService;
+        private readonly IPostReportBusinessService postReportBusinessService;
 
         public PostsController(
             IUserService userService,
@@ -41,7 +43,8 @@
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
-            IPostReportDataService postReportService)
+            IPostReportDataService postReportService,
+            IPostReportBusinessService postReportBusinessService)
         {
             this.userService = userService;
             this.postDataService = postDataService;
@@ -50,6 +53,7 @@
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
             this.postReportService = postReportService;
+            this.postReportBusinessService = postReportBusinessService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
@@ -103,7 +107,7 @@
 
             var newPost = await AddPostAsync(data);
 
-            await postReportService.AutoGeneratePostReport(newPost.Title, newPost.HtmlContent, newPost.Id);
+            await postReportBusinessService.AutoGeneratePostReportAsync(newPost.Title, newPost.HtmlContent, newPost.Id);
 
             return RedirectToAction("ViewPost", new { postId = newPost.Id, postTitle = newPost.Title });
         }
@@ -176,7 +180,7 @@
                 return BadRequest();
             }
 
-            await postReportService.ReportPost(postId, content);
+            await postReportBusinessService.ReportAsync(postId, content);
 
             return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
         }

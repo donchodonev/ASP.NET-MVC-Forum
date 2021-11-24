@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
+    using ASP.NET_MVC_Forum.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using AutoMapper;
@@ -18,12 +19,17 @@
     {
         private readonly IPostReportDataService postReportDataService;
         private readonly IPostReportBusinessService postReportBusinessService;
+        private readonly ICensorService censorService;
         private readonly IMapper mapper;
 
-        public PostReportsController(IPostReportDataService postReportDataService, IPostReportBusinessService postReportBusinessService, IMapper mapper)
+        public PostReportsController(IPostReportDataService postReportDataService,
+            IPostReportBusinessService postReportBusinessService,
+            ICensorService censorService,
+            IMapper mapper)
         {
             this.postReportDataService = postReportDataService;
             this.postReportBusinessService = postReportBusinessService;
+            this.censorService = censorService;
             this.mapper = mapper;
         }
 
@@ -47,7 +53,7 @@
         {
             if (await postReportDataService.ReportExists(reportId))
             {
-                await postReportBusinessService.Delete(reportId);
+                await postReportBusinessService.DeleteAsync(reportId);
                 TempData["Message"] = "Report has been marked as resolved !";
             }
             else
@@ -62,7 +68,7 @@
         {
             if (await postReportDataService.ReportExists(reportId))
             {
-                await postReportBusinessService.Restore(reportId);
+                await postReportBusinessService.RestoreAsync(reportId);
                 TempData["Message"] = "Report has been successfully restored !";
             }
             else
@@ -73,15 +79,15 @@
             return RedirectToAction("Index", "PostReports", new { reportStatus = "Active" });
         }
 
-        public IActionResult Censor(int postId, bool withRegex)
+        public async Task<IActionResult> Censor(int postId, bool withRegex)
         {
             if (withRegex)
             {
-                postReportDataService.HardCensorPost(postId);
+                await censorService.CensorPostWithRegexAsync(postId);
             }
             else
             {
-                postReportDataService.CensorPost(postId);
+                await censorService.CensorPostAsync(postId);
             }
 
             TempData["Message"] = "The post has been successfully censored";

@@ -4,10 +4,12 @@
 
     public interface IPostReportBusinessService
     {
-        public Task Delete(int id);
+        public Task ReportAsync(int postId, string reason);
 
-        public Task Restore(int id);
+        public Task DeleteAsync(int id);
 
-        public Task AutoGeneratePostReport(string title, string content, int postId);
+        public Task RestoreAsync(int id);
+
+        public Task AutoGeneratePostReportAsync(string title, string content, int postId);
     }
 }

@@ -2,9 +2,9 @@
 {
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.Data.PostReport;
+    using ASP.NET_MVC_Forum.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.Post;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -17,13 +17,15 @@
     public class PostBusinessService : IPostBusinessService
     {
         private readonly IPostDataService postDataService;
-        private readonly IPostReportDataService reportService;
+        private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public PostBusinessService(IPostDataService postDataService, IPostReportDataService reportService, IHtmlManipulator htmlManipulator)
+        public PostBusinessService(IPostDataService postDataService,
+            IPostReportBusinessService postReportBusinessService,
+            IHtmlManipulator htmlManipulator)
         {
             this.postDataService = postDataService;
-            this.reportService = reportService;
+            this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
         }
 
@@ -111,7 +113,7 @@
 
             await postDataService.UpdatePostAsync(post);
 
-            await reportService .AutoGeneratePostReport(post.Title, post.HtmlContent, post.Id);
+            await postReportBusinessService.AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
         }
 
         /// <summary>

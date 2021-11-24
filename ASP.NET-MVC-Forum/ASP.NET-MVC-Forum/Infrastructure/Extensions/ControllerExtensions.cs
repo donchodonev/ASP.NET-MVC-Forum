@@ -13,13 +13,13 @@
         public static IActionResult RedirectToActionWithErrorMessage(this Controller controller, string errorMessage, string controllerName, string actionName)
         {
             controller.TempData["ErrorMessage"] = errorMessage;
-            return controller.RedirectToAction(controllerName,actionName);
+            return controller.RedirectToAction(actionName, controllerName);
         }
 
         public static IActionResult RedirectToActionWithMessage(this Controller controller, string message, string controllerName, string actionName)
         {
             controller.TempData["Message"] = message;
-            return controller.RedirectToAction(controllerName, actionName);
+            return controller.RedirectToAction(actionName, controllerName);
         }
     }
 }

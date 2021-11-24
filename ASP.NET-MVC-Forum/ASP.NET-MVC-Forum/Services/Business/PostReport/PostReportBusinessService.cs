@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Data.Models;
 
     public class PostReportBusinessService : IPostReportBusinessService
     {
@@ -16,7 +17,14 @@
             this.data = data;
             this.censorService = censorService;
         }
-        public async Task Delete(int id)
+
+        public async Task ReportAsync(int postId, string reason)
+        {
+            var report = new PostReport() { PostId = postId, Reason = reason};
+            await data.AddReport(report);
+        }
+
+        public async Task DeleteAsync(int id)
         {
             var report = await data.GetByIdAsync(id);
 
@@ -26,7 +34,7 @@
             await data.Update(report);
         }
 
-        public async Task Restore(int id)
+        public async Task RestoreAsync(int id)
         {
             var report = await data.GetByIdAsync(id, includePost: true);
 
@@ -38,7 +46,7 @@
             await data.Update(report);
         }
 
-        public async Task AutoGeneratePostReport(string title, string content, int postId)
+        public async Task AutoGeneratePostReportAsync(string title, string content, int postId)
         {
             if (censorService.ContainsProfanity(content))
             {
@@ -46,7 +54,7 @@
 
                 string reason = $"Profane words found in post title and content: {string.Join(", ", profaneWordsFound)}";
 
-                await data.ReportPost(postId, reason);
+                await ReportAsync(postId, reason);
             }
         }
     }

@@ -1,9 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Services.Business.EmailSender;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.Post;
+    using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using ASP.NET_MVC_Forum.Services.Chart;
     using ASP.NET_MVC_Forum.Services.Chat;
@@ -61,6 +63,8 @@
             services.AddTransient<IPostDataService, PostDataService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IPostReportDataService, PostReportDataService>();
+            services.AddTransient<IPostReportBusinessService, PostReportBusinessService>();
+            services.AddTransient<ICensorService, CensorService>();
             services.AddTransient<ICommentReportService, CommentReportService>();
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
             services.AddTransient<IVoteService, VoteService>();
