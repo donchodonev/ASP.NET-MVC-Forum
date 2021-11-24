@@ -14,10 +14,22 @@
         }
         public async Task Delete(int id)
         {
-            var report = await data.GetById(id);
+            var report = await data.GetByIdAsync(id);
 
             report.IsDeleted = true;
             report.ModifiedOn = DateTime.UtcNow;
+
+            await data.Update(report);
+        }
+
+        public async Task Restore(int id)
+        {
+            var report = await data.GetByIdAsync(id, includePost: true);
+
+            report.IsDeleted = false;
+            report.ModifiedOn = DateTime.UtcNow;
+            report.Post.IsDeleted = false;
+            report.Post.ModifiedOn = DateTime.UtcNow;
 
             await data.Update(report);
         }

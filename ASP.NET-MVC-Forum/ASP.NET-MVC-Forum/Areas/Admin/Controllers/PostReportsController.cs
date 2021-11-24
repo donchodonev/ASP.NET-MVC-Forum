@@ -20,7 +20,7 @@
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IMapper mapper;
 
-        public PostReportsController(IPostReportDataService postReportDataService,IPostReportBusinessService postReportBusinessService, IMapper mapper)
+        public PostReportsController(IPostReportDataService postReportDataService, IPostReportBusinessService postReportBusinessService, IMapper mapper)
         {
             this.postReportDataService = postReportDataService;
             this.postReportBusinessService = postReportBusinessService;
@@ -45,7 +45,7 @@
 
         public async Task<IActionResult> Delete(int reportId)
         {
-            if (postReportDataService.ReportExists(reportId))
+            if (await postReportDataService.ReportExists(reportId))
             {
                 await postReportBusinessService.Delete(reportId);
                 TempData["Message"] = "Report has been marked as resolved !";
@@ -58,11 +58,11 @@
             return RedirectToAction("Index", "PostReports");
         }
 
-        public IActionResult Restore(int reportId)
+        public async Task<IActionResult> Restore(int reportId)
         {
-            if (postReportDataService.ReportExists(reportId))
+            if (await postReportDataService.ReportExists(reportId))
             {
-                postReportDataService.Restore(reportId);
+                await postReportBusinessService.Restore(reportId);
                 TempData["Message"] = "Report has been successfully restored !";
             }
             else

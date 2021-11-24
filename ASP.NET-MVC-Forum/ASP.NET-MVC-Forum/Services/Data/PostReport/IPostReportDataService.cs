@@ -10,9 +10,7 @@
 
         public Task Update(PostReport report);
 
-        public bool ReportExists(int reportId);
-
-        public void Restore(int reportId);
+        public Task<bool> ReportExists(int reportId);
 
         public Task AutoGeneratePostReport(string title, string content, int postId);
 
@@ -24,6 +22,6 @@
 
         public Task ReportPost(int postId, string reasons);
 
-        public Task<PostReport> GetById(int reportId);
+        public Task<PostReport> GetByIdAsync(int reportId, bool includePost = false);
     }
 }

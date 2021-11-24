@@ -5,5 +5,7 @@
     public interface IPostReportBusinessService
     {
         public Task Delete(int id);
+
+        public Task Restore(int id);
     }
 }

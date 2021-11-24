@@ -34,26 +34,11 @@
             await db.SaveChangesAsync();
         }
 
-        public void Restore(int reportId)
+        public async Task<bool> ReportExists(int reportId)
         {
-            var report = db.PostReports.First(x => x.Id == reportId);
-
-            report.IsDeleted = false;
-            report.ModifiedOn = DateTime.UtcNow;
-
-            var post = db.Posts.First(x => x.Id == report.PostId);
-            post.IsDeleted = false;
-            post.ModifiedOn = DateTime.UtcNow;
-
-            db.Update(report);
-            db.Update(post);
-
-            db.SaveChangesAsync().Wait();
-        }
-
-        public bool ReportExists(int reportId)
-        {
-            return db.PostReports.Any(x => x.Id == reportId);
+            return await db
+                .PostReports
+                .AnyAsync(x => x.Id == reportId);
         }
 
         public async Task AutoGeneratePostReport(string title, string content, int postId)
@@ -165,11 +150,18 @@
             return profaneWordsFound;
         }
 
-        public async Task<PostReport> GetById(int reportId)
+        public async Task<PostReport> GetByIdAsync(int reportId, bool includePost = false)
         {
-            return await db
+            var report = db
                 .PostReports
-                .FirstOrDefaultAsync(x => x.Id == reportId);
+                .Where(x => x.Id == reportId);
+
+            if (includePost)
+            {
+                report = report.Include(x => x.Post);
+            }
+
+            return await report.FirstOrDefaultAsync();
         }
     }
 }
