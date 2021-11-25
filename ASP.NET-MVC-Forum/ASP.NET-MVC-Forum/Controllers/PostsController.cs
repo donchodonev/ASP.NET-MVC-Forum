@@ -9,7 +9,6 @@
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -76,7 +75,7 @@
         [Authorize]
         public IActionResult Add()
         {
-            var vm = PrepareAddFormDataOnGet();
+            var vm = PrepareAddFormDataOnGet(categoryService);
 
             return View(vm);
         }
@@ -117,7 +116,7 @@
                 .ProjectTo<EditPostFormModel>(post)
                 .First();
 
-            vm.Categories = GetCategoryIdAndNameCombinations();
+            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
 
             return View(vm);
         }
@@ -174,13 +173,11 @@
             return this.RedirectToActionWithSuccessMessage(ReportThankYouMessage, "Home", "Index");
         }
 
-        private AddPostFormModel PrepareAddFormDataOnGet()
+        private AddPostFormModel PrepareAddFormDataOnGet(ICategoryService categoryService)
         {
             var addPostFormModel = new AddPostFormModel();
 
-            var selectOptions = GetCategoryIdAndNameCombinations();
-
-            addPostFormModel.Categories = selectOptions;
+            addPostFormModel.FillCategories(categoryService);
 
             if (TempData.ContainsKey("HtmlContent"))
             {
@@ -194,16 +191,6 @@
             return addPostFormModel;
         }
 
-        private CategoryIdAndNameViewModel[] GetCategoryIdAndNameCombinations()
-        {
-            var categories = categoryService.All();
-
-            var selectOptions = categories
-                .ProjectTo<CategoryIdAndNameViewModel>(mapper.ConfigurationProvider)
-                .ToArray();
-
-            return selectOptions;
-        }
 
         private async Task<Post> AddPostAsync(AddPostFormModel data)
         {
