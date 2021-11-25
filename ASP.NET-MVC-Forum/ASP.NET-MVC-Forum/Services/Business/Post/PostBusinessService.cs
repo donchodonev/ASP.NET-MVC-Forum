@@ -157,14 +157,6 @@
             return await posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
-        public async Task<bool> UserCanEdit(int userId, int postId, ClaimsPrincipal principal)
-        {
-            var isAuthor = await IsAuthor(userId,postId);
-            var isPrivileged = principal.IsAdminOrModerator();
-
-            return isAuthor || isPrivileged;
-        }
-
         public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
         {
             if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))

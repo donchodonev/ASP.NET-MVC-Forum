@@ -20,7 +20,7 @@
             this.CreateMap<Message, ChatMessageResponseData>()
                 .ForMember(x => x.SenderUsername, y => y.MapFrom(y => y.SenderUsername))
                 .ForMember(x => x.Time, y => y.MapFrom(y => y.CreatedOn.AddHours(2) // FOR GMT+2
-                .ToString("MM/dd/yyyy H:mm")));
+                .ToString(DateAndTimeFormat)));
 
             this.CreateMap<User, ChatSelectUserViewModel>();
 

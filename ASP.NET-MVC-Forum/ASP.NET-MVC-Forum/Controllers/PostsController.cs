@@ -107,7 +107,12 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            await ValidatePostOwnership(postId, this.User);
+            var verificationResult = await IsUserPrivileged(postId);
+
+            if (verificationResult != null)
+            {
+                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home", "Index");
+            }
 
             var post = postDataService
                 .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
@@ -123,9 +128,14 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit([FromForm] EditPostFormModel data)
+        public async Task<ActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            await ValidatePostOwnership(data.PostId, this.User);
+            var verificationResult = await IsUserPrivileged(data.PostId);
+
+            if (verificationResult != null)
+            {
+                return verificationResult;
+            }
 
             var originalPost = await postDataService.GetByIdAsync(data.PostId);
 
@@ -147,7 +157,12 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            await ValidatePostOwnership(postId, this.User);
+            var verificationResult = await IsUserPrivileged(postId);
+
+            if (verificationResult != null)
+            {
+                return verificationResult;
+            }
 
             var isPostDeleted = await postDataService.IsPostDeleted(postId, postTitle);
 
@@ -203,14 +218,16 @@
             return newPost;
         }
 
-        private async Task ValidatePostOwnership(int postId, ClaimsPrincipal principal)
+        private async Task<ActionResult> IsUserPrivileged(int postId)
         {
             var userId = await userService.GetBaseUserIdAsync(User.Id());
 
-            if (!await postBusinessService.UserCanEdit(userId, postId, principal))
+            if (!await postBusinessService.IsAuthor(userId, postId) && !this.User.IsAdminOrModerator())
             {
-                RedirectToAction("Index", "Home");
+                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home","Index");
             }
+
+            return null;
         }
 
         private async Task<int> GetUserLastVote(Post post, ViewPostViewModel vm, ClaimsPrincipal user)

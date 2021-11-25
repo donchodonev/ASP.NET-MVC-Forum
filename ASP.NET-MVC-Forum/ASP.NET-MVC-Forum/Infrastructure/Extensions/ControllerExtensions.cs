@@ -5,13 +5,13 @@
 
     public static class ControllerExtensions
     {
-        public static IActionResult ViewWithErrorMessage(this Controller controller, string errorMessage)
+        public static ActionResult ViewWithErrorMessage(this Controller controller, string errorMessage)
         {
             controller.TempData[ErrorMessage] = errorMessage;
             return controller.View();
         }
 
-        public static IActionResult RedirectToActionWithErrorMessage(this Controller controller,
+        public static ActionResult RedirectToActionWithErrorMessage(this Controller controller,
             string errorMessage,
             string controllerName,
             string actionName)
@@ -20,7 +20,7 @@
             return controller.RedirectToAction(actionName, controllerName);
         }
 
-        public static IActionResult RedirectToActionWithGenericMessage(this Controller controller, 
+        public static ActionResult RedirectToActionWithGenericMessage(this Controller controller, 
             string genericMessage, 
             string controllerName, 
             string actionName)
@@ -29,7 +29,7 @@
             return controller.RedirectToAction(actionName, controllerName);
         }
 
-        public static IActionResult RedirectToActionWithSuccessMessage(this Controller controller,
+        public static ActionResult RedirectToActionWithSuccessMessage(this Controller controller,
             string successMessage,
             string controllerName,
             string actionName)
