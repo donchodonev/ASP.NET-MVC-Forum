@@ -23,7 +23,7 @@
 
     public class PostsController : Controller
     {
-        private const string PostDeletedMessege = "Your post has already been successfully deleted. Please allow 60 seconds to pass after which will stop being displayed";
+        private const string PostDeletedMessege =
         private const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
 
         private readonly IUserService userService;
@@ -155,11 +155,7 @@
 
             var isPostDeleted = await postDataService.IsPostDeleted(postId, postTitle);
 
-            if (isPostDeleted.Value == true)
-            {
-                this.RedirectToActionWithErrorMessage(PostDeletedMessege, "Index", "Home");
-            }
-            else if (!isPostDeleted.HasValue)
+            if (!isPostDeleted.HasValue)
             {
                 BadRequest();
             }

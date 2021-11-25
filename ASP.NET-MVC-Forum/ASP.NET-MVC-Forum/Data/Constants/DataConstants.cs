@@ -1,9 +1,5 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Constants
 {
-    using ASP.NET_MVC_Forum.Services.Data.Category;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class DataConstants
     {
         public class UserConstants
