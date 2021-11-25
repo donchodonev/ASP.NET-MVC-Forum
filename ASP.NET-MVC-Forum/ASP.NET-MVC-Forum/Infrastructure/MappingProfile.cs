@@ -10,6 +10,7 @@
     using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Comment.Models;
+    using ASP.NET_MVC_Forum.Services.Models.Post;
     using AutoMapper;
     using System.Linq;
     using static ASP.NET_MVC_Forum.Data.Constants.DateTimeConstants;
@@ -17,6 +18,10 @@
     {
         public MappingProfile()
         {
+            this.CreateMap<Post, NewlyCreatedPostServiceModel>()
+                .ForMember(x => x.Id, cfg => cfg.MapFrom(z => z.Id))
+                .ForMember(x => x.Title, cfg => cfg.MapFrom(z => z.Title));
+
             this.CreateMap<Message, ChatMessageResponseData>()
                 .ForMember(x => x.SenderUsername, y => y.MapFrom(y => y.SenderUsername))
                 .ForMember(x => x.Time, y => y.MapFrom(y => y.CreatedOn.AddHours(2) // FOR GMT+2

@@ -15,7 +15,6 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
@@ -31,7 +30,6 @@
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
-        private readonly IVoteDataService voteDataService;
 
         public PostsController(
             IUserService userService,
@@ -40,8 +38,7 @@
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
-            IPostReportBusinessService postReportBusinessService,
-            IVoteDataService voteDataService)
+            IPostReportBusinessService postReportBusinessService)
         {
             this.userService = userService;
             this.postDataService = postDataService;
@@ -50,7 +47,6 @@
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
             this.postReportBusinessService = postReportBusinessService;
-            this.voteDataService = voteDataService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
@@ -101,6 +97,7 @@
 
             if (await postDataService.PostExistsAsync(data.Title))
             {
+                TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
 
                 var errorMessage = $"A post with the title \"{data.Title}\" already exists";
@@ -108,12 +105,9 @@
                 return this.RedirectToActionWithErrorMessage(errorMessage, "Posts", "Add");
             }
 
-            var newPost = await AddPostAsync(data);
+            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data,this.User.Id());
 
-            await postReportBusinessService
-                .AutoGeneratePostReportAsync(newPost.Title, newPost.HtmlContent, newPost.Id);
-
-            return RedirectToAction("ViewPost", new { postId = newPost.Id, postTitle = newPost.Title });
+            return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
 
         [Authorize]
@@ -198,17 +192,6 @@
             await postReportBusinessService.ReportAsync(postId, content);
 
             return this.RedirectToActionWithSuccessMessage(ReportThankYouMessage, "Home", "Index");
-        }
-
-        private async Task<Post> AddPostAsync(AddPostFormModel data)
-        {
-            var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
-
-            var newPost = mapper.Map<Post>(data);
-
-            await postBusinessService.CreateNew(newPost, baseUserId);
-
-            return newPost;
         }
 
         private async Task<ActionResult> IsUserPrivileged(int postId)

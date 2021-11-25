@@ -2,13 +2,14 @@
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Models.Post;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public interface IPostBusinessService
     {
-        public Task<int> CreateNew(Post post, int userId);
+        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
 
         public Task Edit (Post post);
 

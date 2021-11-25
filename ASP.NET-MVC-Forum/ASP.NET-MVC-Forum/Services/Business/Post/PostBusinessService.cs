@@ -7,6 +7,7 @@
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Services.Models.Post;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -41,21 +42,25 @@
             this.mapper = mapper;
         }
 
-        public async Task<int> CreateNew(Post post, int userId)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string identityUserId)
         {
-            post.UserId = userId;
+            var post = mapper.Map<Post>(formModelPost);
+
+            post.UserId = await userService.GetBaseUserIdAsync(identityUserId);
 
             var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
-            var decodedHtml = htmlManipulator.Decode(sanitizedhtml);
-            var escapedHtml = htmlManipulator.Escape(decodedHtml);
+            var santizedAndDecodedHtml = htmlManipulator.Decode(sanitizedhtml);
+            var santizedAndDecodedHtmlAndEscapedHtml = htmlManipulator.Escape(santizedAndDecodedHtml);
 
-            post.HtmlContent = decodedHtml;
+            post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
+            post.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
 
-            post.ShortDescription = GenerateShortDescription(escapedHtml);
+            await postDataService.AddPostAsync(post);
 
-            var postId = await postDataService.AddPostAsync(post);
+            await postReportBusinessService
+                .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
 
-            return postId;
+            return mapper.Map<NewlyCreatedPostServiceModel>(post);
         }
 
         public string GenerateShortDescription(string escapedHtml)
