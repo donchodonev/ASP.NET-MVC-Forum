@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Models.Post
 {
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostConstants;
 
     public class EditPostFormModel
     {

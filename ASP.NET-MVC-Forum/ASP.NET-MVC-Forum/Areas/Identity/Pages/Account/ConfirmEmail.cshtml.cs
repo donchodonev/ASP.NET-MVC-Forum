@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
+﻿namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.WebUtilities;
+    using System.Text;
+    using System.Threading.Tasks;
+
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {

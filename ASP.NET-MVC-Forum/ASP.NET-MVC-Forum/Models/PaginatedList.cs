@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostViewCountOptions;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostViewCountOptions;
 
     public class PaginatedList<T> : List<T>
     {

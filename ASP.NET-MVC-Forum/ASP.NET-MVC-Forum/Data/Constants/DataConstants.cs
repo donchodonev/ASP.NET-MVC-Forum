@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ASP.NET_MVC_Forum.Data
+namespace ASP.NET_MVC_Forum.Data.Constants
 {
     public class DataConstants
     {

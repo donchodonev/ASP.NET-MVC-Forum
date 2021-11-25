@@ -1,10 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
-    using ASP.NET_MVC_Forum.Data.Interfaces;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-    using static DataConstants.ReportConstants;
+    using static Constants.DataConstants.ReportConstants;
 
     public class PostReport : BaseModel
     {

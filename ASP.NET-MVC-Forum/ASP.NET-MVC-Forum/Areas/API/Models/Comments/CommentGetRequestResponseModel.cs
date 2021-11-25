@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
+﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
 {
+    using System;
+
     public class CommentGetRequestResponseModel
     {
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
         {
             get
             {
-                string returnString = null;
+                string returnString;
                 DateTime currentTime = DateTime.UtcNow;
                 var differenceInSeconds = (currentTime - CreatedOn).Seconds;
                 var differenceInMinutes = (currentTime - CreatedOn).Minutes;

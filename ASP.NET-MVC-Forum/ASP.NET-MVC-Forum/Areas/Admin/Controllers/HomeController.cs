@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.RoleConstants;
 
     [Area("Admin")]
     [Authorize(Roles = AdminOrModerator)]

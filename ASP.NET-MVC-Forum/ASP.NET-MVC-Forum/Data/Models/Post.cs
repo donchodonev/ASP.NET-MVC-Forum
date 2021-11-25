@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using static DataConstants.PostConstants;
+    using static Constants.DataConstants.PostConstants;
 
     public class Post : BaseModel
     {

@@ -9,8 +9,8 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
-
-    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+    using System.Threading.Tasks;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.RoleConstants;
 
     [Area("Admin")]
     [Authorize(Roles = AdminRoleName)]
@@ -91,7 +91,7 @@
             }
 
             var identityUser = userService
-                .GetUser(userId,UserQueryFilter.WithIdentityUser)
+                .GetUser(userId, UserQueryFilter.WithIdentityUser)
                 .First()
                 .IdentityUser;
 
@@ -122,7 +122,7 @@
             }
 
             var identityUser = userService
-                .GetUser(userId,UserQueryFilter.WithIdentityUser)
+                .GetUser(userId, UserQueryFilter.WithIdentityUser)
                 .First()
                 .IdentityUser;
 
@@ -141,15 +141,13 @@
             return RedirectToAction("Index");
         }
 
-        private List<UserViewModel> ReturnUsersWithRoles(List<UserViewModel> users)
+        private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)
         {
             foreach (var user in users)
             {
-                user.Roles = userManager
-                    .GetRolesAsync(user.IdentityUser)
-                    .GetAwaiter()
-                    .GetResult()
-                    .ToList();
+                var roles = await userManager.GetRolesAsync(user.IdentityUser);
+
+                user.Roles = roles.ToList();
             }
 
             return users;

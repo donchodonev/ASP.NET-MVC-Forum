@@ -11,7 +11,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using static Data.DataConstants.UserConstants;
+    using static Data.Constants.DataConstants.UserConstants;
 
     [AllowAnonymous]
     public class LoginModel : PageModel

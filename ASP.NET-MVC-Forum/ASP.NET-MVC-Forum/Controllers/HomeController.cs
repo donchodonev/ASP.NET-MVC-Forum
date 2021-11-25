@@ -14,9 +14,9 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostFilterConstants;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostSortConstants;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostViewCountOptions;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostFilterConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostSortConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostViewCountOptions;
 
     public class HomeController : Controller
     {

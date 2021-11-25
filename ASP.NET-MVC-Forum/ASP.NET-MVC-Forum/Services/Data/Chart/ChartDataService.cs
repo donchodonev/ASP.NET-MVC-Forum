@@ -11,7 +11,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.ColorConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.ColorConstants;
 
     public class ChartDataService : IChartDataService
     {

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport
+﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport
 {
+    using System;
     public class PostReportViewModel
     {
         public int Id { get; set; }
@@ -33,7 +32,7 @@ namespace ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport
         {
             get
             {
-                string returnString = null;
+                string returnString;
                 DateTime currentTime = DateTime.UtcNow;
                 var differenceInSeconds = (currentTime - CreatedOn).Seconds;
                 var differenceInMinutes = (currentTime - CreatedOn).Minutes;

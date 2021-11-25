@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Data.Interfaces;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.ChatConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.ChatConstants;
 
     public class Message : ICreatedOn
     {

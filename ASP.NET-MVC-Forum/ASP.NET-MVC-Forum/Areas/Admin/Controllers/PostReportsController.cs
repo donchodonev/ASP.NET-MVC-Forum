@@ -10,7 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.RoleConstants;
 
 
     [Area("Admin")]

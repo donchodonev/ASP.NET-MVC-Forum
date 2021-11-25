@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-
-namespace ASP.NET_MVC_Forum.Areas.Admin.Models.User
+﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Models.User
 {
+    using Microsoft.AspNetCore.Identity;
+    using System;
+    using System.Collections.Generic;
+
     public class UserViewModel
     {
         public int Id { get; set; }

@@ -10,7 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static Data.DataConstants.RoleConstants;
+    using static Data.Constants.DataConstants.RoleConstants;
 
     public static class ApplicationBuilderExtensions
     {

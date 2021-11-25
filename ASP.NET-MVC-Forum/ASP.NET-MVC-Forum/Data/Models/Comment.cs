@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using static DataConstants.CommentConstants;
+    using static Constants.DataConstants.CommentConstants;
     public class Comment : BaseModel
     {
         public Comment() 

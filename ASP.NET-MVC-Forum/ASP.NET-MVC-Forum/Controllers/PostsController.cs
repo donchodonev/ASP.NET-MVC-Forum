@@ -7,7 +7,6 @@
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -18,7 +17,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.PostConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
@@ -33,7 +32,6 @@
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
-        private readonly IPostReportDataService postReportService;
         private readonly IPostReportBusinessService postReportBusinessService;
 
         public PostsController(
@@ -43,7 +41,6 @@
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
-            IPostReportDataService postReportService,
             IPostReportBusinessService postReportBusinessService)
         {
             this.userService = userService;
@@ -52,7 +49,6 @@
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
-            this.postReportService = postReportService;
             this.postReportBusinessService = postReportBusinessService;
         }
 
@@ -82,7 +78,7 @@
         [Authorize]
         public IActionResult Add()
         {
-            var vm = PrepareAddFormDataOnGetAsync();
+            var vm = PrepareAddFormDataOnGet();
 
             return View(vm);
         }
@@ -185,7 +181,7 @@
             return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
         }
 
-        private AddPostFormModel PrepareAddFormDataOnGetAsync()
+        private AddPostFormModel PrepareAddFormDataOnGet()
         {
             var addPostFormModel = new AddPostFormModel();
 

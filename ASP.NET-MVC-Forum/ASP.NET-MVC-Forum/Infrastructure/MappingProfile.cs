@@ -1,19 +1,18 @@
-﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
-using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
-using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
-using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
-using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
-using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
-using ASP.NET_MVC_Forum.Data.Models;
-using ASP.NET_MVC_Forum.Models.Chat;
-using ASP.NET_MVC_Forum.Models.Post;
-using ASP.NET_MVC_Forum.Services.Comment.Models;
-using AutoMapper;
-using System.Linq;
-using static ASP.NET_MVC_Forum.Data.DataConstants.DateTimeFormat;
-
-namespace ASP.NET_MVC_Forum.Infrastructure
+﻿namespace ASP.NET_MVC_Forum.Infrastructure
 {
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
+    using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
+    using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
+    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Models.Chat;
+    using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Comment.Models;
+    using AutoMapper;
+    using System.Linq;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.DateTimeFormat;
     public class MappingProfile : Profile
     {
         public MappingProfile()

@@ -11,8 +11,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Data.DataConstants.RoleConstants;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.WebConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.WebConstants;
 
     public class UserService : IUserService
     {

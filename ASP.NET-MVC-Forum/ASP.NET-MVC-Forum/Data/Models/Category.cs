@@ -1,11 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Models
 {
     using ASP.NET_MVC_Forum.Data.Interfaces;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using static DataConstants.CategoryConstants;
+    using static Constants.DataConstants.CategoryConstants;
 
     public class Category : BaseModel, IContainImage
     {

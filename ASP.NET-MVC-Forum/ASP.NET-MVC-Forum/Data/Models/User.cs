@@ -6,7 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.DataConstants.UserConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.UserConstants;
 
     [Index(nameof(Id))]
     public class User : BaseModel, IContainImage
