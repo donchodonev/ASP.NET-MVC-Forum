@@ -1,19 +1,20 @@
-﻿@using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+﻿@using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
+@using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 @using ASP.NET_MVC_Forum.Models.Post;
 @model ASP.NET_MVC_Forum.Models.PaginatedList<PostPreviewViewModel>
 <link rel="stylesheet" href="~/css/postsAll.css" />
 
 @{
-    if (TempData.ContainsKey("ErrorMessage"))
+    if (TempData.ContainsKey(ErrorMessage))
     {
         <div class="alert alert-warning" role="alert">
-            @TempData["ErrorMessage"]
+            @TempData[ErrorMessage]
         </div>
     }
-    else if (TempData.ContainsKey("Message"))
+    else if (TempData.ContainsKey(SuccessMessage))
     {
         <div class="alert alert-success" role="alert">
-            @TempData["Message"]
+            @TempData[SuccessMessage]
         </div>
     }
 
@@ -141,7 +142,7 @@
     <div class="col-12">
         <a asp-action="Index"
            asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @previousDisabled w-50">
-            <i class="bi bi-arrow-left"></i> Previous 
+            <i class="bi bi-arrow-left"></i> Previous
         </a>
         <div class="col-12 mt-4">
             <a asp-action="Index"

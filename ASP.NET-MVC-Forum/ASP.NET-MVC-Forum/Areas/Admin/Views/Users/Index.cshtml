@@ -1,4 +1,6 @@
 ﻿@model List<ASP.NET_MVC_Forum.Areas.Admin.Models.User.UserViewModel>;
+@using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType
+@using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -13,16 +15,16 @@
 </script>
 <div>
 
-    @if (TempData.ContainsKey("SuccessMessage"))
+    @if (TempData.ContainsKey(SuccessMessage))
     {
         <div class="alert alert-success pb-2 mb-0 text-center" role="alert">
-            @TempData["SuccessMessage"]
+            @TempData[SuccessMessage]
         </div>
     }
-    else if (TempData.ContainsKey("ErrorMessage"))
+    else if (TempData.ContainsKey(ErrorMessage))
     {
         <div class="alert alert-danger pb-2 mb-0 text-center" role="alert">
-            @TempData["ErrorMessage"]
+            @TempData[ErrorMessage]
         </div>
     }
 
@@ -62,7 +64,7 @@
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="Promote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Promote</a>
                                                     }
 
-                                                    if (user.Roles.Contains("Moderator"))
+                                                    if (user.Roles.Contains(ModeratorRoleName))
                                                     {
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="Demote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Demote</a>
                                                     }
@@ -73,7 +75,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (!user.Roles.Contains("Administrator"))
+                                                        if (!user.Roles.Contains(AdminRoleName))
                                                         {
                                                             <a asp-area="Admin" asp-controller="Users" asp-action="Ban" asp-route-userId="@user.Id" type="button" class="btn btn-danger text-light">Ban</a>
                                                         }

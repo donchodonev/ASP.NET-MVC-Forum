@@ -4,10 +4,18 @@
     {
         public class Error
         {
+            public const string PostLengthTooSmall = "The length of the post must be longer than 100 symbols";
+            public const string UserDoesNotExist = "User does NOT exist !";
         }
         public class Success
         {
-
+            public const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
+        }
+        public class MessageType
+        {
+            public const string ErrorMessage = "ErrorMessage";
+            public const string SuccessMessage = "SuccessMessage";
+            public const string GenericMessage = "GenericMessage";
         }
     }
 }

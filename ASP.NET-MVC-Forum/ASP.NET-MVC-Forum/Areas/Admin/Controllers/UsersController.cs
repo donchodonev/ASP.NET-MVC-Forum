@@ -10,7 +10,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
     [Area("Admin")]
     [Authorize(Roles = AdminRoleName)]
@@ -26,7 +29,7 @@
             this.mapper = mapper;
             this.userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var allUsers = userService.GetAll(UserQueryFilter.WithIdentityUser);
 
@@ -34,7 +37,7 @@
                 .Map<List<UserViewModel>>(allUsers)
                 .ToList();
 
-            var vmWithRoles = ReturnUsersWithRoles(vm);
+            var vmWithRoles = await ReturnUsersWithRoles(vm);
 
             return View(vmWithRoles);
         }
@@ -43,20 +46,17 @@
         {
             if (!userService.UserExists(userId))
             {
-                TempData["ErrorMessage"] = "User does NOT exist !";
-                return RedirectToAction("Index");
+                this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
-
 
             if (userService.IsBanned(userId))
             {
-                TempData["ErrorMessage"] = $"User with Id {userId} is already banned !";
-                return RedirectToAction("Index");
+                this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
             }
 
             userService.Ban(userId);
 
-            TempData["SuccessMessage"] = $"User with Id {userId} has been successfully banned indefinitely";
+            TempData[SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
 
             return RedirectToAction("Index");
         }
@@ -65,8 +65,7 @@
         {
             if (!userService.UserExists(userId))
             {
-                TempData["ErrorMessage"] = "User does NOT exist !";
-                return RedirectToAction("Index");
+                return this.RedirectToActionWithErrorMessage(UserDoesNotExist,"Users","Index");
             }
 
             if (!userService.IsBanned(userId))
@@ -77,17 +76,14 @@
 
             userService.Unban(userId);
 
-            TempData["SuccessMessage"] = $"User with Id {userId} has been successfully unbanned";
-
-            return RedirectToAction("Index");
+            return this.RedirectToActionWithSuccessMessage($"User with Id {userId} has been successfully unbanned", "Users", "Index");
         }
 
-        public IActionResult Promote(int userId)
+        public async Task<IActionResult> Promote(int userId)
         {
             if (!userService.UserExists(userId))
             {
-                TempData["ErrorMessage"] = "User does NOT exist !";
-                return RedirectToAction("Index");
+                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
             var identityUser = userService
@@ -95,30 +91,24 @@
                 .First()
                 .IdentityUser;
 
-            bool isUserModerator = userManager
-                .IsInRoleAsync(identityUser, ModeratorRoleName)
-                .GetAwaiter()
-                .GetResult();
+            bool isUserModerator = await userManager
+                .IsInRoleAsync(identityUser, ModeratorRoleName);
 
             if (isUserModerator)
             {
-                TempData["ErrorMessage"] = $"{identityUser.UserName} is already in the {ModeratorRoleName} position !";
-                return RedirectToAction("Index");
+                return this.RedirectToActionWithErrorMessage($"{identityUser.UserName} is already in the {ModeratorRoleName} position !", "Users", "Index");
             }
 
             userService.Promote(identityUser);
 
-            TempData["SuccessMessage"] = $"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}";
-
-            return RedirectToAction("Index");
+            return this.RedirectToActionWithSuccessMessage($"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}", "Users", "Index");
         }
 
-        public IActionResult Demote(int userId)
+        public async Task<IActionResult> Demote(int userId)
         {
             if (!userService.UserExists(userId))
             {
-                TempData["ErrorMessage"] = "User does NOT exist !";
-                return RedirectToAction("Index");
+                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
             var identityUser = userService
@@ -126,19 +116,17 @@
                 .First()
                 .IdentityUser;
 
-            int userRolesCount = userManager.GetRolesAsync(identityUser).GetAwaiter().GetResult().Count;
+            var userRoles = await userManager.GetRolesAsync(identityUser);
+            int userRolesCount = userRoles.Count;
 
             if (userRolesCount == 0)
             {
-                TempData["ErrorMessage"] = $"{identityUser.UserName} cannot be further demoted !";
-                return RedirectToAction("Index");
+                return this.RedirectToActionWithErrorMessage($"{identityUser.UserName} cannot be further demoted !", "Users", "Index");
             }
 
             userService.Demote(identityUser);
 
-            TempData["SuccessMessage"] = $"{identityUser.UserName} has been successfully demoted !";
-
-            return RedirectToAction("Index");
+            return this.RedirectToActionWithSuccessMessage($"{identityUser.UserName} has been successfully demoted !", "Users", "Index");
         }
 
         private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)

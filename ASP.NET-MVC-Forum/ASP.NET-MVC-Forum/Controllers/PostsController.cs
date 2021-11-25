@@ -17,15 +17,14 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
     public class PostsController : Controller
     {
-        private const string PostDeletedMessege =
-        private const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
-
         private readonly IUserService userService;
         private readonly IPostDataService postDataService;
         private readonly ICategoryService categoryService;
@@ -90,13 +89,13 @@
             if (!ModelState.IsValid)
             {
                 TempData["Title"] = data.Title;
-                TempData["ErrorMessage"] = $"The length of the post must be longer than {HtmlContentMinLength} symbols";
+                TempData[ErrorMessage] = PostLengthTooSmall;
                 return RedirectToAction("Add", "Posts");
             }
 
             if (await postDataService.PostExistsAsync(data.Title))
             {
-                TempData["ErrorMessage"] = $"A post with the title \"{data.Title}\" already exists";
+                TempData[ErrorMessage] = $"A post with the title \"{data.Title}\" already exists";
                 TempData["HtmlContent"] = data.HtmlContent;
                 return RedirectToAction("Add", "Posts");
             }
@@ -174,7 +173,7 @@
 
             await postReportBusinessService.ReportAsync(postId, content);
 
-            return this.RedirectToActionWithMessage(ReportThankYouMessage, "Home", "Index");
+            return this.RedirectToActionWithSuccessMessage(ReportThankYouMessage, "Home", "Index");
         }
 
         private AddPostFormModel PrepareAddFormDataOnGet()
