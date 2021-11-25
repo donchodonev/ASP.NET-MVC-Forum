@@ -1,9 +1,9 @@
-﻿using ASP.NET_MVC_Forum.Services.Data.Category;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ASP.NET_MVC_Forum.Data.Constants
+﻿namespace ASP.NET_MVC_Forum.Data.Constants
 {
+    using ASP.NET_MVC_Forum.Services.Data.Category;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class DataConstants
     {
         public class UserConstants
@@ -57,106 +57,6 @@ namespace ASP.NET_MVC_Forum.Data.Constants
         {
             public const int ChatMessageMinLength = 1;
             public const int ChatMessageMaxLength = 10000;
-        }
-
-        public class RoleConstants
-        {
-            public const string AdminRoleName = "Administrator";
-
-            public const string ModeratorRoleName = "Moderator";
-
-            public const string AdminOrModerator = AdminRoleName + "," + ModeratorRoleName;
-        }
-
-        public class DateTimeFormat
-        {
-            public const string DateFormat = "MM/dd/yyyy";
-
-            public const string DateAndTimeFormat = "MM/dd/yyyy HH:mm";
-        }
-
-        public class WebConstants
-        {
-            public const string AvatarWebPath = "/avatar/";
-            public const string AvatarDirectoryPath = "\\wwwroot\\avatar\\";
-            public const string AvatarURL = "/avatar/defaultUserImage.png";
-        }
-
-        public class ImageConstants
-        {
-            /// <summary>
-            /// Image maximum size in bytes
-            /// </summary>
-            public const long ImageMaxSize = 5242880;
-            public const string JPEG = ".jpeg";
-            public const string JPG = ".jpg";
-            public const string PNG = ".png";
-            public const string BMP = ".bmp";
-        }
-
-        public class ColorConstants
-        {
-            /// <summary>
-            /// Color RGB Values
-            /// </summary>
-
-            public static readonly string[] Colors = new string[] {
-
-            "rgb(0,0,128,0.4)",
-            "rgb(0,0,255,0.4)",
-            "rgb(0,128,0,0.4)",
-            "rgb(0,128,128,0.4)",
-            "rgb(0,255,0,0.4)",
-            "rgb(0,255,255,0.4)",
-            "rgb(128,0,0,0.4)",
-            "rgb(128,0,128,0.4)",
-            "rgb(128,0,128,0.4)",
-            "rgb(255,255,0,0.4)" };
-        }
-        public class PostSortConstants
-        {
-            public static IReadOnlyDictionary<int, string> GetSortOptions()
-            {
-                return new Dictionary<int, string>()
-                 {
-                      {0,"Date" },
-                      { 1,"Post Title"}
-                 };
-            }
-
-            public static IReadOnlyDictionary<int, string> GetOrderType()
-            {
-                return new Dictionary<int, string>()
-                {
-                    { 0,"Descending"},
-                    {1,"Ascending" }
-                };
-            }
-        }
-
-        public class PostFilterConstants
-        {
-            /// <summary>
-            /// Returns all existing post categories from the database PLUS the fictional category "All" prepended as the zero-index element
-            /// </summary>
-            /// <param name="categoryService"></param>
-            /// <returns></returns>
-            public static IReadOnlyCollection<string> GetCategories(ICategoryService categoryService)
-            {
-                return categoryService
-                    .GetCategoryNames()
-                    .Prepend("All")
-                    .ToList()
-                    .AsReadOnly();
-            }
-        }
-
-        public class PostViewCountOptions
-        {
-            public static IReadOnlyCollection<int> GetViewCountOptions()
-            {
-                return new List<int> { 10, 20, 30 }.AsReadOnly();
-            }
         }
     }
 }

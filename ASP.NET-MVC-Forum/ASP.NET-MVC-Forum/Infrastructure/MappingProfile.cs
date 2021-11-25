@@ -12,7 +12,7 @@
     using ASP.NET_MVC_Forum.Services.Comment.Models;
     using AutoMapper;
     using System.Linq;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.DateTimeFormat;
+    using static ASP.NET_MVC_Forum.Data.Constants.DateTimeConstants;
     public class MappingProfile : Profile
     {
         public MappingProfile()

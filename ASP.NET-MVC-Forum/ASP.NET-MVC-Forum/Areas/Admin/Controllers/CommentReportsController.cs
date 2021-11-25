@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 
 
     [Area("Admin")]
