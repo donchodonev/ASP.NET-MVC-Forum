@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Business.Post
 {
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Models.Post;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,7 +18,7 @@
 
         public Task Delete(int postId);
 
-        public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category);
+        public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category);
 
         public string GenerateShortDescription(string escapedHtml);
     }

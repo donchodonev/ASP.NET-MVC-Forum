@@ -1,5 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Models.Post
 {
+    using ASP.NET_MVC_Forum.Services.Data.Category;
     using System.ComponentModel.DataAnnotations;
     using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostConstants;
 
@@ -18,9 +19,12 @@
         public string HtmlContent { get; set; }
 
         [Required]
-        [Range(0,int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int CategoryId { get; set; }
 
         public int PostId { get; set; }
+
+        public void FillCategories(ICategoryService categoryService) 
+            => Categories = categoryService.GetCategoryIdAndNameCombinations();
     }
 }

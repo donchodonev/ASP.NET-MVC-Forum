@@ -66,7 +66,7 @@
 
             if (signInManager.IsSignedIn(this.User))
             {
-                vm.UserLastVoteChoice = await GetUserLastVote(post, vm, this.User);
+                vm.UserLastVoteChoice = await GetUserLastVote(post, this.User);
             }
 
             return View(vm);
@@ -94,12 +94,15 @@
             {
                 TempData["HtmlContent"] = data.HtmlContent;
 
-                return this.RedirectToActionWithErrorMessage($"A post with the title \"{data.Title}\" already exists", "Posts", "Add");
+                var errorMessage = $"A post with the title \"{data.Title}\" already exists";
+
+                return this.RedirectToActionWithErrorMessage(errorMessage, "Posts", "Add");
             }
 
             var newPost = await AddPostAsync(data);
 
-            await postReportBusinessService.AutoGeneratePostReportAsync(newPost.Title, newPost.HtmlContent, newPost.Id);
+            await postReportBusinessService
+                .AutoGeneratePostReportAsync(newPost.Title, newPost.HtmlContent, newPost.Id);
 
             return RedirectToAction("ViewPost", new { postId = newPost.Id, postTitle = newPost.Title });
         }
@@ -121,7 +124,7 @@
                 .ProjectTo<EditPostFormModel>(post)
                 .First();
 
-            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
+            vm.FillCategories(categoryService);
 
             return View(vm);
         }
@@ -230,11 +233,10 @@
             return null;
         }
 
-        private async Task<int> GetUserLastVote(Post post, ViewPostViewModel vm, ClaimsPrincipal user)
+        private async Task<int> GetUserLastVote(Post post, ClaimsPrincipal user)
         {
             int userId = await userService
                 .GetBaseUserIdAsync(user.Id());
-
 
             var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
 

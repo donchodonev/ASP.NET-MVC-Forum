@@ -2,31 +2,35 @@
 {
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Post;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     public class PostBusinessService : IPostBusinessService
     {
         private readonly IPostDataService postDataService;
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
+        private readonly IMapper mapper;
 
         public PostBusinessService(IPostDataService postDataService,
             IPostReportBusinessService postReportBusinessService,
-            IHtmlManipulator htmlManipulator)
+            IHtmlManipulator htmlManipulator,
+            IMapper mapper)
         {
             this.postDataService = postDataService;
             this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
+            this.mapper = mapper;
         }
 
         public async Task<int> CreateNew(Post post, int userId)
@@ -72,7 +76,7 @@
             var currentTime = DateTime.UtcNow;
 
             var postToMarkAsDeleted = await postDataService
-                .GetByIdAsync(postId,PostQueryFilter.WithReports);
+                .GetByIdAsync(postId, PostQueryFilter.WithReports);
 
             postToMarkAsDeleted.IsDeleted = true;
             postToMarkAsDeleted.ModifiedOn = currentTime;
@@ -157,8 +161,14 @@
             return await posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
-        public IQueryable<Post> SortAndOrder(IQueryable<Post> posts, int sortType, int sortOrder, string searchTerm, string category)
+        public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category)
         {
+            var posts = postDataService.All(
+                    PostQueryFilter.WithUser,
+                    PostQueryFilter.WithIdentityUser,
+                    PostQueryFilter.WithoutDeleted,
+                    PostQueryFilter.AsNoTracking);
+
             if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
             {
                 posts = posts.Where(post => post.Title.Contains(searchTerm));
@@ -186,7 +196,7 @@
                 posts = posts.OrderBy(x => x.Title);
             }
 
-            return posts;
+            return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider); ;
         }
     }
 }
