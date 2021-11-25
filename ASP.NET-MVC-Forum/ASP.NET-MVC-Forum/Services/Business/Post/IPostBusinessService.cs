@@ -21,5 +21,9 @@
         public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category);
 
         public string GenerateShortDescription(string escapedHtml);
+
+        public Task<ViewPostViewModel> GenerateViewPostModel(int postId);
+
+        public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
     }
 }

@@ -6,6 +6,8 @@
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
@@ -20,16 +22,22 @@
         private readonly IPostDataService postDataService;
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
+        private readonly IUserService userService;
+        private readonly IVoteDataService voteDataService;
         private readonly IMapper mapper;
 
         public PostBusinessService(IPostDataService postDataService,
             IPostReportBusinessService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
+            IUserService userService,
+            IVoteDataService voteDataService,
             IMapper mapper)
         {
             this.postDataService = postDataService;
             this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
+            this.userService = userService;
+            this.voteDataService = voteDataService;
             this.mapper = mapper;
         }
 
@@ -197,6 +205,34 @@
             }
 
             return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider); ;
+        }
+
+        public async Task<ViewPostViewModel> GenerateViewPostModel(int postId)
+        {
+            var post = await postDataService.GetByIdAsync(postId,
+                PostQueryFilter.WithIdentityUser,
+                PostQueryFilter.WithUserPosts,
+                PostQueryFilter.WithComments,
+                PostQueryFilter.WithVotes);
+
+            return mapper.Map<ViewPostViewModel>(post) ?? null;
+        }
+
+        public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
+        {
+            var baseUserId = await userService
+                .GetBaseUserIdAsync(identityUserId);
+
+            var vote = await voteDataService.GetUserVoteAsync(baseUserId, viewModel.PostId);
+
+            if (vote == null)
+            {
+                viewModel.UserLastVoteChoice = 0;
+            }
+            else
+            {
+                viewModel.UserLastVoteChoice = (int)vote.VoteType;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Services.Data.Vote;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,7 @@
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
+        private readonly IVoteDataService voteDataService;
 
         public PostsController(
             IUserService userService,
@@ -38,7 +40,8 @@
             IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
-            IPostReportBusinessService postReportBusinessService)
+            IPostReportBusinessService postReportBusinessService,
+            IVoteDataService voteDataService)
         {
             this.userService = userService;
             this.postDataService = postDataService;
@@ -47,29 +50,24 @@
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
             this.postReportBusinessService = postReportBusinessService;
+            this.voteDataService = voteDataService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postDataService.GetByIdAsync(postId,
-                PostQueryFilter.WithIdentityUser,
-                PostQueryFilter.WithUserPosts,
-                PostQueryFilter.WithComments,
-                PostQueryFilter.WithVotes);
+            var post = await postBusinessService.GenerateViewPostModel(postId);
 
             if (post == null)
             {
-                return BadRequest();
+                return this.RedirectToActionWithErrorMessage(SuchAPostDoesNotExist, "Home", "Index");
             }
-
-            var vm = mapper.Map<ViewPostViewModel>(post);
 
             if (signInManager.IsSignedIn(this.User))
             {
-                vm.UserLastVoteChoice = await GetUserLastVote(post, this.User);
+                await postBusinessService.InjectUserLastVoteType(post, this.User.Id());
             }
 
-            return View(vm);
+            return View(post);
         }
 
         [Authorize]
@@ -227,7 +225,7 @@
 
             if (!await postBusinessService.IsAuthor(userId, postId) && !this.User.IsAdminOrModerator())
             {
-                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home","Index");
+                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home", "Index");
             }
 
             return null;
