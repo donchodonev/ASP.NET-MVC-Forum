@@ -1,9 +1,10 @@
 ﻿@model ASP.NET_MVC_Forum.Models.Chat.ChatSelectUserViewModel;
+@using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType; 
 
-@if (TempData["ErrorMessage"] != null)
+@if (TempData[ErrorMessage] != null)
 {
 <div class="alert alert-danger mt-2 mb-2 text-center" role="alert">
-    @TempData["ErrorMessage"]
+    @TempData[ErrorMessage]
 </div>}
 
 <form method="get" asp-controller="Chat" asp-action="SelectUser" asp-area="">

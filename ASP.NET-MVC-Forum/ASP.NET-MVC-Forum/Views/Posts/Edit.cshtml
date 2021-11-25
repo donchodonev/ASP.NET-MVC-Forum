@@ -1,4 +1,6 @@
 ﻿@model ASP.NET_MVC_Forum.Models.Post.EditPostFormModel;
+@using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
+ 
 @{
     ViewData["Title"] = "Add";
 }
@@ -29,10 +31,10 @@
         </div>
         <div class="text-center mt-3">
             <span class="text-center text-danger " asp-validation-for="Title"></span>
-            @if (TempData.ContainsKey("ErrorMessage"))
+            @if (TempData.ContainsKey(ErrorMessage))
             {
                 <div class="text-center mt-3">
-                    <span class="text-center text-danger ">@TempData["ErrorMessage"]</span>
+                    <span class="text-center text-danger ">@TempData[ErrorMessage]</span>
                 </div>
             }
             @*HtmlContent property's validation error message is displayed via TempData as for some reason it refuses to display the traditional way*@

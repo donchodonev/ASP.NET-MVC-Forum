@@ -17,9 +17,8 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
@@ -89,15 +88,14 @@
             if (!ModelState.IsValid)
             {
                 TempData["Title"] = data.Title;
-                TempData[ErrorMessage] = PostLengthTooSmall;
-                return RedirectToAction("Add", "Posts");
+                return this.RedirectToActionWithErrorMessage(PostLengthTooSmall, "Posts", "Add");
             }
 
             if (await postDataService.PostExistsAsync(data.Title))
             {
-                TempData[ErrorMessage] = $"A post with the title \"{data.Title}\" already exists";
                 TempData["HtmlContent"] = data.HtmlContent;
-                return RedirectToAction("Add", "Posts");
+
+                return this.RedirectToActionWithErrorMessage($"A post with the title \"{data.Title}\" already exists", "Posts", "Add");
             }
 
             var newPost = await AddPostAsync(data);

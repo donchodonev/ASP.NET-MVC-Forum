@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
@@ -46,12 +47,12 @@
         {
             if (!userService.UserExists(userId))
             {
-                this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
             if (userService.IsBanned(userId))
             {
-                this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
+                return this .RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
             }
 
             userService.Ban(userId);
@@ -70,7 +71,7 @@
 
             if (!userService.IsBanned(userId))
             {
-                TempData["ErrorMessage"] = $"User with Id {userId} is not banned !";
+                TempData[ErrorMessage] = $"User with Id {userId} is not banned !";
                 return RedirectToAction("Index");
             }
 
