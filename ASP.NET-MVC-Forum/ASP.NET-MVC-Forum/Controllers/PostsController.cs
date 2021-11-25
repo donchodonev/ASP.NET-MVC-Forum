@@ -73,9 +73,20 @@
         [Authorize]
         public IActionResult Add()
         {
-            var vm = PrepareAddFormDataOnGet(categoryService);
+            var addPostFormModel = new AddPostFormModel();
 
-            return View(vm);
+            addPostFormModel.FillCategories(categoryService);
+
+            if (TempData.ContainsKey("HtmlContent"))
+            {
+                addPostFormModel.HtmlContent = TempData["HtmlContent"].ToString();
+            }
+            if (TempData.ContainsKey("Title"))
+            {
+                addPostFormModel.Title = TempData["Title"].ToString();
+            }
+
+            return View(addPostFormModel);
         }
 
         [HttpPost]
@@ -189,25 +200,6 @@
             return this.RedirectToActionWithSuccessMessage(ReportThankYouMessage, "Home", "Index");
         }
 
-        private AddPostFormModel PrepareAddFormDataOnGet(ICategoryService categoryService)
-        {
-            var addPostFormModel = new AddPostFormModel();
-
-            addPostFormModel.FillCategories(categoryService);
-
-            if (TempData.ContainsKey("HtmlContent"))
-            {
-                addPostFormModel.HtmlContent = TempData["HtmlContent"].ToString();
-            }
-            if (TempData.ContainsKey("Title"))
-            {
-                addPostFormModel.Title = TempData["Title"].ToString();
-            }
-
-            return addPostFormModel;
-        }
-
-
         private async Task<Post> AddPostAsync(AddPostFormModel data)
         {
             var baseUserId = await userService.GetBaseUserIdAsync(this.User.Id());
@@ -229,21 +221,6 @@
             }
 
             return null;
-        }
-
-        private async Task<int> GetUserLastVote(Post post, ClaimsPrincipal user)
-        {
-            int userId = await userService
-                .GetBaseUserIdAsync(user.Id());
-
-            var userLastVote = post.Votes.FirstOrDefault(x => x.UserId == userId);
-
-            if (userLastVote != null)
-            {
-                return (int)userLastVote.VoteType;
-            }
-
-            return 0;
         }
 
         private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
