@@ -110,6 +110,8 @@
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
 
+        // TODO: Continue refactoring from here
+
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
