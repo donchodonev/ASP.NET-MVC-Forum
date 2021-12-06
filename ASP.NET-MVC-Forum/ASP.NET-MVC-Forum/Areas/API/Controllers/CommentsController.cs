@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.Comment.Models;
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

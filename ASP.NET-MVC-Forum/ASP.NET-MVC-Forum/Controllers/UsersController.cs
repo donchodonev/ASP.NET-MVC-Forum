@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

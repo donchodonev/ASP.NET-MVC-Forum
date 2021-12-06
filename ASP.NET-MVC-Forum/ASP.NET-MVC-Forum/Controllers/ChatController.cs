@@ -1,9 +1,10 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
+    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
+    using ASP.NET_MVC_Forum.Services.Business.Chat;
     using ASP.NET_MVC_Forum.Services.Chat;
-    using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -15,17 +16,17 @@
 
     public class ChatController : Controller
     {
-        private readonly IUserDataService userService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IMapper mapper;
         private readonly IChatService chatService;
+        private readonly IChatBusinessService chatBusinessService;
 
-        public ChatController(IUserDataService userService, UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService)
+        public ChatController(UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService, IChatBusinessService chatBusinessService)
         {
-            this.userService = userService;
             this.userManager = userManager;
             this.mapper = mapper;
             this.chatService = chatService;
+            this.chatBusinessService = chatBusinessService;
         }
         public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
@@ -58,7 +59,7 @@
                 return this.ViewWithErrorMessage($"No users found with the username \"{username}\"");
             }
 
-            var vm = GetViewModelWithData(identityUser);
+            var vm = await chatBusinessService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);
 
             return View(vm);
         }
@@ -70,21 +71,6 @@
             }
 
             return await chatService.GetChatIdAsync(sender, receiver);
-        }
-
-
-        private ChatSelectUserViewModel GetViewModelWithData(IdentityUser identityUser)
-        {
-            var vm = mapper
-                .ProjectTo<ChatSelectUserViewModel>(userService.GetUser(identityUser.Id))
-                .First();
-
-            vm.RecipientUsername = identityUser.UserName;
-            vm.RecipientIdentityUserId = identityUser.Id;
-            vm.SenderUsername = this.User.Identity.Name;
-            vm.SenderIdentityUserId = this.User.Id();
-
-            return vm;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
     using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;

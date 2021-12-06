@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
     using ASP.NET_MVC_Forum.Services.Business.Vote;
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;

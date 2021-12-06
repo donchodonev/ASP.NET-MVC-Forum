@@ -9,7 +9,7 @@
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.Vote;
     using ASP.NET_MVC_Forum.Services.Models.Post;
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;

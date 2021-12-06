@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.User
+﻿namespace ASP.NET_MVC_Forum.Services.Data.User
 {
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;

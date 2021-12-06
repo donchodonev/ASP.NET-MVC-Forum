@@ -27,7 +27,9 @@
                 .ForMember(x => x.Time, y => y.MapFrom(y => y.CreatedOn.AddHours(2) // FOR GMT+2
                 .ToString(DateAndTimeFormat)));
 
-            this.CreateMap<User, ChatSelectUserViewModel>();
+            this.CreateMap<User, ChatSelectUserViewModel>()
+                .ForMember(x => x.RecipientUsername, cfg => cfg.MapFrom(y => y.IdentityUser.UserName))
+                .ForMember(x => x.RecipientIdentityUserId, cfg => cfg.MapFrom(y => y.IdentityUser.Id));
 
             this.CreateMap<Category, MostPostsPerCategoryResponseModel>()
                 .ForMember(x => x.Count, y => y.MapFrom(y => y.Posts.Count))

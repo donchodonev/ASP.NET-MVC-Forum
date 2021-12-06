@@ -14,7 +14,7 @@
     using ASP.NET_MVC_Forum.Services.Data.Chart;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
-    using ASP.NET_MVC_Forum.Services.User;
+    using ASP.NET_MVC_Forum.Services.Data.User;
     using ASP.NET_MVC_Forum.Services.Data.Vote;
 
     using Ganss.XSS;
@@ -34,6 +34,7 @@
     using System;
     using ASP.NET_MVC_Forum.Services.Business.Vote;
     using ASP.NET_MVC_Forum.Services.Business.User;
+    using ASP.NET_MVC_Forum.Services.Business.Chat;
 
     public static class ServiceCollectionExtensions
     {
@@ -82,6 +83,7 @@
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
             services.AddTransient<IUserBusinessService, UserBusinessService>();
+            services.AddTransient<IChatBusinessService, ChatBusinessService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {
