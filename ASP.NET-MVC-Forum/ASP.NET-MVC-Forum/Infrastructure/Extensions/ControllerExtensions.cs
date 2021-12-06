@@ -20,6 +20,16 @@
             return controller.RedirectToAction(actionName, controllerName);
         }
 
+        public static ActionResult RedirectToActionWithErrorMessage(this Controller controller,
+            string errorMessage,
+            string controllerName,
+            string actionName,
+            object routeValues)
+        {
+            controller.TempData[ErrorMessage] = errorMessage;
+            return controller.RedirectToAction(actionName, controllerName, routeValues);
+        }
+
         public static ActionResult RedirectToActionWithGenericMessage(this Controller controller, 
             string genericMessage, 
             string controllerName, 

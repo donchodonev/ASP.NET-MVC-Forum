@@ -120,7 +120,7 @@
             var sanitizedHtml = htmlManipulator.Sanitize(originalPost.HtmlContent);
             var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
 
-            var postDescriptionWithoutHtmlTags = RemoveHtmlTags(decodedHtml);
+            var postDescriptionWithoutHtmlTags = htmlManipulator.Escape(decodedHtml);
 
             originalPost.HtmlContent = decodedHtml;
             originalPost.ShortDescription = GeneratePostShortDescription(postDescriptionWithoutHtmlTags, 300);
@@ -259,11 +259,6 @@
                     originalPost.CategoryId = newPostData.CategoryId;
                 }
             }
-        }
-
-        private string RemoveHtmlTags(string html)
-        {
-            return Regex.Replace(html, @"<.*?>", string.Empty);
         }
 
         private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)

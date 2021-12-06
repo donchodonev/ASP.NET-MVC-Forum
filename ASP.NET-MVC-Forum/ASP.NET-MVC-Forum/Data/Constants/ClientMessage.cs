@@ -8,6 +8,7 @@
             public const string UserDoesNotExist = "User does NOT exist !";
             public const string YouAreNotTheAuthor = "You are not the author of this post";
             public const string SuchAPostDoesNotExist = "Such a post does not exist";
+            public const string PostRemainsUnchanged = "There were no changes made to the post's title, body or category";
         }
         public class Success
         {

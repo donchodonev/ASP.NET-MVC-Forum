@@ -1,19 +1,16 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
     using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.Vote;
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
@@ -147,8 +144,10 @@
 
             if (postChanges.Count == 0)
             {
-                return RedirectToAction("Edit", "Posts", new { postId = data.PostId });
+                this.RedirectToActionWithErrorMessage(PostRemainsUnchanged,"Posts","Edit", new { postId = data.PostId });
             }
+
+            await postBusinessService.Edit(data);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
