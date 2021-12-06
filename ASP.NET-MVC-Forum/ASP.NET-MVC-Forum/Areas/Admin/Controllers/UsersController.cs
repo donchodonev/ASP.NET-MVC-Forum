@@ -1,14 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Business.User;
     using ASP.NET_MVC_Forum.Services.User;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -48,7 +45,7 @@
                 return this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
             }
 
-            await userDataService.BanAsync(userId);
+            await userBusinessService.BanAsync(userId);
 
             TempData[SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
 
@@ -68,7 +65,7 @@
                 return RedirectToAction("Index");
             }
 
-            await userDataService.UnbanAsync(userId);
+            await userBusinessService.UnbanAsync(userId);
 
             return this.RedirectToActionWithSuccessMessage($"User with Id {userId} has been successfully unbanned", "Users", "Index");
         }

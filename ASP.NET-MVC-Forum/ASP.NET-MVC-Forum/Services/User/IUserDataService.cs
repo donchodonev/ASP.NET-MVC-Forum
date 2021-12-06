@@ -9,6 +9,8 @@
 
     public interface IUserDataService
     {
+        public Task UpdateAsync(User user);
+
         public Task<User> GetByIdAsync(string identityUserId, params UserQueryFilter[] userQueryFilters);
 
         public Task<User> GetByIdAsync(int userId, params UserQueryFilter[] userQueryFilters);
@@ -35,10 +37,6 @@
         public IQueryable<User> GetUser(int userId, params UserQueryFilter[] filters);
 
         public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters);
-
-        public Task BanAsync(int userId);
-
-        public Task UnbanAsync(int userId);
 
         public Task PromoteAsync(IdentityUser user);
 

@@ -52,6 +52,12 @@
             return await db.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(User user)
+        {
+            db.Update(user);
+            await db.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Get's BaseUser's Id using IdentityUser's Id
         /// </summary>
@@ -151,54 +157,6 @@
             return QueryBuilder(query, filters);
         }
 
-        /// <summary>
-        /// Bans the user by setting his IsBanned property to "true" and increasing it's linked IdentityUser's LockoutEnd by 100 years and marking it's LockoutEnabled property as "true"
-        /// </summary>
-        /// <param name="userId">BaseUser's Id</param>
-        public async Task BanAsync(int userId)
-        {
-            var currentDateAndTime = DateTime.UtcNow;
-
-            var user = await GetByIdAsync(userId,UserQueryFilter.WithIdentityUser);
-
-            user.IsBanned = true;
-
-            user.IdentityUser.LockoutEnd = currentDateAndTime.AddYears(100);
-
-            user.IdentityUser.LockoutEnabled = true;
-
-            user.ModifiedOn = currentDateAndTime;
-
-            await userManager
-                .UpdateSecurityStampAsync(user.IdentityUser);
-
-            db.Update<User>(user);
-
-            db.Update<IdentityUser>(user.IdentityUser);
-
-            await db.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// Ubans the user by setting it's IsBanned property to false and marking his linked IdentityUser's LockoutEnabled property to "false"
-        /// </summary>
-        /// <param name="userId">BaseUser's Id</param>
-        public async Task UnbanAsync(int userId)
-        {
-            var user = await GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
-
-            user.IsBanned = false;
-
-            user.IdentityUser.LockoutEnabled = false;
-
-            user.ModifiedOn = DateTime.UtcNow;
-
-            db.Update<User>(user);
-
-            db.Update<IdentityUser>(user.IdentityUser);
-
-            await db.SaveChangesAsync();
-        }
         /// <summary>
         /// Promotes the user to a Moderator
         /// </summary>
