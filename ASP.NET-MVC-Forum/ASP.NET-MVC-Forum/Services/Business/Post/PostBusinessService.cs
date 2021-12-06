@@ -5,6 +5,7 @@
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.Vote;
     using ASP.NET_MVC_Forum.Services.Models.Post;
@@ -15,7 +16,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class PostBusinessService : IPostBusinessService
@@ -25,6 +25,7 @@
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserService userService;
         private readonly IVoteDataService voteDataService;
+        private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
 
         public PostBusinessService(IPostDataService postDataService,
@@ -32,6 +33,7 @@
             IHtmlManipulator htmlManipulator,
             IUserService userService,
             IVoteDataService voteDataService,
+            ICategoryService categoryService,
             IMapper mapper)
         {
             this.postDataService = postDataService;
@@ -39,6 +41,7 @@
             this.htmlManipulator = htmlManipulator;
             this.userService = userService;
             this.voteDataService = voteDataService;
+            this.categoryService = categoryService;
             this.mapper = mapper;
         }
 
@@ -240,6 +243,20 @@
             {
                 viewModel.UserLastVoteChoice = (int)vote.VoteType;
             }
+        }
+
+        public EditPostFormModel GenerateEditPostFormModel(int postId)
+        {
+            var post = postDataService
+               .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
+
+            var vm = mapper
+                .ProjectTo<EditPostFormModel>(post)
+                .First();
+
+            vm.FillCategories(categoryService);
+
+            return vm;
         }
 
         private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)

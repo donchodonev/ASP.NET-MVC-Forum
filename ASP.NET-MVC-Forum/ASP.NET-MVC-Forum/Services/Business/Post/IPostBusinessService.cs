@@ -26,5 +26,7 @@
         public Task<ViewPostViewModel> GenerateViewPostModel(int postId);
 
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
+
+        public EditPostFormModel GenerateEditPostFormModel(int postId);
     }
 }

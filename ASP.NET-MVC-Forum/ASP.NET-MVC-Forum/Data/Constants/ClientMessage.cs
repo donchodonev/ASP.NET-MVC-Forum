@@ -13,6 +13,7 @@
         public class Success
         {
             public const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
+            public const string PostSuccessfullyDeleted = "Your post has been successfully deleted";
         }
         public class MessageType
         {

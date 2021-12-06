@@ -117,14 +117,7 @@
                 return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home", "Index");
             }
 
-            var post = postDataService
-                .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
-
-            var vm = mapper
-                .ProjectTo<EditPostFormModel>(post)
-                .First();
-
-            vm.FillCategories(categoryService);
+            var vm = postBusinessService.GenerateEditPostFormModel(postId);
 
             return View(vm);
         }
@@ -140,11 +133,12 @@
                 return verificationResult;
             }
 
-            var postChanges = await postBusinessService.GetPostChangesAsync(data.PostId, data.HtmlContent, data.Title, data.CategoryId);
+            var postChanges = await postBusinessService
+                .GetPostChangesAsync(data.PostId, data.HtmlContent, data.Title, data.CategoryId);
 
             if (postChanges.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage(PostRemainsUnchanged,"Posts","Edit", new { postId = data.PostId });
+                return this.RedirectToActionWithErrorMessage(PostRemainsUnchanged, "Posts", "Edit", new { postId = data.PostId });
             }
 
             await postBusinessService.Edit(data);
@@ -172,7 +166,7 @@
 
             await postBusinessService.Delete(postId);
 
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToActionWithSuccessMessage(PostSuccessfullyDeleted, "Home", "Index");
         }
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
