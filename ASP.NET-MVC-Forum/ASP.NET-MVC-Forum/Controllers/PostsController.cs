@@ -144,7 +144,7 @@
 
             if (postChanges.Count == 0)
             {
-                this.RedirectToActionWithErrorMessage(PostRemainsUnchanged,"Posts","Edit", new { postId = data.PostId });
+                return this.RedirectToActionWithErrorMessage(PostRemainsUnchanged,"Posts","Edit", new { postId = data.PostId });
             }
 
             await postBusinessService.Edit(data);
