@@ -7,8 +7,12 @@
     using Microsoft.AspNetCore.Http;
     using ASP.NET_MVC_Forum.Data.Enums;
 
-    public interface IUserService
+    public interface IUserDataService
     {
+        public Task<User> GetByIdAsync(string identityUserId, params UserQueryFilter[] userQueryFilters);
+
+        public Task<User> GetByIdAsync(int userId, params UserQueryFilter[] userQueryFilters);
+
         /// <summary>
         /// Adds a new BaseType user to the database
         /// </summary>
@@ -32,25 +36,25 @@
 
         public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters);
 
-        public void Ban(int userId);
+        public Task BanAsync(int userId);
 
-        public void Unban(int userId);
+        public Task UnbanAsync(int userId);
 
-        public void Promote(IdentityUser user);
+        public Task PromoteAsync(IdentityUser user);
 
-        public void Demote(IdentityUser user);
+        public Task DemoteAsync(IdentityUser user);
 
-        public void AvatarDelete(string identityUserId);
+        public Task AvatarDeleteAsync(string identityUserId);
 
         public bool UserHasAvatar(int userId);
 
-        public string GetUserAvatar(string identityUserId);
+        public Task<string> GetUserAvatarAsync(string identityUserId);
 
         /// <summary>
         /// Gets said image's extension if extension is amongst the allowed image extensions defined at ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions that are used in the implementation of the GetImageExtension() method in UserAvatarService
         /// 
         public string GetImageExtension(IFormFile image);
 
-        public void AvatarUpdate(string identityUserId, IFormFile image);
+        public Task AvatarUpdateAsync(string identityUserId, IFormFile image);
     }
 }

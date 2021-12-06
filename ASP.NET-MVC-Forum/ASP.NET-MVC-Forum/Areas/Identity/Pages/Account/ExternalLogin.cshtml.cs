@@ -20,14 +20,14 @@
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender, IUserService userService)
+            IEmailSender emailSender, IUserDataService userService)
         {
             _signInManager = signInManager;
             _userManager = userManager;

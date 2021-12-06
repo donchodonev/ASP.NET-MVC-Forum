@@ -5,25 +5,26 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserDataService userService)
         {
             this.userService = userService;
         }
 
-        public IActionResult UploadAvatar(IFormFile file)
+        public async Task<IActionResult> UploadAvatar(IFormFile file)
         {
             string identityUserId = this.User.Id();
 
             try
             {
-                userService.AvatarUpdate(identityUserId, file);
+                await userService.AvatarUpdateAsync(identityUserId, file);
             }
             catch (ArgumentOutOfRangeException ex)
             {

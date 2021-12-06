@@ -11,10 +11,10 @@
     public class ChatService : IChatService
     {
         private readonly ApplicationDbContext db;
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public ChatService(ApplicationDbContext db, IUserService userService,IHtmlManipulator htmlManipulator)
+        public ChatService(ApplicationDbContext db, IUserDataService userService,IHtmlManipulator htmlManipulator)
         {
             this.db = db;
             this.userService = userService;

@@ -15,11 +15,11 @@
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly ICommentService commentService;
         private readonly IMapper mapper;
 
-        public CommentsController(IUserService userService, ICommentService commentService, IMapper mapper)
+        public CommentsController(IUserDataService userService, ICommentService commentService, IMapper mapper)
         {
             this.userService = userService;
             this.commentService = commentService;

@@ -15,12 +15,12 @@
 
     public class ChatController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IMapper mapper;
         private readonly IChatService chatService;
 
-        public ChatController(IUserService userService, UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService)
+        public ChatController(IUserDataService userService, UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService)
         {
             this.userService = userService;
             this.userManager = userManager;

@@ -23,7 +23,7 @@
         private readonly IPostDataService postDataService;
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly IVoteDataService voteDataService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
@@ -31,7 +31,7 @@
         public PostBusinessService(IPostDataService postDataService,
             IPostReportBusinessService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
-            IUserService userService,
+            IUserDataService userService,
             IVoteDataService voteDataService,
             ICategoryService categoryService,
             IMapper mapper)

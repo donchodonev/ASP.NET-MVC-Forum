@@ -20,13 +20,13 @@
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IUserService usersService;
+        private readonly IUserDataService usersService;
         private readonly UserManager<IdentityUser> _userManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IUserService usersService
+            IUserDataService usersService
          )
         {
             _userManager = userManager;

@@ -14,13 +14,13 @@
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.WebConstants;
 
-    public class UserService : IUserService
+    public class UserDataService : IUserDataService
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IUserAvatarService avatarService;
 
-        public UserService(ApplicationDbContext db, UserManager<IdentityUser> userManager, IUserAvatarService avatarService)
+        public UserDataService(ApplicationDbContext db, UserManager<IdentityUser> userManager, IUserAvatarService avatarService)
         {
             this.db = db;
             this.userManager = userManager;
@@ -155,84 +155,87 @@
         /// Bans the user by setting his IsBanned property to "true" and increasing it's linked IdentityUser's LockoutEnd by 100 years and marking it's LockoutEnabled property as "true"
         /// </summary>
         /// <param name="userId">BaseUser's Id</param>
-        public void Ban(int userId)
+        public async Task BanAsync(int userId)
         {
-            var user = GetUser(userId, UserQueryFilter.WithIdentityUser).First();
+            var currentDateAndTime = DateTime.UtcNow;
+
+            var user = await GetByIdAsync(userId,UserQueryFilter.WithIdentityUser);
 
             user.IsBanned = true;
-            user.IdentityUser.LockoutEnd = DateTime.UtcNow.AddYears(100);
+
+            user.IdentityUser.LockoutEnd = currentDateAndTime.AddYears(100);
+
             user.IdentityUser.LockoutEnabled = true;
 
-            userManager
-                .UpdateSecurityStampAsync(user.IdentityUser)
-                .GetAwaiter()
-                .GetResult();
+            user.ModifiedOn = currentDateAndTime;
+
+            await userManager
+                .UpdateSecurityStampAsync(user.IdentityUser);
 
             db.Update<User>(user);
+
             db.Update<IdentityUser>(user.IdentityUser);
-            db.SaveChanges();
+
+            await db.SaveChangesAsync();
         }
 
         /// <summary>
         /// Ubans the user by setting it's IsBanned property to false and marking his linked IdentityUser's LockoutEnabled property to "false"
         /// </summary>
         /// <param name="userId">BaseUser's Id</param>
-        public void Unban(int userId)
+        public async Task UnbanAsync(int userId)
         {
-            var user = GetUser(userId, UserQueryFilter.WithIdentityUser).First();
+            var user = await GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
+
             user.IsBanned = false;
+
             user.IdentityUser.LockoutEnabled = false;
+
+            user.ModifiedOn = DateTime.UtcNow;
+
             db.Update<User>(user);
+
             db.Update<IdentityUser>(user.IdentityUser);
-            db.SaveChanges();
+
+            await db.SaveChangesAsync();
         }
         /// <summary>
         /// Promotes the user to a Moderator
         /// </summary>
         /// <param name="user">IdentityUser</param>
-        public void Promote(IdentityUser user)
+        public async Task PromoteAsync(IdentityUser user)
         {
-            userManager
-                .AddToRoleAsync(user, ModeratorRoleName)
-                .GetAwaiter()
-                .GetResult();
+            await userManager
+                .AddToRoleAsync(user, ModeratorRoleName);
 
-            userManager
-                .UpdateSecurityStampAsync(user)
-                .GetAwaiter()
-                .GetResult();
+            await userManager
+                .UpdateSecurityStampAsync(user);
         }
         /// <summary>
         /// Demotes a user back to a normal user with no moderator privileges
         /// </summary>
         /// <param name="user">IdentityUser</param>
-        public void Demote(IdentityUser user)
+        public async Task DemoteAsync(IdentityUser user)
         {
-            userManager
-                .RemoveFromRoleAsync(user, ModeratorRoleName)
-                .GetAwaiter()
-                .GetResult();
+            await userManager
+                .RemoveFromRoleAsync(user, ModeratorRoleName);
 
-            userManager
-                .UpdateSecurityStampAsync(user)
-                .GetAwaiter()
-                .GetResult();
+            await userManager
+                .UpdateSecurityStampAsync(user);
         }
         /// <summary>
         /// Sets the user's avatar to the default avatar image
         /// </summary>
         /// <param name="identityUserId"></param>
-        public void AvatarDelete(string identityUserId)
+        public async Task AvatarDeleteAsync(string identityUserId)
         {
-            var user = db
-                .BaseUsers
-                .First(x => x.IdentityUserId == identityUserId);
+            var user = await GetByIdAsync(identityUserId);
 
             user.ImageUrl = AvatarURL;
 
             db.Update(user);
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         /// <summary>
@@ -240,14 +243,12 @@
         /// </summary>
         /// <param name="identityUserId">IdentityUser's Id</param>
         /// <param name="image">The image file</param>
-        public void AvatarUpdate(string identityUserId, IFormFile image)
+        public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
         {
-            string fileName = avatarService
-                .UploadAvatarAsync(image)
-                .GetAwaiter()
-                .GetResult();
+            string fileName = await avatarService
+                .UploadAvatarAsync(image);
 
-            var user = db.BaseUsers.First(x => x.IdentityUserId == identityUserId);
+            var user = await GetByIdAsync(identityUserId);
 
             user.ImageUrl = $"{AvatarWebPath}{fileName}";
 
@@ -263,9 +264,7 @@
         /// <returns>True if the user has an avatar different from the default one, False if otherwise</returns>
         public bool UserHasAvatar(int userId)
         {
-            return db
-                .BaseUsers
-                .AsNoTracking()
+            return GetUser(userId, UserQueryFilter.AsNoTracking, UserQueryFilter.WithoutDeleted)
                 .First(x => x.Id != userId).ImageUrl != AvatarURL;
         }
 
@@ -274,16 +273,11 @@
         /// </summary>
         /// <param name="identityUserId">IIdentityUser's Id</param>
         /// <returns>string - user's avatar URL</returns>
-        public string GetUserAvatar(string identityUserId)
+        public async Task<string> GetUserAvatarAsync(string identityUserId)
         {
-            int baseUserId = GetBaseUserIdAsync(identityUserId)
-                 .GetAwaiter()
-                 .GetResult();
+            var user = await GetByIdAsync(identityUserId);
 
-            return db
-                 .BaseUsers
-                 .First(x => x.Id == baseUserId)
-                 .ImageUrl;
+            return user.ImageUrl;
         }
 
         /// <summary>
@@ -293,9 +287,18 @@
         /// <returns>Image's extension if valid, null if otherwise</returns>
         public string GetImageExtension(IFormFile image)
         {
-            string imageExtension = avatarService.GetImageExtension(image);
-
             return avatarService.GetImageExtension(image);
+        }
+
+        public async Task<User> GetByIdAsync(int userId, params UserQueryFilter[] userQueryFilters)
+        {
+            return await GetUser(userId, userQueryFilters)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetByIdAsync(string identityUserId, params UserQueryFilter[] userQueryFilters)
+        {
+            return await GetUser(identityUserId,userQueryFilters).FirstOrDefaultAsync();
         }
 
         /// <summary>

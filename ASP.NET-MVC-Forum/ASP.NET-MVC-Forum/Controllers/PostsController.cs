@@ -16,14 +16,14 @@
 
     public class PostsController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
         private readonly IPostDataService postDataService;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
 
         public PostsController(
-            IUserService userService,
+            IUserDataService userService,
             IPostDataService postDataService,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,

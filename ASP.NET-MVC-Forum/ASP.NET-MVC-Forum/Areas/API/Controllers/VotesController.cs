@@ -14,9 +14,9 @@
     public class VotesController : ControllerBase
     {
         private readonly IVoteBusinessService voteService;
-        private readonly IUserService userService;
+        private readonly IUserDataService userService;
 
-        public VotesController(IVoteBusinessService voteService, IUserService userService)
+        public VotesController(IVoteBusinessService voteService, IUserDataService userService)
         {
             this.voteService = voteService;
             this.userService = userService;

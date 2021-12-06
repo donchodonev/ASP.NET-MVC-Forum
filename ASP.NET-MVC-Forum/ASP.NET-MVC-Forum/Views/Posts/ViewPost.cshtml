@@ -1,7 +1,7 @@
 ﻿@model ASP.NET_MVC_Forum.Models.Post.ViewPostViewModel;
 @using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 @using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
-@inject ASP.NET_MVC_Forum.Services.User.IUserService userService;
+@inject ASP.NET_MVC_Forum.Services.User.IUserDataService userDataService;
 
 @{
     ViewData["Title"] = "View Post";
@@ -11,7 +11,7 @@
 
     if (this.User.Identity.IsAuthenticated)
     {
-        currUserAvatar = userService.GetUserAvatar(this.User.Id());
+        currUserAvatar = await userDataService.GetUserAvatarAsync(this.User.Id());
     }
     else
     {

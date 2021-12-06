@@ -63,7 +63,7 @@
 
         public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserDataService, UserDataService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostBusinessService, PostBusinessService>();
             services.AddTransient<IPostDataService, PostDataService>();
