@@ -43,16 +43,16 @@
             return View(vmWithRoles);
         }
 
-        public IActionResult Ban(int userId)
+        public async Task<IActionResult> Ban(int userId)
         {
-            if (!userService.UserExists(userId))
+            if (!await userService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
             if (userService.IsBanned(userId))
             {
-                return this .RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
+                return this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
             }
 
             userService.Ban(userId);
@@ -62,11 +62,11 @@
             return RedirectToAction("Index");
         }
 
-        public IActionResult RemoveBan(int userId)
+        public async Task<IActionResult> RemoveBan(int userId)
         {
-            if (!userService.UserExists(userId))
+            if (!await userService.UserExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserDoesNotExist,"Users","Index");
+                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
             if (!userService.IsBanned(userId))
@@ -82,7 +82,7 @@
 
         public async Task<IActionResult> Promote(int userId)
         {
-            if (!userService.UserExists(userId))
+            if (!await userService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
@@ -107,7 +107,7 @@
 
         public async Task<IActionResult> Demote(int userId)
         {
-            if (!userService.UserExists(userId))
+            if (!await userService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }

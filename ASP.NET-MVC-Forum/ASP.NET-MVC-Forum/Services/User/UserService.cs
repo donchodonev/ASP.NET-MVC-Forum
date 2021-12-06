@@ -46,6 +46,7 @@
                 Age = age,
                 ImageUrl = AvatarURL
             };
+
             await db.BaseUsers.AddAsync(user);
 
             return await db.SaveChangesAsync();
@@ -58,12 +59,12 @@
         /// <returns>Task<int></returns>
         public async Task<int> GetBaseUserIdAsync(string identityUserId)
         {
-            return await Task
-               .Run(() => db
+            var user = await db
                .BaseUsers
                .AsNoTracking()
-               .FirstOrDefault(x => x.IdentityUserId == identityUserId)
-               .Id);
+               .FirstOrDefaultAsync(x => x.IdentityUserId == identityUserId);
+
+            return user.Id;
         }
 
         /// <summary>
@@ -73,15 +74,12 @@
         /// <returns></returns>
         public async Task<int> UserPostsCount(int userId)
         {
-            return await Task.Run(() =>
-            {
-                return db
-                .BaseUsers
-                .AsNoTracking()
-                .FirstOrDefault(x => x.Id == userId)
-                .Posts
-                .Count;
-            });
+            var user = await db
+             .BaseUsers
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == userId);
+
+            return user.Posts.Count;
         }
 
         /// <summary>
@@ -101,12 +99,12 @@
         /// </summary>
         /// <param name="userId">User's Id</param>
         /// <returns>Bool - True if it exists and False if otherwise</returns>
-        public bool UserExists(int userId)
+        public async Task<bool> UserExistsAsync(int userId)
         {
-            return db
+            return await db
                 .BaseUsers
                 .AsNoTracking()
-                .Any(x => x.Id == userId);
+                .AnyAsync(x => x.Id == userId);
         }
 
         /// <summary>
