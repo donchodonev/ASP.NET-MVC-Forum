@@ -16,6 +16,9 @@
         {
             public const string ReportThankYouMessage = "Thank you for your report, our moderators will review it as quickly as possible !";
             public const string PostSuccessfullyDeleted = "Your post has been successfully deleted";
+            public const string UserSucessfullyBanned = "The user has been successfully banned indefinitely";
+            public const string UserSucessfullyUnBanned = "The user has been successfully unbanned";
+
         }
         public class MessageType
         {

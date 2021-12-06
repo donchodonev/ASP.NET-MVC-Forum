@@ -1,16 +1,14 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.User
 {
     using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Data.Enums;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
-
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.WebConstants;
 
@@ -111,20 +109,6 @@
                 .BaseUsers
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == userId);
-        }
-
-        /// <summary>
-        /// Checks whether the user with the given Id is banned
-        /// </summary>
-        /// <param name="userId">User's Id</param>
-        /// <returns>Bool - True if the user is banned, False if otherwise</returns>
-        public bool IsBanned(int userId)
-        {
-            return db
-                .BaseUsers
-                .AsNoTracking()
-                .First(x => x.Id == userId)
-                .IsBanned;
         }
 
         /// <summary>

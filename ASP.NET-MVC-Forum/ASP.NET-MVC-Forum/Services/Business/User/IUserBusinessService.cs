@@ -11,5 +11,9 @@ namespace ASP.NET_MVC_Forum.Services.Business.User
         public Task BanAsync(int userId);
 
         public Task UnbanAsync(int userId);
+
+        public Task<bool> IsBannedAsync(int userId);
+
+        public Task<bool> UserExistsAsync(int userId);
     }
 }

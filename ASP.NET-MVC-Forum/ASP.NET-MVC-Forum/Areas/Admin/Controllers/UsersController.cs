@@ -10,6 +10,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
@@ -40,7 +41,7 @@
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
-            if (userDataService.IsBanned(userId))
+            if (await userBusinessService.IsBannedAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
             }
@@ -49,17 +50,17 @@
 
             TempData[SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
 
-            return RedirectToAction("Index");
+            return this.RedirectToActionWithSuccessMessage(UserSucessfullyBanned,"Users","Index");
         }
 
         public async Task<IActionResult> RemoveBan(int userId)
         {
-            if (!await userDataService.UserExistsAsync(userId))
+            if (!await userBusinessService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
-            if (!userDataService.IsBanned(userId))
+            if (!await userBusinessService.IsBannedAsync(userId))
             {
                 TempData[ErrorMessage] = $"User with Id {userId} is not banned !";
                 return RedirectToAction("Index");
@@ -67,7 +68,7 @@
 
             await userBusinessService.UnbanAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage($"User with Id {userId} has been successfully unbanned", "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(UserSucessfullyUnBanned, "Users", "Index");
         }
 
         public async Task<IActionResult> Promote(int userId)

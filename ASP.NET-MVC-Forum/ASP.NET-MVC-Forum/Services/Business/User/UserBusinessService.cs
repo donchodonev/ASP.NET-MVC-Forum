@@ -12,20 +12,20 @@
 
     public class UserBusinessService : IUserBusinessService
     {
-        private readonly IUserDataService userDataService;
+        private readonly IUserDataService data;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IMapper mapper;
 
-        public UserBusinessService(IUserDataService userService, UserManager<IdentityUser> userManager, IMapper mapper)
+        public UserBusinessService(IUserDataService data, UserManager<IdentityUser> userManager, IMapper mapper)
         {
-            this.userDataService = userService;
+            this.data = data;
             this.userManager = userManager;
             this.mapper = mapper;
         }
 
         public async Task<List<UserViewModel>> GenerateUserViewModelAsync()
         {
-            var allUsers = userDataService.GetAll(UserQueryFilter.WithIdentityUser, UserQueryFilter.AsNoTracking);
+            var allUsers = data.GetAll(UserQueryFilter.WithIdentityUser, UserQueryFilter.AsNoTracking);
 
             var vm = mapper
                 .Map<List<UserViewModel>>(allUsers)
@@ -38,7 +38,7 @@
         {
             var currentDateAndTime = DateTime.UtcNow;
 
-            var user = await userDataService.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
+            var user = await data.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
 
             user.IsBanned = true;
 
@@ -51,7 +51,7 @@
             await userManager
                 .UpdateSecurityStampAsync(user.IdentityUser);
 
-            await userDataService.UpdateAsync(user);
+            await data.UpdateAsync(user);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@
         /// <param name="userId">BaseUser's Id</param>
         public async Task UnbanAsync(int userId)
         {
-            var user = await userDataService.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
+            var user = await data.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
 
             user.IsBanned = false;
 
@@ -68,7 +68,28 @@
 
             user.ModifiedOn = DateTime.UtcNow;
 
-            await userDataService.UpdateAsync(user);
+            await data.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// Checks if a user with the given Id exists in the database
+        /// </summary>
+        /// <param name="userId">User's Id</param>
+        /// <returns>Bool - True if it exists and False if otherwise</returns>
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            return await data.UserExistsAsync(userId);
+        }
+
+        /// <summary>
+        /// Checks whether the user with the given Id is banned
+        /// </summary>
+        /// <param name="userId">User's Id</param>
+        /// <returns>Bool - True if the user is banned, False if otherwise</returns>
+        public async Task<bool> IsBannedAsync(int userId)
+        {
+            var user = await data.GetByIdAsync(userId, UserQueryFilter.AsNoTracking);
+            return user.IsBanned;
         }
 
         private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)

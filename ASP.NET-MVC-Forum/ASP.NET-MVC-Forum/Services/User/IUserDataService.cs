@@ -32,8 +32,6 @@
 
         public Task<bool> UserExistsAsync(int userId);
 
-        public bool IsBanned(int userId);
-
         public IQueryable<User> GetUser(int userId, params UserQueryFilter[] filters);
 
         public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters);
