@@ -24,5 +24,7 @@ namespace ASP.NET_MVC_Forum.Services.Business.User
         public Task DemoteAsync(int userId);
 
         public Task PromoteAsync(int userId);
+
+        public Task<int> UserPostsCountAsync(int userId);
     }
 }

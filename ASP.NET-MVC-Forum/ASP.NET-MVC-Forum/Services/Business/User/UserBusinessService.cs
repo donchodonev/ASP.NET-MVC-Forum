@@ -133,6 +133,14 @@
                 .UpdateSecurityStampAsync(identityUser);
         }
 
+        public async Task<int> UserPostsCountAsync(int userId)
+        {
+            return await data
+                .GetUser(userId,UserQueryFilter.AsNoTracking,UserQueryFilter.WithoutDeleted)
+                .Select(x => x.Posts.Count)
+                .FirstAsync();
+        }
+
         private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)
         {
             foreach (var user in users)

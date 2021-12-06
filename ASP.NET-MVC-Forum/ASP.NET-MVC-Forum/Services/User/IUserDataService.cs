@@ -26,8 +26,6 @@
 
         public Task<int> GetBaseUserIdAsync(string identityUserId);
 
-        public Task<int> UserPostsCount(int userId);
-
         public IQueryable<User> GetAll(params UserQueryFilter[] filters);
 
         public Task<bool> UserExistsAsync(int userId);

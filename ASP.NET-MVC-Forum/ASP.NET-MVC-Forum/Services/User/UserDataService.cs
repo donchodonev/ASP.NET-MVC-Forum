@@ -69,21 +69,6 @@
         }
 
         /// <summary>
-        /// Get's BaseUser's posts count
-        /// </summary>
-        /// <param name="userId">BaseUser's Id</param>
-        /// <returns></returns>
-        public async Task<int> UserPostsCount(int userId)
-        {
-            var user = await db
-             .BaseUsers
-             .AsNoTracking()
-             .FirstOrDefaultAsync(x => x.Id == userId);
-
-            return user.Posts.Count;
-        }
-
-        /// <summary>
         /// Gets all users filtered by selected filters (if any)
         /// </summary>
         /// <param name="filters"> Desired filters of type UserQueryFilter</param>
@@ -190,9 +175,9 @@
         /// <returns>string - user's avatar URL</returns>
         public async Task<string> GetUserAvatarAsync(string identityUserId)
         {
-            var user = await GetByIdAsync(identityUserId);
-
-            return user.ImageUrl;
+            return await GetUser(identityUserId,UserQueryFilter.AsNoTracking,UserQueryFilter.WithoutDeleted)
+                .Select(x => x.ImageUrl)
+                .FirstAsync();
         }
 
         /// <summary>
