@@ -228,6 +228,15 @@
             return mapper.Map<ViewPostViewModel>(post) ?? null;
         }
 
+        public AddPostFormModel GeneratedAddPostFormModel()
+        {
+            var vm = new AddPostFormModel();
+
+            vm.FillCategories(categoryService);
+
+            return vm;
+        }
+
         public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
         {
             var baseUserId = await userService

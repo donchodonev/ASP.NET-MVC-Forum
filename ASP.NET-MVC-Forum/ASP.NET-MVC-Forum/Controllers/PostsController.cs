@@ -1,17 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
-    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.User;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Linq;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
@@ -22,8 +18,6 @@
     {
         private readonly IUserService userService;
         private readonly IPostDataService postDataService;
-        private readonly ICategoryService categoryService;
-        private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
@@ -31,16 +25,12 @@
         public PostsController(
             IUserService userService,
             IPostDataService postDataService,
-            ICategoryService categoryService,
-            IMapper mapper,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
             IPostReportBusinessService postReportBusinessService)
         {
             this.userService = userService;
             this.postDataService = postDataService;
-            this.categoryService = categoryService;
-            this.mapper = mapper;
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
             this.postReportBusinessService = postReportBusinessService;
@@ -66,9 +56,7 @@
         [Authorize]
         public IActionResult Add()
         {
-            var addPostFormModel = new AddPostFormModel();
-
-            addPostFormModel.FillCategories(categoryService);
+            var addPostFormModel = postBusinessService.GeneratedAddPostFormModel();
 
             if (TempData.ContainsKey("HtmlContent"))
             {

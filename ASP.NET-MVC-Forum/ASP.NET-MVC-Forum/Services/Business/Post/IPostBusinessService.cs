@@ -9,6 +9,8 @@
 
     public interface IPostBusinessService
     {
+        public AddPostFormModel GeneratedAddPostFormModel();
+
         public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
 
         public Task<Post> Edit(EditPostFormModel viewModelData);
