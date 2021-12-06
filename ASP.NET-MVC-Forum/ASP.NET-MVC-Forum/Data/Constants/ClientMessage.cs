@@ -1,5 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Data.Constants
 {
+    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     public class ClientMessage
     {
         public class Error
@@ -11,7 +12,8 @@
             public const string PostRemainsUnchanged = "There were no changes made to the post's title, body or category";
             public const string DuplicatePostName = "A post with the same title already exists";
             public const string CannotFurtherDemote = "User cannot be further demoted";
-
+            public const string UserIsAlreadyAModerator = "User is already a moderator";
+            public const string UserIsAlreadyBanned = "User is already a banned";
         }
         public class Success
         {
@@ -20,8 +22,7 @@
             public const string UserSucessfullyBanned = "The user has been successfully banned indefinitely";
             public const string UserSucessfullyUnBanned = "The user has been successfully unbanned";
             public const string UserSuccessfullyDemoted = "The user has been successfully demoted";
-
-
+            public const string UserSuccessfullyPromoted = "The user has been successfully promoted to " + ModeratorRoleName;
         }
         public class MessageType
         {

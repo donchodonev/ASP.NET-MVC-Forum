@@ -37,7 +37,7 @@
 
             if (await userBusinessService.IsBannedAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage($"User with Id {userId} is already banned !", "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(UserIsAlreadyBanned, "Users", "Index");
             }
 
             await userBusinessService.BanAsync(userId);
@@ -79,12 +79,12 @@
 
             if (isUserModerator)
             {
-                return this.RedirectToActionWithErrorMessage($"{identityUser.UserName} is already in the {ModeratorRoleName} position !", "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(UserIsAlreadyAModerator, "Users", "Index");
             }
 
             await userBusinessService.PromoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage($"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}", "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(UserSuccessfullyPromoted, "Users", "Index");
         }
 
         public async Task<IActionResult> Demote(int userId)
