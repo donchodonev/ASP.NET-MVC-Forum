@@ -105,12 +105,10 @@
                 return this.RedirectToActionWithErrorMessage(errorMessage, "Posts", "Add");
             }
 
-            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data,this.User.Id());
+            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data, this.User.Id());
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
-
-        // TODO: Continue refactoring from here
 
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
@@ -145,18 +143,12 @@
                 return verificationResult;
             }
 
-            var originalPost = await postDataService.GetByIdAsync(data.PostId);
-
-            var postChanges = postBusinessService.GetPostChanges(originalPost, data.HtmlContent, data.Title, data.CategoryId);
+            var postChanges = await postBusinessService.GetPostChangesAsync(data.PostId, data.HtmlContent, data.Title, data.CategoryId);
 
             if (postChanges.Count == 0)
             {
                 return RedirectToAction("Edit", "Posts", new { postId = data.PostId });
             }
-
-            AddPostChanges(originalPost, data, postChanges);
-
-            await postBusinessService.Edit(originalPost);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
@@ -206,25 +198,6 @@
             }
 
             return null;
-        }
-
-        private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
-        {
-            foreach (var kvp in postChanges)
-            {
-                if (kvp.Key == "HtmlContent")
-                {
-                    originalPost.HtmlContent = newPostData.HtmlContent;
-                }
-                if (kvp.Key == "Title")
-                {
-                    originalPost.Title = newPostData.Title;
-                }
-                if (kvp.Key == "CategoryId")
-                {
-                    originalPost.CategoryId = newPostData.CategoryId;
-                }
-            }
         }
     }
 }

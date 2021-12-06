@@ -33,6 +33,7 @@
 
     using System;
     using ASP.NET_MVC_Forum.Services.Business.Vote;
+    using ASP.NET_MVC_Forum.Services.Business.User;
 
     public static class ServiceCollectionExtensions
     {
@@ -80,6 +81,7 @@
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
+            services.AddTransient<IUserBusinessService, UserBusinessService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

@@ -103,34 +103,34 @@
             await postDataService.UpdatePostAsync(postToMarkAsDeleted);
         }
 
-        public async Task Edit(Post post)
+        public async Task<Post> Edit(EditPostFormModel viewModelData)
         {
-            var sanitizedHtml = htmlManipulator.Sanitize(post.HtmlContent);
+            var originalPost = await postDataService
+                .GetByIdAsync(viewModelData.PostId, PostQueryFilter.WithoutDeleted);
+
+            var postChanges = await GetPostChangesAsync(viewModelData.PostId, viewModelData.HtmlContent, viewModelData.Title, viewModelData.CategoryId);
+
+            if (postChanges.Count == 0)
+            {
+                return originalPost;
+            }
+
+            AddPostChanges(originalPost, viewModelData, postChanges);
+
+            var sanitizedHtml = htmlManipulator.Sanitize(originalPost.HtmlContent);
             var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
 
-            var pattern = @"<.*?>";
-            var replacement = string.Empty;
+            var postDescriptionWithoutHtmlTags = RemoveHtmlTags(decodedHtml);
 
-            var postDescriptionWithoutHtml = Regex.Replace(decodedHtml, pattern, replacement);
+            originalPost.HtmlContent = decodedHtml;
+            originalPost.ShortDescription = GeneratePostShortDescription(postDescriptionWithoutHtmlTags, 300);
+            originalPost.ModifiedOn = DateTime.UtcNow;
 
-            string postShortDescription;
+            await postDataService.UpdatePostAsync(originalPost);
 
-            if (postDescriptionWithoutHtml.Length < 300)
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, postDescriptionWithoutHtml.Length) + "...";
-            }
-            else
-            {
-                postShortDescription = postDescriptionWithoutHtml.Substring(0, 300) + "...";
-            }
+            await postReportBusinessService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
 
-            post.HtmlContent = decodedHtml;
-            post.ShortDescription = postShortDescription;
-            post.ModifiedOn = DateTime.UtcNow;
-
-            await postDataService.UpdatePostAsync(post);
-
-            await postReportBusinessService.AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
+            return originalPost;
         }
 
         /// <summary>
@@ -142,8 +142,10 @@
         /// <param name="newCategoryId">The new post category Id</param>
         /// <returns>Task<Dictionary<string, bool>></returns>
 
-        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId)
+        public async Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId)
         {
+            var originalPost = await postDataService.GetByIdAsync(originalPostId);
+
             var kvp = new Dictionary<string, bool>();
 
             var sanitizedAndDecodedHtml = htmlManipulator
@@ -238,6 +240,40 @@
             {
                 viewModel.UserLastVoteChoice = (int)vote.VoteType;
             }
+        }
+
+        private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
+        {
+            foreach (var kvp in postChanges)
+            {
+                if (kvp.Key == "HtmlContent")
+                {
+                    originalPost.HtmlContent = newPostData.HtmlContent;
+                }
+                if (kvp.Key == "Title")
+                {
+                    originalPost.Title = newPostData.Title;
+                }
+                if (kvp.Key == "CategoryId")
+                {
+                    originalPost.CategoryId = newPostData.CategoryId;
+                }
+            }
+        }
+
+        private string RemoveHtmlTags(string html)
+        {
+            return Regex.Replace(html, @"<.*?>", string.Empty);
+        }
+
+        private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)
+        {
+            if (postDescriptionWithoutHtmlTags.Length < postDescriptionMaxLength)
+            {
+                return postDescriptionWithoutHtmlTags.Substring(0, postDescriptionWithoutHtmlTags.Length) + "...";
+            }
+
+            return postDescriptionWithoutHtmlTags.Substring(0, postDescriptionMaxLength) + "...";
         }
     }
 }

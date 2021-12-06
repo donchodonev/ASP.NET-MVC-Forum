@@ -11,11 +11,11 @@
     {
         public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
 
-        public Task Edit (Post post);
+        public Task<Post> Edit(EditPostFormModel viewModelData);
 
         public Task<bool> IsAuthor(int userId, int postId);
 
-        public Dictionary<string, bool> GetPostChanges(Post originalPost, string newHtmlContent, string newTitle, int newCategoryId);
+        public Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId);
 
         public Task Delete(int postId);
 
