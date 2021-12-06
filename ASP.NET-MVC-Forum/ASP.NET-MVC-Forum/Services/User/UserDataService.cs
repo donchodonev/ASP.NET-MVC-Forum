@@ -9,19 +9,16 @@
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.WebConstants;
 
     public class UserDataService : IUserDataService
     {
         private readonly ApplicationDbContext db;
-        private readonly UserManager<IdentityUser> userManager;
         private readonly IUserAvatarService avatarService;
 
-        public UserDataService(ApplicationDbContext db, UserManager<IdentityUser> userManager, IUserAvatarService avatarService)
+        public UserDataService(ApplicationDbContext db, IUserAvatarService avatarService)
         {
             this.db = db;
-            this.userManager = userManager;
             this.avatarService = avatarService;
         }
 
@@ -141,30 +138,6 @@
             return QueryBuilder(query, filters);
         }
 
-        /// <summary>
-        /// Promotes the user to a Moderator
-        /// </summary>
-        /// <param name="user">IdentityUser</param>
-        public async Task PromoteAsync(IdentityUser user)
-        {
-            await userManager
-                .AddToRoleAsync(user, ModeratorRoleName);
-
-            await userManager
-                .UpdateSecurityStampAsync(user);
-        }
-        /// <summary>
-        /// Demotes a user back to a normal user with no moderator privileges
-        /// </summary>
-        /// <param name="user">IdentityUser</param>
-        public async Task DemoteAsync(IdentityUser user)
-        {
-            await userManager
-                .RemoveFromRoleAsync(user, ModeratorRoleName);
-
-            await userManager
-                .UpdateSecurityStampAsync(user);
-        }
         /// <summary>
         /// Sets the user's avatar to the default avatar image
         /// </summary>

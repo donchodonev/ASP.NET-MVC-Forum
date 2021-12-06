@@ -78,10 +78,7 @@
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
-            var identityUser = userDataService
-                .GetUser(userId, UserQueryFilter.WithIdentityUser)
-                .First()
-                .IdentityUser;
+            var identityUser = await userBusinessService.GetIdentityUser(userId);
 
             bool isUserModerator = await userManager
                 .IsInRoleAsync(identityUser, ModeratorRoleName);
@@ -91,36 +88,28 @@
                 return this.RedirectToActionWithErrorMessage($"{identityUser.UserName} is already in the {ModeratorRoleName} position !", "Users", "Index");
             }
 
-            await userDataService.PromoteAsync(identityUser);
+            await userBusinessService.PromoteAsync(userId);
 
             return this.RedirectToActionWithSuccessMessage($"{identityUser.UserName} has been successfully promoted to {ModeratorRoleName}", "Users", "Index");
         }
 
         public async Task<IActionResult> Demote(int userId)
         {
-            if (!await userDataService.UserExistsAsync(userId))
+            if (!await userBusinessService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
 
-            var identityUser = userDataService
-                .GetUser(userId, UserQueryFilter.WithIdentityUser)
-                .First()
-                .IdentityUser;
+            var userRoles = await userBusinessService.GetUserRolesAsync(userId);
 
-            var userRoles = await userManager.GetRolesAsync(identityUser);
-            int userRolesCount = userRoles.Count;
-
-            if (userRolesCount == 0)
+            if (userRoles.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage($"{identityUser.UserName} cannot be further demoted !", "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(CannotFurtherDemote, "Users", "Index");
             }
 
-            await userDataService.DemoteAsync(identityUser);
+            await userBusinessService.DemoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage($"{identityUser.UserName} has been successfully demoted !", "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(UserSuccessfullyDemoted, "Users", "Index");
         }
-
-
     }
 }

@@ -10,7 +10,8 @@
             public const string SuchAPostDoesNotExist = "Such a post does not exist";
             public const string PostRemainsUnchanged = "There were no changes made to the post's title, body or category";
             public const string DuplicatePostName = "A post with the same title already exists";
-            
+            public const string CannotFurtherDemote = "User cannot be further demoted";
+
         }
         public class Success
         {
@@ -18,6 +19,8 @@
             public const string PostSuccessfullyDeleted = "Your post has been successfully deleted";
             public const string UserSucessfullyBanned = "The user has been successfully banned indefinitely";
             public const string UserSucessfullyUnBanned = "The user has been successfully unbanned";
+            public const string UserSuccessfullyDemoted = "The user has been successfully demoted";
+
 
         }
         public class MessageType

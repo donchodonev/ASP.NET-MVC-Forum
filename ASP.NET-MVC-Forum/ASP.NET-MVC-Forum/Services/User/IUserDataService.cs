@@ -1,11 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.User
 {
+    using ASP.NET_MVC_Forum.Data.Enums;
+    using ASP.NET_MVC_Forum.Data.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using System.Linq;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using Microsoft.AspNetCore.Http;
-    using ASP.NET_MVC_Forum.Data.Enums;
 
     public interface IUserDataService
     {
@@ -35,10 +35,6 @@
         public IQueryable<User> GetUser(int userId, params UserQueryFilter[] filters);
 
         public IQueryable<User> GetUser(string identityUserId, params UserQueryFilter[] filters);
-
-        public Task PromoteAsync(IdentityUser user);
-
-        public Task DemoteAsync(IdentityUser user);
 
         public Task AvatarDeleteAsync(string identityUserId);
 

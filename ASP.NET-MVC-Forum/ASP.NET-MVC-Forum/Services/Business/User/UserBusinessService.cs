@@ -5,11 +5,12 @@
     using ASP.NET_MVC_Forum.Services.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     public class UserBusinessService : IUserBusinessService
     {
         private readonly IUserDataService data;
@@ -90,6 +91,46 @@
         {
             var user = await data.GetByIdAsync(userId, UserQueryFilter.AsNoTracking);
             return user.IsBanned;
+        }
+
+        public async Task<IList<string>> GetUserRolesAsync(int userId)
+        {
+            var user = await data
+                    .GetUser(userId, UserQueryFilter.WithIdentityUser)
+                    .FirstAsync();
+
+            return await userManager.GetRolesAsync(user.IdentityUser);
+        }
+
+        public async Task<IdentityUser> GetIdentityUser(int userId)
+        {
+            return await data
+                .GetAll(UserQueryFilter.WithIdentityUser, UserQueryFilter.WithoutDeleted)
+                .Where(x => x.Id == userId)
+                .Select(x => x.IdentityUser)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task DemoteAsync(int userId)
+        {
+            var identityUser = await GetIdentityUser(userId);
+
+            await userManager
+                .RemoveFromRoleAsync(identityUser, ModeratorRoleName);
+
+            await userManager
+                .UpdateSecurityStampAsync(identityUser);
+        }
+
+        public async Task PromoteAsync(int userId)
+        {
+            var identityUser = await GetIdentityUser(userId);
+
+            await userManager
+                .AddToRoleAsync(identityUser, ModeratorRoleName);
+
+            await userManager
+                .UpdateSecurityStampAsync(identityUser);
         }
 
         private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)
