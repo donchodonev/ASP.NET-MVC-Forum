@@ -9,6 +9,8 @@
             public const string YouAreNotTheAuthor = "You are not the author of this post";
             public const string SuchAPostDoesNotExist = "Such a post does not exist";
             public const string PostRemainsUnchanged = "There were no changes made to the post's title, body or category";
+            public const string DuplicatePostName = "A post with the same title already exists";
+            
         }
         public class Success
         {

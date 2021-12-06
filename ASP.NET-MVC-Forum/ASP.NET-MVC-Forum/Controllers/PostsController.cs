@@ -85,9 +85,7 @@
                 TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
 
-                var errorMessage = $"A post with the title \"{data.Title}\" already exists";
-
-                return this.RedirectToActionWithErrorMessage(errorMessage, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(DuplicatePostName, "Posts", "Add");
             }
 
             var newlyCreatedPost = await postBusinessService.CreateNewAsync(data, this.User.Id());
