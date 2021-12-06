@@ -1,17 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Business.User;
-    using ASP.NET_MVC_Forum.Services.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Linq;
     using System.Threading.Tasks;
-
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
@@ -19,13 +15,11 @@
     [Authorize(Roles = AdminRoleName)]
     public class UsersController : Controller
     {
-        private readonly IUserDataService userDataService;
         private readonly IUserBusinessService userBusinessService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public UsersController(IUserDataService userService, IUserBusinessService userBusinessService, UserManager<IdentityUser> userManager)
+        public UsersController(IUserBusinessService userBusinessService, UserManager<IdentityUser> userManager)
         {
-            this.userDataService = userService;
             this.userBusinessService = userBusinessService;
             this.userManager = userManager;
         }
@@ -36,7 +30,7 @@
 
         public async Task<IActionResult> Ban(int userId)
         {
-            if (!await userDataService.UserExistsAsync(userId))
+            if (!await userBusinessService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
@@ -73,7 +67,7 @@
 
         public async Task<IActionResult> Promote(int userId)
         {
-            if (!await userDataService.UserExistsAsync(userId))
+            if (!await userBusinessService.UserExistsAsync(userId))
             {
                 return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
             }
