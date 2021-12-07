@@ -13,8 +13,6 @@
 
         public Task UpdateAll(ICollection<PostReport> report);
 
-        public Task<bool> ReportExists(int reportId);
-
         public Task AddReport(PostReport report);
 
         public Task<PostReport> GetByIdAsync(int reportId, bool includePost = false);

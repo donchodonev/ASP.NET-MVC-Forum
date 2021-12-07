@@ -36,13 +36,6 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task<bool> ReportExists(int reportId)
-        {
-            return await db
-                .PostReports
-                .AnyAsync(x => x.Id == reportId);
-        }
-
         public async Task AddReport(PostReport report)
         {
             db

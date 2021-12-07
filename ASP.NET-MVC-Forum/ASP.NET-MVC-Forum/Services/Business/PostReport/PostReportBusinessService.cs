@@ -1,10 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Business.PostReport
 {
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -14,12 +17,14 @@
         private readonly IPostReportDataService data;
         private readonly IPostDataService postDataService;
         private readonly ICensorService censorService;
+        private readonly IMapper mapper;
 
-        public PostReportBusinessService(IPostReportDataService data, IPostDataService postDataService, ICensorService censorService)
+        public PostReportBusinessService(IPostReportDataService data, IPostDataService postDataService, ICensorService censorService, IMapper mapper)
         {
             this.data = data;
             this.postDataService = postDataService;
             this.censorService = censorService;
+            this.mapper = mapper;
         }
 
         public async Task ReportAsync(int postId, string reason)
@@ -72,6 +77,22 @@
             DeleteAllPostReports(postWithAllReports.Reports);
 
             await data.UpdateAll(postWithAllReports.Reports);
+        }
+
+        public async Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus)
+        {
+            if (reportStatus == "Active")
+            {
+                return await mapper.ProjectTo<PostReportViewModel>(data.All()).ToListAsync();
+            }
+
+            return await mapper.ProjectTo<PostReportViewModel>(data.All(isDeleted: true)).ToListAsync();
+        }
+
+        public async Task<bool> ReportExistsAsync(int reportId)
+        {
+            return await data.All()
+                .AnyAsync(x => x.Id == reportId && !x.IsDeleted);
         }
 
         private ICollection<PostReport> DeleteAllPostReports(ICollection<PostReport> reports)

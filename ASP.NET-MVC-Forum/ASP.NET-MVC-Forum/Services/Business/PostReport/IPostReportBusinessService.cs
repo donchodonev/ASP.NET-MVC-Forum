@@ -1,5 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Services.Business.PostReport
 {
+    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IPostReportBusinessService
@@ -13,5 +15,9 @@
         public Task RestoreAsync(int id);
 
         public Task AutoGeneratePostReportAsync(string title, string content, int postId);
+
+        public Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus);
+
+        public Task<bool> ReportExistsAsync(int reportId);
     }
 }

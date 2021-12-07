@@ -1,15 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Services.Data.PostReport;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
+
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 
 
@@ -17,43 +13,26 @@
     [Authorize(Roles = AdminOrModerator)]
     public class PostReportsController : Controller
     {
-        private readonly IPostReportDataService postReportDataService;
-        private readonly IPostReportBusinessService postReportBusinessService;
+        private readonly IPostReportBusinessService postReportService;
         private readonly ICensorService censorService;
-        private readonly IMapper mapper;
 
-        public PostReportsController(IPostReportDataService postReportDataService,
-            IPostReportBusinessService postReportBusinessService,
-            ICensorService censorService,
-            IMapper mapper)
+        public PostReportsController(IPostReportBusinessService postReportService,ICensorService censorService)
         {
-            this.postReportDataService = postReportDataService;
-            this.postReportBusinessService = postReportBusinessService;
+            this.postReportService = postReportService;
             this.censorService = censorService;
-            this.mapper = mapper;
         }
 
-        public IActionResult Index(string reportStatus)
+        public async Task<IActionResult> Index(string reportStatus)
         {
-            List<PostReportViewModel> vm;
-
-            if (reportStatus == "Active")
-            {
-                vm = mapper.ProjectTo<PostReportViewModel>(postReportDataService.All()).ToList();
-            }
-            else
-            {
-                vm = mapper.ProjectTo<PostReportViewModel>(postReportDataService.All(isDeleted: true)).ToList();
-            }
-
+            var vm = await postReportService.GeneratePostReportViewModelList(reportStatus);
             return View(vm);
         }
 
         public async Task<IActionResult> Delete(int reportId)
         {
-            if (await postReportDataService.ReportExists(reportId))
+            if (await postReportService.ReportExistsAsync(reportId))
             {
-                await postReportBusinessService.DeleteAsync(reportId);
+                await postReportService.DeleteAsync(reportId);
                 TempData["Message"] = "Report has been marked as resolved !";
             }
             else
@@ -66,9 +45,9 @@
 
         public async Task<IActionResult> Restore(int reportId)
         {
-            if (await postReportDataService.ReportExists(reportId))
+            if (await postReportService.ReportExistsAsync(reportId))
             {
-                await postReportBusinessService.RestoreAsync(reportId);
+                await postReportService.RestoreAsync(reportId);
                 TempData["Message"] = "Report has been successfully restored !";
             }
             else
@@ -97,7 +76,7 @@
 
         public async Task<IActionResult> DeleteAndResolve(int postId)
         {
-            await postReportBusinessService.DeletePostAndResolveReportsAsync(postId);
+            await postReportService.DeletePostAndResolveReportsAsync(postId);
 
             TempData["Message"] = "The post has been successfully censored and all of it's reports were marked as resolved";
 
