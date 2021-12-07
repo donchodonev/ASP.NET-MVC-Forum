@@ -19,9 +19,16 @@
             return db.CommentReports.Where(x => x.IsDeleted == isDeleted);
         }
 
-        public async Task<CommentReport> GetByIdAsync(int reportId)
+        public async Task<CommentReport> GetByIdAsync(int reportId, bool withCommentIncluded = false)
         {
-            return await db.CommentReports.FirstOrDefaultAsync(x => x.Id == reportId);
+            var query = db.CommentReports.Where(x => x.Id == reportId);
+
+            if (withCommentIncluded)
+            {
+                return await query.Include(x => x.Comment).FirstOrDefaultAsync();
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync<T>(T report) where T : class

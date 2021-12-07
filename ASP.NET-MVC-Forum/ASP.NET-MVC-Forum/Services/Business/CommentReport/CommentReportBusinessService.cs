@@ -68,7 +68,7 @@
         public async Task<bool> ReportExistsAsync(int reportId)
         {
             return await reportData
-                .All()
+                .All(isDeleted:true)
                 .AnyAsync(x => x.Id == reportId);
         }
 
@@ -95,7 +95,7 @@
         {
             if (await ReportExistsAsync(reportId))
             {
-                var report = await reportData.GetByIdAsync(reportId);
+                var report = await reportData.GetByIdAsync(reportId,withCommentIncluded:true);
 
                 report.IsDeleted = false;
                 report.ModifiedOn = DateTime.UtcNow;
@@ -117,7 +117,7 @@
         {
             var timeOfResolution = DateTime.UtcNow;
 
-            var report = await reportData.GetByIdAsync(reportId);
+            var report = await reportData.GetByIdAsync(reportId,withCommentIncluded:true);
 
             report.IsDeleted = true;
             report.ModifiedOn = timeOfResolution;

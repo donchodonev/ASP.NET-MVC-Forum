@@ -12,7 +12,7 @@
 
         public Task UpdateAsync<T>(T entity) where T : class;
 
-        public Task<CommentReport> GetByIdAsync(int reportId);
+        public Task<CommentReport> GetByIdAsync(int reportId, bool withCommentIncluded = false);
 
         public Task<Comment> GetCommentByIdAsync(int commentId);
     }

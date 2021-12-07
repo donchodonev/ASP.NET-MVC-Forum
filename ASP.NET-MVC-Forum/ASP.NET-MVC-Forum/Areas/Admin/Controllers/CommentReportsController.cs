@@ -44,11 +44,11 @@
         {
             if (await commentReportService.RestoreAsync(reportId))
             {
-                TempData["Message"] = Success.ReportRestored;
+                TempData[MessageType.SuccessMessage] = Success.ReportRestored;
             }
             else
             {
-                TempData["Message"] = Error.ReportDoesNotExist;;
+                TempData[MessageType.ErrorMessage] = Error.ReportDoesNotExist;;
             }
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
