@@ -21,5 +21,7 @@
         public Task HardCensorCommentAsync(int postId);
 
         public Task DeleteAndResolveAsync(int commentId, int reportId);
+
+        public Task UpdateAsync<T>(T entity) where T : class;
     }
 }

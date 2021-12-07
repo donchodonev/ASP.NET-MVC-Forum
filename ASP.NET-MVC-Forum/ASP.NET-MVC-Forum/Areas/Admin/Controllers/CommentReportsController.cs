@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
 
 
     [Area("Admin")]
@@ -35,11 +36,11 @@
             {
                 await commentReportService.DeleteAsync(reportId);
 
-                TempData["Message"] = "Report has been marked as resolved !";
+                TempData["Message"] = Success.ReportResolved;
             }
             else
             {
-                TempData["Message"] = "A report with such an ID does not exist";
+                TempData["Message"] = Error.ReportDoesNotExist;
             }
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
@@ -49,11 +50,11 @@
         {
             if (await commentReportService.RestoreAsync(reportId))
             {
-                TempData["Message"] = "Report has been successfully restored !";
+                TempData["Message"] = Success.ReportRestored;
             }
             else
             {
-                TempData["Message"] = "A report with such an ID does not exist";
+                TempData["Message"] = Error.ReportDoesNotExist;;
             }
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
@@ -70,7 +71,7 @@
                 await commentReportService.CensorCommentAsync(commentId);
             }
 
-            TempData["Message"] = "The comment has been successfully censored";
+            TempData["Message"] = Success.ReportCensored;
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
         }
@@ -79,7 +80,7 @@
         {
             await commentReportService.DeleteAndResolveAsync(commentId, reportId);
 
-            TempData["Message"] = "The comment has been successfully censored and report was marked as resolved";
+            TempData["Message"] = Success.ReportCensoredAndResolved;
 
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
         }

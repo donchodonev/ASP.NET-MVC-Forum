@@ -15,6 +15,7 @@
             public const string UserIsAlreadyAModerator = "User is already a moderator";
             public const string UserIsAlreadyBanned = "User is already a banned";
             public const string UsernameTooShort = "Username must be at least 4 symbols long";
+            public const string ReportDoesNotExist = "A report with such an ID does not exist";
         }
         public class Success
         {
@@ -24,6 +25,11 @@
             public const string UserSucessfullyUnBanned = "The user has been successfully unbanned";
             public const string UserSuccessfullyDemoted = "The user has been successfully demoted";
             public const string UserSuccessfullyPromoted = "The user has been successfully promoted to " + ModeratorRoleName;
+            public const string ReportResolved = "Report has been marked as resolved !";
+            public const string ReportRestored = "Report has been successfully restored !";
+            public const string ReportCensored = "Report has been successfully censored !";
+            public const string ReportCensoredAndResolved = "The comment has been successfully censored and report was marked as resolved";
+
         }
         public class MessageType
         {

@@ -34,7 +34,7 @@
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                db.SaveChangesAsync().Wait();
+                await UpdateAsync(report);
 
                 return true;
             }
@@ -53,14 +53,11 @@
                 report.IsDeleted = false;
                 report.ModifiedOn = DateTime.UtcNow;
 
-                var comment = db.Comments.First(x => x.Id == report.CommentId);
+                var comment = report.Comment;
                 comment.IsDeleted = false;
                 comment.ModifiedOn = DateTime.UtcNow;
 
-                db.Update(report);
-                db.Update(comment);
-
-                await db.SaveChangesAsync();
+                await UpdateAsync(report);
 
                 return true;
             }
@@ -104,9 +101,7 @@
 
             comment.Content = censoredContent;
 
-            db.Update(comment);
-
-            await db.SaveChangesAsync();
+            await UpdateAsync(comment);
         }
 
         public async Task DeleteAndResolveAsync(int commentId, int reportId)
@@ -142,7 +137,12 @@
 
             comment.Content = censoredContent;
 
-            db.Update(comment);
+            await UpdateAsync(comment);
+        }
+
+        public async Task UpdateAsync<T>(T entity) where T : class
+        {
+            db.Update(entity);
 
             await db.SaveChangesAsync();
         }
