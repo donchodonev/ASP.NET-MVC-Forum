@@ -1,15 +1,12 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
-    using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Services.Business.Chat;
     using ASP.NET_MVC_Forum.Services.Chat;
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Linq;
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
     [Authorize]
@@ -17,14 +14,12 @@
     public class ChatController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly IMapper mapper;
         private readonly IChatService chatService;
         private readonly IChatBusinessService chatBusinessService;
 
-        public ChatController(UserManager<IdentityUser> userManager, IMapper mapper, IChatService chatService, IChatBusinessService chatBusinessService)
+        public ChatController(UserManager<IdentityUser> userManager, IChatService chatService, IChatBusinessService chatBusinessService)
         {
             this.userManager = userManager;
-            this.mapper = mapper;
             this.chatService = chatService;
             this.chatBusinessService = chatBusinessService;
         }
