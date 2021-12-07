@@ -1,35 +1,29 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.API.Controllers
 {
     using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
-    using ASP.NET_MVC_Forum.Services.Comment;
-    using ASP.NET_MVC_Forum.Services.Comment.Models;
-    using ASP.NET_MVC_Forum.Services.Data.User;
-    using AutoMapper;
+    using ASP.NET_MVC_Forum.Services.Business.Comment;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [ApiController]
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {
-        private readonly IUserDataService userService;
-        private readonly ICommentService commentService;
-        private readonly IMapper mapper;
+        private readonly ICommentBusinessService commentService;
 
-        public CommentsController(IUserDataService userService, ICommentService commentService, IMapper mapper)
+        public CommentsController(ICommentBusinessService commentService)
         {
-            this.userService = userService;
             this.commentService = commentService;
-            this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IEnumerable<CommentGetRequestResponseModel>> GetComments(int postId)
         {
-            return await commentService.AllComments(postId);
+            return await commentService.GenerateCommentGetRequestResponseModel(postId);
         }
 
         [Authorize]
@@ -41,11 +35,7 @@
                 BadRequest();
             }
 
-            var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
-
-            rawCommentData.UserId = await userService.GetBaseUserIdAsync(this.User.Id());
-            rawCommentData.Username = this.User.Identity.Name;
-            rawCommentData.Id = await commentService.AddComment(rawCommentData);
+            var rawCommentData = await commentService.GenerateRawCommentServiceModel(commentData, this.User);
 
             return Ok(rawCommentData);
         }
@@ -54,19 +44,17 @@
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCommentAsync(int id)
         {
-            var comment = await commentService.GetCommentAsync(id);
-
-            if (comment == null)
+            if (!await commentService.CommentExistsAsync(id))
             {
                 return this.BadRequest();
             }
 
-            if (comment.UserId != await userService.GetBaseUserIdAsync(this.User.Id()) && !this.User.IsAdmin())
+            if (!await commentService.IsUserPrivileged(id, this.User))
             {
-                return StatusCode(401,"Only the comment author or site administrator can delete this comment");
+                return StatusCode(401, "Only the comment author or site administrator can delete this comment");
             }
 
-            await commentService.DeleteCommentAsync(comment);
+            await commentService.DeleteAsync(id);
 
             return Ok();
         }

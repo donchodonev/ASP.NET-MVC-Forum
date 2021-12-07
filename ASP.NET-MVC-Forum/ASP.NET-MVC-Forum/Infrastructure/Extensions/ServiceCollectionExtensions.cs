@@ -8,7 +8,7 @@
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
     using ASP.NET_MVC_Forum.Services.Data.Chat;
-    using ASP.NET_MVC_Forum.Services.Comment;
+    using ASP.NET_MVC_Forum.Services.Data.Comment;
     using ASP.NET_MVC_Forum.Services.Data.CommentReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
     using ASP.NET_MVC_Forum.Services.Data.Chart;
@@ -37,6 +37,7 @@
     using ASP.NET_MVC_Forum.Services.Business.Chat;
     using ASP.NET_MVC_Forum.Services.Business.Category;
     using ASP.NET_MVC_Forum.Services.Business.CommentReport;
+    using ASP.NET_MVC_Forum.Services.Business.Comment;
 
     public static class ServiceCollectionExtensions
     {
@@ -70,7 +71,7 @@
             services.AddTransient<ICategoryDataService, CategoryDataService>();
             services.AddTransient<IPostBusinessService, PostBusinessService>();
             services.AddTransient<IPostDataService, PostDataService>();
-            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<Services.Data.Comment.ICommentDataService, Services.Data.Comment.CommentDataService>();
             services.AddTransient<IPostReportDataService, PostReportDataService>();
             services.AddTransient<IPostReportBusinessService, PostReportBusinessService>();
             services.AddTransient<ICensorService, CensorService>();
@@ -88,6 +89,7 @@
             services.AddTransient<IChatBusinessService, ChatBusinessService>();
             services.AddTransient<ICategoryBusinessService, CategoryBusinessService>();
             services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
+            services.AddTransient<Services.Business.Comment.ICommentBusinessService, Services.Business.Comment.CommentBusinessService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {
