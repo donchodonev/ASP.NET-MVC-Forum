@@ -50,11 +50,11 @@
             this.CreateMap<CommentReport, CommentReportViewModel>()
                 .ForMember(x => x.CommentContent, y => y.MapFrom(z => z.Comment.Content));
 
-            this.CreateMap<User,UserViewModel>();
+            this.CreateMap<User, UserViewModel>();
 
-            this.CreateMap<PostReport,PostReportViewModel>();
+            this.CreateMap<PostReport, PostReportViewModel>();
 
-            this.CreateMap<CommentPostRequestModel,RawCommentServiceModel>();
+            this.CreateMap<CommentPostRequestModel, RawCommentServiceModel>();
 
             this.CreateMap<Category, CategoryIdAndNameViewModel>();
 
@@ -68,7 +68,7 @@
                 .ReverseMap();
 
             this.CreateMap<Post, PostPreviewViewModel>()
-                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count))
+                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Where(x => !x.IsDeleted).Count()))
                 .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
