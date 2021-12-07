@@ -44,14 +44,10 @@
         {
             if (await commentReportService.RestoreAsync(reportId))
             {
-                TempData[MessageType.SuccessMessage] = Success.ReportRestored;
-            }
-            else
-            {
-                TempData[MessageType.ErrorMessage] = Error.ReportDoesNotExist;;
+                return this.RedirectToActionWithSuccessMessage(Success.ReportRestored, "CommentReports", "Index", new { reportStatus = "Active" });
             }
 
-            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Error.ReportDoesNotExist, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Censor(int commentId, bool withRegex)
@@ -65,18 +61,14 @@
                 await commentReportService.CensorCommentAsync(commentId);
             }
 
-            TempData["Message"] = Success.ReportCensored;
-
-            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Success.ReportCensored, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> DeleteAndResolve(int commentId, int reportId)
         {
             await commentReportService.DeleteAndResolveAsync(reportId);
 
-            TempData["Message"] = Success.ReportCensoredAndResolved;
-
-            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(Success.ReportCensoredAndResolved, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
     }
 }
