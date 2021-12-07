@@ -4,7 +4,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Services.Comment.Models;
-    using ASP.NET_MVC_Forum.Services.CommentReport;
+    using ASP.NET_MVC_Forum.Services.Data.CommentReport;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
@@ -15,9 +15,9 @@
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext db;
-        private readonly ICommentReportService commentReportService;
+        private readonly ICommentReportDataService commentReportService;
 
-        public CommentService(IMapper mapper, ApplicationDbContext db, ICommentReportService commentReportService)
+        public CommentService(IMapper mapper, ApplicationDbContext db, ICommentReportDataService commentReportService)
         {
             this.mapper = mapper;
             this.db = db;

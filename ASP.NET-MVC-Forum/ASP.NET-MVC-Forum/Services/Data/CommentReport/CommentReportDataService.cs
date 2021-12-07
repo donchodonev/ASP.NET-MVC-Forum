@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.CommentReport
+﻿namespace ASP.NET_MVC_Forum.Services.Data.CommentReport
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
@@ -10,12 +10,12 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    public class CommentReportService : ICommentReportService
+    public class CommentReportDataService : ICommentReportDataService
     {
         private readonly ApplicationDbContext db;
         private readonly IProfanityFilter filter;
 
-        public CommentReportService(ApplicationDbContext db, IProfanityFilter filter)
+        public CommentReportDataService(ApplicationDbContext db, IProfanityFilter filter)
         {
             this.db = db;
             this.filter = filter;

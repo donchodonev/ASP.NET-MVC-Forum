@@ -1,10 +1,10 @@
-﻿namespace ASP.NET_MVC_Forum.Services.CommentReport
+﻿namespace ASP.NET_MVC_Forum.Services.Data.CommentReport
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;
     using System.Threading.Tasks;
 
-    public interface ICommentReportService
+    public interface ICommentReportDataService
     {
         public IQueryable<CommentReport> All(bool isDeleted = false);
 

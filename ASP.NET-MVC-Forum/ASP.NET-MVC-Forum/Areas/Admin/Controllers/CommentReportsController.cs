@@ -1,12 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
-    using ASP.NET_MVC_Forum.Services.CommentReport;
-    using AutoMapper;
+    using ASP.NET_MVC_Forum.Services.Business.CommentReport;
+    using ASP.NET_MVC_Forum.Services.Data.CommentReport;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
@@ -16,29 +13,20 @@
     [Authorize(Roles = AdminOrModerator)]
     public class CommentReportsController : Controller
     {
-        private readonly ICommentReportService commentReportService;
-        private readonly IMapper mapper;
+        private readonly ICommentReportDataService commentReportService;
+        private readonly ICommentReportBusinessService commetReportBusinessService;
 
-        public CommentReportsController(ICommentReportService commentReportService, IMapper mapper)
+        public CommentReportsController(ICommentReportDataService commentReportService, ICommentReportBusinessService commetReportBusinessService)
         {
             this.commentReportService = commentReportService;
-            this.mapper = mapper;
+            this.commetReportBusinessService = commetReportBusinessService;
         }
 
-        public IActionResult Index(string reportStatus)
+        public async Task<IActionResult> Index(string reportStatus)
         {
-            List<CommentReportViewModel> vm;
+            var viewModel = await commetReportBusinessService.GenerateCommentReportViewModelListAsync(reportStatus);
 
-            if (reportStatus == "Active")
-            {
-                vm = mapper.ProjectTo<CommentReportViewModel>(commentReportService.All()).ToList();
-            }
-            else
-            {
-                vm = mapper.ProjectTo<CommentReportViewModel>(commentReportService.All(isDeleted: true)).ToList();
-            }
-
-            return View(vm);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Resolve(int reportId)
