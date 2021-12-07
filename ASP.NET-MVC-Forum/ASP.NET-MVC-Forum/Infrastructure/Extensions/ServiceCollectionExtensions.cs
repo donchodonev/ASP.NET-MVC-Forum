@@ -35,6 +35,7 @@
     using ASP.NET_MVC_Forum.Services.Business.Vote;
     using ASP.NET_MVC_Forum.Services.Business.User;
     using ASP.NET_MVC_Forum.Services.Business.Chat;
+    using ASP.NET_MVC_Forum.Services.Business.Category;
 
     public static class ServiceCollectionExtensions
     {
@@ -65,7 +66,7 @@
         public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IUserDataService, UserDataService>();
-            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<ICategoryDataService, CategoryDataService>();
             services.AddTransient<IPostBusinessService, PostBusinessService>();
             services.AddTransient<IPostDataService, PostDataService>();
             services.AddTransient<ICommentService, CommentService>();
@@ -84,6 +85,7 @@
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
             services.AddTransient<IUserBusinessService, UserBusinessService>();
             services.AddTransient<IChatBusinessService, ChatBusinessService>();
+            services.AddTransient<ICategoryBusinessService, CategoryBusinessService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {

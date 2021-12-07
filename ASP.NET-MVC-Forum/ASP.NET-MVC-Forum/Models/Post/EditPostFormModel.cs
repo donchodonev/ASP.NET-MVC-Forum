@@ -24,7 +24,7 @@
 
         public int PostId { get; set; }
 
-        public void FillCategories(ICategoryService categoryService) 
+        public void FillCategories(ICategoryDataService categoryService) 
             => Categories = categoryService.GetCategoryIdAndNameCombinations();
     }
 }

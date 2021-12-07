@@ -2,22 +2,21 @@
 {
     using ASP.NET_MVC_Forum.Models;
     using ASP.NET_MVC_Forum.Models.Post;
+    using ASP.NET_MVC_Forum.Services.Business.Category;
     using ASP.NET_MVC_Forum.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.PostFilterConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.PostSortConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.PostViewCountOptions;
 
     public class HomeController : Controller
     {
         private readonly IPostBusinessService postService;
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryBusinessService categoryService;
 
-        public HomeController(IPostBusinessService postService,ICategoryService categoryService)
+        public HomeController(IPostBusinessService postService,ICategoryBusinessService categoryService)
         {
             this.postService = postService;
             this.categoryService = categoryService;
@@ -56,7 +55,7 @@
         {
             ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
             ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
-            ViewBag.CategoryNames = new SelectList(GetCategories(categoryService), category);
+            ViewBag.CategoryNames = new SelectList(categoryService.GetCategories(), category);
             ViewBag.ViewCountOptions = new SelectList(GetViewCountOptions(), viewCount);
 
             if (personalOnly == "checked")

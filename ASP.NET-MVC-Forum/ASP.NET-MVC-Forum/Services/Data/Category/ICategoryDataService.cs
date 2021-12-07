@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public interface ICategoryService
+    public interface ICategoryDataService
     {
         public IQueryable<Category> All(bool withPostsIncluded = false);
         public List<string> GetCategoryNames();

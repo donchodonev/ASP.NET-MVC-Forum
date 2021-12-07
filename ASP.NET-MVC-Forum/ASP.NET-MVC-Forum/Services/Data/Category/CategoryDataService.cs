@@ -9,12 +9,12 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class CategoryService : ICategoryService
+    public class CategoryDataService : ICategoryDataService
     {
         private readonly ApplicationDbContext db;
         private readonly IMapper mapper;
 
-        public CategoryService(ApplicationDbContext db,IMapper mapper)
+        public CategoryDataService(ApplicationDbContext db,IMapper mapper)
         {
             this.db = db;
             this.mapper = mapper;

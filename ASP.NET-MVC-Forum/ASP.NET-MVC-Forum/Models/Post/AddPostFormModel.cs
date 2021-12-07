@@ -22,7 +22,7 @@
         [Range(0, int.MaxValue)]
         public int CategoryId { get; set; }
 
-        public void FillCategories(ICategoryService categoryService) 
+        public void FillCategories(ICategoryDataService categoryService) 
             => Categories = categoryService.GetCategoryIdAndNameCombinations();
     }
 }

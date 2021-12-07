@@ -28,7 +28,7 @@
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserDataService userService;
         private readonly IVoteDataService voteDataService;
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryDataService categoryService;
         private readonly IMapper mapper;
 
         public PostBusinessService(IPostDataService postDataService,
@@ -36,7 +36,7 @@
             IHtmlManipulator htmlManipulator,
             IUserDataService userService,
             IVoteDataService voteDataService,
-            ICategoryService categoryService,
+            ICategoryDataService categoryService,
             IMapper mapper)
         {
             this.postDataService = postDataService;

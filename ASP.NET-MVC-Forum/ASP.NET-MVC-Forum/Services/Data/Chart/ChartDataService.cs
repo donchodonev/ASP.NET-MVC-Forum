@@ -16,10 +16,10 @@
     public class ChartDataService : IChartDataService
     {
         private readonly IPostDataService postDataService;
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryDataService categoryService;
         private readonly IMapper mapper;
 
-        public ChartDataService(IPostDataService postDataService, ICategoryService categoryService, IMapper mapper)
+        public ChartDataService(IPostDataService postDataService, ICategoryDataService categoryService, IMapper mapper)
         {
             this.postDataService = postDataService;
             this.categoryService = categoryService;
