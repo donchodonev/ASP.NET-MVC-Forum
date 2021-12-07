@@ -4,6 +4,7 @@
     using ASP.NET_MVC_Forum.Data.Enums;
     using ASP.NET_MVC_Forum.Services.Data.User;
     using AutoMapper;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -16,6 +17,11 @@
         private readonly IUserDataService data;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IMapper mapper;
+
+        public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
+        {
+            await data.AvatarUpdateAsync(identityUserId,image);
+        }
 
         public UserBusinessService(IUserDataService data, UserManager<IdentityUser> userManager, IMapper mapper)
         {

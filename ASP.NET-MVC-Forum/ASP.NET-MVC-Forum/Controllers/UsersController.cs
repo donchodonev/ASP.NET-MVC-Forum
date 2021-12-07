@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Controllers
 {
-    using ASP.NET_MVC_Forum.Services.Data.User;
+    using ASP.NET_MVC_Forum.Services.Business.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -11,9 +11,9 @@
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly IUserDataService userService;
+        private readonly IUserBusinessService userService;
 
-        public UsersController(IUserDataService userService)
+        public UsersController(IUserBusinessService userService)
         {
             this.userService = userService;
         }
