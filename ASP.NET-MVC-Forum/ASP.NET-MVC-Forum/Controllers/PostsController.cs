@@ -3,8 +3,6 @@
     using ASP.NET_MVC_Forum.Models.Post;
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -15,21 +13,15 @@
 
     public class PostsController : Controller
     {
-        private readonly IUserDataService userService;
-        private readonly IPostDataService postDataService;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
 
         public PostsController(
-            IUserDataService userService,
-            IPostDataService postDataService,
             SignInManager<IdentityUser> signInManager,
             IPostBusinessService postBusinessService,
             IPostReportBusinessService postReportBusinessService)
         {
-            this.userService = userService;
-            this.postDataService = postDataService;
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;
             this.postReportBusinessService = postReportBusinessService;
@@ -79,7 +71,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.PostLengthTooSmall, "Posts", "Add");
             }
 
-            if (await postDataService.PostExistsAsync(data.Title))
+            if (await postBusinessService.PostExistsAsync(data.Title))
             {
                 TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
@@ -95,9 +87,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            var verificationResult = await IsUserPrivileged(postId);
-
-            if (verificationResult != null)
+            if (!await postBusinessService.IsUserPrivileged(postId, this.User))
             {
                 return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
@@ -111,11 +101,9 @@
         [HttpPost]
         public async Task<ActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            var verificationResult = await IsUserPrivileged(data.PostId);
-
-            if (verificationResult != null)
+            if (!await postBusinessService.IsUserPrivileged(data.PostId, this.User))
             {
-                return verificationResult;
+                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
             var postChanges = await postBusinessService
@@ -135,16 +123,12 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            var verificationResult = await IsUserPrivileged(postId);
-
-            if (verificationResult != null)
+            if (!await postBusinessService.IsUserPrivileged(postId, this.User))
             {
-                return verificationResult;
+                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
-            var isPostDeleted = await postDataService.IsPostDeleted(postId, postTitle);
-
-            if (!isPostDeleted.HasValue)
+            if (!await postBusinessService.PostExistsAsync(postId))
             {
                 BadRequest();
             }
@@ -156,7 +140,7 @@
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
         {
-            if (!await postDataService.PostExistsAsync(postId))
+            if (!await postBusinessService.PostExistsAsync(postId))
             {
                 return BadRequest();
             }
@@ -164,18 +148,6 @@
             await postReportBusinessService.ReportAsync(postId, content);
 
             return this.RedirectToActionWithSuccessMessage(Success.ReportThankYouMessage, "Home", "Index");
-        }
-
-        private async Task<ActionResult> IsUserPrivileged(int postId)
-        {
-            var userId = await userService.GetBaseUserIdAsync(User.Id());
-
-            if (!await postBusinessService.IsAuthor(userId, postId) && !this.User.IsAdminOrModerator())
-            {
-                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
-            }
-
-            return null;
         }
     }
 }

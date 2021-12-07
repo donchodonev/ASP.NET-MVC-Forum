@@ -15,16 +15,16 @@
     public class ChatController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly IChatBusinessService chatBusinessService;
+        private readonly IChatBusinessService chatService;
 
-        public ChatController(UserManager<IdentityUser> userManager, IChatBusinessService chatBusinessService)
+        public ChatController(UserManager<IdentityUser> userManager, IChatBusinessService chatService)
         {
             this.userManager = userManager;
-            this.chatBusinessService = chatBusinessService;
+            this.chatService = chatService;
         }
         public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
-            var vm = await chatBusinessService
+            var vm = await chatService
                 .GenerateChatConversationViewModel<ChatConversationViewModel>
                 (senderIdentityUserId, recipientIdentityUserId, senderUsername);
 
@@ -49,7 +49,7 @@
                 return this.ViewWithErrorMessage(Error.UserDoesNotExist);
             }
 
-            var vm = await chatBusinessService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);
+            var vm = await chatService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);
 
             return View(vm);
         }

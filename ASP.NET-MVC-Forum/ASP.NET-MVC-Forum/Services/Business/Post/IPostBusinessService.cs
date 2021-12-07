@@ -5,10 +5,12 @@
     using ASP.NET_MVC_Forum.Services.Models.Post;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IPostBusinessService
     {
+        public Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal);
         public AddPostFormModel GeneratedAddPostFormModel();
 
         public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
@@ -30,5 +32,9 @@
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
 
         public EditPostFormModel GenerateEditPostFormModel(int postId);
+
+        public Task<bool> PostExistsAsync(string postTitle);
+
+        public Task<bool> PostExistsAsync(int postId);
     }
 }

@@ -17,6 +17,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Security.Claims;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+
 
     public class PostBusinessService : IPostBusinessService
     {
@@ -68,18 +71,12 @@
 
         public string GenerateShortDescription(string escapedHtml)
         {
-            string postShortDescription;
-
             if (escapedHtml.Length < 300)
             {
-                postShortDescription = escapedHtml.Substring(0, escapedHtml.Length) + "...";
-            }
-            else
-            {
-                postShortDescription = escapedHtml.Substring(0, 300) + "...";
+                return escapedHtml.Substring(0, escapedHtml.Length) + "...";
             }
 
-            return postShortDescription;
+            return escapedHtml.Substring(0, 300) + "...";
         }
 
         /// <summary>
@@ -285,6 +282,23 @@
                     originalPost.CategoryId = newPostData.CategoryId;
                 }
             }
+        }
+
+        public async Task<bool> PostExistsAsync(string postTitle)
+        {
+            return await postDataService.PostExistsAsync(postTitle);
+        }
+
+        public async Task<bool> PostExistsAsync(int postId)
+        {
+            return await postDataService.PostExistsAsync(postId);
+        }
+
+        public async Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal)
+        {
+            var userId = await userService.GetBaseUserIdAsync(currentPrincipal.Id());
+
+            return await IsAuthor(userId, postId) || currentPrincipal.IsAdminOrModerator();
         }
 
         private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)

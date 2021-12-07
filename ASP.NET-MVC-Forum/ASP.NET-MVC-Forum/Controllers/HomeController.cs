@@ -14,12 +14,12 @@
 
     public class HomeController : Controller
     {
-        private readonly IPostBusinessService postBusinessService;
+        private readonly IPostBusinessService postService;
         private readonly ICategoryService categoryService;
 
-        public HomeController(IPostBusinessService postBusinessService,ICategoryService categoryService)
+        public HomeController(IPostBusinessService postService,ICategoryService categoryService)
         {
-            this.postBusinessService = postBusinessService;
+            this.postService = postService;
             this.categoryService = categoryService;
         }
 
@@ -35,7 +35,7 @@
 
             UpdateViewBag(sortType, sortOrder, category, viewCount, searchTerm, personalOnly);
 
-            var sortedPosts = postBusinessService
+            var sortedPosts = postService
                 .GetAllPostsSortedBy(sortType, sortOrder, searchTerm, category);
 
             return View(await PaginatedList<PostPreviewViewModel>.CreateAsync(sortedPosts, pageNumber, viewCount));

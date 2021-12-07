@@ -145,27 +145,6 @@
         }
 
         /// <summary>
-        /// Checks if a post with this Id and Title is deleted
-        /// </summary>
-        /// <param name="postId">Post's Id</param>
-        /// <param name="postTitle">Post's Title</param>
-        /// <returns>Task<bool?></returns>
-        public async Task<bool?> IsPostDeleted(int postId, string postTitle)
-        {
-            var post = await db
-                .Posts
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == postId && x.Title == postTitle);
-
-            if (post == null)
-            {
-                return null;
-            }
-
-            return post.IsDeleted;
-        }
-
-        /// <summary>
         /// Builds a query according to provided filters
         /// </summary>
         /// <param name="filters">The array of filters of type PostQueryFilter</param>
