@@ -6,22 +6,14 @@
 
     public interface ICommentReportDataService
     {
+        public Task CreateAsync<T>(T report) where T : class;
+
         public IQueryable<CommentReport> All(bool isDeleted = false);
 
-        public Task<bool> DeleteAsync(int reportId);
-
-        public Task<bool> ReportExistsAsync(int reportId);
-
-        public Task<bool> RestoreAsync(int reportId);
-
-        public Task AutoGenerateCommentReportAsync(string content, int commentId);
-
-        public Task CensorCommentAsync(int postId);
-
-        public Task HardCensorCommentAsync(int postId);
-
-        public Task DeleteAndResolveAsync(int commentId, int reportId);
-
         public Task UpdateAsync<T>(T entity) where T : class;
+
+        public Task<CommentReport> GetByIdAsync(int reportId);
+
+        public Task<Comment> GetCommentByIdAsync(int commentId);
     }
 }

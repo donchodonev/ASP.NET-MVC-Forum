@@ -1,31 +1,29 @@
 ﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
 {
+    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Services.Business.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Data.CommentReport;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
-
+    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
     [Area("Admin")]
     [Authorize(Roles = AdminOrModerator)]
     public class CommentReportsController : Controller
     {
-        private readonly ICommentReportDataService commentReportService;
-        private readonly ICommentReportBusinessService commetReportBusinessService;
+        private readonly ICommentReportBusinessService commentReportService;
 
-        public CommentReportsController(ICommentReportDataService commentReportService, ICommentReportBusinessService commetReportBusinessService)
+        public CommentReportsController(ICommentReportBusinessService commentReportService)
         {
             this.commentReportService = commentReportService;
-            this.commetReportBusinessService = commetReportBusinessService;
         }
 
         public async Task<IActionResult> Index(string reportStatus)
         {
-            var viewModel = await commetReportBusinessService.GenerateCommentReportViewModelListAsync(reportStatus);
+            var viewModel = await commentReportService.GenerateCommentReportViewModelListAsync(reportStatus);
 
             return View(viewModel);
         }
@@ -36,14 +34,10 @@
             {
                 await commentReportService.DeleteAsync(reportId);
 
-                TempData["Message"] = Success.ReportResolved;
-            }
-            else
-            {
-                TempData["Message"] = Error.ReportDoesNotExist;
+                return this.RedirectToActionWithSuccessMessage(Success.ReportResolved,"CommentReports","Index", new { reportStatus = "Deleted" });
             }
 
-            return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithErrorMessage(Error.ReportDoesNotExist, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
 
         public async Task<IActionResult> Restore(int reportId)
@@ -78,7 +72,7 @@
 
         public async Task<IActionResult> DeleteAndResolve(int commentId, int reportId)
         {
-            await commentReportService.DeleteAndResolveAsync(commentId, reportId);
+            await commentReportService.DeleteAndResolveAsync(reportId);
 
             TempData["Message"] = Success.ReportCensoredAndResolved;
 

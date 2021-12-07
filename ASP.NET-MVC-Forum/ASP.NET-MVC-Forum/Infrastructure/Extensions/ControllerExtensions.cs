@@ -47,5 +47,15 @@
             controller.TempData[SuccessMessage] = successMessage;
             return controller.RedirectToAction(actionName, controllerName);
         }
+
+        public static ActionResult RedirectToActionWithSuccessMessage(this Controller controller,
+            string successMessage,
+            string controllerName,
+            string actionName,
+            object routeValues)
+        {
+            controller.TempData[SuccessMessage] = successMessage;
+            return controller.RedirectToAction(actionName, controllerName, routeValues);
+        }
     }
 }
