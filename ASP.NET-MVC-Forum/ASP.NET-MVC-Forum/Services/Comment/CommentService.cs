@@ -31,7 +31,7 @@
 
             await db.SaveChangesAsync();
 
-            commentReportService.AutoGenerateCommentReport(comment.Content, comment.Id);
+            await commentReportService.AutoGenerateCommentReportAsync(comment.Content, comment.Id);
 
             return comment.Id;
         }

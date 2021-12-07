@@ -2,23 +2,24 @@
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public interface ICommentReportService
     {
         public IQueryable<CommentReport> All(bool isDeleted = false);
 
-        public bool Delete(int reportId);
+        public Task<bool> DeleteAsync(int reportId);
 
-        public bool ReportExists(int reportId);
+        public Task<bool> ReportExistsAsync(int reportId);
 
-        public bool Restore(int reportId);
+        public Task<bool> RestoreAsync(int reportId);
 
-        public void AutoGenerateCommentReport(string content, int commentId);
+        public Task AutoGenerateCommentReportAsync(string content, int commentId);
 
-        public void CensorComment(int postId);
+        public Task CensorCommentAsync(int postId);
 
-        public void HardCensorComment(int postId);
+        public Task HardCensorCommentAsync(int postId);
 
-        public void DeleteAndResolve(int commentId, int reportId);
+        public Task DeleteAndResolveAsync(int commentId, int reportId);
     }
 }

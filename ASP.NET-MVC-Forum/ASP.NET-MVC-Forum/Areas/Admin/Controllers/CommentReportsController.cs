@@ -7,6 +7,8 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
+
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
 
 
@@ -39,11 +41,12 @@
             return View(vm);
         }
 
-        public IActionResult Resolve(int reportId)
+        public async Task<IActionResult> Resolve(int reportId)
         {
-            if (commentReportService.ReportExists(reportId))
+            if (await commentReportService.ReportExistsAsync(reportId))
             {
-                commentReportService.Delete(reportId);
+                await commentReportService.DeleteAsync(reportId);
+
                 TempData["Message"] = "Report has been marked as resolved !";
             }
             else
@@ -54,9 +57,9 @@
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Deleted" });
         }
 
-        public IActionResult Restore(int reportId)
+        public async Task<IActionResult> Restore(int reportId)
         {
-            if (commentReportService.Restore(reportId))
+            if (await commentReportService.RestoreAsync(reportId))
             {
                 TempData["Message"] = "Report has been successfully restored !";
             }
@@ -68,15 +71,15 @@
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
         }
 
-        public IActionResult Censor(int commentId, bool withRegex)
+        public async Task<IActionResult> Censor(int commentId, bool withRegex)
         {
             if (withRegex)
             {
-                commentReportService.HardCensorComment(commentId);
+                await commentReportService.HardCensorCommentAsync(commentId);
             }
             else
             {
-                commentReportService.CensorComment(commentId);
+                await commentReportService.CensorCommentAsync(commentId);
             }
 
             TempData["Message"] = "The comment has been successfully censored";
@@ -84,9 +87,9 @@
             return RedirectToAction("Index", "CommentReports", new { reportStatus = "Active" });
         }
 
-        public IActionResult DeleteAndResolve(int commentId, int reportId)
+        public async Task<IActionResult> DeleteAndResolve(int commentId, int reportId)
         {
-            commentReportService.DeleteAndResolve(commentId,reportId);
+            await commentReportService.DeleteAndResolveAsync(commentId, reportId);
 
             TempData["Message"] = "The comment has been successfully censored and report was marked as resolved";
 

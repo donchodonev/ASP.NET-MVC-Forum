@@ -2,11 +2,13 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Models;
+    using Microsoft.EntityFrameworkCore;
     using ProfanityFilter.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     public class CommentReportService : ICommentReportService
     {
@@ -23,9 +25,9 @@
             return db.CommentReports.Where(x => x.IsDeleted == isDeleted);
         }
 
-        public bool Delete(int reportId)
+        public async Task<bool> DeleteAsync(int reportId)
         {
-            if (ReportExists(reportId))
+            if (await ReportExistsAsync(reportId))
             {
                 var report = db.CommentReports.First(x => x.Id == reportId);
 
@@ -42,9 +44,9 @@
             }
         }
 
-        public bool Restore(int reportId)
+        public async Task<bool> RestoreAsync(int reportId)
         {
-            if (ReportExists(reportId))
+            if (await ReportExistsAsync(reportId))
             {
                 var report = db.CommentReports.First(x => x.Id == reportId);
 
@@ -58,7 +60,7 @@
                 db.Update(report);
                 db.Update(comment);
 
-                db.SaveChangesAsync().Wait();
+                await db.SaveChangesAsync();
 
                 return true;
             }
@@ -68,12 +70,12 @@
             }
         }
 
-        public bool ReportExists(int reportId)
+        public async Task<bool> ReportExistsAsync(int reportId)
         {
-            return db.CommentReports.Any(x => x.Id == reportId);
+            return await db.CommentReports.AnyAsync(x => x.Id == reportId);
         }
 
-        public void AutoGenerateCommentReport(string content, int commentId)
+        public async Task AutoGenerateCommentReportAsync(string content, int commentId)
         {
             if (filter.ContainsProfanity(content))
             {
@@ -81,18 +83,18 @@
 
                 string reason = string.Join(", ", profaneWordsFound);
 
-                ReportComment(commentId, reason);
+                await ReportCommentAsync(commentId, reason);
             }
         }
 
-        public void ReportComment(int commentId, string reasons)
+        public async Task ReportCommentAsync(int commentId, string reasons)
         {
             db.CommentReports.Add(new CommentReport() { CommentId = commentId, Reason = reasons });
 
-            db.SaveChangesAsync().GetAwaiter();
+            await db.SaveChangesAsync();
         }
 
-        public void CensorComment(int commentId)
+        public async Task CensorCommentAsync(int commentId)
         {
             var comment = db.Comments.First(x => x.Id == commentId);
 
@@ -104,13 +106,13 @@
 
             db.Update(comment);
 
-            db.SaveChangesAsync().GetAwaiter();
+            await db.SaveChangesAsync();
         }
 
-        public void DeleteAndResolve(int commentId, int reportId)
+        public async Task DeleteAndResolveAsync(int commentId, int reportId)
         {
             var comment = db.Comments.First(x => x.Id == commentId);
-            
+
             comment.IsDeleted = true;
             comment.ModifiedOn = DateTime.UtcNow;
 
@@ -122,10 +124,10 @@
             db.Update(comment);
             db.Update(report);
 
-            db.SaveChangesAsync().Wait();
+            await db.SaveChangesAsync();
         }
 
-        public void HardCensorComment(int commentId)
+        public async Task HardCensorCommentAsync(int commentId)
         {
             var comment = db.Comments.First(x => x.Id == commentId);
 
@@ -142,7 +144,7 @@
 
             db.Update(comment);
 
-            db.SaveChangesAsync().GetAwaiter();
+            await db.SaveChangesAsync();
         }
 
         private List<string> GetProfanities(string content)
