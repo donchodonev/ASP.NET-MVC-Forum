@@ -9,8 +9,9 @@
     using System.Threading.Tasks;
     using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
-    [Authorize]
+    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants;
 
+    [Authorize]
     public class ChatController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -36,7 +37,7 @@
             {
                 return View();
             }
-            else if (username.Length < 4)
+            else if (username.Length < UserConstants.UsernameMinLength)
             {
                 return this.ViewWithErrorMessage(Error.UsernameTooShort);
             }
@@ -45,7 +46,7 @@
 
             if (identityUser == null)
             {
-                return this.ViewWithErrorMessage($"No users found with the username \"{username}\"");
+                return this.ViewWithErrorMessage(Error.UserDoesNotExist);
             }
 
             var vm = await chatBusinessService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);
