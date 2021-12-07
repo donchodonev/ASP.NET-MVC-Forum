@@ -6,7 +6,9 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
 
     [Area("Admin")]
@@ -16,7 +18,7 @@
         private readonly IPostReportBusinessService postReportService;
         private readonly ICensorService censorService;
 
-        public PostReportsController(IPostReportBusinessService postReportService,ICensorService censorService)
+        public PostReportsController(IPostReportBusinessService postReportService, ICensorService censorService)
         {
             this.postReportService = postReportService;
             this.censorService = censorService;
@@ -25,6 +27,7 @@
         public async Task<IActionResult> Index(string reportStatus)
         {
             var vm = await postReportService.GeneratePostReportViewModelList(reportStatus);
+
             return View(vm);
         }
 
@@ -33,14 +36,11 @@
             if (await postReportService.ReportExistsAsync(reportId))
             {
                 await postReportService.DeleteAsync(reportId);
-                TempData["Message"] = "Report has been marked as resolved !";
-            }
-            else
-            {
-                TempData["Message"] = "A report with such an ID does not exist";
+
+                return this.RedirectToActionWithSuccessMessage(Success.ReportResolved, "PostReports", "Index");
             }
 
-            return RedirectToAction("Index", "PostReports");
+            return this.RedirectToActionWithErrorMessage(Error.ReportDoesNotExist, "PostReports", "Index");
         }
 
         public async Task<IActionResult> Restore(int reportId)
@@ -48,14 +48,11 @@
             if (await postReportService.ReportExistsAsync(reportId))
             {
                 await postReportService.RestoreAsync(reportId);
-                TempData["Message"] = "Report has been successfully restored !";
-            }
-            else
-            {
-                TempData["Message"] = "A report with such an ID does not exist";
+
+                return this.RedirectToActionWithSuccessMessage(Success.ReportRestored, "PostReports", "Index");
             }
 
-            return RedirectToAction("Index", "PostReports", new { reportStatus = "Active" });
+            return this.RedirectToActionWithErrorMessage(Error.ReportDoesNotExist, "PostReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Censor(int postId, bool withRegex)
@@ -69,18 +66,14 @@
                 await censorService.CensorPostAsync(postId);
             }
 
-            TempData["Message"] = "The post has been successfully censored";
-
-            return RedirectToAction("Index", "PostReports");
+            return this.RedirectToActionWithSuccessMessage(Success.PostCensored, "PostReports", "Index");
         }
 
         public async Task<IActionResult> DeleteAndResolve(int postId)
         {
             await postReportService.DeletePostAndResolveReportsAsync(postId);
 
-            TempData["Message"] = "The post has been successfully censored and all of it's reports were marked as resolved";
-
-            return RedirectToAction("Index", "PostReports", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(Success.PostCensoredAndResolved, "PostReports", "Index", new { reportStatus = "Deleted" });
         }
     }
 }

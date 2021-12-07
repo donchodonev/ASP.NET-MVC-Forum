@@ -27,9 +27,11 @@
             public const string UserSuccessfullyPromoted = "The user has been successfully promoted to " + ModeratorRoleName;
             public const string ReportResolved = "Report has been marked as resolved !";
             public const string ReportRestored = "Report has been successfully restored !";
-            public const string ReportCensored = "Report has been successfully censored !";
-            public const string ReportCensoredAndResolved = "The comment has been successfully censored and report was marked as resolved";
-
+            public const string CommentReportCensored = "Comment has been successfully censored !";
+            public const string CommentReportCensoredAndResolved = "The comment has been successfully censored and report was marked as resolved";
+            public const string CommentCensoredAndResolved = "The comment has been successfully censored and report was marked as resolved";
+            public const string PostCensored = "The post has been successfully censored";
+            public const string PostCensoredAndResolved = "The post has been successfully censored and all of it's reports were marked as resolved";
         }
         public class MessageType
         {

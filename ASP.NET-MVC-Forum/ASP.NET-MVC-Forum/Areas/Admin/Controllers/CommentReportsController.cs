@@ -61,14 +61,14 @@
                 await commentReportService.CensorCommentAsync(commentId);
             }
 
-            return this.RedirectToActionWithSuccessMessage(Success.ReportCensored, "CommentReports", "Index", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Success.CommentReportCensored, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> DeleteAndResolve(int reportId)
         {
             await commentReportService.DeleteAndResolveAsync(reportId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.ReportCensoredAndResolved, "CommentReports", "Index", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(Success.CommentReportCensoredAndResolved, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
     }
 }
