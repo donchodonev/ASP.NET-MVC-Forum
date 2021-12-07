@@ -64,7 +64,7 @@
             return this.RedirectToActionWithSuccessMessage(Success.ReportCensored, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
-        public async Task<IActionResult> DeleteAndResolve(int commentId, int reportId)
+        public async Task<IActionResult> DeleteAndResolve(int reportId)
         {
             await commentReportService.DeleteAndResolveAsync(reportId);
 
