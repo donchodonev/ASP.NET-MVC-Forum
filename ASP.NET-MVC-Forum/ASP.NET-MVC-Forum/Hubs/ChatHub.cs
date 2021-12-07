@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Hubs
 {
     using ASP.NET_MVC_Forum.Models.Chat;
-    using ASP.NET_MVC_Forum.Services.Chat;
+    using ASP.NET_MVC_Forum.Services.Data.Chat;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.AspNetCore.Authorization;
@@ -13,10 +13,10 @@
     [Authorize]
     public class ChatHub : Hub
     {
-        private readonly IChatService chatService;
+        private readonly IChatDataService chatService;
         private readonly IMapper mapper;
 
-        public ChatHub(IChatService chatService, IMapper mapper)
+        public ChatHub(IChatDataService chatService, IMapper mapper)
         {
             this.chatService = chatService;
             this.mapper = mapper;

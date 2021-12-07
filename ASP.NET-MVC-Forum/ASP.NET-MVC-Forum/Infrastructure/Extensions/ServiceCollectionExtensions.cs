@@ -7,7 +7,7 @@
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
-    using ASP.NET_MVC_Forum.Services.Chat;
+    using ASP.NET_MVC_Forum.Services.Data.Chat;
     using ASP.NET_MVC_Forum.Services.Comment;
     using ASP.NET_MVC_Forum.Services.CommentReport;
     using ASP.NET_MVC_Forum.Services.Data.Category;
@@ -80,7 +80,7 @@
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChartDataService, ChartDataService>();
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
-            services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<IChatDataService, ChatDataService>();
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
             services.AddTransient<IUserBusinessService, UserBusinessService>();
             services.AddTransient<IChatBusinessService, ChatBusinessService>();

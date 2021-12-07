@@ -1,10 +1,10 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Chat
+﻿namespace ASP.NET_MVC_Forum.Services.Data.Chat
 {
     using ASP.NET_MVC_Forum.Data.Models;
     using System.Linq;
     using System.Threading.Tasks;
 
-    public interface IChatService
+    public interface IChatDataService
     {
         public Task<Message> PersistMessageAsync(long chatId, string message, string senderUsername);
 

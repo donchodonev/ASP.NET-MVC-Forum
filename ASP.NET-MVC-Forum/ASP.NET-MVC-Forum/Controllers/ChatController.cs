@@ -3,35 +3,29 @@
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Models.Chat;
     using ASP.NET_MVC_Forum.Services.Business.Chat;
-    using ASP.NET_MVC_Forum.Services.Chat;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
     [Authorize]
 
     public class ChatController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly IChatService chatService;
         private readonly IChatBusinessService chatBusinessService;
 
-        public ChatController(UserManager<IdentityUser> userManager, IChatService chatService, IChatBusinessService chatBusinessService)
+        public ChatController(UserManager<IdentityUser> userManager, IChatBusinessService chatBusinessService)
         {
             this.userManager = userManager;
-            this.chatService = chatService;
             this.chatBusinessService = chatBusinessService;
         }
         public async Task<IActionResult> ChatConversation(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
-            var chatId = await GetChatId(senderIdentityUserId, recipientIdentityUserId);
-
-            var vm = new ChatConversationViewModel(
-                chatId,
-                senderIdentityUserId,
-                recipientIdentityUserId,
-                senderUsername);
+            var vm = await chatBusinessService
+                .GenerateChatConversationViewModel<ChatConversationViewModel>
+                (senderIdentityUserId, recipientIdentityUserId, senderUsername);
 
             return View(vm);
         }
@@ -44,7 +38,7 @@
             }
             else if (username.Length < 4)
             {
-                return this.ViewWithErrorMessage($"Username must be at least 4 symbols long");
+                return this.ViewWithErrorMessage(Error.UsernameTooShort);
             }
 
             var identityUser = await userManager.FindByNameAsync(username);
@@ -57,15 +51,6 @@
             var vm = await chatBusinessService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);
 
             return View(vm);
-        }
-        private async Task<long> GetChatId(string sender, string receiver)
-        {
-            if (!await chatService.ChatExistsAsync(sender, receiver))
-            {
-                return await chatService.CreateChatAsync(sender, receiver);
-            }
-
-            return await chatService.GetChatIdAsync(sender, receiver);
         }
     }
 }

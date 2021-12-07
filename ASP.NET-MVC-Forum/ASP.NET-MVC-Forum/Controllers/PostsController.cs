@@ -9,8 +9,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
@@ -42,7 +41,7 @@
 
             if (post == null)
             {
-                return this.RedirectToActionWithErrorMessage(SuchAPostDoesNotExist, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.SuchAPostDoesNotExist, "Home", "Index");
             }
 
             if (signInManager.IsSignedIn(this.User))
@@ -77,7 +76,7 @@
             if (!ModelState.IsValid)
             {
                 TempData["Title"] = data.Title;
-                return this.RedirectToActionWithErrorMessage(PostLengthTooSmall, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(Error.PostLengthTooSmall, "Posts", "Add");
             }
 
             if (await postDataService.PostExistsAsync(data.Title))
@@ -85,7 +84,7 @@
                 TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
 
-                return this.RedirectToActionWithErrorMessage(DuplicatePostName, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(Error.DuplicatePostName, "Posts", "Add");
             }
 
             var newlyCreatedPost = await postBusinessService.CreateNewAsync(data, this.User.Id());
@@ -100,7 +99,7 @@
 
             if (verificationResult != null)
             {
-                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
             var vm = postBusinessService.GenerateEditPostFormModel(postId);
@@ -124,7 +123,7 @@
 
             if (postChanges.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage(PostRemainsUnchanged, "Posts", "Edit", new { postId = data.PostId });
+                return this.RedirectToActionWithErrorMessage(Error.PostRemainsUnchanged, "Posts", "Edit", new { postId = data.PostId });
             }
 
             await postBusinessService.Edit(data);
@@ -152,7 +151,7 @@
 
             await postBusinessService.Delete(postId);
 
-            return this.RedirectToActionWithSuccessMessage(PostSuccessfullyDeleted, "Home", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.PostSuccessfullyDeleted, "Home", "Index");
         }
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
@@ -164,7 +163,7 @@
 
             await postReportBusinessService.ReportAsync(postId, content);
 
-            return this.RedirectToActionWithSuccessMessage(ReportThankYouMessage, "Home", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.ReportThankYouMessage, "Home", "Index");
         }
 
         private async Task<ActionResult> IsUserPrivileged(int postId)
@@ -173,7 +172,7 @@
 
             if (!await postBusinessService.IsAuthor(userId, postId) && !this.User.IsAdminOrModerator())
             {
-                return this.RedirectToActionWithErrorMessage(YouAreNotTheAuthor, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
             return null;

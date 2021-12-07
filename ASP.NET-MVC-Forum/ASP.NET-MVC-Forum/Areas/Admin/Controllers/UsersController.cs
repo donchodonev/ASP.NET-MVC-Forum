@@ -5,9 +5,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Error;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.MessageType;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage.Success;
+    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
 
@@ -32,44 +30,44 @@
         {
             if (!await userBusinessService.UserExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
             }
 
             if (await userBusinessService.IsBannedAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserIsAlreadyBanned, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserIsAlreadyBanned, "Users", "Index");
             }
 
             await userBusinessService.BanAsync(userId);
 
-            TempData[SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
+            TempData[MessageType.SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
 
-            return this.RedirectToActionWithSuccessMessage(UserSucessfullyBanned,"Users","Index");
+            return this.RedirectToActionWithSuccessMessage(Success.UserSucessfullyBanned,"Users","Index");
         }
 
         public async Task<IActionResult> RemoveBan(int userId)
         {
             if (!await userBusinessService.UserExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
             }
 
             if (!await userBusinessService.IsBannedAsync(userId))
             {
-                TempData[ErrorMessage] = $"User with Id {userId} is not banned !";
+                TempData[MessageType.ErrorMessage] = $"User with Id {userId} is not banned !";
                 return RedirectToAction("Index");
             }
 
             await userBusinessService.UnbanAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(UserSucessfullyUnBanned, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.UserSucessfullyUnBanned, "Users", "Index");
         }
 
         public async Task<IActionResult> Promote(int userId)
         {
             if (!await userBusinessService.UserExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
             }
 
             var identityUser = await userBusinessService.GetIdentityUser(userId);
@@ -79,31 +77,31 @@
 
             if (isUserModerator)
             {
-                return this.RedirectToActionWithErrorMessage(UserIsAlreadyAModerator, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserIsAlreadyAModerator, "Users", "Index");
             }
 
             await userBusinessService.PromoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(UserSuccessfullyPromoted, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.UserSuccessfullyPromoted, "Users", "Index");
         }
 
         public async Task<IActionResult> Demote(int userId)
         {
             if (!await userBusinessService.UserExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
             }
 
             var userRoles = await userBusinessService.GetUserRolesAsync(userId);
 
             if (userRoles.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage(CannotFurtherDemote, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.CannotFurtherDemote, "Users", "Index");
             }
 
             await userBusinessService.DemoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(UserSuccessfullyDemoted, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.UserSuccessfullyDemoted, "Users", "Index");
         }
     }
 }

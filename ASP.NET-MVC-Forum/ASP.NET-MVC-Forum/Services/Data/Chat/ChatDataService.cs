@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Chat
+﻿namespace ASP.NET_MVC_Forum.Services.Data.Chat
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Services.Data.User;
@@ -8,13 +8,13 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    public class ChatService : IChatService
+    public class ChatDataService : IChatDataService
     {
         private readonly ApplicationDbContext db;
         private readonly IUserDataService userService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public ChatService(ApplicationDbContext db, IUserDataService userService,IHtmlManipulator htmlManipulator)
+        public ChatDataService(ApplicationDbContext db, IUserDataService userService,IHtmlManipulator htmlManipulator)
         {
             this.db = db;
             this.userService = userService;

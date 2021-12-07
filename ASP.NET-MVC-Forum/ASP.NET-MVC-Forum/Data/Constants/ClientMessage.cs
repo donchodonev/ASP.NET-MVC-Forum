@@ -14,6 +14,7 @@
             public const string CannotFurtherDemote = "User cannot be further demoted";
             public const string UserIsAlreadyAModerator = "User is already a moderator";
             public const string UserIsAlreadyBanned = "User is already a banned";
+            public const string UsernameTooShort = "Username must be at least 4 symbols long";
         }
         public class Success
         {
