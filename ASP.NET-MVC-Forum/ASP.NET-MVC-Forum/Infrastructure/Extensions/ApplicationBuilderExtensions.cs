@@ -164,7 +164,7 @@
                     Email = "donevdoncho92@gmail.com",
                 };
 
-                await userManager.CreateAsync(user, "123456");
+                await userManager.CreateAsync(user, "d123456789D@");
                 await userManager.AddToRoleAsync(user, AdminRoleName);
 
                 var baseUser = new User()

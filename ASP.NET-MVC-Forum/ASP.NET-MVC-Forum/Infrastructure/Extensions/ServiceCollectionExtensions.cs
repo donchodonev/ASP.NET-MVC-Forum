@@ -1,17 +1,23 @@
 ﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Services.Business.Category;
     using ASP.NET_MVC_Forum.Services.Business.Censor;
+    using ASP.NET_MVC_Forum.Services.Business.Chat;
+    using ASP.NET_MVC_Forum.Services.Business.Comment;
+    using ASP.NET_MVC_Forum.Services.Business.CommentReport;
     using ASP.NET_MVC_Forum.Services.Business.EmailSender;
     using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Services.Business.Post;
     using ASP.NET_MVC_Forum.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Services.Business.User;
     using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
+    using ASP.NET_MVC_Forum.Services.Business.Vote;
+    using ASP.NET_MVC_Forum.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Services.Data.Chart;
     using ASP.NET_MVC_Forum.Services.Data.Chat;
     using ASP.NET_MVC_Forum.Services.Data.Comment;
     using ASP.NET_MVC_Forum.Services.Data.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Services.Data.Chart;
     using ASP.NET_MVC_Forum.Services.Data.Post;
     using ASP.NET_MVC_Forum.Services.Data.PostReport;
     using ASP.NET_MVC_Forum.Services.Data.User;
@@ -32,12 +38,6 @@
     using ProfanityFilter.Interfaces;
 
     using System;
-    using ASP.NET_MVC_Forum.Services.Business.Vote;
-    using ASP.NET_MVC_Forum.Services.Business.User;
-    using ASP.NET_MVC_Forum.Services.Business.Chat;
-    using ASP.NET_MVC_Forum.Services.Business.Category;
-    using ASP.NET_MVC_Forum.Services.Business.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Business.Comment;
 
     public static class ServiceCollectionExtensions
     {
@@ -71,7 +71,7 @@
             services.AddTransient<ICategoryDataService, CategoryDataService>();
             services.AddTransient<IPostBusinessService, PostBusinessService>();
             services.AddTransient<IPostDataService, PostDataService>();
-            services.AddTransient<Services.Data.Comment.ICommentDataService, Services.Data.Comment.CommentDataService>();
+            services.AddTransient<ICommentDataService, CommentDataService>();
             services.AddTransient<IPostReportDataService, PostReportDataService>();
             services.AddTransient<IPostReportBusinessService, PostReportBusinessService>();
             services.AddTransient<ICensorService, CensorService>();
@@ -89,7 +89,7 @@
             services.AddTransient<IChatBusinessService, ChatBusinessService>();
             services.AddTransient<ICategoryBusinessService, CategoryBusinessService>();
             services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
-            services.AddTransient<Services.Business.Comment.ICommentBusinessService, Services.Business.Comment.CommentBusinessService>();
+            services.AddTransient<ICommentBusinessService, CommentBusinessService>();
             services.AddSingleton(configuration);
             services.AddAntiforgery(options =>
             {
@@ -98,7 +98,7 @@
             services.AddMemoryCache();
         }
 
-        public static void AddDatabase (this IServiceCollection services, IConfiguration configuration)
+        public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(

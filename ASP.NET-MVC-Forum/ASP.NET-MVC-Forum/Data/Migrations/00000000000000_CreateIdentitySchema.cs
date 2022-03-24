@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+
 using System;
 
-namespace ASP.NET_MVC_Forum.Data.Migrations
+namespace WebApplication4.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
