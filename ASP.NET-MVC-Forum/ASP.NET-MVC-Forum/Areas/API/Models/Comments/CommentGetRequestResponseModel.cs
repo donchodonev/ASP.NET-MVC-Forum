@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Comments
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments
 {
     using System;
 

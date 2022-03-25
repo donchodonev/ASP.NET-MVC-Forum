@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Category
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Category
 {
-    using ASP.NET_MVC_Forum.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
     using System.Collections.Generic;
     using System.Linq;
 

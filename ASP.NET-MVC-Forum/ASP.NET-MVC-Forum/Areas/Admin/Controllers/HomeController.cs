@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
 
     [Area("Admin")]
     [Authorize(Roles = AdminOrModerator)]

@@ -1,10 +1,10 @@
-﻿using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
-using ASP.NET_MVC_Forum.Services.Comment.Models;
+﻿using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
+using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.Business.Comment
+namespace ASP.NET_MVC_Forum.Web.Services.Business.Comment
 {
     public interface ICommentBusinessService
     {

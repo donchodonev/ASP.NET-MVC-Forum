@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ASP.NET_MVC_Forum.Services.Comment.Models
+namespace ASP.NET_MVC_Forum.Web.Services.Comment.Models
 {
     public class RawCommentServiceModel
     {

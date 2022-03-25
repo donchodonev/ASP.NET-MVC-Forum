@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Censor
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Censor
 {
-    using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
     using ProfanityFilter.Interfaces;
     using System.Collections.Generic;
     using System.Linq;

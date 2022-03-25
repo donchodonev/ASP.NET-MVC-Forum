@@ -1,15 +1,15 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.CommentReport
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.CommentReport
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Comment;
-    using ASP.NET_MVC_Forum.Services.Data.CommentReport;
+    using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.CommentReport;
+    using ASP.NET_MVC_Forum.Web.Services.Comment;
+    using ASP.NET_MVC_Forum.Web.Services.Data.CommentReport;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using ProfanityFilter.Interfaces;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
     using System;
     using System.Text.RegularExpressions;
 

@@ -1,12 +1,12 @@
-﻿namespace ASP.NET_MVC_Forum.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Services.Business.User;
+    using ASP.NET_MVC_Forum.Web.Services.Business.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
     public class UsersController : Controller

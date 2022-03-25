@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Post
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Post
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Data.Enums;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;

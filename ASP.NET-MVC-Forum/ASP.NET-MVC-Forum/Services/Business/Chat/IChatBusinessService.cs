@@ -1,7 +1,7 @@
-﻿using ASP.NET_MVC_Forum.Models.Chat;
+﻿using ASP.NET_MVC_Forum.Web.Models.Chat;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.Business.Chat
+namespace ASP.NET_MVC_Forum.Web.Services.Business.Chat
 {
     public interface IChatBusinessService
     {

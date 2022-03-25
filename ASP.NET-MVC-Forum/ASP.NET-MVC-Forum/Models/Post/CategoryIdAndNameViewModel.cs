@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Models.Post
+﻿namespace ASP.NET_MVC_Forum.Web.Models.Post
 {
     public class CategoryIdAndNameViewModel
     {

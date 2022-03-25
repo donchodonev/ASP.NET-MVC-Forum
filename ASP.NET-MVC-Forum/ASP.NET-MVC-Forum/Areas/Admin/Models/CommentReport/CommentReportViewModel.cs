@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Models.CommentReport
 {
     using System;
 

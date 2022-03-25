@@ -1,12 +1,12 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.API.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
-    using ASP.NET_MVC_Forum.Services.Business.Vote;
-    using ASP.NET_MVC_Forum.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Votes;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Vote;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [Authorize]
     [Route("/api/[controller]")]

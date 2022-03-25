@@ -1,12 +1,12 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Models
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Models
 {
-    using ASP.NET_MVC_Forum.Data.Interfaces;
+    using ASP.NET_MVC_Forum.Web.Data.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.UserConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.UserConstants;
 
     [Index(nameof(Id))]
     public class User : BaseModel, IContainImage

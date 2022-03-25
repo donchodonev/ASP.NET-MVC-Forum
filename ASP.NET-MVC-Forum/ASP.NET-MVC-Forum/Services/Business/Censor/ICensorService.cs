@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Censor
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Censor
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

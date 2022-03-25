@@ -1,7 +1,7 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Comment
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Comment
 {
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Comment.Models;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
     using System.Linq;
     using System.Threading.Tasks;
 

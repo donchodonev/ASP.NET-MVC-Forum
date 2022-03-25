@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Constants
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Constants
 {
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
     public class ClientMessage
     {
         public class Error

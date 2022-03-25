@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Vote
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Vote
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models.Votes;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Votes;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
     using AutoMapper;
     using System.Linq;
     using System.Threading.Tasks;

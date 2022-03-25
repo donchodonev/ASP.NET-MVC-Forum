@@ -1,14 +1,14 @@
-﻿using ASP.NET_MVC_Forum.Data.Enums;
-using ASP.NET_MVC_Forum.Models.Chat;
-using ASP.NET_MVC_Forum.Services.Data.Chat;
-using ASP.NET_MVC_Forum.Services.Data.User;
+﻿using ASP.NET_MVC_Forum.Web.Data.Enums;
+using ASP.NET_MVC_Forum.Web.Models.Chat;
+using ASP.NET_MVC_Forum.Web.Services.Data.Chat;
+using ASP.NET_MVC_Forum.Web.Services.Data.User;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.Business.Chat
+namespace ASP.NET_MVC_Forum.Web.Services.Business.Chat
 {
     public class ChatBusinessService : IChatBusinessService
     {

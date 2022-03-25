@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.UserAvatar
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.UserAvatar
 {
     using Microsoft.AspNetCore.Http;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ImageConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.ImageConstants;
 
     public interface IUserAvatarService
     {

@@ -1,11 +1,11 @@
-﻿namespace ASP.NET_MVC_Forum.Models
+﻿namespace ASP.NET_MVC_Forum.Web.Models
 {
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.PostViewCountOptions;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.PostViewCountOptions;
 
     public class PaginatedList<T> : List<T>
     {

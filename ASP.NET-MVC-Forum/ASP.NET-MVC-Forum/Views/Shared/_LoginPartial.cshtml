@@ -1,10 +1,10 @@
 ﻿@inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@inject ASP.NET_MVC_Forum.Services.Data.User.IUserDataService userDataService;
+@inject ASP.NET_MVC_Forum.Web.Services.Data.User.IUserDataService userDataService;
 @{
     @using Microsoft.AspNetCore.Identity
-    @using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
-    @using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    @using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
+    @using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 }
 
 <ul class="navbar-nav">

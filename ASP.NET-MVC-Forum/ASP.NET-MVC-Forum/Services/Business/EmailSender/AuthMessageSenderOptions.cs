@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.EmailSender
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.EmailSender
 {
     public class AuthMessageSenderOptions
     {

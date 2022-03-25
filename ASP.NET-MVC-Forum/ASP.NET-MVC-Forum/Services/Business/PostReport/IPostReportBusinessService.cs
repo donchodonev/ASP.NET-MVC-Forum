@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.PostReport
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.PostReport
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
+    using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.PostReport;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

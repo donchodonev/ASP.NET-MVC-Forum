@@ -1,7 +1,7 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.CommentReport
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.CommentReport
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;

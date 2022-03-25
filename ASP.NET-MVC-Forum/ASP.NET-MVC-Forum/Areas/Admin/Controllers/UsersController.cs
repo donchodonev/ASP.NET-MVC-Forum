@@ -1,13 +1,13 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Services.Business.User;
+    using ASP.NET_MVC_Forum.Web.Services.Business.User;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.ClientMessage;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
 
     [Area("Admin")]
     [Authorize(Roles = AdminRoleName)]

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Models.User
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Models.User
 {
     using Microsoft.AspNetCore.Identity;
     using System;

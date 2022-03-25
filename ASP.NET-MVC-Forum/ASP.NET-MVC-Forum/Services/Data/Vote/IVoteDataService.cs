@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Vote
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Vote
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
 
     public interface IVoteDataService
     {

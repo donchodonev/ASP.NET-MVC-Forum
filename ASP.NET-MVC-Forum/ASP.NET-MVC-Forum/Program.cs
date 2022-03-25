@@ -1,6 +1,6 @@
 namespace ASP.NET_MVC_Forum
 {
-    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Web.Data;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;

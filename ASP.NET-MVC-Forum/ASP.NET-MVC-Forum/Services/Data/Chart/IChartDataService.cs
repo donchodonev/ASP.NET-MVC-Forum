@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Chart
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Chart
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Stats;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

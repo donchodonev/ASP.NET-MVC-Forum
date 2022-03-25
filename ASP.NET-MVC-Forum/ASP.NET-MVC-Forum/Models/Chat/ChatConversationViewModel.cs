@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Models.Chat
+﻿namespace ASP.NET_MVC_Forum.Web.Models.Chat
 {
     public class ChatConversationViewModel
     {

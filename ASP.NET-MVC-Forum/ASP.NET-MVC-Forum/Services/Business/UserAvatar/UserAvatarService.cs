@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.UserAvatar
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.UserAvatar
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -6,8 +6,8 @@
     using SixLabors.ImageSharp.Processing;
     using System;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ImageConstants;
-    using static ASP.NET_MVC_Forum.Data.Constants.WebConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.ImageConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.WebConstants;
 
     public class UserAvatarService : IUserAvatarService
     {

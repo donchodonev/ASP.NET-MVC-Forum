@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
-    using ASP.NET_MVC_Forum.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
@@ -17,7 +17,7 @@
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.UserConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.UserConstants;
 
 
     [AllowAnonymous]

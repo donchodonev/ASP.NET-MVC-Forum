@@ -1,17 +1,17 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Chart
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Chart
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models.Stats;
-    using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Web.Data.Enums;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ColorConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.ColorConstants;
 
     public class ChartDataService : IChartDataService
     {

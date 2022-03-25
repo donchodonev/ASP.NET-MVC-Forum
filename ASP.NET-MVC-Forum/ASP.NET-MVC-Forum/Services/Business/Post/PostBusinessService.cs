@@ -1,15 +1,15 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Post
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Post
 {
-    using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.Vote;
-    using ASP.NET_MVC_Forum.Services.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Data.Enums;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Models.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
+    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Web.Services.Models.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Security.Claims;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
 
     public class PostBusinessService : IPostBusinessService

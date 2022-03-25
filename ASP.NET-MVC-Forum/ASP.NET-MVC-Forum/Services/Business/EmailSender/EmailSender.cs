@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.EmailSender
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.EmailSender
 {
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.Extensions.Options;

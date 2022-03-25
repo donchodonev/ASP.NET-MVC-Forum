@@ -1,8 +1,8 @@
-﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.CommentReport;
+﻿using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.CommentReport;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.Business.CommentReport
+namespace ASP.NET_MVC_Forum.Web.Services.Business.CommentReport
 {
     public interface ICommentReportBusinessService
     {

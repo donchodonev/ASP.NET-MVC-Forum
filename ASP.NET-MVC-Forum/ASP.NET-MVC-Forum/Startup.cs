@@ -1,6 +1,6 @@
 namespace ASP.NET_MVC_Forum
 {
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
+    using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;

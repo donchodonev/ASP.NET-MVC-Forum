@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Chat
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Chat
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Services.Data.User;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;

@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
+﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Hubs;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Hubs;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;

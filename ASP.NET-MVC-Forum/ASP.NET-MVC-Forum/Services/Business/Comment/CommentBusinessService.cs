@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Comment
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Comment
 {
-    using ASP.NET_MVC_Forum.Areas.API.Models.Comments;
-    using ASP.NET_MVC_Forum.Services.Comment.Models;
-    using ASP.NET_MVC_Forum.Services.Data.Comment;
-    using ASP.NET_MVC_Forum.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
+    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Comment;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     public class CommentBusinessService : ICommentBusinessService
     {

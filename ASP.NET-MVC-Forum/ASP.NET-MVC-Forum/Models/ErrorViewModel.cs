@@ -1,4 +1,4 @@
-namespace ASP.NET_MVC_Forum.Models
+namespace ASP.NET_MVC_Forum.Web.Models
 {
     public class ErrorViewModel
     {

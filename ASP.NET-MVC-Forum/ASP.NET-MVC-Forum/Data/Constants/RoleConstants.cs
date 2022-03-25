@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Constants
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Constants
 {
     public class RoleConstants
     {

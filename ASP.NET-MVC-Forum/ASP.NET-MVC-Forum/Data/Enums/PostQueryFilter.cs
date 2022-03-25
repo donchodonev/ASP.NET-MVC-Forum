@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Enums
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Enums
 {
     public enum PostQueryFilter
     {

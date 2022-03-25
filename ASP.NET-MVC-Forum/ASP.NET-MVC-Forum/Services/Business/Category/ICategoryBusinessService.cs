@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.Category
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Category
 {
     using System.Collections.Generic;
 

@@ -1,16 +1,16 @@
-﻿namespace ASP.NET_MVC_Forum.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Models;
-    using ASP.NET_MVC_Forum.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Business.Category;
-    using ASP.NET_MVC_Forum.Services.Business.Post;
+    using ASP.NET_MVC_Forum.Web.Models;
+    using ASP.NET_MVC_Forum.Web.Models.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Post;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Data.Constants.PostSortConstants;
-    using static ASP.NET_MVC_Forum.Data.Constants.PostViewCountOptions;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.PostSortConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.PostViewCountOptions;
 
     public class HomeController : Controller
     {

@@ -1,10 +1,10 @@
-﻿using ASP.NET_MVC_Forum.Areas.Admin.Models.User;
+﻿using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Services.Business.User
+namespace ASP.NET_MVC_Forum.Web.Services.Business.User
 {
     public interface IUserBusinessService
     {

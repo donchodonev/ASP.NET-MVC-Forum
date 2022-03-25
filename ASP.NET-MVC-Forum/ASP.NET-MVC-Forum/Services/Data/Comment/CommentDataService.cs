@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Data.Comment
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Comment
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Business.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Comment.Models;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Business.CommentReport;
+    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;

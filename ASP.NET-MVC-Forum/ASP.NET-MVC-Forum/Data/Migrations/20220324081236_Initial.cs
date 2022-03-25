@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ASP.NET_MVC_Forum.Data.Migrations
+namespace ASP.NET_MVC_Forum.Web.Data.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Models
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

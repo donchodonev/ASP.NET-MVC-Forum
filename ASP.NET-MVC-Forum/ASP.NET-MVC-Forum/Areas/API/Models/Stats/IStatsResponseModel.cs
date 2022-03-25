@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Stats
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Models.Stats
 {
     public interface IStatsResponseModel
     {

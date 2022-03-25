@@ -1,9 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Models
+﻿namespace ASP.NET_MVC_Forum.Web.Data.Models
 {
-    using ASP.NET_MVC_Forum.Data.Interfaces;
+    using ASP.NET_MVC_Forum.Web.Data.Interfaces;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.ChatConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.ChatConstants;
 
     public class Message : ICreatedOn
     {

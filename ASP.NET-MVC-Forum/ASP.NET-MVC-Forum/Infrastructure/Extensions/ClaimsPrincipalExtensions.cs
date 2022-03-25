@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
+﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
     using System.Security.Claims;
 
-    using static ASP.NET_MVC_Forum.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
     public static class ClaimsPrincipalExtensions
     {
         public static string Id(this ClaimsPrincipal user)

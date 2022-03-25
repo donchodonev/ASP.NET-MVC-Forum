@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Data
+﻿namespace ASP.NET_MVC_Forum.Web.Data
 {
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 

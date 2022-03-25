@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account.Manage
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account.Manage
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System;

@@ -1,11 +1,11 @@
-﻿namespace ASP.NET_MVC_Forum.Services.Business.PostReport
+﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.PostReport
 {
-    using ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport;
-    using ASP.NET_MVC_Forum.Data.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
-    using ASP.NET_MVC_Forum.Services.Business.Censor;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.PostReport;
+    using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.PostReport;
+    using ASP.NET_MVC_Forum.Web.Data.Enums;
+    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Data.PostReport;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System;

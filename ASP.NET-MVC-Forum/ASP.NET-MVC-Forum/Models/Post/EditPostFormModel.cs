@@ -1,8 +1,8 @@
-﻿namespace ASP.NET_MVC_Forum.Models.Post
+﻿namespace ASP.NET_MVC_Forum.Web.Models.Post
 {
-    using ASP.NET_MVC_Forum.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Data.Constants.DataConstants.PostConstants;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.PostConstants;
 
     public class EditPostFormModel
     {

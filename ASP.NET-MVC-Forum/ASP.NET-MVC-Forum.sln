@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31727.386
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum", "ASP.NET-MVC-Forum\ASP.NET-MVC-Forum.csproj", "{21F838B8-59B1-4E1F-91C0-5B6EFD152655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Web", "ASP.NET-MVC-Forum\ASP.NET-MVC-Forum.Web.csproj", "{21F838B8-59B1-4E1F-91C0-5B6EFD152655}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

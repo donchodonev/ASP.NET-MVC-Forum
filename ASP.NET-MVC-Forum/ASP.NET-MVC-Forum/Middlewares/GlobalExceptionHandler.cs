@@ -1,4 +1,4 @@
-﻿using ASP.NET_MVC_Forum.Models;
+﻿using ASP.NET_MVC_Forum.Web.Models;
 
 using Microsoft.AspNetCore.Http;
 
@@ -8,7 +8,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ASP.NET_MVC_Forum.Middlewares
+namespace ASP.NET_MVC_Forum.Web.Middlewares
 {
     public class GlobalExceptionHandler
     {

@@ -1,27 +1,27 @@
-﻿namespace ASP.NET_MVC_Forum.Infrastructure.Extensions
+﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Services.Business.Category;
-    using ASP.NET_MVC_Forum.Services.Business.Censor;
-    using ASP.NET_MVC_Forum.Services.Business.Chat;
-    using ASP.NET_MVC_Forum.Services.Business.Comment;
-    using ASP.NET_MVC_Forum.Services.Business.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Business.EmailSender;
-    using ASP.NET_MVC_Forum.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Services.Business.User;
-    using ASP.NET_MVC_Forum.Services.Business.UserAvatar;
-    using ASP.NET_MVC_Forum.Services.Business.Vote;
-    using ASP.NET_MVC_Forum.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Services.Data.Chart;
-    using ASP.NET_MVC_Forum.Services.Data.Chat;
-    using ASP.NET_MVC_Forum.Services.Data.Comment;
-    using ASP.NET_MVC_Forum.Services.Data.CommentReport;
-    using ASP.NET_MVC_Forum.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Services.Data.PostReport;
-    using ASP.NET_MVC_Forum.Services.Data.User;
-    using ASP.NET_MVC_Forum.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Chat;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Comment;
+    using ASP.NET_MVC_Forum.Web.Services.Business.CommentReport;
+    using ASP.NET_MVC_Forum.Web.Services.Business.EmailSender;
+    using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Web.Services.Business.User;
+    using ASP.NET_MVC_Forum.Web.Services.Business.UserAvatar;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Vote;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Chart;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Chat;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Comment;
+    using ASP.NET_MVC_Forum.Web.Services.Data.CommentReport;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Data.PostReport;
+    using ASP.NET_MVC_Forum.Web.Services.Data.User;
+    using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
 
     using Ganss.XSS;
 

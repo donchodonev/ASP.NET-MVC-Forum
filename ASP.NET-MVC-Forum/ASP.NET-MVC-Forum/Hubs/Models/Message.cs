@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Hubs.Models
+﻿namespace ASP.NET_MVC_Forum.Web.Hubs.Models
 {
     public class Message
     {

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.API.Models.Votes
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Models.Votes
 {
     using System.ComponentModel.DataAnnotations;
 

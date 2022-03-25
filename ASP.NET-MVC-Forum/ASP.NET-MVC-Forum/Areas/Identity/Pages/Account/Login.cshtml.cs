@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Identity.Pages.Account
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;

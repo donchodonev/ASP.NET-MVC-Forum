@@ -1,15 +1,15 @@
-﻿namespace ASP.NET_MVC_Forum.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Models.Post;
-    using ASP.NET_MVC_Forum.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Web.Models.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Business.Post;
+    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Data.Constants.ClientMessage;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
-    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ControllerExtensions;
+    using static ASP.NET_MVC_Forum.Web.Data.Constants.ClientMessage;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
 
     public class PostsController : Controller
     {

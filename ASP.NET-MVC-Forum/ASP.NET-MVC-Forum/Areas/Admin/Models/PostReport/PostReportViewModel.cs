@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Areas.Admin.Models.PostReport
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Models.PostReport
 {
     using System;
     public class PostReportViewModel
