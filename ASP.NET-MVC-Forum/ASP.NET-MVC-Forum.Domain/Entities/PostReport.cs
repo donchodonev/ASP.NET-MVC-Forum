@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Models
+﻿namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;

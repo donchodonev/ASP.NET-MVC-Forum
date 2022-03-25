@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Web.Services.Data.User;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
     using Microsoft.EntityFrameworkCore;
     using System;

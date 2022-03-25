@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace ASP.NET_MVC_Forum.Data.Models
+namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     public class CommentReport : BaseModel
     {

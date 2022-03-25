@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
 
     public interface IVoteDataService
     {

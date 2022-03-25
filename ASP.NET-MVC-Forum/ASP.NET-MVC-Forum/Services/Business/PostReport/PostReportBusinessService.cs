@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.PostReport;
     using ASP.NET_MVC_Forum.Domain.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Web.Services.Data.Post;
     using ASP.NET_MVC_Forum.Web.Services.Data.PostReport;

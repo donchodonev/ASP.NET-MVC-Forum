@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ASP.NET_MVC_Forum.Data.Models
+namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     public class Vote : BaseModel
     {

@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Vote
 {
     using ASP.NET_MVC_Forum.Web.Areas.API.Models.Votes;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
     using AutoMapper;
     using System.Linq;

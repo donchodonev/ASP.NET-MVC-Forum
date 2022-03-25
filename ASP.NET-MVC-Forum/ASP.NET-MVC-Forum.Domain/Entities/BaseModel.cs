@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Data.Models
+﻿namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     using ASP.NET_MVC_Forum.Domain.Interfaces;
     using System;

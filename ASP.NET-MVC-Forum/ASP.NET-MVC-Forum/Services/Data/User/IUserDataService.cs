@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.User
 {
     using ASP.NET_MVC_Forum.Domain.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using System.Linq;

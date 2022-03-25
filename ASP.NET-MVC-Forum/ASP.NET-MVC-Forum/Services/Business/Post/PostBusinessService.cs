@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Post
 {
     using ASP.NET_MVC_Forum.Domain.Enums;
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Web.Models.Post;
     using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
     using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;

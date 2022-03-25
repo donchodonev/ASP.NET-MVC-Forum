@@ -21,7 +21,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Category", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Chat", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("Chats");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Comment", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,7 +115,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.CommentReport", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.CommentReport", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,7 +144,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("CommentReports");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Message", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Message", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +173,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,7 +219,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.PostReport", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.PostReport", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +250,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("PostReports");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -301,7 +301,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("BaseUsers");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Vote", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Vote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -535,22 +535,22 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Chat", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", null)
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.User", null)
                         .WithMany("Chats")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Comment", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", "User")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -561,9 +561,9 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.CommentReport", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.CommentReport", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Comment", "Comment")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Comment", "Comment")
                         .WithMany()
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -572,9 +572,9 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("Comment");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Message", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Message", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Chat", "Chat")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Chat", "Chat")
                         .WithMany("Messages")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -583,15 +583,15 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("Chat");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Post", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Category", "Category")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Category", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", "User")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
 
@@ -600,9 +600,9 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.PostReport", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.PostReport", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Post", "Post")
                         .WithMany("Reports")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -611,7 +611,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.User", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
@@ -622,15 +622,15 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("IdentityUser");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Vote", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Vote", b =>
                 {
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.Post", "Post")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Post", "Post")
                         .WithMany("Votes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_MVC_Forum.Data.Models.User", "User")
+                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -692,17 +692,17 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Category", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Chat", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Chat", b =>
                 {
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.Post", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
 
@@ -711,7 +711,7 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Navigation("Votes");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Data.Models.User", b =>
+            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.User", b =>
                 {
                     b.Navigation("Chats");
 

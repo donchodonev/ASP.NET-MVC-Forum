@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.CommentReport
 {
-    using ASP.NET_MVC_Forum.Data.Models;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using System.Linq;
     using System.Threading.Tasks;
 
