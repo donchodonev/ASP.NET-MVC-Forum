@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>ASP.NET_MVC_Forum.Business</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Business.Contracts\ASP.NET-MVC-Forum.Business.Contracts.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Data.Contracts\ASP.NET-MVC-Forum.Data.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

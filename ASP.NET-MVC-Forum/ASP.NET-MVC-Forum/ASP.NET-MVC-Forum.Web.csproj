@@ -27,6 +27,11 @@
     <PackageReference Include="SendGrid" Version="9.24.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Business\ASP.NET-MVC-Forum.Business.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="libman.json" />
