@@ -5,17 +5,19 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Web", "ASP.NET-MVC-Forum\ASP.NET-MVC-Forum.Web.csproj", "{21F838B8-59B1-4E1F-91C0-5B6EFD152655}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Domain", "ASP.NET-MVC-Forum.Domain\ASP.NET-MVC-Forum.Domain.csproj", "{82740C1F-00C9-406D-83BC-77C8EC5B36B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Domain", "ASP.NET-MVC-Forum.Domain\ASP.NET-MVC-Forum.Domain.csproj", "{82740C1F-00C9-406D-83BC-77C8EC5B36B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Business.Contracts", "ASP.NET-MVC-Forum.Business.Contracts\ASP.NET-MVC-Forum.Business.Contracts.csproj", "{8241D4E2-F574-4CD8-A2FE-97A95379205D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Business.Contracts", "ASP.NET-MVC-Forum.Business.Contracts\ASP.NET-MVC-Forum.Business.Contracts.csproj", "{8241D4E2-F574-4CD8-A2FE-97A95379205D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Business", "ASP.NET-MVC-Forum.Business\ASP.NET-MVC-Forum.Business.csproj", "{E3429FC6-6033-4D4E-9AA5-4BBA25897047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Business", "ASP.NET-MVC-Forum.Business\ASP.NET-MVC-Forum.Business.csproj", "{E3429FC6-6033-4D4E-9AA5-4BBA25897047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Data", "ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj", "{C45BE36F-A665-4DC4-B37C-10F3222ABA25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Data", "ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj", "{C45BE36F-A665-4DC4-B37C-10F3222ABA25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Data.Contracts", "ASP.NET-MVC-Forum.Data.Contracts\ASP.NET-MVC-Forum.Data.Contracts.csproj", "{4A8740A1-E8E5-41AC-9702-7460C3334685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Data.Contracts", "ASP.NET-MVC-Forum.Data.Contracts\ASP.NET-MVC-Forum.Data.Contracts.csproj", "{4A8740A1-E8E5-41AC-9702-7460C3334685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Infrastructure", "ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj", "{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Infrastructure", "ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj", "{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Hubs", "ASP.NET-MVC-Forum.Hubs\ASP.NET-MVC-Forum.Hubs.csproj", "{56471B1B-9EF1-4616-AF76-89FD5F861578}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56471B1B-9EF1-4616-AF76-89FD5F861578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56471B1B-9EF1-4616-AF76-89FD5F861578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56471B1B-9EF1-4616-AF76-89FD5F861578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56471B1B-9EF1-4616-AF76-89FD5F861578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
