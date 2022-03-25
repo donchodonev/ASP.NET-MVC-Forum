@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Web.Services.Data.Category;
     using System.ComponentModel.DataAnnotations;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.PostConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.PostConstants;
 
     public class EditPostFormModel
     {

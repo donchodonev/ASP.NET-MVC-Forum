@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
     using Microsoft.AspNetCore.Mvc;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.ClientMessage.MessageType;
+    using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.MessageType;
 
     public static class ControllerExtensions
     {

@@ -9,8 +9,8 @@
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.PostSortConstants;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.PostViewCountOptions;
+    using static ASP.NET_MVC_Forum.Domain.Constants.PostSortConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.PostViewCountOptions;
 
     public class HomeController : Controller
     {

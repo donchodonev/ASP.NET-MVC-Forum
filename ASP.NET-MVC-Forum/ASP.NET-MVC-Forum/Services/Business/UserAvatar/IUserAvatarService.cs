@@ -2,7 +2,7 @@
 {
     using Microsoft.AspNetCore.Http;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.ImageConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.ImageConstants;
 
     public interface IUserAvatarService
     {

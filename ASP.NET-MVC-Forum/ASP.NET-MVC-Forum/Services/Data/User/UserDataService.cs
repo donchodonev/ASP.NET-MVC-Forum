@@ -1,15 +1,15 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.User
 {
-    using ASP.NET_MVC_Forum.Web.Data;
-    using ASP.NET_MVC_Forum.Web.Data.Enums;
-    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Domain.Enums;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Web.Services.Business.UserAvatar;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.WebConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.WebConstants;
 
     public class UserDataService : IUserDataService
     {

@@ -6,7 +6,7 @@
     using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
     using ASP.NET_MVC_Forum.Web.Areas.API.Models.Stats;
     using ASP.NET_MVC_Forum.Web.Areas.API.Models.Votes;
-    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Web.Models.Chat;
     using ASP.NET_MVC_Forum.Web.Models.Post;
     using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
@@ -16,7 +16,7 @@
 
     using System.Linq;
 
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.DateTimeConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.DateTimeConstants;
 
     public class MappingProfile : Profile
     {

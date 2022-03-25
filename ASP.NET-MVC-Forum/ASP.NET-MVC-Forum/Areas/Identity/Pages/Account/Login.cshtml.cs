@@ -6,12 +6,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using static Data.Constants.DataConstants.UserConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.UserConstants;
 
     [AllowAnonymous]
     public class LoginModel : PageModel
@@ -20,7 +21,7 @@
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, 
+        public LoginModel(SignInManager<IdentityUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<IdentityUser> userManager)
         {
@@ -77,7 +78,7 @@
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        
+
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -96,7 +97,11 @@
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
-
+                else if (await _userManager.FindByNameAsync(Input.Username) == null)
+                {
+                    ModelState.AddModelError(string.Empty, "A user with this username doesn't exist.");
+                    return Page();
+                }
                 else if (!_userManager.Users.FirstOrDefault(x => x.UserName == Input.Username).EmailConfirmed)
                 {
                     ModelState.AddModelError(string.Empty, "Please verify your email using the email we sent you upon registration. If you see no email in the email account you specified at login - please check your email account's SPAM folder too. You can also use the \"Resend email confirmation\" button to send a new confirmation email as well");

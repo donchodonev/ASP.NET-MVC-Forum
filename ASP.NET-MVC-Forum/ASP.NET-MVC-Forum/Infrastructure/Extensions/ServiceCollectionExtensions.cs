@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
-    using ASP.NET_MVC_Forum.Web.Data;
+    using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Web.Services.Business.Category;
     using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
     using ASP.NET_MVC_Forum.Web.Services.Business.Chat;

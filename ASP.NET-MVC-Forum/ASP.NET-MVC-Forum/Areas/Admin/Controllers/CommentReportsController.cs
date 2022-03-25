@@ -6,8 +6,8 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.ClientMessage;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
     using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
 
     [Area("Admin")]

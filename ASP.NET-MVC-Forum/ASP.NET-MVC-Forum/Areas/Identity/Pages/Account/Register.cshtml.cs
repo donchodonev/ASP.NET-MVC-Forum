@@ -17,7 +17,7 @@
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.DataConstants.UserConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.UserConstants;
 
 
     [AllowAnonymous]

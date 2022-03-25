@@ -6,8 +6,8 @@
     using SixLabors.ImageSharp.Processing;
     using System;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.ImageConstants;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.WebConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.ImageConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.WebConstants;
 
     public class UserAvatarService : IUserAvatarService
     {

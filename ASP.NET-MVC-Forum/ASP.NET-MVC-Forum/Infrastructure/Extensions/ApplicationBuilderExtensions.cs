@@ -1,16 +1,19 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
-    using ASP.NET_MVC_Forum.Web.Data;
-    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Web.Hubs;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static Data.Constants.RoleConstants;
+
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
     public static class ApplicationBuilderExtensions
     {

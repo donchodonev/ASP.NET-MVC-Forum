@@ -2,7 +2,7 @@
 {
     using System.Security.Claims;
 
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
     public static class ClaimsPrincipalExtensions
     {
         public static string Id(this ClaimsPrincipal user)

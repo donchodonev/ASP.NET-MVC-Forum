@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.Post
 {
-    using ASP.NET_MVC_Forum.Web.Data.Models;
+    using ASP.NET_MVC_Forum.Data.Models;
     using ASP.NET_MVC_Forum.Web.Models.Post;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
     using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Services.Business.User
 {
     using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.User;
-    using ASP.NET_MVC_Forum.Web.Data.Enums;
+    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Web.Services.Data.User;
     using AutoMapper;
     using Microsoft.AspNetCore.Http;
@@ -11,7 +11,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static ASP.NET_MVC_Forum.Web.Data.Constants.RoleConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
     public class UserBusinessService : IUserBusinessService
     {
         private readonly IUserDataService data;
