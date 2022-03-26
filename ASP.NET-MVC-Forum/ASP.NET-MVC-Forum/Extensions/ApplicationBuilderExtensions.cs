@@ -205,6 +205,7 @@
                     Title = $"{i}",
                     CategoryId = categories[i].Id,
                     Category = categories[i],
+                    UserId = 1,
                     HtmlContent = @"
                     Lorem ipsum dolor sit amet,
                     consectetur adipiscing elit,
