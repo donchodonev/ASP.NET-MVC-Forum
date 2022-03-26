@@ -9,7 +9,7 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
-    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
+    using static ASP.NET_MVC_Forum.Web.Extensions.ControllerExtensions;
 
 
     [Area("Admin")]

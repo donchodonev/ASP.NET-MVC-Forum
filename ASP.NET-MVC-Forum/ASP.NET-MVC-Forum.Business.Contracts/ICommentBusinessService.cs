@@ -1,7 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Business.Contracts
 {
-    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
-    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
 
     using System.Collections.Generic;
     using System.Security.Claims;

@@ -5,6 +5,7 @@
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Infrastructure;
+    using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
 
     using Ganss.XSS;
 
@@ -51,33 +52,68 @@
         public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IUserDataService, UserDataService>();
+
             services.AddTransient<ICategoryDataService, CategoryDataService>();
+
             services.AddTransient<IPostBusinessService, PostBusinessService>();
+
             services.AddTransient<IPostDataService, PostDataService>();
+
             services.AddTransient<ICommentDataService, CommentDataService>();
+
             services.AddTransient<IPostReportDataService, PostReportDataService>();
+
             services.AddTransient<IPostReportBusinessService, PostReportBusinessService>();
+
             services.AddTransient<ICensorService, CensorService>();
+
             services.AddTransient<ICommentReportDataService, CommentReportDataService>();
+
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
+
             services.AddTransient<IVoteBusinessService, VoteBusinessService>();
+
             services.AddTransient<IVoteDataService, VoteDataService>();
+
             services.AddTransient<IUserAvatarService, UserAvatarService>();
+
             services.AddTransient<IEmailSender, EmailSender>();
+
             services.AddTransient<IChartDataService, ChartDataService>();
+
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
+
             services.AddTransient<IChatDataService, ChatDataService>();
+
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
+
             services.AddTransient<IUserBusinessService, UserBusinessService>();
+
             services.AddTransient<IChatBusinessService, ChatBusinessService>();
+
             services.AddTransient<ICategoryBusinessService, CategoryBusinessService>();
+
             services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
+
             services.AddTransient<ICommentBusinessService, CommentBusinessService>();
+
             services.AddSingleton(configuration);
+
+            services.AddAutoMapper(
+                typeof(CategoryMappingProfile).Assembly,
+                typeof(CommentMappingProfile).Assembly,
+                typeof(CommentReportMappingProfile).Assembly,
+                typeof(MessageMappingProfile).Assembly,
+                typeof(PostMappingProfile).Assembly,
+                typeof(PostReportMappingProfile).Assembly,
+                typeof(UserMappingProfile).Assembly,
+                typeof(VoteMappingProfile).Assembly);
+
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-CSRF-TOKEN";
             });
+
             services.AddMemoryCache();
         }
 

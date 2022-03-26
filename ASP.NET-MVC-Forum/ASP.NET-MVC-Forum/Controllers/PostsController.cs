@@ -11,7 +11,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
-    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
+    using static ASP.NET_MVC_Forum.Web.Extensions.ControllerExtensions;
 
     public class PostsController : Controller
     {

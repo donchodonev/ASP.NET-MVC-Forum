@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
+    using ASP.NET_MVC_Forum.Web.Extensions;
     using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
     using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
-    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
+    using static ASP.NET_MVC_Forum.Web.Extensions.ControllerExtensions;
 
     [Area("Admin")]
     [Authorize(Roles = AdminOrModerator)]

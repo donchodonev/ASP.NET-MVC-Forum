@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
     using ASP.NET_MVC_Forum.Business.Contracts;
 
     using Microsoft.AspNetCore.Authorization;

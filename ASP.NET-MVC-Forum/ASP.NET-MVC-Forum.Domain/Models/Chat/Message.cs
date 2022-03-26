@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Hubs.Models
+﻿namespace ASP.NET_MVC_Forum.Domain.Models.Chat
 {
     public class Message
     {

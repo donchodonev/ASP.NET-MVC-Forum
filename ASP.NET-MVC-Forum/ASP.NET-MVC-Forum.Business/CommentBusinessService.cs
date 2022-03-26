@@ -2,9 +2,9 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
-    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
+
 
     using AutoMapper;
 

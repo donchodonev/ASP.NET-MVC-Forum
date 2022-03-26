@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
+﻿namespace ASP.NET_MVC_Forum.Web.Extensions
 {
     using Microsoft.AspNetCore.Mvc;
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.MessageType;

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace ASP.NET_MVC_Forum.Web.Services.Comment.Models
+﻿namespace ASP.NET_MVC_Forum.Domain.Models.Comment
 {
+    using System;
+
     public class RawCommentServiceModel
     {
         public RawCommentServiceModel()

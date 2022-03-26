@@ -51,6 +51,7 @@
                 .GetLastMessages(chatId)
                 .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
                 .ToListAsync();
+
                 await Clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
+﻿namespace ASP.NET_MVC_Forum.Web.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Domain.Entities;

@@ -1,6 +1,8 @@
 namespace ASP.NET_MVC_Forum
 {
+    using ASP.NET_MVC_Forum.Web.Extensions;
     using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -24,7 +26,6 @@ namespace ASP.NET_MVC_Forum
             services.SetupSendgrindConnectionKey(Configuration);
             services.ConfigureSecurityStampValidation();
             services.ConfigureCookiePolicy();
-            services.AddAutoMapper(typeof(Startup));
             services.AddSignalR();
             services.SetupControllersWithViews();
             services.SetupDependencyInjection(Configuration);
