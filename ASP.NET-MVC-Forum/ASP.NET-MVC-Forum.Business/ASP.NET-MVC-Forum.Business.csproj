@@ -6,16 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" Version="7.1.488" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.15" />
     <PackageReference Include="Profanity.Detector" Version="0.1.8" />
     <PackageReference Include="SendGrid" Version="9.27.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ASP.NET-MVC-Forum.Business.Contracts\ASP.NET-MVC-Forum.Business.Contracts.csproj" />
-    <ProjectReference Include="..\ASP.NET-MVC-Forum.Data.Contracts\ASP.NET-MVC-Forum.Data.Contracts.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj" />
   </ItemGroup>
 
 </Project>

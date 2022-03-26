@@ -1,6 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Business
+﻿namespace ASP.NET_MVC_Forum.Data
 {
-    using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Data.Contracts;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;

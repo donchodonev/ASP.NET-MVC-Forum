@@ -1,14 +1,12 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
+    using ASP.NET_MVC_Forum.Infrastructure;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Web.Services.Data.User;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
 
     using AutoMapper;
@@ -51,6 +49,8 @@
 
         public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string identityUserId)
         {
+            formModelPost.Categories = categoryService.GetCategoryIdAndNameCombinations();
+
             var post = mapper.Map<Post>(formModelPost);
 
             post.UserId = await userService.GetBaseUserIdAsync(identityUserId);
@@ -230,7 +230,7 @@
         {
             var vm = new AddPostFormModel();
 
-            vm.FillCategories(categoryService);
+            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
 
             return vm;
         }
@@ -261,7 +261,7 @@
                 .ProjectTo<EditPostFormModel>(post)
                 .First();
 
-            vm.FillCategories(categoryService);
+            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
 
             return vm;
         }

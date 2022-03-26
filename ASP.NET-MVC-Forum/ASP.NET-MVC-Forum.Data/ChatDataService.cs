@@ -1,13 +1,15 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Chat
+﻿namespace ASP.NET_MVC_Forum.Data
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Web.Services.Data.User;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Infrastructure;
+
     using Microsoft.EntityFrameworkCore;
+
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+
     public class ChatDataService : IChatDataService
     {
         private readonly ApplicationDbContext db;

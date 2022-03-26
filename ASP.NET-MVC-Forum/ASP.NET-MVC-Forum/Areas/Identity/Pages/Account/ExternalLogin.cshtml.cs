@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
-    using ASP.NET_MVC_Forum.Web.Services.Data.User;
+    using ASP.NET_MVC_Forum.Data.Contracts;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
@@ -8,6 +9,7 @@
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
+
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Text;

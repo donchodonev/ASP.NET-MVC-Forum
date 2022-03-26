@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
-    using ASP.NET_MVC_Forum.Web.Services.Data.User;
+    using ASP.NET_MVC_Forum.Data.Contracts;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;

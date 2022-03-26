@@ -3,15 +3,8 @@
     using ASP.NET_MVC_Forum.Business;
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Category;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Chart;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Chat;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Comment;
-    using ASP.NET_MVC_Forum.Web.Services.Data.CommentReport;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Post;
-    using ASP.NET_MVC_Forum.Web.Services.Data.PostReport;
-    using ASP.NET_MVC_Forum.Web.Services.Data.User;
-    using ASP.NET_MVC_Forum.Web.Services.Data.Vote;
+    using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Infrastructure;
 
     using Ganss.XSS;
 

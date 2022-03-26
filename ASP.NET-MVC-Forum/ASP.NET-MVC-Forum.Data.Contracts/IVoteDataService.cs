@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Vote
+﻿namespace ASP.NET_MVC_Forum.Data.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

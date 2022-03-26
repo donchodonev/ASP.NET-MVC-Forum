@@ -1,11 +1,13 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Comment
+﻿namespace ASP.NET_MVC_Forum.Data
 {
-    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
+
     using AutoMapper;
+
     using Microsoft.EntityFrameworkCore;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -13,13 +15,11 @@
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext db;
-        private readonly ICommentReportBusinessService commentReportService;
 
-        public CommentDataService(IMapper mapper, ApplicationDbContext db, ICommentReportBusinessService commentReportService)
+        public CommentDataService(IMapper mapper, ApplicationDbContext db)
         {
             this.mapper = mapper;
             this.db = db;
-            this.commentReportService = commentReportService;
         }
         public async Task<int> AddComment(RawCommentServiceModel commentData)
         {
@@ -28,8 +28,6 @@
             await db.Comments.AddAsync(comment);
 
             await db.SaveChangesAsync();
-
-            await commentReportService.AutoGenerateCommentReportAsync(comment.Content, comment.Id);
 
             return comment.Id;
         }

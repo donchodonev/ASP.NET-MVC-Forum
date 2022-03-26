@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.PostReport
+﻿namespace ASP.NET_MVC_Forum.Data.Contracts
 {
     using ASP.NET_MVC_Forum.Domain.Entities;
     using System.Collections.Generic;

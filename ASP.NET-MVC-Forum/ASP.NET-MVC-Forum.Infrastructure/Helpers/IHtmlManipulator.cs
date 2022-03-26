@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Business.Contracts
+﻿namespace ASP.NET_MVC_Forum.Infrastructure
 {
     public interface IHtmlManipulator
     {

@@ -1,11 +1,13 @@
-﻿@model ASP.NET_MVC_Forum.Domain.Models.Post.ViewPostViewModel;
+﻿@using ASP.NET_MVC_Forum.Infrastructure.Extensions
+@model ASP.NET_MVC_Forum.Domain.Models.Post.ViewPostViewModel;
 @using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
-@using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ClaimsPrincipalExtensions;
-@inject ASP.NET_MVC_Forum.Web.Services.Data.User.IUserDataService userDataService;
+@using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
+@inject ASP.NET_MVC_Forum.Data.Contracts.IUserDataService userDataService;
 
 @{
     ViewData["Title"] = "View Post";
-    @Html.HiddenFor(x => x.PostId);
+    @Html.HiddenFor(x => x.PostId)
+    ;
 
     string currUserAvatar;
 
@@ -192,6 +194,6 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/comments.js" asp-append-version="true"></script>
-    <script src="~/js/votes.js" asp-append-version="true"></script>
+<script src="~/js/comments.js" asp-append-version="true"></script>
+<script src="~/js/votes.js" asp-append-version="true"></script>
 }

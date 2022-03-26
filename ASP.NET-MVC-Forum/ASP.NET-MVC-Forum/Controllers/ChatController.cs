@@ -1,15 +1,19 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Domain.Models.Chat;
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Models.Chat;
+    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
+    using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using System.Threading.Tasks;
+
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
-    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants;
+    using static ASP.NET_MVC_Forum.Web.Infrastructure.Extensions.ControllerExtensions;
 
     [Authorize]
     public class ChatController : Controller

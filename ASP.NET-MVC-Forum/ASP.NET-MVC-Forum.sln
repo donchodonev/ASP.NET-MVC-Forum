@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Data.Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Infrastructure", "ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj", "{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Hubs", "ASP.NET-MVC-Forum.Hubs\ASP.NET-MVC-Forum.Hubs.csproj", "{56471B1B-9EF1-4616-AF76-89FD5F861578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Hubs", "ASP.NET-MVC-Forum.Hubs\ASP.NET-MVC-Forum.Hubs.csproj", "{56471B1B-9EF1-4616-AF76-89FD5F861578}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

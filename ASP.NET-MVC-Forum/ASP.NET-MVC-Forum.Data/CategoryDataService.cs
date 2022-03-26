@@ -1,11 +1,14 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Category
+﻿namespace ASP.NET_MVC_Forum.Data
 {
-    using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
+
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+
     using Microsoft.EntityFrameworkCore;
+
     using System.Collections.Generic;
     using System.Linq;
 

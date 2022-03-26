@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Chart
+﻿namespace ASP.NET_MVC_Forum.Data.Contracts
 {
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
     using System.Collections.Generic;

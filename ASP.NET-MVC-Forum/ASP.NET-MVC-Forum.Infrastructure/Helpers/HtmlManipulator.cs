@@ -1,7 +1,5 @@
-﻿namespace ASP.NET_MVC_Forum.Business
+﻿namespace ASP.NET_MVC_Forum.Infrastructure
 {
-    using ASP.NET_MVC_Forum.Business.Contracts;
-
     using Ganss.XSS;
 
     using System.Text.RegularExpressions;

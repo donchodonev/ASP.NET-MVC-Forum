@@ -1,12 +1,15 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Services.Data.Post
+﻿namespace ASP.NET_MVC_Forum.Data
 {
-    using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Domain.Enums;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Enums;
+
     using Microsoft.EntityFrameworkCore;
+
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+
     public class PostDataService : IPostDataService
     {
         private readonly ApplicationDbContext db;

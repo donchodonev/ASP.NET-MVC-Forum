@@ -1,14 +1,14 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure
 {
-    using ASP.NET_MVC_Forum.Domain.Models.CommentReport;
-    using ASP.NET_MVC_Forum.Domain.Models.PostReport;
-    using ASP.NET_MVC_Forum.Web.Areas.Admin.Models.User;
-    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
-    using ASP.NET_MVC_Forum.Domain.Models.Stats;
-    using ASP.NET_MVC_Forum.Domain.Models.Votes;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Chat;
+    using ASP.NET_MVC_Forum.Domain.Models.CommentReport;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
+    using ASP.NET_MVC_Forum.Domain.Models.PostReport;
+    using ASP.NET_MVC_Forum.Domain.Models.Stats;
+    using ASP.NET_MVC_Forum.Domain.Models.User;
+    using ASP.NET_MVC_Forum.Domain.Models.Votes;
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
     using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
 

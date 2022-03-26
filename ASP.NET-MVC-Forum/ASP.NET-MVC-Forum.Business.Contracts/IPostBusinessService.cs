@@ -11,6 +11,7 @@
     public interface IPostBusinessService
     {
         public Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal);
+
         public AddPostFormModel GeneratedAddPostFormModel();
 
         public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
