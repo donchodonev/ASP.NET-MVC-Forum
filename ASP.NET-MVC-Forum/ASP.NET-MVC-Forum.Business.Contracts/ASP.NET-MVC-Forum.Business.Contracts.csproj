@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>ASP.NET_MVC_Forum.Business.Contracts</RootNamespace>
+    <RootNamespace>ASP.NET_MVC_Forum.Business.Contracts.Contracts</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.15" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ASP.NET-MVC-Forum.Domain\ASP.NET-MVC-Forum.Domain.csproj" />

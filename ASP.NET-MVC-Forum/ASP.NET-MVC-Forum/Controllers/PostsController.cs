@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Models.Post;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Domain.Models.Post;
+    using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

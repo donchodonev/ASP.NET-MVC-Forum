@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Hubs
 {
-    using ASP.NET_MVC_Forum.Web.Models.Chat;
+    using ASP.NET_MVC_Forum.Domain.Models.Chat;
     using ASP.NET_MVC_Forum.Web.Services.Data.Chat;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;

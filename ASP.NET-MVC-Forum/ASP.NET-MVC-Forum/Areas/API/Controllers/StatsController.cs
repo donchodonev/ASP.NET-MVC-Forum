@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Stats;
+    using ASP.NET_MVC_Forum.Domain.Models.Stats;
     using ASP.NET_MVC_Forum.Web.Services.Data.Chart;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

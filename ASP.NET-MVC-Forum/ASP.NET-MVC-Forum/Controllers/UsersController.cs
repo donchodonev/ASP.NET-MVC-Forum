@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Services.Business.User;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

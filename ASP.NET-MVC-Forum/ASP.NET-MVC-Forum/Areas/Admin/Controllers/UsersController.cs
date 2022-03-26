@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Services.Business.User;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

@@ -1,0 +1,22 @@
+﻿namespace ASP.NET_MVC_Forum.Business.Contracts
+{
+    using ASP.NET_MVC_Forum.Web.Areas.API.Models.Comments;
+    using ASP.NET_MVC_Forum.Web.Services.Comment.Models;
+
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+    public interface ICommentBusinessService
+    {
+        public Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId);
+
+        public Task<RawCommentServiceModel> GenerateRawCommentServiceModel(CommentPostRequestModel commentData, ClaimsPrincipal user);
+
+        public Task<bool> CommentExistsAsync(int commentId);
+
+        public Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user);
+
+        public Task DeleteAsync(int commentId);
+    }
+}

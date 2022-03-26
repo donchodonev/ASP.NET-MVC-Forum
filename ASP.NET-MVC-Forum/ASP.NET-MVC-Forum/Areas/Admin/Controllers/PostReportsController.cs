@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
-    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
+    using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;

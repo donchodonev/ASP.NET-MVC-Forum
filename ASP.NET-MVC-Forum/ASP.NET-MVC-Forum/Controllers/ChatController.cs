@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
     using ASP.NET_MVC_Forum.Web.Infrastructure.Extensions;
-    using ASP.NET_MVC_Forum.Web.Models.Chat;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Chat;
+    using ASP.NET_MVC_Forum.Domain.Models.Chat;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using ASP.NET_MVC_Forum.Web.Models;
+﻿using ASP.NET_MVC_Forum.Domain.Models;
 
 using Microsoft.AspNetCore.Http;
 

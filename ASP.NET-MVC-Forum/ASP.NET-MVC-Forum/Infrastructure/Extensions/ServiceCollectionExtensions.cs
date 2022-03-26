@@ -1,18 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Infrastructure.Extensions
 {
+    using ASP.NET_MVC_Forum.Business;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Category;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Censor;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Chat;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Comment;
-    using ASP.NET_MVC_Forum.Web.Services.Business.CommentReport;
-    using ASP.NET_MVC_Forum.Web.Services.Business.EmailSender;
-    using ASP.NET_MVC_Forum.Web.Services.Business.HtmlManipulator;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Post;
-    using ASP.NET_MVC_Forum.Web.Services.Business.PostReport;
-    using ASP.NET_MVC_Forum.Web.Services.Business.User;
-    using ASP.NET_MVC_Forum.Web.Services.Business.UserAvatar;
-    using ASP.NET_MVC_Forum.Web.Services.Business.Vote;
     using ASP.NET_MVC_Forum.Web.Services.Data.Category;
     using ASP.NET_MVC_Forum.Web.Services.Data.Chart;
     using ASP.NET_MVC_Forum.Web.Services.Data.Chat;
