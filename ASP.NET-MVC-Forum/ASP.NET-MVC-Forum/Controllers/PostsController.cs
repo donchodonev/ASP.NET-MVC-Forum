@@ -47,9 +47,9 @@
         }
 
         [Authorize]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            var addPostFormModel = postBusinessService.GeneratedAddPostFormModel();
+            var addPostFormModel = await postBusinessService.GeneratedAddPostFormModelAsync();
 
             if (TempData.ContainsKey("HtmlContent"))
             {
@@ -94,7 +94,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
-            var vm = postBusinessService.GenerateEditPostFormModel(postId);
+            var vm = await postBusinessService.GenerateEditPostFormModelAsync(postId);
 
             return View(vm);
         }

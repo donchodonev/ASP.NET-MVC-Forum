@@ -53,7 +53,7 @@
         {
             services.AddTransient<IUserDataService, UserDataService>();
 
-            services.AddTransient<ICategoryDataService, CategoryDataService>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
             services.AddTransient<IPostBusinessService, PostBusinessService>();
 
@@ -90,8 +90,6 @@
             services.AddTransient<IUserBusinessService, UserBusinessService>();
 
             services.AddTransient<IChatBusinessService, ChatBusinessService>();
-
-            services.AddTransient<ICategoryBusinessService, CategoryBusinessService>();
 
             services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
 

@@ -19,10 +19,12 @@
     public class ChartDataService : IChartDataService
     {
         private readonly IPostDataService postDataService;
-        private readonly ICategoryDataService categoryService;
+        private readonly ICategoryRepository categoryService;
         private readonly IMapper mapper;
 
-        public ChartDataService(IPostDataService postDataService, ICategoryDataService categoryService, IMapper mapper)
+        public ChartDataService(IPostDataService postDataService,
+            ICategoryRepository categoryService,
+            IMapper mapper)
         {
             this.postDataService = postDataService;
             this.categoryService = categoryService;
@@ -103,7 +105,7 @@
         {
             int postsTotalCount = posts.Count();
 
-            int lowestCountBetweenTotalPostCountAndTheCountOfColors = 
+            int lowestCountBetweenTotalPostCountAndTheCountOfColors =
                 Math.Min(postsTotalCount,
                 Colors.Length);
 

@@ -11,16 +11,31 @@
 
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
-    public class CategoryDataService : ICategoryDataService
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext db;
         private readonly IMapper mapper;
 
-        public CategoryDataService(ApplicationDbContext db,IMapper mapper)
+        public CategoryRepository(ApplicationDbContext db, IMapper mapper)
         {
             this.db = db;
             this.mapper = mapper;
+        }
+
+        public IQueryable<T> AllAs<T>(bool includePosts = false)
+        {
+            var query = db
+                        .Categories
+                        .AsQueryable();
+
+            if (includePosts)
+            {
+                query = query.Include(x => x.Posts);
+            }
+
+            return query.ProjectTo<T>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<Category> All(bool withPostsIncluded = false)
@@ -37,24 +52,17 @@
             return query;
         }
 
-        public List<string> GetCategoryNames()
+        public Task<List<string>> GetCategoryNamesAsync()
         {
-            return db
-                .Categories
-                .AsNoTracking()
-                .Select(x => x.Name)
-                .ToList();
+            return  db
+                    .Categories
+                    .Select(x => x.Name)
+                    .ToListAsync();
         }
 
-        public CategoryIdAndNameViewModel[] GetCategoryIdAndNameCombinations()
+        public Task<CategoryIdAndNameViewModel[]> GetCategoryIdAndNameCombinationsAsync()
         {
-            var categories = All();
-
-            var selectOptions = categories
-                .ProjectTo<CategoryIdAndNameViewModel>(mapper.ConfigurationProvider)
-                .ToArray();
-
-            return selectOptions;
+            return AllAs<CategoryIdAndNameViewModel>().ToArrayAsync();
         }
     }
 }

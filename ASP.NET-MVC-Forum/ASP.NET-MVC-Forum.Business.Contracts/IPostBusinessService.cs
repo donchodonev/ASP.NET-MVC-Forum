@@ -12,7 +12,7 @@
     {
         public Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal);
 
-        public AddPostFormModel GeneratedAddPostFormModel();
+        public Task<AddPostFormModel> GeneratedAddPostFormModelAsync();
 
         public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
 
@@ -32,7 +32,7 @@
 
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
 
-        public EditPostFormModel GenerateEditPostFormModel(int postId);
+        public Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId);
 
         public Task<bool> PostExistsAsync(string postTitle);
 

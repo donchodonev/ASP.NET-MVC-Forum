@@ -27,7 +27,7 @@
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserDataService userService;
         private readonly IVoteDataService voteDataService;
-        private readonly ICategoryDataService categoryService;
+        private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
 
         public PostBusinessService(IPostDataService postDataService,
@@ -35,7 +35,7 @@
             IHtmlManipulator htmlManipulator,
             IUserDataService userService,
             IVoteDataService voteDataService,
-            ICategoryDataService categoryService,
+            ICategoryRepository categoryRepository,
             IMapper mapper)
         {
             this.postDataService = postDataService;
@@ -43,13 +43,13 @@
             this.htmlManipulator = htmlManipulator;
             this.userService = userService;
             this.voteDataService = voteDataService;
-            this.categoryService = categoryService;
+            this.categoryRepository = categoryRepository;
             this.mapper = mapper;
         }
 
         public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string identityUserId)
         {
-            formModelPost.Categories = categoryService.GetCategoryIdAndNameCombinations();
+            formModelPost.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             var post = mapper.Map<Post>(formModelPost);
 
@@ -226,11 +226,11 @@
             return mapper.Map<ViewPostViewModel>(post) ?? null;
         }
 
-        public AddPostFormModel GeneratedAddPostFormModel()
+        public async Task<AddPostFormModel> GeneratedAddPostFormModelAsync()
         {
             var vm = new AddPostFormModel();
 
-            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
+            vm.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             return vm;
         }
@@ -252,16 +252,16 @@
             }
         }
 
-        public EditPostFormModel GenerateEditPostFormModel(int postId)
+        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId)
         {
             var post = postDataService
-               .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
+                        .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
 
             var vm = mapper
-                .ProjectTo<EditPostFormModel>(post)
-                .First();
+                    .ProjectTo<EditPostFormModel>(post)
+                    .First();
 
-            vm.Categories = categoryService.GetCategoryIdAndNameCombinations();
+            vm.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             return vm;
         }
