@@ -18,14 +18,14 @@
         private readonly IMapper mapper;
         private readonly IUserDataService data;
         private readonly UserManager<IdentityUser> userManager;
-        private readonly IChatDataService chatDataService;
+        private readonly IChatRepository chatRepo;
 
-        public ChatBusinessService(IMapper mapper, IUserDataService data, UserManager<IdentityUser> userManager, IChatDataService chatDataService)
+        public ChatBusinessService(IMapper mapper, IUserDataService data, UserManager<IdentityUser> userManager, IChatRepository chatDataService)
         {
             this.mapper = mapper;
             this.data = data;
             this.userManager = userManager;
-            this.chatDataService = chatDataService;
+            this.chatRepo = chatDataService;
         }
 
         public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(string recipientUsername, string currentIdentityUserId, string currentIdentityUserUsername)
@@ -44,12 +44,12 @@
 
         public async Task<T> GenerateChatConversationViewModel<T>(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
-            if (!await chatDataService.ChatExistsAsync(senderIdentityUserId, recipientIdentityUserId))
+            if (!await chatRepo.ChatExistsAsync(senderIdentityUserId, recipientIdentityUserId))
             {
-                await chatDataService.CreateChatAsync(senderIdentityUserId, recipientIdentityUserId);
+                await chatRepo.CreateChatAsync(senderIdentityUserId, recipientIdentityUserId);
             }
 
-            var chatId = await chatDataService.GetChatIdAsync(senderIdentityUserId, recipientIdentityUserId);
+            var chatId = await chatRepo.GetChatIdAsync(senderIdentityUserId, recipientIdentityUserId);
 
             return (T)Activator.CreateInstance(typeof(T), chatId, senderIdentityUserId, recipientIdentityUserId, senderUsername);
         }

@@ -12,7 +12,6 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ColorConstants;
 
-
     public class ChartService : IChartService
     {
         private readonly IChartRepository chartRepo;
@@ -77,7 +76,6 @@
 
         public async Task<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategoryAsync(int count)
         {
-
             var categories = new CategoryQueryBuilder(categoryRepo.All())
                 .WithoutDeleted()
                 .IncludePosts()

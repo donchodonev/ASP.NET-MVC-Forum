@@ -16,12 +16,12 @@
     [Authorize]
     public class ChatHub : Hub
     {
-        private readonly IChatDataService chatService;
+        private readonly IChatRepository chatRepo;
         private readonly IMapper mapper;
 
-        public ChatHub(IChatDataService chatService, IMapper mapper)
+        public ChatHub(IChatRepository chatService, IMapper mapper)
         {
-            this.chatService = chatService;
+            this.chatRepo = chatService;
             this.mapper = mapper;
         }
 
@@ -29,7 +29,7 @@
         public async Task SendMessageToGroup(string senderIdentityId, string receiverIdentityId, string message, long chatId, string senderUsername)
         {
 
-            var persistedMessage = await chatService.PersistMessageAsync(chatId, message, senderUsername);
+            var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
 
             var time = persistedMessage
                 .CreatedOn
@@ -47,8 +47,8 @@
         {
             try
             {
-                var messages = await chatService
-                .GetLastMessages(chatId)
+                var messages = await chatRepo
+                .GetLastMessagesAsNoTracking(chatId)
                 .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
                 .ToListAsync();
 

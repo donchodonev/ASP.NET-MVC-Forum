@@ -2,27 +2,32 @@
 {
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Models;
     using ASP.NET_MVC_Forum.Infrastructure;
 
     using Microsoft.EntityFrameworkCore;
 
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class ChatDataService : IChatDataService
+    using static ASP.NET_MVC_Forum.Domain.Constants.ChatConstants.Errors;
+
+    public class ChatRepository : IChatRepository
     {
         private readonly ApplicationDbContext db;
         private readonly IUserDataService userService;
         private readonly IHtmlManipulator htmlManipulator;
 
-        public ChatDataService(ApplicationDbContext db, IUserDataService userService,IHtmlManipulator htmlManipulator)
+        public ChatRepository(ApplicationDbContext db,
+            IUserDataService userService,
+            IHtmlManipulator htmlManipulator)
         {
             this.db = db;
             this.userService = userService;
             this.htmlManipulator = htmlManipulator;
         }
-        public async Task<Message> PersistMessageAsync(long chatId, string message, string senderUsername)
+
+        public async Task<Message> AddMessageAsync(long chatId, string message, string senderUsername)
         {
             var sanitizedMessage = htmlManipulator.Sanitize(message);
             var htmlEscapedMessage = htmlManipulator.Escape(sanitizedMessage);
@@ -34,7 +39,7 @@
                 SenderUsername = senderUsername
             };
 
-            await db.Messages.AddAsync(chatMessage);
+            db.Messages.Add(chatMessage);
 
             await db.SaveChangesAsync();
 
@@ -45,6 +50,7 @@
         {
             int userA = await userService.GetBaseUserIdAsync(identityUserA);
             int userB = await userService.GetBaseUserIdAsync(identityUserB);
+
             return db
                 .Chats
                 .AsNoTracking()
@@ -55,7 +61,7 @@
         {
             if (!await ChatExistsAsync(identityUserA, identityUserB))
             {
-                throw new InvalidOperationException("There is no existing chat between the two users");
+                throw new AppException(CHAT_DOES_NOT_EXIST);
             }
 
             int userA = await userService.GetBaseUserIdAsync(identityUserA);
@@ -63,8 +69,7 @@
 
             return db
                 .Chats
-                .AsNoTracking()
-                .First(x => (x.UserA == userA && x.UserB == userB) || (x.UserA == userB && x.UserB == userA))
+                .FirstOrDefaultAsync(x => (x.UserA == userA && x.UserB == userB) || (x.UserA == userB && x.UserB == userA))
                 .Id;
         }
 
@@ -81,13 +86,13 @@
 
             Chat chat = new Chat() { UserA = userA, UserB = userB };
 
-            await db.Chats.AddAsync(chat);
+            db.Chats.Add(chat);
             await db.SaveChangesAsync();
 
             return chat.Id;
         }
 
-        public IQueryable<Message> GetLastMessages(long chatId, int count = 100)
+        public IQueryable<Message> GetLastMessagesAsNoTracking(long chatId, int count = 100)
         {
             return db
                 .Messages

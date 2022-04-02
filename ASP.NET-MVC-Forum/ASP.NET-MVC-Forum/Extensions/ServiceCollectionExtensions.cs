@@ -84,7 +84,7 @@
 
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
 
-            services.AddTransient<IChatDataService, ChatDataService>();
+            services.AddTransient<IChatRepository, ChatRepository>();
 
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
 
