@@ -1,6 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Controllers
 {
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
 
     using Microsoft.AspNetCore.Authorization;
@@ -14,9 +16,10 @@
     [Route("api/[controller]")]
     public class StatsController : ControllerBase
     {
-        private readonly IChartDataService chartService;
 
-        public StatsController(IChartDataService chartService)
+        private readonly IChartService chartService;
+
+        public StatsController(IChartService chartService)
         {
             this.chartService = chartService;
         }
@@ -24,7 +27,8 @@
         [Route("most-commented-posts/{count:int?}")]
         public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostCommentedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = await chartService.GetMostCommentedPostsChartDataAsync(resultCount);
+            var chartData = await chartService
+                .GetMostCommentedPostsChartDataAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by comments count" });
         }
@@ -32,7 +36,8 @@
         [Route("most-liked-posts/{count:int?}")]
         public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostLikedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = await chartService.GetMostLikedPostsChartDataAsync(resultCount);
+            var chartData = await chartService
+                .GetMostLikedPostsChartDataAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by vote sum" });
         }
@@ -40,7 +45,8 @@
         [Route("most-reported-posts/{count:int?}")]
         public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetReportedPosts(int resultCount = 7) // count can be changed in the future
         {
-            var chartData = await chartService.GetMostReportedPostsChartDataAsync(resultCount);
+            var chartData = await chartService
+                .GetMostReportedPostsChartDataAsync(resultCount);
 
             return Ok(new { chartData, fileDownLoadName = "Top posts ordered descending by reports count" });
         }

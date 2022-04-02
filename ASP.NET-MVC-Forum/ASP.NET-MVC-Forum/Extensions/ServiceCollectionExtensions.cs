@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Business;
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Infrastructure;
@@ -79,7 +80,7 @@
 
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddTransient<IChartDataService, ChartDataService>();
+            services.AddTransient<IChartRepository, ChartRespository>();
 
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
 
@@ -94,6 +95,8 @@
             services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
 
             services.AddTransient<ICommentBusinessService, CommentBusinessService>();
+
+            services.AddTransient<IChartService, ChartService>();
 
             services.AddSingleton(configuration);
 
