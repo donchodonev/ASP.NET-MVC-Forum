@@ -10,8 +10,6 @@
     using System.Linq;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.DateTimeConstants;
-
-
     public class PostMappingProfile : Profile
     {
         public PostMappingProfile()
@@ -37,19 +35,19 @@
 
             CreateMap<Post, PostPreviewViewModel>()
                 .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Where(x => !x.IsDeleted).Count()))
-                .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
-                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id));
 
             CreateMap<Post, ViewPostViewModel>()
                 .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count))
-                .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DateFormat)))
-                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.IdentityUser.UserName))
+                .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DateAndTimeFormat) + " UTC"))
                 .ForMember(x => x.CommentsCount, y => y.MapFrom(z => z.Comments.Where(x => x.IsDeleted == false).Count()))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id))

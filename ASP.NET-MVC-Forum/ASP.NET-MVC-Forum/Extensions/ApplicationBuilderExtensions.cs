@@ -1,11 +1,13 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Extensions
 {
     using ASP.NET_MVC_Forum.Data;
+    using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Web.Hubs;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
 
     using System;
@@ -17,15 +19,17 @@
 
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder PrepareDatabase(
+        public static async Task<IApplicationBuilder> PrepareDatabaseAsync(
             this IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.CreateScope();
+
             var services = serviceScope.ServiceProvider;
 
-            SeedCategories(services);
-            SeedAdministrators(services);
-            SeedPosts(services);
+            await SeedCategoriesAsync(services);
+            await SeedRolesAsync(services);
+            await SeedAdministratorAsync(services);
+            await SeedPostsAsync(services);
 
             return app;
         }
@@ -113,11 +117,11 @@
             });
         }
 
-        private static void SeedCategories(IServiceProvider services)
+        private static async Task SeedCategoriesAsync(IServiceProvider services)
         {
             var data = services.GetRequiredService<ApplicationDbContext>();
 
-            if (data.Categories.Any())
+            if (await data.Categories.AnyAsync())
             {
                 return;
             }
@@ -133,69 +137,57 @@
                 new Category{ Name = "Celebrity", ImageUrl = "https://www.nami.org/NAMI/media/NAMI-Media/BlogImageArchive/2016/celebrities-blog.jpeg"},
             });
 
-            data.SaveChanges();
+            await data.SaveChangesAsync();
         }
 
-        private static void SeedAdministrators(IServiceProvider services)
+        private static async Task SeedAdministratorAsync(IServiceProvider services)
         {
-            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var userRepo = services.GetRequiredService<IUserRepository>();
+
+            await userRepo.AddАsync("Doncho", "Donev", "d123456789D@", "donevdoncho92@gmail.com", "admin");
+        }
+
+        private static async Task SeedRolesAsync(IServiceProvider services)
+        {
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var data = services.GetRequiredService<ApplicationDbContext>();
 
-            Task.Run(async () =>
-            {
-                if (await roleManager.RoleExistsAsync(AdminRoleName))
-                {
-                    return;
-                }
-
-                if (await roleManager.RoleExistsAsync(ModeratorRoleName))
-                {
-                    return;
-                }
-
-                var adminRole = new IdentityRole() { Name = AdminRoleName };
-                var moderatorRole = new IdentityRole() { Name = ModeratorRoleName };
-
-                await roleManager.CreateAsync(adminRole);
-                await roleManager.CreateAsync(moderatorRole);
-
-
-                var user = new IdentityUser()
-                {
-                    UserName = "admin",
-                    Email = "donevdoncho92@gmail.com",
-                };
-
-                await userManager.CreateAsync(user, "d123456789D@");
-                await userManager.AddToRoleAsync(user, AdminRoleName);
-
-                var baseUser = new User()
-                {
-                    FirstName = "Doncho",
-                    LastName = "Donev",
-                    IdentityUserId = user.Id
-                };
-
-                data.BaseUsers.Add(baseUser);
-
-                data.SaveChanges();
-            })
-                .GetAwaiter()
-                .GetResult();
-        }
-
-        private static void SeedPosts(IServiceProvider services)
-        {
-
-            var db = services.GetRequiredService<ApplicationDbContext>();
-
-            if (db.Posts.Any())
+            if (await roleManager.RoleExistsAsync(AdminRoleName))
             {
                 return;
             }
 
-            var categories = db.Categories.ToList();
+            if (await roleManager.RoleExistsAsync(ModeratorRoleName))
+            {
+                return;
+            }
+
+            var adminRole = new IdentityRole() { Name = AdminRoleName };
+
+            var moderatorRole = new IdentityRole() { Name = ModeratorRoleName };
+
+            await roleManager.CreateAsync(adminRole);
+
+            await roleManager.CreateAsync(moderatorRole);
+        }
+
+        private static async Task SeedPostsAsync(IServiceProvider services)
+        {
+            var db = services.GetRequiredService<ApplicationDbContext>();
+
+            var userRepo = services.GetRequiredService<IUserRepository>();
+
+            var adminId = await userRepo
+                    .GetAll()
+                    .Select(x => x.Id)
+                    .FirstAsync();
+
+            if (await db.Posts.AnyAsync())
+            {
+                return;
+            }
+
+            var categories = await db.Categories.ToListAsync();
+
             var posts = new List<Post>();
 
             for (int i = 0; i < categories.Count; i++)
@@ -205,7 +197,7 @@
                     Title = $"{i}",
                     CategoryId = categories[i].Id,
                     Category = categories[i],
-                    UserId = 1,
+                    UserId = adminId,
                     HtmlContent = @"
                     Lorem ipsum dolor sit amet,
                     consectetur adipiscing elit,
@@ -215,7 +207,7 @@
 
             db.Posts.AddRange(posts);
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

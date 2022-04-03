@@ -11,6 +11,6 @@
 
         public Task<List<Vote>> GetPostVotesAsync(int postId);
 
-        public Task<Vote> GetUserVoteAsync(int userId, int postId);
+        public Task<Vote> GetUserVoteAsync(string userId, int postId);
     }
 }

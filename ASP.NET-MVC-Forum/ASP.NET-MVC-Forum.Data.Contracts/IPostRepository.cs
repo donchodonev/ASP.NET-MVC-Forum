@@ -17,13 +17,13 @@
 
         public IQueryable<Post> GetByCategoryId(int categoryId);
 
-        public IQueryable<Post> GetByUserId(int userId);
+        public IQueryable<Post> GetByUserId(string userId);
 
         public Task<Post> GetByIdAsync(int postId);
 
         public Task<Post> GetByCategoryIdAsync(int categoryId);
 
-        public Task<Post> GetByUserIdAsync(int userId);
+        public Task<Post> GetByUserIdAsync(string userId);
 
         public Task<bool> ExistsAsync(string postTitle);
 

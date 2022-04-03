@@ -1,5 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
+    using ASP.NET_MVC_Forum.Domain.Entities;
+
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -17,13 +19,13 @@
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
+        private readonly SignInManager<ExtendedIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager,
+        public LoginModel(SignInManager<ExtendedIdentityUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<IdentityUser> userManager)
+            UserManager<ExtendedIdentityUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

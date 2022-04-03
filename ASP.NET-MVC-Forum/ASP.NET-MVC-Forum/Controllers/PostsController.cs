@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
 
@@ -15,12 +16,12 @@
 
     public class PostsController : Controller
     {
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostBusinessService postBusinessService;
         private readonly IPostReportBusinessService postReportBusinessService;
 
         public PostsController(
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<ExtendedIdentityUser> signInManager,
             IPostBusinessService postBusinessService,
             IPostReportBusinessService postReportBusinessService)
         {
@@ -81,7 +82,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.DuplicatePostName, "Posts", "Add");
             }
 
-            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data, this.User.Id());
+            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data);
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }

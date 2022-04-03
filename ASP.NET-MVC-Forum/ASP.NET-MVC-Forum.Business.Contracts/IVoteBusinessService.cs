@@ -5,7 +5,7 @@
 
     public interface IVoteBusinessService
     {
-        public Task RegisterVote(VoteRequestModel incomingVote, int userId);
+        public Task RegisterVote(VoteRequestModel incomingVote, string userId);
 
         public Task<int> GetPostVoteSum(int postId);
     }

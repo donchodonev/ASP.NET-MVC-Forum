@@ -12,7 +12,7 @@
 
         public Task<long> GetChatIdAsync(string identityUserA, string identityUserB);
 
-        public Task<long> CreateChatAsync(string identityUserA, string identityUserB);
+        public Task CreateChatAsync(string identityUserA, string identityUserB);
 
         public IQueryable<Message> GetLastMessagesAsNoTracking(long chatId, int count = 100);
     }

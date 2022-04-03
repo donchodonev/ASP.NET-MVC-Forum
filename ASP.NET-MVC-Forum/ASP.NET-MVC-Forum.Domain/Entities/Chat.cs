@@ -17,12 +17,12 @@
         public long Id { get; set; }
 
         [Required]
-        public int UserA { get; set; }
+        public string UserA { get; set; }
 
         [Required]
-        public int UserB { get; set; }
+        public string UserB { get; set; }
 
-        public DateTime CreatedOn { get; init; }
+        public DateTime CreatedOn { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
     }

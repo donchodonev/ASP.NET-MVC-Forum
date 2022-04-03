@@ -33,7 +33,7 @@
                  .ToListAsync();
         }
 
-        public Task<Vote> GetUserVoteAsync(int userId, int postId)
+        public Task<Vote> GetUserVoteAsync(string userId, int postId)
         {
             return db
                 .Votes

@@ -15,15 +15,15 @@
     public class ChatRepository : IChatRepository
     {
         private readonly ApplicationDbContext db;
-        private readonly IUserDataService userService;
+        private readonly IUserRepository userRepo;
         private readonly IHtmlManipulator htmlManipulator;
 
         public ChatRepository(ApplicationDbContext db,
-            IUserDataService userService,
+            IUserRepository userRepo,
             IHtmlManipulator htmlManipulator)
         {
             this.db = db;
-            this.userService = userService;
+            this.userRepo = userRepo;
             this.htmlManipulator = htmlManipulator;
         }
 
@@ -46,15 +46,15 @@
             return chatMessage;
         }
 
-        public async Task<bool> ChatExistsAsync(string identityUserA, string identityUserB)
+        public Task<bool> ChatExistsAsync(string identityUserA, string identityUserB)
         {
-            int userA = await userService.GetBaseUserIdAsync(identityUserA);
-            int userB = await userService.GetBaseUserIdAsync(identityUserB);
-
             return db
                 .Chats
                 .AsNoTracking()
-                .Any(x => (x.UserA == userA && x.UserB == userB) || (x.UserA == userB && x.UserB == userA));
+                .AnyAsync(x =>
+                (x.UserA == identityUserA && x.UserB == identityUserB)
+                ||
+                (x.UserA == identityUserB && x.UserB == identityUserA));
         }
 
         public async Task<long> GetChatIdAsync(string identityUserA, string identityUserB)
@@ -64,32 +64,22 @@
                 throw new AppException(CHAT_DOES_NOT_EXIST);
             }
 
-            int userA = await userService.GetBaseUserIdAsync(identityUserA);
-            int userB = await userService.GetBaseUserIdAsync(identityUserB);
-
             return db
                 .Chats
-                .FirstOrDefaultAsync(x => (x.UserA == userA && x.UserB == userB) || (x.UserA == userB && x.UserB == userA))
+                .FirstOrDefaultAsync(x =>
+                (x.UserA == identityUserA && x.UserB == identityUserB) 
+                ||
+                (x.UserA == identityUserB && x.UserB == identityUserA))
                 .Id;
         }
 
-        /// <summary>
-        /// Creates a new chat and saves it in the database
-        /// </summary>
-        /// <param name="identityUserA"></param>
-        /// <param name="identityUserB"></param>
-        /// <returns>Returns the create chat's Id</returns>
-        public async Task<long> CreateChatAsync(string identityUserA, string identityUserB)
+        public Task CreateChatAsync(string identityUserA, string identityUserB)
         {
-            int userA = await userService.GetBaseUserIdAsync(identityUserA);
-            int userB = await userService.GetBaseUserIdAsync(identityUserB);
-
-            Chat chat = new Chat() { UserA = userA, UserB = userB };
+            Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
 
             db.Chats.Add(chat);
-            await db.SaveChangesAsync();
 
-            return chat.Id;
+            return db.SaveChangesAsync();
         }
 
         public IQueryable<Message> GetLastMessagesAsNoTracking(long chatId, int count = 100)

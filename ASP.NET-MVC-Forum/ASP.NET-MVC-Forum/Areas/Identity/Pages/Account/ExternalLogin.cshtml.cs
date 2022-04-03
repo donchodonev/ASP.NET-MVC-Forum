@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -19,23 +20,24 @@
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ExtendedIdentityUser> _signInManager;
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IUserDataService userService;
+        private readonly IUserRepository userRepo;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
+            SignInManager<ExtendedIdentityUser> signInManager,
+            UserManager<ExtendedIdentityUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender, IUserDataService userService)
+            IEmailSender emailSender,
+            IUserRepository userRepo)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
-            this.userService = userService;
+            this.userRepo = userRepo;
         }
 
         [BindProperty]
@@ -123,16 +125,15 @@
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ExtendedIdentityUser { UserName = Input.Email, Email = Input.Email };
 
                 var result = await _userManager.CreateAsync(user);
+
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        await userService.AddАsync(user, "", "");
-
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
                         var userId = await _userManager.GetUserIdAsync(user);

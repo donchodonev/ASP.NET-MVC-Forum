@@ -20,14 +20,14 @@
     {
         private readonly ICommentRepository commentRepo;
         private readonly IMapper mapper;
-        private readonly IUserDataService users;
+        private readonly IUserRepository userRepo;
         private readonly ICommentReportBusinessService commentReportService;
 
-        public CommentBusinessService(ICommentRepository commentRepo, IMapper mapper, IUserDataService users, ICommentReportBusinessService commentReportService)
+        public CommentBusinessService(ICommentRepository commentRepo, IMapper mapper, IUserRepository userRepo, ICommentReportBusinessService commentReportService)
         {
             this.commentRepo = commentRepo;
             this.mapper = mapper;
-            this.users = users;
+            this.userRepo = userRepo;
             this.commentReportService = commentReportService;
         }
 
@@ -36,7 +36,7 @@
             var allCommentsQuery = commentRepo.All();
 
             var commentById = new CommentQueryBuilder(allCommentsQuery)
-                .IncludeBaseAndIdentityUser()
+                .IncludeUser()
                 .BuildQuery()
                 .Where(x => x.PostId == postId);
 
@@ -50,8 +50,10 @@
         {
             var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
 
-            rawCommentData.UserId = await users.GetBaseUserIdAsync(user.Id());
+            rawCommentData.UserId = user.Id();
+
             rawCommentData.Username = user.Identity.Name;
+
             rawCommentData.Id = await commentRepo.AddCommentAsync(rawCommentData);
 
             await commentReportService.AutoGenerateCommentReportAsync(rawCommentData.CommentText, rawCommentData.Id);
@@ -64,14 +66,14 @@
             return await commentRepo.All().AnyAsync(x => x.Id == commentId);
         }
 
-        public async Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user)
+        public Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user)
         {
-            var baseUserId = await users.GetBaseUserIdAsync(user.Id());
+            string userId = user.Id();
 
-            return await commentRepo
+            return commentRepo
                 .All()
                 .AnyAsync(x => x.Id == commentId &&
-                (x.UserId == baseUserId || user.IsAdminOrModerator()));
+                (x.UserId == userId || user.IsAdminOrModerator()));
         }
 
         public async Task DeleteAsync(int commentId)

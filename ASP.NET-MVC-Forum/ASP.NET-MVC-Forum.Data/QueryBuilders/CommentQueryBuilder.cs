@@ -20,18 +20,9 @@
             return this;
         }
 
-        public CommentQueryBuilder IncludeBaseUser()
+        public CommentQueryBuilder IncludeUser()
         {
             entities = entities.Include(x => x.User);
-
-            return this;
-        }
-
-        public CommentQueryBuilder IncludeBaseAndIdentityUser()
-        {
-            entities = entities
-                .Include(x => x.User)
-                .ThenInclude(x => x.IdentityUser);
 
             return this;
         }

@@ -26,7 +26,7 @@
         [Required]
         public string SenderUsername { get; set; }
 
-        public DateTime CreatedOn { get; init; }
+        public DateTime CreatedOn { get; set; }
 
         public virtual Chat Chat { get; set; }
     }

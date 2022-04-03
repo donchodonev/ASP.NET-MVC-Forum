@@ -1,21 +1,24 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
+    using ASP.NET_MVC_Forum.Domain.Entities;
+
     using Microsoft.AspNetCore.Authorization;
-    using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.WebUtilities;
 
+    using System.Text;
+    using System.Threading.Tasks;
+
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
         private readonly IEmailSender _sender;
 
-        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<ExtendedIdentityUser> userManager, IEmailSender sender)
         {
             _userManager = userManager;
             _sender = sender;

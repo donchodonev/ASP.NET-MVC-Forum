@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-
-namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account.Manage
+﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account.Manage
 {
+    using ASP.NET_MVC_Forum.Domain.Entities;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
+        private readonly SignInManager<ExtendedIdentityUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ExtendedIdentityUser> userManager,
+            SignInManager<ExtendedIdentityUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -34,7 +37,7 @@ namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ExtendedIdentityUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

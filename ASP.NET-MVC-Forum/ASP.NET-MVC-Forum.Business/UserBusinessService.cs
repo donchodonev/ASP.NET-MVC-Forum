@@ -2,10 +2,11 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Domain.Enums;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.User;
 
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -20,68 +21,70 @@
 
     public class UserBusinessService : IUserBusinessService
     {
-        private readonly IUserDataService data;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly IUserRepository userRepo;
+        private readonly UserManager<ExtendedIdentityUser> userManager;
         private readonly IMapper mapper;
 
         public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
         {
-            await data.AvatarUpdateAsync(identityUserId,image);
+            await userRepo.AvatarUpdateAsync(identityUserId, image);
         }
 
-        public UserBusinessService(IUserDataService data, UserManager<IdentityUser> userManager, IMapper mapper)
+        public UserBusinessService(
+            IUserRepository userRepo,
+            UserManager<ExtendedIdentityUser> userManager, 
+            IMapper mapper)
         {
-            this.data = data;
+            this.userRepo = userRepo;
             this.userManager = userManager;
             this.mapper = mapper;
         }
 
         public async Task<List<UserViewModel>> GenerateUserViewModelAsync()
         {
-            var allUsers = data.GetAll(UserQueryFilter.WithIdentityUser, UserQueryFilter.AsNoTracking);
+            var vm = await userRepo
+                    .GetAll()
+                    .ProjectTo<UserViewModel>(mapper.ConfigurationProvider)
+                    .ToListAsync();
 
-            var vm = mapper
-                .Map<List<UserViewModel>>(allUsers)
-                .ToList();
-
-            return await ReturnUsersWithRoles(vm);
+            return await ReturnUsersWithRolesAsync(vm);
         }
 
-        public async Task BanAsync(int userId)
+        public async Task BanAsync(string userId)
         {
             var currentDateAndTime = DateTime.UtcNow;
 
-            var user = await data.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
+            var user = await userRepo.GetByIdAsync(userId);
 
             user.IsBanned = true;
 
-            user.IdentityUser.LockoutEnd = currentDateAndTime.AddYears(100);
+            user.LockoutEnd = currentDateAndTime.AddYears(100);
 
-            user.IdentityUser.LockoutEnabled = true;
+            user.LockoutEnabled = true;
 
             user.ModifiedOn = currentDateAndTime;
 
             await userManager
-                .UpdateSecurityStampAsync(user.IdentityUser);
+                .UpdateSecurityStampAsync(user);
 
-            await data.UpdateAsync(user);
+            await userRepo.UpdateAsync(user);
         }
 
         /// <summary>
         /// Ubans the user by setting it's IsBanned property to false and marking his linked IdentityUser's LockoutEnabled property to "false"
         /// </summary>
         /// <param name="userId">BaseUser's Id</param>
-        public async Task UnbanAsync(int userId)
+        public async Task UnbanAsync(string userId)
         {
-            var user = await data.GetByIdAsync(userId, UserQueryFilter.WithIdentityUser);
+            var user = await userRepo.GetByIdAsync(userId);
 
             user.IsBanned = false;
 
-            user.IdentityUser.LockoutEnabled = false;
+            user.LockoutEnabled = false;
 
             user.ModifiedOn = DateTime.UtcNow;
 
-            await data.UpdateAsync(user);
+            await userRepo.UpdateAsync(user);
         }
 
         /// <summary>
@@ -89,9 +92,9 @@
         /// </summary>
         /// <param name="userId">User's Id</param>
         /// <returns>Bool - True if it exists and False if otherwise</returns>
-        public async Task<bool> UserExistsAsync(int userId)
+        public Task<bool> ExistsAsync(string userId)
         {
-            return await data.UserExistsAsync(userId);
+            return userRepo.ExistsAsync(userId);
         }
 
         /// <summary>
@@ -99,61 +102,52 @@
         /// </summary>
         /// <param name="userId">User's Id</param>
         /// <returns>Bool - True if the user is banned, False if otherwise</returns>
-        public async Task<bool> IsBannedAsync(int userId)
+        public Task<bool> IsBannedAsync(string userId)
         {
-            var user = await data.GetByIdAsync(userId, UserQueryFilter.AsNoTracking);
-            return user.IsBanned;
-        }
-
-        public async Task<IList<string>> GetUserRolesAsync(int userId)
-        {
-            var user = await data
-                    .GetUser(userId, UserQueryFilter.WithIdentityUser)
-                    .FirstAsync();
-
-            return await userManager.GetRolesAsync(user.IdentityUser);
-        }
-
-        public async Task<IdentityUser> GetIdentityUser(int userId)
-        {
-            return await data
-                .GetAll(UserQueryFilter.WithIdentityUser, UserQueryFilter.WithoutDeleted)
-                .Where(x => x.Id == userId)
-                .Select(x => x.IdentityUser)
+            return userRepo
+                .GetById(userId)
+                .Select(x => x.IsBanned)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DemoteAsync(int userId)
+        public async Task<IList<string>> GetUserRolesAsync(string userId)
         {
-            var identityUser = await GetIdentityUser(userId);
+            var user = await userRepo.GetByIdAsync(userId);
 
-            await userManager
-                .RemoveFromRoleAsync(identityUser, ModeratorRoleName);
-
-            await userManager
-                .UpdateSecurityStampAsync(identityUser);
+            return await userRepo.GetRolesAsync(user);
         }
 
-        public async Task PromoteAsync(int userId)
+        public Task<IList<string>> GetUserRolesAsync(ExtendedIdentityUser user)
         {
-            var identityUser = await GetIdentityUser(userId);
-
-            await userManager
-                .AddToRoleAsync(identityUser, ModeratorRoleName);
-
-            await userManager
-                .UpdateSecurityStampAsync(identityUser);
+            return userRepo.GetRolesAsync(user);
         }
 
-        public async Task<int> UserPostsCountAsync(int userId)
+        public Task DemoteAsync(string userId)
         {
-            return await data
-                .GetUser(userId,UserQueryFilter.AsNoTracking,UserQueryFilter.WithoutDeleted)
+            return userRepo.RemoveRoleAsync(userId, ModeratorRoleName);
+        }
+
+        public Task PromoteAsync(string userId)
+        {
+            return userRepo.AddRoleAsync(userId, ModeratorRoleName);
+        }
+
+        public Task<int> UserPostsCountAsync(string userId)
+        {
+            return userRepo
+                .GetById(userId)
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Posts)
                 .Select(x => x.Posts.Count)
                 .FirstAsync();
         }
 
-        private async Task<List<UserViewModel>> ReturnUsersWithRoles(List<UserViewModel> users)
+        public Task<bool> IsUserInRoleAsync(ExtendedIdentityUser user, string role)
+        {
+            return userManager.IsInRoleAsync(user, role);
+        }
+
+        private async Task<List<UserViewModel>> ReturnUsersWithRolesAsync(List<UserViewModel> users)
         {
             foreach (var user in users)
             {

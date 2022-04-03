@@ -33,10 +33,10 @@ namespace ASP.NET_MVC_Forum
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.PrepareDatabase();
-
             if (env.IsDevelopment())
             {
+                app.PrepareDatabaseAsync().Wait();
+
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
@@ -45,6 +45,7 @@ namespace ASP.NET_MVC_Forum
                 app.UseHttpsRedirection();
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseCookiePolicy();
 
             app.UseStaticFiles();

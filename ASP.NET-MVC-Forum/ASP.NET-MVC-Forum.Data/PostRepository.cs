@@ -52,7 +52,7 @@
                 .Where(x => x.CategoryId == categoryId);
         }
 
-        public IQueryable<Post> GetByUserId(int userId)
+        public IQueryable<Post> GetByUserId(string userId)
         {
             return db
                 .Posts
@@ -73,7 +73,7 @@
                 .FirstOrDefaultAsync(x => x.CategoryId == categoryId);
         }
 
-        public Task<Post> GetByUserIdAsync(int userId)
+        public Task<Post> GetByUserIdAsync(string userId)
         {
             return db
                 .Posts

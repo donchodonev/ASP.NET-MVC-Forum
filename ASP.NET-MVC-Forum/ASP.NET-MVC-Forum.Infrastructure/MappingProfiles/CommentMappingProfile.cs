@@ -12,7 +12,7 @@
             CreateMap<CommentPostRequestModel, RawCommentServiceModel>();
 
             CreateMap<Comment, CommentGetRequestResponseModel>()
-            .ForMember(x => x.CommentAuthor, y => y.MapFrom(z => z.User.IdentityUser.UserName));
+            .ForMember(x => x.CommentAuthor, y => y.MapFrom(z => z.User.UserName));
 
             CreateMap<RawCommentServiceModel, Comment>()
             .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId))

@@ -5,17 +5,16 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ExtendedIdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
         public DbSet<CommentReport> CommentReports { get; set; }
 
         public DbSet<PostReport> PostReports { get; set; }
-
-        public DbSet<User> BaseUsers { get; set; }
 
         public DbSet<Category> Categories { get; set; }
 

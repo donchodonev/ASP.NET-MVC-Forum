@@ -1,6 +1,7 @@
 namespace ASP.NET_MVC_Forum
 {
     using ASP.NET_MVC_Forum.Data;
+
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace ASP.NET_MVC_Forum
             using (var scope = host.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
                 db.Database.Migrate();
             }
 

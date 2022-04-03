@@ -16,21 +16,18 @@
     public class VotesController : ControllerBase
     {
         private readonly IVoteBusinessService voteService;
-        private readonly IUserDataService userService;
+        private readonly IUserRepository userRepo;
 
-        public VotesController(IVoteBusinessService voteService, IUserDataService userService)
+        public VotesController(IVoteBusinessService voteService, IUserRepository userRepo)
         {
             this.voteService = voteService;
-            this.userService = userService;
+            this.userRepo = userRepo;
         }
 
         [HttpPost]
         public async Task<ActionResult<VoteResponseModel>> CastVote(VoteRequestModel vote)
         {
-            int userId = await userService
-                .GetBaseUserIdAsync(this.User.Id());
-
-            await voteService.RegisterVote(vote, userId);
+            await voteService.RegisterVote(vote, User.Id());
 
             VoteResponseModel response = new VoteResponseModel() { VoteSum = await voteService.GetPostVoteSum(vote.PostId) };
 

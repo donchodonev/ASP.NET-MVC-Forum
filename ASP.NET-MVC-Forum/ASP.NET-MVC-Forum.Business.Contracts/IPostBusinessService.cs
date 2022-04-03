@@ -14,11 +14,11 @@
 
         public Task<AddPostFormModel> GeneratedAddPostFormModelAsync();
 
-        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string identityUserId);
+        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post);
 
         public Task<Post> Edit(EditPostFormModel viewModelData);
 
-        public Task<bool> IsAuthor(int userId, int postId);
+        public Task<bool> IsAuthor(string userId, int postId);
 
         public Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId);
 

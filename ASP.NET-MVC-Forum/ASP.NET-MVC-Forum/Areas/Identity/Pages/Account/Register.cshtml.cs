@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Identity.Pages.Account
 {
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
@@ -23,21 +24,21 @@
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IUserDataService usersService;
+        private readonly SignInManager<ExtendedIdentityUser> _signInManager;
+        private readonly IUserRepository userRepo;
         private readonly IEmailSender emailSender;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IUserDataService usersService,
+            UserManager<ExtendedIdentityUser> userManager,
+            SignInManager<ExtendedIdentityUser> signInManager,
+            IUserRepository userRepo,
             IEmailSender emailSender
          )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            this.usersService = usersService;
+            this.userRepo = userRepo;
             this.emailSender = emailSender;
         }
 
@@ -101,15 +102,16 @@
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Username, Email = Input.Email };
+                var user = new ExtendedIdentityUser { UserName = Input.Username, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Age = Input.Age };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    await usersService.AddАsync(user, Input.FirstName, Input.LastName, Input.Age);
-
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,

@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Models.User
 {
-    using Microsoft.AspNetCore.Identity;
+    using ASP.NET_MVC_Forum.Domain.Entities;
+
     using System;
     using System.Collections.Generic;
 
@@ -16,6 +17,6 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public IdentityUser IdentityUser { get; set; }
+        public ExtendedIdentityUser IdentityUser { get; set; }
     }
 }

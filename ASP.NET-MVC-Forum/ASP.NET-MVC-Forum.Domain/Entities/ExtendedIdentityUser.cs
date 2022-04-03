@@ -1,25 +1,24 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     using ASP.NET_MVC_Forum.Domain.Interfaces;
+
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
+
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.UserConstants;
 
-    [Index(nameof(Id))]
-    public class User : BaseModel, IContainImage
+    public class ExtendedIdentityUser : IdentityUser, IDeletable, IMetaData, IContainImage
     {
-        public User()
+        public ExtendedIdentityUser()
             : base()
         {
             Posts = new HashSet<Post>();
             Chats = new HashSet<Chat>();
+            CreatedOn = DateTime.UtcNow;
         }
-
-        [Required]
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(FirstNameMaxLength)]
@@ -40,14 +39,14 @@
 
         public DateTime? BannedUntil { get; set; }
 
-        [Required]
-        public string IdentityUserId { get; set; }
-
-        [Required]
-        public virtual IdentityUser IdentityUser { get; set; }
-
         public virtual ICollection<Post> Posts { get; set; }
 
         public virtual ICollection<Chat> Chats { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime? ModifiedOn { get ; set ; }
+
+        public bool IsDeleted { get ; set ; }
     }
 }

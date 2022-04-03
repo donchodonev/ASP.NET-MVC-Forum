@@ -16,27 +16,32 @@
     public class ChatBusinessService : IChatBusinessService
     {
         private readonly IMapper mapper;
-        private readonly IUserDataService data;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly IUserRepository userRepo;
         private readonly IChatRepository chatRepo;
 
-        public ChatBusinessService(IMapper mapper, IUserDataService data, UserManager<IdentityUser> userManager, IChatRepository chatDataService)
+        public ChatBusinessService(
+            IMapper mapper,
+            IUserRepository userRepo,
+            IChatRepository chatRepo)
         {
             this.mapper = mapper;
-            this.data = data;
-            this.userManager = userManager;
-            this.chatRepo = chatDataService;
+            this.userRepo = userRepo;
+            this.chatRepo = chatRepo;
         }
 
-        public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(string recipientUsername, string currentIdentityUserId, string currentIdentityUserUsername)
+        public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(
+            string recipientUsername,
+            string currentIdentityUserId, 
+            string currentIdentityUserUsername)
         {
-            var identityUser = await userManager.FindByNameAsync(recipientUsername);
+            var identityUser = userRepo.GetByUsername(recipientUsername);
 
             var vm = await mapper
-                .ProjectTo<ChatSelectUserViewModel>(data.GetUser(identityUser.Id, UserQueryFilter.AsNoTracking, UserQueryFilter.WithIdentityUser))
+                .ProjectTo<ChatSelectUserViewModel>(identityUser)
                 .FirstAsync();
 
             vm.SenderUsername = currentIdentityUserUsername;
+
             vm.SenderIdentityUserId = currentIdentityUserId;
 
             return vm;

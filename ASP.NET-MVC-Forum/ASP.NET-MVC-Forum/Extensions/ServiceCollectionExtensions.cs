@@ -5,6 +5,7 @@
     using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Infrastructure;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
 
@@ -28,7 +29,7 @@
     {
         public static void DefaultIdentitySetup(this IServiceCollection services)
         {
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDefaultIdentity<ExtendedIdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireLowercase = true;
@@ -52,7 +53,7 @@
 
         public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IUserDataService, UserDataService>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<ICategoryRepository, CategoryRepository>();
 

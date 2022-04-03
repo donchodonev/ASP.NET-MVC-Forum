@@ -31,17 +31,16 @@
 
         public bool IsVisible { get; set; }
 
-        [Required]
         public virtual int CategoryId { get; set; }
 
         public string ShortDescription { get; set; }
 
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
 
         [NotMapped]
         public bool IsReported => Reports.Count > 0;
 
-        public virtual User User { get; set; }
+        public virtual ExtendedIdentityUser User { get; set; }
 
         public virtual Category Category { get; set; }
 

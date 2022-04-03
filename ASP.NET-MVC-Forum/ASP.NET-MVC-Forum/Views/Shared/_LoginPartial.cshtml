@@ -1,7 +1,8 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-@inject ASP.NET_MVC_Forum.Data.Contracts.IUserDataService userDataService;
+﻿@inject SignInManager<ExtendedIdentityUser> SignInManager
+@inject UserManager<ExtendedIdentityUser> UserManager
+@inject ASP.NET_MVC_Forum.Data.Contracts.IUserRepository userDataService;
 @{
+    @using ASP.NET_MVC_Forum.Domain.Entities
     @using ASP.NET_MVC_Forum.Infrastructure.Extensions
     @using Microsoft.AspNetCore.Identity
     @using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
@@ -11,7 +12,7 @@
 
     @if (SignInManager.IsSignedIn(User))
     {
-        string currentUserAvatar = await userDataService.GetUserAvatarAsync(this.User.Id()); // userAvatarSource
+        string currentUserAvatar = await userDataService.GetAvatarAsync(this.User.Id()); 
 
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle font-weight-bolder" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

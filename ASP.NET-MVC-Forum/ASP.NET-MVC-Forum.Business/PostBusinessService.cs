@@ -25,7 +25,7 @@
         private readonly IPostRepository postRepo;
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly IUserDataService userService;
+        private readonly IUserRepository userRepo;
         private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
@@ -33,7 +33,7 @@
         public PostBusinessService(IPostRepository postRepo,
             IPostReportBusinessService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
-            IUserDataService userService,
+            IUserRepository userRepo,
             IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
             IMapper mapper)
@@ -41,19 +41,17 @@
             this.postRepo = postRepo;
             this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
-            this.userService = userService;
+            this.userRepo = userRepo;
             this.voteRepo = voteRepo;
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string identityUserId)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost)
         {
             formModelPost.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             var post = mapper.Map<Post>(formModelPost);
-
-            post.UserId = await userService.GetBaseUserIdAsync(identityUserId);
 
             var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
 
@@ -173,7 +171,7 @@
             return kvp;
         }
 
-        public Task<bool> IsAuthor(int userId, int postId)
+        public Task<bool> IsAuthor(string userId, int postId)
         {
             return postRepo
                 .All()
@@ -192,7 +190,6 @@
                 .AsNoTracking()
                 .Where(x => !x.IsDeleted)
                 .Include(x => x.User)
-                .ThenInclude(x => x.IdentityUser)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
@@ -231,8 +228,8 @@
                 .GetById(postId)
                 .Include(x => x.Comments)
                 .Include(x => x.Votes)
-                .Include(x => x.User).ThenInclude(x => x.Posts)
-                .Include(x => x.User).ThenInclude(x => x.IdentityUser);
+                .Include(x => x.User)
+                .ThenInclude(x => x.Posts);
 
             return mapper
                 .ProjectTo<ViewPostViewModel>(post)
@@ -250,10 +247,7 @@
 
         public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
         {
-            var baseUserId = await userService
-                .GetBaseUserIdAsync(identityUserId);
-
-            var vote = await voteRepo.GetUserVoteAsync(baseUserId, viewModel.PostId);
+            var vote = await voteRepo.GetUserVoteAsync(identityUserId, viewModel.PostId);
 
             if (vote == null)
             {
@@ -311,9 +305,7 @@
 
         public async Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal)
         {
-            var userId = await userService.GetBaseUserIdAsync(currentPrincipal.Id());
-
-            return await IsAuthor(userId, postId) || currentPrincipal.IsAdminOrModerator();
+            return await IsAuthor(currentPrincipal.Id(), postId) || currentPrincipal.IsAdminOrModerator();
         }
 
         private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)

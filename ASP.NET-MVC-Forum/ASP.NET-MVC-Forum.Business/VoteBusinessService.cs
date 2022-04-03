@@ -21,7 +21,7 @@
             this.mapper = mapper;
         }
 
-        public async Task RegisterVote(VoteRequestModel incomingVote, int userId)
+        public async Task RegisterVote(VoteRequestModel incomingVote, string userId)
         {
             Vote vote = await voteRepo.GetUserVoteAsync(userId, incomingVote.PostId);
 
