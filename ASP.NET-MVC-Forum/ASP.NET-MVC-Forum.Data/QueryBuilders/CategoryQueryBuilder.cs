@@ -6,32 +6,25 @@
 
     using System.Linq;
 
-    public class CategoryQueryBuilder
+    public class CategoryQueryBuilder : BaseQueryBuilder<Category>
     {
-        private IQueryable<Category> categories;
-
-        public CategoryQueryBuilder(IQueryable<Category> categories)
+        public CategoryQueryBuilder(IQueryable<Category> entities) 
+            : base(entities)
         {
-            this.categories = categories;
         }
 
         public CategoryQueryBuilder WithoutDeleted()
         {
-            categories = categories.Where(x => !x.IsDeleted);
+            entities = entities.Where(x => !x.IsDeleted);
 
             return this;
         }
 
         public CategoryQueryBuilder IncludePosts()
         {
-            categories = categories.Include(x => x.Posts);
+            entities = entities.Include(x => x.Posts);
 
             return this;
-        }
-
-        public IQueryable<Category> BuildQuery()
-        {
-            return categories;
         }
     }
 }

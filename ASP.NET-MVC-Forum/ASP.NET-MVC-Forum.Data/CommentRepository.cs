@@ -11,22 +11,22 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class CommentDataService : ICommentDataService
+    public class CommentRepository : ICommentRepository
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext db;
 
-        public CommentDataService(IMapper mapper, ApplicationDbContext db)
+        public CommentRepository(IMapper mapper, ApplicationDbContext db)
         {
             this.mapper = mapper;
             this.db = db;
         }
 
-        public async Task<int> AddComment(RawCommentServiceModel commentData)
+        public async Task<int> AddCommentAsync(RawCommentServiceModel commentData)
         {
             var comment = mapper.Map<Comment>(commentData);
 
-            await db.Comments.AddAsync(comment);
+            db.Comments.Add(comment);
 
             await db.SaveChangesAsync();
 
@@ -35,9 +35,7 @@
 
         public IQueryable<Comment> All()
         {
-            return db
-                .Comments
-                .AsQueryable();
+            return db.Comments;
         }
 
         public IQueryable GetAllByPostId(int postId, bool withDeleted = false, bool withIdentityUser = false, bool withBaseUser = false)
