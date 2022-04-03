@@ -9,32 +9,33 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class VoteDataService : IVoteDataService
+    public class VoteRepository : IVoteRepository
     {
         private readonly ApplicationDbContext db;
 
-        public VoteDataService(ApplicationDbContext db)
+        public VoteRepository(ApplicationDbContext db)
         {
             this.db = db;
         }
 
-        public async Task UpdateVoteAsync(Vote vote)
+        public Task UpdateVoteAsync(Vote vote)
         {
             db.Update(vote);
-            await db.SaveChangesAsync();
+
+            return db.SaveChangesAsync();
         }
 
-        public async Task<List<Vote>> GetPostVotesAsync(int postId)
+        public Task<List<Vote>> GetPostVotesAsync(int postId)
         {
-            return await db
+            return db
                  .Votes
                  .Where(x => x.PostId == postId)
                  .ToListAsync();
         }
 
-        public async Task<Vote> GetUserVoteAsync(int userId, int postId)
+        public Task<Vote> GetUserVoteAsync(int userId, int postId)
         {
-            return await db
+            return db
                 .Votes
                 .FirstOrDefaultAsync(x => x.PostId == postId && x.UserId == userId);
         }

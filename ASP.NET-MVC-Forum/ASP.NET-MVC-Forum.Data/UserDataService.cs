@@ -16,9 +16,9 @@
     public class UserDataService : IUserDataService
     {
         private readonly ApplicationDbContext db;
-        private readonly IUserAvatarService avatarService;
+        private readonly IAvatarRepository avatarService;
 
-        public UserDataService(ApplicationDbContext db, IUserAvatarService avatarService)
+        public UserDataService(ApplicationDbContext db, IAvatarRepository avatarService)
         {
             this.db = db;
             this.avatarService = avatarService;

@@ -12,18 +12,18 @@
 
     public class VoteBusinessService : IVoteBusinessService
     {
-        private readonly IVoteDataService data;
+        private readonly IVoteRepository voteRepo;
         private readonly IMapper mapper;
 
-        public VoteBusinessService(IVoteDataService data, IMapper mapper)
+        public VoteBusinessService(IVoteRepository voteRepo, IMapper mapper)
         {
-            this.data = data;
+            this.voteRepo = voteRepo;
             this.mapper = mapper;
         }
 
         public async Task RegisterVote(VoteRequestModel incomingVote, int userId)
         {
-            Vote vote = await data.GetUserVoteAsync(userId, incomingVote.PostId);
+            Vote vote = await voteRepo.GetUserVoteAsync(userId, incomingVote.PostId);
 
             if (vote != null)
             {
@@ -32,16 +32,17 @@
             else
             {
                 vote = mapper.Map<Vote>(incomingVote);
+
                 vote.UserId = userId;
                 //VoteType assigned by mapper logic
             }
 
-            await data.UpdateVoteAsync(vote);
+            await voteRepo.UpdateVoteAsync(vote);
         }
 
         public async Task<int> GetPostVoteSum(int postId)
         {
-            var votes = await data.GetPostVotesAsync(postId);
+            var votes = await voteRepo.GetPostVotesAsync(postId);
 
             return votes.Sum(x => (int)x.VoteType);
         }

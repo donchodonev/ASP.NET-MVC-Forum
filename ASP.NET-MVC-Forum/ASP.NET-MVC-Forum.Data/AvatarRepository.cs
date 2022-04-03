@@ -14,12 +14,12 @@
     using static ASP.NET_MVC_Forum.Domain.Constants.ImageConstants;
     using static ASP.NET_MVC_Forum.Domain.Constants.WebConstants;
 
-    public class UserAvatarService : IUserAvatarService
+    public class AvatarRepository : IAvatarRepository
     {
         private readonly IWebHostEnvironment enviroment;
         private string[] validFileExtensions;
 
-        public UserAvatarService(IWebHostEnvironment enviroment)
+        public AvatarRepository(IWebHostEnvironment enviroment)
         {
             this.enviroment = enviroment;
             validFileExtensions = new string[4] { JPG, JPEG, PNG, BMP};

@@ -74,9 +74,9 @@
 
             services.AddTransient<IVoteBusinessService, VoteBusinessService>();
 
-            services.AddTransient<IVoteDataService, VoteDataService>();
+            services.AddTransient<IVoteRepository, VoteRepository>();
 
-            services.AddTransient<IUserAvatarService, UserAvatarService>();
+            services.AddTransient<IAvatarRepository, AvatarRepository>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 

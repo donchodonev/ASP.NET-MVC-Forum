@@ -26,7 +26,7 @@
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserDataService userService;
-        private readonly IVoteDataService voteDataService;
+        private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
 
@@ -34,7 +34,7 @@
             IPostReportBusinessService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
             IUserDataService userService,
-            IVoteDataService voteDataService,
+            IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
             IMapper mapper)
         {
@@ -42,7 +42,7 @@
             this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
             this.userService = userService;
-            this.voteDataService = voteDataService;
+            this.voteRepo = voteRepo;
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
         }
@@ -56,10 +56,13 @@
             post.UserId = await userService.GetBaseUserIdAsync(identityUserId);
 
             var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
+
             var santizedAndDecodedHtml = htmlManipulator.Decode(sanitizedhtml);
+
             var santizedAndDecodedHtmlAndEscapedHtml = htmlManipulator.Escape(santizedAndDecodedHtml);
 
             post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
+
             post.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
 
             await postRepo.AddPostAsync(post);
@@ -250,7 +253,7 @@
             var baseUserId = await userService
                 .GetBaseUserIdAsync(identityUserId);
 
-            var vote = await voteDataService.GetUserVoteAsync(baseUserId, viewModel.PostId);
+            var vote = await voteRepo.GetUserVoteAsync(baseUserId, viewModel.PostId);
 
             if (vote == null)
             {

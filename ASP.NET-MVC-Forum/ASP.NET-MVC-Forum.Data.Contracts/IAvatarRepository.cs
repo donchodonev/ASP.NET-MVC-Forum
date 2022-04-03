@@ -6,7 +6,7 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ImageConstants;
 
-    public interface IUserAvatarService
+    public interface IAvatarRepository
     {
         /// <summary>
         /// Gets said image's extension if extension is amongst the allowed image extensions defined at ASP.NET_MVC_Forum.Data.DataConstants.AllowedImageExtensions that are used in the implementation of the GetImageExtension() method in UserAvatarService
