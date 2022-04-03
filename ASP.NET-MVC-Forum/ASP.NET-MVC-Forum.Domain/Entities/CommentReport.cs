@@ -20,7 +20,7 @@ namespace ASP.NET_MVC_Forum.Domain.Entities
                     return Reason;
                 }
 
-                return Reason.Substring(0, 30);
+                return Reason.Substring(0, 30) + "...";
             }
         }
 

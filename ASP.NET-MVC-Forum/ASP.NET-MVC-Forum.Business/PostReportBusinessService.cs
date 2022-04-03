@@ -12,22 +12,23 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class PostReportBusinessService : IPostReportBusinessService
     {
-        private readonly IPostReportDataService data;
+        private readonly IPostReportRepository postReportRepo;
         private readonly IPostRepository postRepo;
         private readonly ICensorService censorService;
         private readonly IMapper mapper;
 
         public PostReportBusinessService(
-            IPostReportDataService data, 
+            IPostReportRepository postReportRepo, 
             IPostRepository postRepo,
             ICensorService censorService, 
             IMapper mapper)
         {
-            this.data = data;
+            this.postReportRepo = postReportRepo;
             this.postRepo = postRepo;
             this.censorService = censorService;
             this.mapper = mapper;
@@ -36,29 +37,36 @@
         public async Task ReportAsync(int postId, string reason)
         {
             var report = new PostReport() { PostId = postId, Reason = reason };
-            await data.AddReport(report);
+            await postReportRepo.AddReport(report);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var report = await data.GetByIdAsync(id);
+            var report = await postReportRepo.GetByIdAsync(id);
 
             report.IsDeleted = true;
+
             report.ModifiedOn = DateTime.UtcNow;
 
-            await data.Update(report);
+            await postReportRepo.UpdateAsync(report);
         }
 
         public async Task RestoreAsync(int id)
         {
-            var report = await data.GetByIdAsync(id, includePost: true);
+            var report = await postReportRepo
+                .GetById(id)
+                .Include(x => x.Post)
+                .FirstOrDefaultAsync();
 
             report.IsDeleted = false;
+
             report.ModifiedOn = DateTime.UtcNow;
+
             report.Post.IsDeleted = false;
+
             report.Post.ModifiedOn = DateTime.UtcNow;
 
-            await data.Update(report);
+            await postReportRepo.UpdateAsync(report);
         }
 
         public async Task AutoGeneratePostReportAsync(string title, string content, int postId)
@@ -84,22 +92,35 @@
 
             DeleteAllPostReports(postWithAllReports.Reports);
 
-            await data.UpdateAll(postWithAllReports.Reports);
+            await postReportRepo.UpdateAll(postWithAllReports.Reports);
         }
 
         public async Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus)
         {
+            var postReports = postReportRepo
+                .All()
+                .Where(x => !x.IsDeleted);
+
             if (reportStatus == "Active")
             {
-                return await mapper.ProjectTo<PostReportViewModel>(data.All()).ToListAsync();
+                return await mapper
+                    .ProjectTo<PostReportViewModel>(postReports)
+                    .ToListAsync();
             }
 
-            return await mapper.ProjectTo<PostReportViewModel>(data.All(isDeleted: true)).ToListAsync();
+            var inactivePostReports = postReportRepo
+                .All()
+                .Where(x => x.IsDeleted);
+
+            return await mapper
+                .ProjectTo<PostReportViewModel>(inactivePostReports)
+                .ToListAsync();
         }
 
         public async Task<bool> ReportExistsAsync(int reportId)
         {
-            return await data.All()
+            return await postReportRepo
+                .All()
                 .AnyAsync(x => x.Id == reportId && !x.IsDeleted);
         }
 
