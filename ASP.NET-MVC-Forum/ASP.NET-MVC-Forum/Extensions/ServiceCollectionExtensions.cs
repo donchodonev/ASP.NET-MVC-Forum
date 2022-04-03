@@ -68,7 +68,7 @@
 
             services.AddTransient<ICensorService, CensorService>();
 
-            services.AddTransient<ICommentReportDataService, CommentReportDataService>();
+            services.AddTransient<ICommentReportRepository, CommentReportRepository>();
 
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
 
