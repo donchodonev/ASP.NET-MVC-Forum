@@ -6,8 +6,6 @@
 
     using AutoMapper;
 
-    using Microsoft.EntityFrameworkCore;
-
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -38,37 +36,23 @@
             return db.Comments;
         }
 
-        public IQueryable GetAllByPostId(int postId, bool withDeleted = false, bool withIdentityUser = false, bool withBaseUser = false)
+        public IQueryable GetAllByPostId(int postId)
         {
             var query = db.Comments.Where(x => x.PostId == postId);
-
-            if (!withDeleted)
-            {
-                query = query.Where(x => !x.IsDeleted);
-            }
-
-            if (withBaseUser)
-            {
-                query = query.Include(x => x.User);
-            }
-
-            if (withIdentityUser)
-            {
-                query = query.Include(x => x.User).ThenInclude(x => x.IdentityUser);
-            }
 
             return query;
         }
 
-        public IQueryable<Comment> GetById(int id)
+        public IQueryable<Comment> GetAllById(int id)
         {
             return db.Comments.Where(x => x.Id == id);
         }
 
-        public async Task UpdateAsync<T>(T entity)
+        public Task UpdateAsync(Comment entity)
         {
             db.Update(entity);
-            await db.SaveChangesAsync();
+
+            return db.SaveChangesAsync();
         }
     }
 }

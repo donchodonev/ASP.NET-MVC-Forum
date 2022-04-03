@@ -60,7 +60,7 @@
 
             services.AddTransient<IPostDataService, PostDataService>();
 
-            services.AddTransient<ICommentDataService, CommentDataService>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
 
             services.AddTransient<IPostReportDataService, PostReportDataService>();
 
