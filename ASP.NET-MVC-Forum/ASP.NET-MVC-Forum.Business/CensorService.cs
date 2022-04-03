@@ -12,12 +12,12 @@
 
     public class CensorService : ICensorService
     {
-        private readonly IPostDataService posts;
+        private readonly IPostRepository postRepo;
         private readonly IProfanityFilter filter;
 
-        public CensorService(IPostDataService posts, IProfanityFilter filter)
+        public CensorService(IPostRepository postRepo, IProfanityFilter filter)
         {
-            this.posts = posts;
+            this.postRepo = postRepo;
             this.filter = filter;
         }
         public List<string> FindPostProfanities(string title, string content)
@@ -51,7 +51,7 @@
 
         public async Task CensorPostAsync(int postId)
         {
-            var post = await posts.GetByIdAsync(postId);
+            var post = await postRepo.GetByIdAsync(postId);
 
             var title = filter.CensorString(post.Title, '*');
             var htmlContent = filter.CensorString(post.HtmlContent, '*');
@@ -61,12 +61,12 @@
             post.HtmlContent = htmlContent;
             post.ShortDescription = shortDescription;
 
-            await posts.UpdatePostAsync(post);
+            await postRepo.UpdateAsync(post);
         }
 
         public async Task CensorPostWithRegexAsync(int postId)
         {
-            var post = await posts.GetByIdAsync(postId);
+            var post = await postRepo.GetByIdAsync(postId);
 
             var profanities = FindPostProfanities(post.Title, post.HtmlContent, post.ShortDescription);
 
@@ -85,7 +85,7 @@
             post.HtmlContent = htmlContent;
             post.ShortDescription = shortDescription;
 
-            await posts.UpdatePostAsync(post);
+            await postRepo.UpdateAsync(post);
         }
     }
 }

@@ -58,7 +58,7 @@
 
             services.AddTransient<IPostBusinessService, PostBusinessService>();
 
-            services.AddTransient<IPostDataService, PostDataService>();
+            services.AddTransient<IPostRepository, PostRepository>();
 
             services.AddTransient<ICommentRepository, CommentRepository>();
 

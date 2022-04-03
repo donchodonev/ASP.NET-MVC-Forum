@@ -17,14 +17,18 @@
     public class PostReportBusinessService : IPostReportBusinessService
     {
         private readonly IPostReportDataService data;
-        private readonly IPostDataService postDataService;
+        private readonly IPostRepository postRepo;
         private readonly ICensorService censorService;
         private readonly IMapper mapper;
 
-        public PostReportBusinessService(IPostReportDataService data, IPostDataService postDataService, ICensorService censorService, IMapper mapper)
+        public PostReportBusinessService(
+            IPostReportDataService data, 
+            IPostRepository postRepo,
+            ICensorService censorService, 
+            IMapper mapper)
         {
             this.data = data;
-            this.postDataService = postDataService;
+            this.postRepo = postRepo;
             this.censorService = censorService;
             this.mapper = mapper;
         }
@@ -71,10 +75,12 @@
 
         public async Task DeletePostAndResolveReportsAsync(int postId)
         {
-            var postWithAllReports = await postDataService
-                .GetByIdAsync(postId, PostQueryFilter.WithReports);
+            var postWithAllReports = await postRepo
+                .GetById(postId)
+                .Include(x => x.Reports)
+                .FirstOrDefaultAsync();
 
-            await postDataService.DeleteAsync(postWithAllReports); // deletes just the post
+            await postRepo.DeleteAsync(postWithAllReports); 
 
             DeleteAllPostReports(postWithAllReports.Reports);
 

@@ -22,7 +22,7 @@
 
     public class PostBusinessService : IPostBusinessService
     {
-        private readonly IPostDataService postDataService;
+        private readonly IPostRepository postRepo;
         private readonly IPostReportBusinessService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserDataService userService;
@@ -30,7 +30,7 @@
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
 
-        public PostBusinessService(IPostDataService postDataService,
+        public PostBusinessService(IPostRepository postRepo,
             IPostReportBusinessService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
             IUserDataService userService,
@@ -38,7 +38,7 @@
             ICategoryRepository categoryRepository,
             IMapper mapper)
         {
-            this.postDataService = postDataService;
+            this.postRepo = postRepo;
             this.postReportBusinessService = postReportBusinessService;
             this.htmlManipulator = htmlManipulator;
             this.userService = userService;
@@ -62,7 +62,7 @@
             post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
             post.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
 
-            await postDataService.AddPostAsync(post);
+            await postRepo.AddPostAsync(post);
 
             await postReportBusinessService
                 .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
@@ -89,10 +89,13 @@
         {
             var currentTime = DateTime.UtcNow;
 
-            var postToMarkAsDeleted = await postDataService
-                .GetByIdAsync(postId, PostQueryFilter.WithReports);
+            var postToMarkAsDeleted = await postRepo
+                .GetById(postId)
+                .Include(x => x.Reports)
+                .FirstOrDefaultAsync();
 
             postToMarkAsDeleted.IsDeleted = true;
+
             postToMarkAsDeleted.ModifiedOn = currentTime;
 
             foreach (var report in postToMarkAsDeleted.Reports)
@@ -101,15 +104,18 @@
                 report.ModifiedOn = currentTime;
             }
 
-            await postDataService.UpdatePostAsync(postToMarkAsDeleted);
+            await postRepo.UpdateAsync(postToMarkAsDeleted);
         }
 
         public async Task<Post> Edit(EditPostFormModel viewModelData)
         {
-            var originalPost = await postDataService
-                .GetByIdAsync(viewModelData.PostId, PostQueryFilter.WithoutDeleted);
+            var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
-            var postChanges = await GetPostChangesAsync(viewModelData.PostId, viewModelData.HtmlContent, viewModelData.Title, viewModelData.CategoryId);
+            var postChanges = await GetPostChangesAsync(
+                viewModelData.PostId,
+                viewModelData.HtmlContent,
+                viewModelData.Title,
+                viewModelData.CategoryId);
 
             if (postChanges.Count == 0)
             {
@@ -119,33 +125,27 @@
             AddPostChanges(originalPost, viewModelData, postChanges);
 
             var sanitizedHtml = htmlManipulator.Sanitize(originalPost.HtmlContent);
+
             var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
 
             var postDescriptionWithoutHtmlTags = htmlManipulator.Escape(decodedHtml);
 
             originalPost.HtmlContent = decodedHtml;
+
             originalPost.ShortDescription = GeneratePostShortDescription(postDescriptionWithoutHtmlTags, 300);
+
             originalPost.ModifiedOn = DateTime.UtcNow;
 
-            await postDataService.UpdatePostAsync(originalPost);
+            await postRepo.UpdateAsync(originalPost);
 
             await postReportBusinessService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
 
             return originalPost;
         }
 
-        /// <summary>
-        /// Checks which parts of a post have been changed during edit (if any)
-        /// </summary>
-        /// <param name="originalPost">The source post</param>
-        /// <param name="newHtmlContent">The new post html content</param>
-        /// <param name="newTitle">The new post title</param>
-        /// <param name="newCategoryId">The new post category Id</param>
-        /// <returns>Task<Dictionary<string, bool>></returns>
-
         public async Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId)
         {
-            var originalPost = await postDataService.GetByIdAsync(originalPostId);
+            var originalPost = await postRepo.GetByIdAsync(originalPostId);
 
             var kvp = new Dictionary<string, bool>();
 
@@ -170,20 +170,27 @@
             return kvp;
         }
 
-        public async Task<bool> IsAuthor(int userId, int postId)
+        public Task<bool> IsAuthor(int userId, int postId)
         {
-            var posts = postDataService.All(PostQueryFilter.AsNoTracking);
-
-            return await posts.AnyAsync(x => x.Id == postId && x.UserId == userId);
+            return postRepo
+                .All()
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
-        public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category)
+        public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(
+            int sortType,
+            int sortOrder,
+            string searchTerm,
+            string category)
         {
-            var posts = postDataService.All(
-                    PostQueryFilter.WithUser,
-                    PostQueryFilter.WithIdentityUser,
-                    PostQueryFilter.WithoutDeleted,
-                    PostQueryFilter.AsNoTracking);
+            var posts = postRepo
+                .All()
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.User)
+                .ThenInclude(x => x.IdentityUser)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -215,15 +222,18 @@
             return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider); ;
         }
 
-        public async Task<ViewPostViewModel> GenerateViewPostModel(int postId)
+        public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
         {
-            var post = await postDataService.GetByIdAsync(postId,
-                PostQueryFilter.WithIdentityUser,
-                PostQueryFilter.WithUserPosts,
-                PostQueryFilter.WithComments,
-                PostQueryFilter.WithVotes);
+            var post = postRepo
+                .GetById(postId)
+                .Include(x => x.Comments)
+                .Include(x => x.Votes)
+                .Include(x => x.User).ThenInclude(x => x.Posts)
+                .Include(x => x.User).ThenInclude(x => x.IdentityUser);
 
-            return mapper.Map<ViewPostViewModel>(post) ?? null;
+            return mapper
+                .ProjectTo<ViewPostViewModel>(post)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AddPostFormModel> GeneratedAddPostFormModelAsync()
@@ -254,8 +264,9 @@
 
         public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId)
         {
-            var post = postDataService
-                        .GetByIdAsQueryable(postId, PostQueryFilter.WithCategory);
+            var post = postRepo
+                        .GetById(postId)
+                        .Include(x => x.Category);
 
             var vm = mapper
                     .ProjectTo<EditPostFormModel>(post)
@@ -287,12 +298,12 @@
 
         public async Task<bool> PostExistsAsync(string postTitle)
         {
-            return await postDataService.PostExistsAsync(postTitle);
+            return await postRepo.ExistsAsync(postTitle);
         }
 
         public async Task<bool> PostExistsAsync(int postId)
         {
-            return await postDataService.PostExistsAsync(postId);
+            return await postRepo.ExistsAsync(postId);
         }
 
         public async Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal)

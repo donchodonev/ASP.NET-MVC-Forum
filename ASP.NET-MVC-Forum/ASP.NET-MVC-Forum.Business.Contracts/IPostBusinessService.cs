@@ -28,7 +28,7 @@
 
         public string GenerateShortDescription(string escapedHtml);
 
-        public Task<ViewPostViewModel> GenerateViewPostModel(int postId);
+        public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId);
 
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
 

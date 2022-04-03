@@ -15,20 +15,20 @@
     public class ChartService : IChartService
     {
         private readonly IChartRepository chartRepo;
-        private readonly IPostDataService postsData;
+        private readonly IPostRepository postRepo;
         private readonly ICategoryRepository categoryRepo;
 
-        public ChartService(IChartRepository chartRepo, IPostDataService postsData,
+        public ChartService(IChartRepository chartRepo, IPostRepository postRepo,
             ICategoryRepository categoryRepo)
         {
             this.chartRepo = chartRepo;
-            this.postsData = postsData;
+            this.postRepo = postRepo;
             this.categoryRepo = categoryRepo;
         }
 
         public async Task<List<MostCommentedPostsResponeModel>> GetMostCommentedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postsData.All())
+            var posts = new PostQueryBuilder(postRepo.All())
                 .WithoutDeleted()
                 .IncludeComments()
                 .BuildQuery();
@@ -44,7 +44,7 @@
 
         public async Task<List<MostLikedPostsResponeModel>> GetMostLikedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postsData.All())
+            var posts = new PostQueryBuilder(postRepo.All())
                 .WithoutDeleted()
                 .IncludeVotes()
                 .BuildQuery();
@@ -60,7 +60,7 @@
 
         public async Task<List<MostReportedPostsResponeModel>> GetMostReportedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postsData.All())
+            var posts = new PostQueryBuilder(postRepo.All())
                 .WithoutDeleted()
                 .IncludeReports()
                 .BuildQuery();

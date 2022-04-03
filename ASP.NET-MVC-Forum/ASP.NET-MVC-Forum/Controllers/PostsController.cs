@@ -31,7 +31,7 @@
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postBusinessService.GenerateViewPostModel(postId);
+            var post = await postBusinessService.GenerateViewPostModelAsync(postId);
 
             if (post == null)
             {
