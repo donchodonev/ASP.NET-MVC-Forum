@@ -8,7 +8,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public interface IPostBusinessService
+    public interface IPostService
     {
         public Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal);
 

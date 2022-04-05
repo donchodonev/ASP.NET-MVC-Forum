@@ -20,9 +20,9 @@
     public class ChatController : Controller
     {
         private readonly UserManager<ExtendedIdentityUser> userManager;
-        private readonly IChatBusinessService chatService;
+        private readonly IChatService chatService;
 
-        public ChatController(UserManager<ExtendedIdentityUser> userManager, IChatBusinessService chatService)
+        public ChatController(UserManager<ExtendedIdentityUser> userManager, IChatService chatService)
         {
             this.userManager = userManager;
             this.chatService = chatService;

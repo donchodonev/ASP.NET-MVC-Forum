@@ -13,13 +13,13 @@
     using System;
     using System.Threading.Tasks;
 
-    public class ChatBusinessService : IChatBusinessService
+    public class ChatService : IChatService
     {
         private readonly IMapper mapper;
         private readonly IUserRepository userRepo;
         private readonly IChatRepository chatRepo;
 
-        public ChatBusinessService(
+        public ChatService(
             IMapper mapper,
             IUserRepository userRepo,
             IChatRepository chatRepo)

@@ -16,10 +16,10 @@
     [Authorize(Roles = AdminOrModerator)]
     public class PostReportsController : Controller
     {
-        private readonly IPostReportBusinessService postReportService;
+        private readonly IPostReportService postReportService;
         private readonly ICensorService censorService;
 
-        public PostReportsController(IPostReportBusinessService postReportService, ICensorService censorService)
+        public PostReportsController(IPostReportService postReportService, ICensorService censorService)
         {
             this.postReportService = postReportService;
             this.censorService = censorService;

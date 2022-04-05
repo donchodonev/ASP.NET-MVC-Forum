@@ -14,9 +14,9 @@
     [Authorize(Roles = AdminOrModerator)]
     public class CommentReportsController : Controller
     {
-        private readonly ICommentReportBusinessService commentReportService;
+        private readonly ICommentReportService commentReportService;
 
-        public CommentReportsController(ICommentReportBusinessService commentReportService)
+        public CommentReportsController(ICommentReportService commentReportService)
         {
             this.commentReportService = commentReportService;
         }

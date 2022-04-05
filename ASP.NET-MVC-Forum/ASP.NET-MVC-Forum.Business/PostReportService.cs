@@ -15,14 +15,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class PostReportBusinessService : IPostReportBusinessService
+    public class PostReportService : IPostReportService
     {
         private readonly IPostReportRepository postReportRepo;
         private readonly IPostRepository postRepo;
         private readonly ICensorService censorService;
         private readonly IMapper mapper;
 
-        public PostReportBusinessService(
+        public PostReportService(
             IPostReportRepository postReportRepo, 
             IPostRepository postRepo,
             ICensorService censorService, 

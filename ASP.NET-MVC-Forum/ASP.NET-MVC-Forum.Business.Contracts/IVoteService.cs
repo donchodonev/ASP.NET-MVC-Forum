@@ -3,7 +3,7 @@
     using ASP.NET_MVC_Forum.Domain.Models.Votes;
     using System.Threading.Tasks;
 
-    public interface IVoteBusinessService
+    public interface IVoteService
     {
         public Task RegisterVote(VoteRequestModel incomingVote, string userId);
 

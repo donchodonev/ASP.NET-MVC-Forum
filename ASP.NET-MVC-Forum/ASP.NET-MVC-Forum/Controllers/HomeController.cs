@@ -17,10 +17,10 @@
 
     public class HomeController : Controller
     {
-        private readonly IPostBusinessService postService;
+        private readonly IPostService postService;
         private readonly ICategoryRepository categoryRepository;
 
-        public HomeController(IPostBusinessService postService,ICategoryRepository categoryRepository)
+        public HomeController(IPostService postService,ICategoryRepository categoryRepository)
         {
             this.postService = postService;
             this.categoryRepository = categoryRepository;

@@ -15,10 +15,10 @@
     [ApiController]
     public class VotesController : ControllerBase
     {
-        private readonly IVoteBusinessService voteService;
+        private readonly IVoteService voteService;
         private readonly IUserRepository userRepo;
 
-        public VotesController(IVoteBusinessService voteService, IUserRepository userRepo)
+        public VotesController(IVoteService voteService, IUserRepository userRepo)
         {
             this.voteService = voteService;
             this.userRepo = userRepo;

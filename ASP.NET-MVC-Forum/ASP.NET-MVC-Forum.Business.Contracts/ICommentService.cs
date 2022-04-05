@@ -6,7 +6,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public interface ICommentBusinessService
+    public interface ICommentService
     {
         public Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId);
 

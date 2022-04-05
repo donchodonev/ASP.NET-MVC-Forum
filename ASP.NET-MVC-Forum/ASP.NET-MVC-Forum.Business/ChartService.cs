@@ -8,6 +8,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ColorConstants;
@@ -28,10 +29,10 @@
 
         public async Task<List<MostCommentedPostsResponeModel>> GetMostCommentedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postRepo.All())
-                .WithoutDeleted()
-                .IncludeComments()
-                .BuildQuery();
+            var posts = postRepo
+                .All()
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Comments);
 
             var chartData = await chartRepo
                 .GetStatsAs<MostCommentedPostsResponeModel>(count, posts)
@@ -44,10 +45,10 @@
 
         public async Task<List<MostLikedPostsResponeModel>> GetMostLikedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postRepo.All())
-                .WithoutDeleted()
-                .IncludeVotes()
-                .BuildQuery();
+            var posts = postRepo
+                .All()
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Votes);
 
             var chartData = await chartRepo
                 .GetStatsAs<MostLikedPostsResponeModel>(count, posts)
@@ -60,10 +61,10 @@
 
         public async Task<List<MostReportedPostsResponeModel>> GetMostReportedPostsChartDataAsync(int count)
         {
-            var posts = new PostQueryBuilder(postRepo.All())
-                .WithoutDeleted()
-                .IncludeReports()
-                .BuildQuery();
+            var posts = postRepo
+                .All()
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Reports);
 
             var chartData = await chartRepo
                 .GetStatsAs<MostReportedPostsResponeModel>(count, posts)
@@ -76,11 +77,10 @@
 
         public async Task<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategoryAsync(int count)
         {
-            var categories = new CategoryQueryBuilder(categoryRepo.All())
-                .WithoutDeleted()
-                .IncludePosts()
-                .BuildQuery();
-
+            var categories = categoryRepo
+                .All()
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Posts);
 
             var chartData = await chartRepo
                 .GetStatsAs<MostPostsPerCategoryResponseModel>(count, categories)

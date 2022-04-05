@@ -4,7 +4,7 @@
 
     using System.Threading.Tasks;
 
-    public interface IChatBusinessService
+    public interface IChatService
     {
         public Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(string recipientUsername, string currentIdentityUserId, string currentIdentityUserUsername);
         public Task<T> GenerateChatConversationViewModel<T>(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername);

@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
@@ -20,18 +21,18 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public class PostBusinessService : IPostBusinessService
+    public class PostService : IPostService
     {
         private readonly IPostRepository postRepo;
-        private readonly IPostReportBusinessService postReportBusinessService;
+        private readonly IPostReportService postReportBusinessService;
         private readonly IHtmlManipulator htmlManipulator;
         private readonly IUserRepository userRepo;
         private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
 
-        public PostBusinessService(IPostRepository postRepo,
-            IPostReportBusinessService postReportBusinessService,
+        public PostService(IPostRepository postRepo,
+            IPostReportService postReportBusinessService,
             IHtmlManipulator htmlManipulator,
             IUserRepository userRepo,
             IVoteRepository voteRepo,
@@ -185,39 +186,15 @@
             string searchTerm,
             string category)
         {
-            var posts = postRepo
-                .All()
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .Include(x => x.User)
-                .AsQueryable();
+            var allPosts = postRepo.All();
 
-            if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
-            {
-                posts = posts.Where(post => post.Title.Contains(searchTerm));
-            }
-
-            if (!string.IsNullOrEmpty(category) && !string.IsNullOrWhiteSpace(category) && category != "All")
-            {
-                posts = posts.Where(post => post.Category.Name == category);
-            }
-
-            if (sortOrder == 0 && sortType == 0)
-            {
-                posts = posts.OrderByDescending(x => x.CreatedOn);
-            }
-            else if (sortOrder == 0 && sortType == 1)
-            {
-                posts = posts.OrderByDescending(x => x.Title);
-            }
-            else if (sortOrder == 1 && sortType == 0)
-            {
-                posts = posts.OrderBy(x => x.CreatedOn);
-            }
-            else if (sortOrder == 1 && sortType == 1)
-            {
-                posts = posts.OrderBy(x => x.Title);
-            }
+            var posts = new PostQueryBuilder(allPosts)
+                .WithoutDeleted()
+                .IncludeUser()
+                .FindBySearchTerm(searchTerm)
+                .FindByCategoryName(category)
+                .Order(sortType, sortOrder)
+                .BuildQuery();
 
             return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider); ;
         }

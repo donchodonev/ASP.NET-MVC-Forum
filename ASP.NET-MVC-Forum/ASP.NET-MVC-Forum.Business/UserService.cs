@@ -19,7 +19,7 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
-    public class UserBusinessService : IUserBusinessService
+    public class UserService : IUserService
     {
         private readonly IUserRepository userRepo;
         private readonly UserManager<ExtendedIdentityUser> userManager;
@@ -30,7 +30,7 @@
             await userRepo.AvatarUpdateAsync(identityUserId, image);
         }
 
-        public UserBusinessService(
+        public UserService(
             IUserRepository userRepo,
             UserManager<ExtendedIdentityUser> userManager, 
             IMapper mapper)

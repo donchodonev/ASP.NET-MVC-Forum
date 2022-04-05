@@ -17,13 +17,13 @@
     public class PostsController : Controller
     {
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
-        private readonly IPostBusinessService postBusinessService;
-        private readonly IPostReportBusinessService postReportBusinessService;
+        private readonly IPostService postBusinessService;
+        private readonly IPostReportService postReportBusinessService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
-            IPostBusinessService postBusinessService,
-            IPostReportBusinessService postReportBusinessService)
+            IPostService postBusinessService,
+            IPostReportService postReportBusinessService)
         {
             this.signInManager = signInManager;
             this.postBusinessService = postBusinessService;

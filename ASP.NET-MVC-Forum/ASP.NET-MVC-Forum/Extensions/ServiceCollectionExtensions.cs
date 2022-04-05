@@ -57,7 +57,7 @@
 
             services.AddTransient<ICategoryRepository, CategoryRepository>();
 
-            services.AddTransient<IPostBusinessService, PostBusinessService>();
+            services.AddTransient<IPostService, PostService>();
 
             services.AddTransient<IPostRepository, PostRepository>();
 
@@ -65,7 +65,7 @@
 
             services.AddTransient<IPostReportRepository, PostReportRepository>();
 
-            services.AddTransient<IPostReportBusinessService, PostReportBusinessService>();
+            services.AddTransient<IPostReportService, PostReportService>();
 
             services.AddTransient<ICensorService, CensorService>();
 
@@ -73,7 +73,7 @@
 
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
 
-            services.AddTransient<IVoteBusinessService, VoteBusinessService>();
+            services.AddTransient<IVoteService, VoteService>();
 
             services.AddTransient<IVoteRepository, VoteRepository>();
 
@@ -89,13 +89,13 @@
 
             services.AddTransient<IHtmlManipulator, HtmlManipulator>();
 
-            services.AddTransient<IUserBusinessService, UserBusinessService>();
+            services.AddTransient<IUserService, UserService>();
 
-            services.AddTransient<IChatBusinessService, ChatBusinessService>();
+            services.AddTransient<IChatService, ChatService>();
 
-            services.AddTransient<ICommentReportBusinessService, CommentReportBusinessService>();
+            services.AddTransient<ICommentReportService, CommentReportService>();
 
-            services.AddTransient<ICommentBusinessService, CommentBusinessService>();
+            services.AddTransient<ICommentService, CommentService>();
 
             services.AddTransient<IChartService, ChartService>();
 

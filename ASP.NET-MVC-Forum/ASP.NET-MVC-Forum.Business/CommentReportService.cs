@@ -18,14 +18,14 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    public class CommentReportBusinessService : ICommentReportBusinessService
+    public class CommentReportService : ICommentReportService
     {
         private readonly IMapper mapper;
         private readonly ICommentReportRepository commentReportRepo;
         private readonly IProfanityFilter filter;
         private readonly ICommentRepository commentRepo;
 
-        public CommentReportBusinessService(
+        public CommentReportService(
             IMapper mapper,
             ICommentReportRepository commentReportRepo,
             IProfanityFilter filter,
@@ -38,11 +38,10 @@
         }
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
-            var allCommentReports = commentReportRepo.All();
+            var allCommentReports = commentReportRepo
+                .All();
 
-            var activeCommentReports = new CommentReportQueryBuilder(allCommentReports)
-                .WithoutDeleted()
-                .BuildQuery();
+            var activeCommentReports = allCommentReports.Where(x => !x.IsDeleted);
 
             if (reportStatus == "Active")
             {
@@ -51,9 +50,9 @@
                     .ToListAsync();
             }
 
-            var inactiveCommentReports = new CommentReportQueryBuilder(allCommentReports)
-                .DeletedOnly()
-                .BuildQuery();
+            var inactiveCommentReports = commentReportRepo
+                .All()
+                .Where(x => x.IsDeleted);
 
             return await mapper
                 .ProjectTo<CommentReportViewModel>(inactiveCommentReports)
@@ -122,13 +121,11 @@
         {
             if (await ReportExistsAsync(reportId))
             {
-                var allCommentReports = commentReportRepo.All();
-
-                var report = await new CommentReportQueryBuilder(allCommentReports)
-                        .IncludeComment()
-                        .BuildQuery()
-                        .Where(x => x.Id == reportId)
-                        .FirstAsync();
+                var report = await commentReportRepo
+                    .All()
+                    .Where(x => x.Id == reportId)
+                    .Include(x => x.Comment)
+                    .FirstAsync();
 
                 report.IsDeleted = false;
 
@@ -152,13 +149,11 @@
         {
             var timeOfResolution = DateTime.UtcNow;
 
-            var allCommentReports = commentReportRepo.All();
-
-            var report = await new CommentReportQueryBuilder(allCommentReports)
-                       .IncludeComment()
-                       .BuildQuery()
-                       .Where(x => x.Id == reportId)
-                       .FirstAsync();
+            var report = await commentReportRepo
+                .All()
+                .Where(x => x.Id == reportId)
+                .Include(x => x.Comment)
+                .FirstAsync();
 
             report.IsDeleted = true;
 

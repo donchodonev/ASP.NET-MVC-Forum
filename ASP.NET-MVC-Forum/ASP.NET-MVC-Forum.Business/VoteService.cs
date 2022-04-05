@@ -10,12 +10,12 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class VoteBusinessService : IVoteBusinessService
+    public class VoteService : IVoteService
     {
         private readonly IVoteRepository voteRepo;
         private readonly IMapper mapper;
 
-        public VoteBusinessService(IVoteRepository voteRepo, IMapper mapper)
+        public VoteService(IVoteRepository voteRepo, IMapper mapper)
         {
             this.voteRepo = voteRepo;
             this.mapper = mapper;

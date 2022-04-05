@@ -16,14 +16,14 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public class CommentBusinessService : ICommentBusinessService
+    public class CommentService : ICommentService
     {
         private readonly ICommentRepository commentRepo;
         private readonly IMapper mapper;
         private readonly IUserRepository userRepo;
-        private readonly ICommentReportBusinessService commentReportService;
+        private readonly ICommentReportService commentReportService;
 
-        public CommentBusinessService(ICommentRepository commentRepo, IMapper mapper, IUserRepository userRepo, ICommentReportBusinessService commentReportService)
+        public CommentService(ICommentRepository commentRepo, IMapper mapper, IUserRepository userRepo, ICommentReportService commentReportService)
         {
             this.commentRepo = commentRepo;
             this.mapper = mapper;
@@ -33,16 +33,14 @@
 
         public async Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId)
         {
-            var allCommentsQuery = commentRepo.All();
-
-            var commentById = new CommentQueryBuilder(allCommentsQuery)
-                .IncludeUser()
-                .BuildQuery()
-                .Where(x => x.PostId == postId);
+            var commentById = commentRepo
+                .All()
+                .Where(x => x.PostId == postId)
+                .Include(x => x.User)
+                .OrderByDescending(x => x.CreatedOn);
 
             return await mapper
                 .ProjectTo<CommentGetRequestResponseModel>(commentById)
-                .OrderByDescending(x => x.CreatedOn)
                 .ToListAsync();
         }
 

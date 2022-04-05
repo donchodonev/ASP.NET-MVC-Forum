@@ -18,11 +18,11 @@
     [Authorize(Roles = AdminRoleName)]
     public class UsersController : Controller
     {
-        private readonly IUserBusinessService userService;
+        private readonly IUserService userService;
         private readonly IUserRepository userRepo;
 
         public UsersController(
-            IUserBusinessService userService,
+            IUserService userService,
             UserManager<ExtendedIdentityUser> userManager,
             IUserRepository userRepo)
         {

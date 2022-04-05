@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ICommentReportBusinessService
+    public interface ICommentReportService
     {
         public Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus);
 

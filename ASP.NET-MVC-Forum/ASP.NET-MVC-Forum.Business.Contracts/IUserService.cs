@@ -9,7 +9,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IUserBusinessService
+    public interface IUserService
     {
         public Task AvatarUpdateAsync(string identityUserId, IFormFile image);
 

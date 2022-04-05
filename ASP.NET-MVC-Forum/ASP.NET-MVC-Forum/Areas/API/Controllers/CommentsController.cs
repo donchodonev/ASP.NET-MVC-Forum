@@ -13,9 +13,9 @@
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {
-        private readonly ICommentBusinessService commentService;
+        private readonly ICommentService commentService;
 
-        public CommentsController(ICommentBusinessService commentService)
+        public CommentsController(ICommentService commentService)
         {
             this.commentService = commentService;
         }

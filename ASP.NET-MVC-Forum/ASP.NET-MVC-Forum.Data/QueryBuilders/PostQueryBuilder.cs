@@ -49,42 +49,67 @@
             return this;
         }
 
-        public PostQueryBuilder Order(OrderDirection direction, PostOrderType orderType)
+        public PostQueryBuilder IncludeUser()
         {
-            entities = direction switch
+            entities = entities.Include(x => x.User);
+
+            return this;
+        }
+
+        public PostQueryBuilder Order(int orderType, int orderDirection)
+        {
+            entities = orderDirection switch
             {
-                OrderDirection.Ascending => OrderAscendingBy(orderType),
-                OrderDirection.Descending => OrderDescendingBy(orderType),
+                1 => OrderAscendingBy(orderType),
+                0 => OrderDescendingBy(orderType),
                 _ => entities
             };
 
             return this;
         }
 
-        private IQueryable<Post> OrderAscendingBy(PostOrderType orderType)
+        public PostQueryBuilder FindBySearchTerm(string searchTerm)
+        {
+            if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrWhiteSpace(searchTerm))
+            {
+                entities = entities.Where(post => post.Title.Contains(searchTerm));
+            }
+
+            return this;
+        }
+
+        public PostQueryBuilder FindByCategoryName(string category)
+        {
+            if (!string.IsNullOrEmpty(category) && !string.IsNullOrWhiteSpace(category) && category != "All")
+            {
+                entities = entities.Where(post => post.Category.Name == category);
+            }
+
+            return this;
+        }
+
+        private IQueryable<Post> OrderAscendingBy(int orderType)
         {
             IQueryable<Post> query;
 
             query = orderType switch
             {
-                PostOrderType.CommentCount => entities.OrderBy(x => x.Comments.Count),
-                PostOrderType.VoteTypeSum => entities.OrderBy(x => x.Votes.Sum(x => (int)x.VoteType)),
-                PostOrderType.ReportsCount => entities.OrderBy(x => x.Reports.Count),
+                0 => entities.OrderBy(x => x.CreatedOn),
+                1 => entities.OrderBy(x => x.Title),
                 _ => entities
             };
 
             return query;
         }
 
-        private IQueryable<Post> OrderDescendingBy(PostOrderType orderType)
+        private IQueryable<Post> OrderDescendingBy(int orderType)
         {
             IQueryable<Post> query;
 
             query = orderType switch
             {
-                PostOrderType.CommentCount => entities.OrderByDescending(x => x.Comments.Count),
-                PostOrderType.VoteTypeSum => entities.OrderByDescending(x => x.Votes.Sum(x => (int)x.VoteType)),
-                PostOrderType.ReportsCount => entities.OrderByDescending(x => x.Reports.Count),
+                0 => entities.OrderByDescending(x => x.CreatedOn),
+                1 => entities.OrderByDescending(x => x.Title),
                 _ => entities
             };
 

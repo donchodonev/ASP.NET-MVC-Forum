@@ -13,9 +13,9 @@
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly IUserBusinessService userService;
+        private readonly IUserService userService;
 
-        public UsersController(IUserBusinessService userService)
+        public UsersController(IUserService userService)
         {
             this.userService = userService;
         }
