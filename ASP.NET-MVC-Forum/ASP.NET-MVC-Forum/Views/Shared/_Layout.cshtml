@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.MessageType;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,6 +30,21 @@
                 </div>
             </div>
         </nav>
+        @{
+            if (TempData.ContainsKey(ErrorMessage))
+            {
+                <div class="alert alert-warning text-center" role="alert">
+                    @TempData[ErrorMessage]
+                </div>
+            }
+            else if (TempData.ContainsKey(SuccessMessage))
+            {
+                <div class="alert alert-success text-center" role="alert">
+                    @TempData[SuccessMessage]
+                </div>
+            }
+        }
+
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
@@ -38,7 +55,6 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -2,7 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Models;
+    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Infrastructure;
 
     using Microsoft.EntityFrameworkCore;

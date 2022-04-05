@@ -5,19 +5,6 @@
 <link rel="stylesheet" href="~/css/postsAll.css" />
 
 @{
-    if (TempData.ContainsKey(ErrorMessage))
-    {
-        <div class="alert alert-warning text-center" role="alert">
-            @TempData[ErrorMessage]
-        </div>
-    }
-    else if (TempData.ContainsKey(SuccessMessage))
-    {
-        <div class="alert alert-success text-center" role="alert">
-            @TempData[SuccessMessage]
-        </div>
-    }
-
     var previousDisabled = !Model.HasPreviousPage ? "disabled border" : "border-dark";
     var nextDisabled = !Model.HasNextPage ? "disabled border" : "border-dark";
 }

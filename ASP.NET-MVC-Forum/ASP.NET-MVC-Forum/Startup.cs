@@ -43,8 +43,9 @@ namespace ASP.NET_MVC_Forum
             else
             {
                 app.UseHttpsRedirection();
-                app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseExceptionHandler("/Error/Show");
 
             app.UseCookiePolicy();
 

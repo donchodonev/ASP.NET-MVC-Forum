@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Domain.Models
+﻿namespace ASP.NET_MVC_Forum.Domain.Exceptions
 {
     using System;
     using System.Globalization;

@@ -2,12 +2,14 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
 
     using System.Threading.Tasks;
 
@@ -17,22 +19,22 @@
     public class PostsController : Controller
     {
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
-        private readonly IPostService postBusinessService;
-        private readonly IPostReportService postReportBusinessService;
+        private readonly IPostService postService;
+        private readonly IPostReportService postReportService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
-            IPostService postBusinessService,
-            IPostReportService postReportBusinessService)
+            IPostService postService,
+            IPostReportService postReportService)
         {
             this.signInManager = signInManager;
-            this.postBusinessService = postBusinessService;
-            this.postReportBusinessService = postReportBusinessService;
+            this.postService = postService;
+            this.postReportService = postReportService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postBusinessService.GenerateViewPostModelAsync(postId);
+            var post = await postService.GenerateViewPostModelAsync(postId);
 
             if (post == null)
             {
@@ -41,7 +43,7 @@
 
             if (signInManager.IsSignedIn(this.User))
             {
-                await postBusinessService.InjectUserLastVoteType(post, this.User.Id());
+                await postService.InjectUserLastVoteType(post, this.User.Id());
             }
 
             return View(post);
@@ -50,7 +52,7 @@
         [Authorize]
         public async Task<IActionResult> Add()
         {
-            var addPostFormModel = await postBusinessService.GeneratedAddPostFormModelAsync();
+            var addPostFormModel = await postService.GeneratedAddPostFormModelAsync();
 
             if (TempData.ContainsKey("HtmlContent"))
             {
@@ -74,7 +76,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.PostLengthTooSmall, "Posts", "Add");
             }
 
-            if (await postBusinessService.PostExistsAsync(data.Title))
+            if (await postService.PostExistsAsync(data.Title))
             {
                 TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
@@ -82,7 +84,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.DuplicatePostName, "Posts", "Add");
             }
 
-            var newlyCreatedPost = await postBusinessService.CreateNewAsync(data);
+            var newlyCreatedPost = await postService.CreateNewAsync(data);
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
@@ -90,12 +92,12 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            if (!await postBusinessService.IsUserPrivileged(postId, this.User))
+            if (!await postService.IsUserPrivileged(postId, this.User))
             {
                 return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
-            var vm = await postBusinessService.GenerateEditPostFormModelAsync(postId);
+            var vm = await postService.GenerateEditPostFormModelAsync(postId);
 
             return View(vm);
         }
@@ -104,12 +106,12 @@
         [HttpPost]
         public async Task<ActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            if (!await postBusinessService.IsUserPrivileged(data.PostId, this.User))
+            if (!await postService.IsUserPrivileged(data.PostId, this.User))
             {
                 return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
-            var postChanges = await postBusinessService
+            var postChanges = await postService
                 .GetPostChangesAsync(data.PostId, data.HtmlContent, data.Title, data.CategoryId);
 
             if (postChanges.Count == 0)
@@ -117,7 +119,7 @@
                 return this.RedirectToActionWithErrorMessage(Error.PostRemainsUnchanged, "Posts", "Edit", new { postId = data.PostId });
             }
 
-            await postBusinessService.Edit(data);
+            await postService.Edit(data);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
@@ -126,29 +128,29 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            if (!await postBusinessService.IsUserPrivileged(postId, this.User))
+            if (!await postService.IsUserPrivileged(postId, this.User))
             {
                 return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
             }
 
-            if (!await postBusinessService.PostExistsAsync(postId))
+            if (!await postService.PostExistsAsync(postId))
             {
                 BadRequest();
             }
 
-            await postBusinessService.Delete(postId);
+            await postService.Delete(postId);
 
             return this.RedirectToActionWithSuccessMessage(Success.PostSuccessfullyDeleted, "Home", "Index");
         }
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
         {
-            if (!await postBusinessService.PostExistsAsync(postId))
+            if (!await postService.PostExistsAsync(postId))
             {
                 return BadRequest();
             }
 
-            await postReportBusinessService.ReportAsync(postId, content);
+            await postReportService.ReportAsync(postId, content);
 
             return this.RedirectToActionWithSuccessMessage(Success.ReportThankYouMessage, "Home", "Index");
         }

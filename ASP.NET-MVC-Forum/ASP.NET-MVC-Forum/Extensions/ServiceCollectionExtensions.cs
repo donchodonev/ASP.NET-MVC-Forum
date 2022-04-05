@@ -99,6 +99,8 @@
 
             services.AddTransient<IChartService, ChartService>();
 
+            services.AddTransient<IPostValidationService, PostValidationService>();
+
             services.AddSingleton(configuration);
 
             services.AddAutoMapper(
