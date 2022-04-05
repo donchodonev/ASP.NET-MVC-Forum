@@ -17,6 +17,7 @@
             public const string USERNAME_TOO_SHORT = "Username must be at least 4 symbols long";
             public const string REPORT_DOES_NOT_EXIST = "A report with such an ID does not exist";
             public const string POST_DOES_NOT_EXIST = "The post doesn't exist";
+            public const string POST_DID_NOT_CHANGE = "There were no changes made";
         }
         public class Success
         {

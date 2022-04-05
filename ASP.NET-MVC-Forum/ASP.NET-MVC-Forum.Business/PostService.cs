@@ -5,7 +5,6 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
@@ -17,7 +16,6 @@
     using Microsoft.EntityFrameworkCore;
 
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -114,18 +112,11 @@
         {
             var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
-            var postChanges = await GetPostChangesAsync(
+            await postValidationService.ValidatePostChangedAsync(
                 viewModelData.PostId,
                 viewModelData.HtmlContent,
                 viewModelData.Title,
                 viewModelData.CategoryId);
-
-            if (postChanges.Count == 0)
-            {
-                return originalPost;
-            }
-
-            AddPostChanges(originalPost, viewModelData, postChanges);
 
             var sanitizedHtml = htmlManipulator.Sanitize(originalPost.HtmlContent);
 
@@ -134,6 +125,10 @@
             var postDescriptionWithoutHtmlTags = htmlManipulator.Escape(decodedHtml);
 
             originalPost.HtmlContent = decodedHtml;
+
+            originalPost.CategoryId = viewModelData.CategoryId;
+
+            originalPost.Title = viewModelData.Title;
 
             originalPost.ShortDescription = GeneratePostShortDescription(postDescriptionWithoutHtmlTags, 300);
 
@@ -144,33 +139,6 @@
             await postReportService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
 
             return originalPost;
-        }
-
-        public async Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId)
-        {
-            var originalPost = await postRepo.GetByIdAsync(originalPostId);
-
-            var kvp = new Dictionary<string, bool>();
-
-            var sanitizedAndDecodedHtml = htmlManipulator
-                .Decode(htmlManipulator.Sanitize(newHtmlContent));
-
-            if (originalPost.HtmlContent.Length != sanitizedAndDecodedHtml.Length)
-            {
-                kvp.Add("HtmlContent", true);
-            }
-
-            if (originalPost.Title != newTitle)
-            {
-                kvp.Add("Title", true);
-            }
-
-            if (originalPost.CategoryId != newCategoryId)
-            {
-                kvp.Add("CategoryId", true);
-            }
-
-            return kvp;
         }
 
         public Task<bool> IsAuthor(string userId, int postId)
@@ -202,18 +170,20 @@
 
         public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
         {
-            var post = postRepo
+            var posts = postRepo
                 .GetById(postId)
                 .Include(x => x.Comments)
                 .Include(x => x.Votes)
                 .Include(x => x.User)
                 .ThenInclude(x => x.Posts);
 
-            
-
-            return mapper
-                .ProjectTo<ViewPostViewModel>(post)
+            var post = mapper
+                .ProjectTo<ViewPostViewModel>(posts)
                 .FirstOrDefaultAsync();
+
+            postValidationService.ValidatePostModelNotNull(post);
+
+            return post;
         }
 
         public async Task<AddPostFormModel> GeneratedAddPostFormModelAsync()
@@ -252,25 +222,6 @@
             vm.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             return vm;
-        }
-
-        private void AddPostChanges(Post originalPost, EditPostFormModel newPostData, Dictionary<string, bool> postChanges)
-        {
-            foreach (var kvp in postChanges)
-            {
-                if (kvp.Key == "HtmlContent")
-                {
-                    originalPost.HtmlContent = newPostData.HtmlContent;
-                }
-                if (kvp.Key == "Title")
-                {
-                    originalPost.Title = newPostData.Title;
-                }
-                if (kvp.Key == "CategoryId")
-                {
-                    originalPost.CategoryId = newPostData.CategoryId;
-                }
-            }
         }
 
         public async Task<bool> PostExistsAsync(string postTitle)

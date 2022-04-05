@@ -1,15 +1,14 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
 
     using System.Threading.Tasks;
 
@@ -21,25 +20,23 @@
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostService postService;
         private readonly IPostReportService postReportService;
+        private readonly IPostValidationService postValidationService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
             IPostService postService,
-            IPostReportService postReportService)
+            IPostReportService postReportService,
+            IPostValidationService postValidationService)
         {
             this.signInManager = signInManager;
             this.postService = postService;
             this.postReportService = postReportService;
+            this.postValidationService = postValidationService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
         {
             var post = await postService.GenerateViewPostModelAsync(postId);
-
-            if (post == null)
-            {
-                return this.RedirectToActionWithErrorMessage(Error.POST_DOES_NOT_EXIST, "Home", "Index");
-            }
 
             if (signInManager.IsSignedIn(this.User))
             {
@@ -50,18 +47,13 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Add()
+        public async Task<IActionResult> Add(string title, string htmlContent, int categoryId)
         {
             var addPostFormModel = await postService.GeneratedAddPostFormModelAsync();
 
-            if (TempData.ContainsKey("HtmlContent"))
-            {
-                addPostFormModel.HtmlContent = TempData["HtmlContent"].ToString();
-            }
-            if (TempData.ContainsKey("Title"))
-            {
-                addPostFormModel.Title = TempData["Title"].ToString();
-            }
+            addPostFormModel.Title = title;
+            addPostFormModel.HtmlContent = htmlContent;
+            addPostFormModel.CategoryId = categoryId;
 
             return View(addPostFormModel);
         }
@@ -72,16 +64,30 @@
         {
             if (!ModelState.IsValid)
             {
-                TempData["Title"] = data.Title;
-                return this.RedirectToActionWithErrorMessage(Error.POST_LENGTH_TOO_SMALL, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(
+                    Error.POST_LENGTH_TOO_SMALL,
+                    "Posts",
+                    "Add",
+                    new
+                    {
+                        title = data.Title,
+                        htmlContent = data.HtmlContent,
+                        categoryId = data.CategoryId
+                    });
             }
 
             if (await postService.PostExistsAsync(data.Title))
             {
-                TempData["Title"] = data.Title;
-                TempData["HtmlContent"] = data.HtmlContent;
-
-                return this.RedirectToActionWithErrorMessage(Error.DUPLICATE_POST_NAME, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(
+                    Error.DUPLICATE_POST_NAME,
+                    "Posts",
+                    "Add",
+                    new
+                    {
+                        title = data.Title,
+                        htmlContent = data.HtmlContent,
+                        categoryId = data.CategoryId
+                    });
             }
 
             var newlyCreatedPost = await postService.CreateNewAsync(data);
@@ -109,14 +115,6 @@
             if (!await postService.IsUserPrivileged(data.PostId, this.User))
             {
                 return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
-            }
-
-            var postChanges = await postService
-                .GetPostChangesAsync(data.PostId, data.HtmlContent, data.Title, data.CategoryId);
-
-            if (postChanges.Count == 0)
-            {
-                return this.RedirectToActionWithErrorMessage(Error.POST_IS_UNCHANGED, "Posts", "Edit", new { postId = data.PostId });
             }
 
             await postService.Edit(data);

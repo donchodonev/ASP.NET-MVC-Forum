@@ -20,8 +20,6 @@
 
         public Task<bool> IsAuthor(string userId, int postId);
 
-        public Task<Dictionary<string, bool>> GetPostChangesAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId);
-
         public Task Delete(int postId);
 
         public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category);

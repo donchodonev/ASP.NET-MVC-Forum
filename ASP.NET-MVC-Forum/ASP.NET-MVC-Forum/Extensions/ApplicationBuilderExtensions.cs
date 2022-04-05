@@ -142,9 +142,16 @@
 
         private static async Task SeedAdministratorAsync(IServiceProvider services)
         {
-            var userRepo = services.GetRequiredService<IUserRepository>();
+            var userManager = services.GetRequiredService<UserManager<ExtendedIdentityUser>>();
 
-            await userRepo.AddАsync("Doncho", "Donev", "d123456789D@", "donevdoncho92@gmail.com", "admin");
+            await userManager.CreateAsync(new ExtendedIdentityUser()
+            {
+                FirstName = "Doncho",
+                LastName = "Donev",
+                Email = "donevdoncho92@gmail.com",
+                UserName = "admin",
+                EmailConfirmed = true
+            }, "d123456789D@");
         }
 
         private static async Task SeedRolesAsync(IServiceProvider services)
