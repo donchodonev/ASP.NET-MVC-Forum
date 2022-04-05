@@ -44,14 +44,14 @@
             }
             else if (username.Length < UserConstants.UsernameMinLength)
             {
-                return this.ViewWithErrorMessage(Error.UsernameTooShort);
+                return this.ViewWithErrorMessage(Error.USERNAME_TOO_SHORT);
             }
 
             var identityUser = await userManager.FindByNameAsync(username);
 
             if (identityUser == null)
             {
-                return this.ViewWithErrorMessage(Error.UserDoesNotExist);
+                return this.ViewWithErrorMessage(Error.USER_DOES_NOT_EXIST);
             }
 
             var vm = await chatService.GenerateChatSelectUserViewModel(username,this.User.Id(),this.User.Identity.Name);

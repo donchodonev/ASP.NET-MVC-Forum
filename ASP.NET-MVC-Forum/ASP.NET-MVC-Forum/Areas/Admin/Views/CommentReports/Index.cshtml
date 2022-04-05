@@ -1,16 +1,16 @@
 ﻿@model List<ASP.NET_MVC_Forum.Domain.Models.CommentReport.CommentReportViewModel>;
 @using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
 
-@if (TempData.ContainsKey(MessageType.ErrorMessage))
+@if (TempData.ContainsKey(MessageType.ERROR_MESSAGE))
 {
     <div class="alert alert-success text-center" role="alert">
-        @TempData[MessageType.ErrorMessage]
+        @TempData[MessageType.ERROR_MESSAGE]
     </div>
 }
-else if (TempData.ContainsKey(MessageType.SuccessMessage))
+else if (TempData.ContainsKey(MessageType.SUCCESS_MESSAGE))
 {
     <div class="alert alert-success text-center" role="alert">
-        @TempData[MessageType.SuccessMessage]
+        @TempData[MessageType.SUCCESS_MESSAGE]
     </div>
 }
 

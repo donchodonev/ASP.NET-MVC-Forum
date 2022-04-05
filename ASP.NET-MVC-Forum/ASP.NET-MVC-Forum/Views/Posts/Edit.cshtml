@@ -31,10 +31,10 @@
         </div>
         <div class="text-center mt-3">
             <span class="text-center text-danger " asp-validation-for="Title"></span>
-            @if (TempData.ContainsKey(ErrorMessage))
+            @if (TempData.ContainsKey(ERROR_MESSAGE))
             {
                 <div class="text-center mt-3">
-                    <span class="text-center text-danger ">@TempData[ErrorMessage]</span>
+                    <span class="text-center text-danger ">@TempData[ERROR_MESSAGE]</span>
                 </div>
             }
         </div>

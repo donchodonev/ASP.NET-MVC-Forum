@@ -31,16 +31,16 @@
             </div>
         </nav>
         @{
-            if (TempData.ContainsKey(ErrorMessage))
+            if (TempData.ContainsKey(ERROR_MESSAGE))
             {
                 <div class="alert alert-warning text-center" role="alert">
-                    @TempData[ErrorMessage]
+                    @TempData[ERROR_MESSAGE]
                 </div>
             }
-            else if (TempData.ContainsKey(SuccessMessage))
+            else if (TempData.ContainsKey(SUCCESS_MESSAGE))
             {
                 <div class="alert alert-success text-center" role="alert">
-                    @TempData[SuccessMessage]
+                    @TempData[SUCCESS_MESSAGE]
                 </div>
             }
         }

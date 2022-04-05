@@ -38,44 +38,44 @@
         {
             if (!await userService.ExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_DOES_NOT_EXIST, "Users", "Index");
             }
 
             if (await userService.IsBannedAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserIsAlreadyBanned, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_ALREADY_BANNED, "Users", "Index");
             }
 
             await userService.BanAsync(userId);
 
-            TempData[MessageType.SuccessMessage] = $"User with Id {userId} has been successfully banned indefinitely";
+            TempData[MessageType.SUCCESS_MESSAGE] = $"User with Id {userId} has been successfully banned indefinitely";
 
-            return this.RedirectToActionWithSuccessMessage(Success.UserSucessfullyBanned,"Users","Index");
+            return this.RedirectToActionWithSuccessMessage(Success.USER_BANNED,"Users","Index");
         }
 
         public async Task<IActionResult> RemoveBan(string userId)
         {
             if (!await userService.ExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_DOES_NOT_EXIST, "Users", "Index");
             }
 
             if (!await userService.IsBannedAsync(userId))
             {
-                TempData[MessageType.ErrorMessage] = $"User with Id {userId} is not banned !";
+                TempData[MessageType.ERROR_MESSAGE] = $"User with Id {userId} is not banned !";
                 return RedirectToAction("Index");
             }
 
             await userService.UnbanAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.UserSucessfullyUnBanned, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.USER_BANNED, "Users", "Index");
         }
 
         public async Task<IActionResult> Promote(string userId)
         {
             if (!await userService.ExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_DOES_NOT_EXIST, "Users", "Index");
             }
 
             var identityUser = await userRepo.GetByIdAsync(userId);
@@ -84,31 +84,31 @@
 
             if (isUserModerator)
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserIsAlreadyAModerator, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_IS_MODERATOR_ALREADY, "Users", "Index");
             }
 
             await userService.PromoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.UserSuccessfullyPromoted, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.USER_PROMOTED, "Users", "Index");
         }
 
         public async Task<IActionResult> Demote(string userId)
         {
             if (!await userService.ExistsAsync(userId))
             {
-                return this.RedirectToActionWithErrorMessage(Error.UserDoesNotExist, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.USER_DOES_NOT_EXIST, "Users", "Index");
             }
 
             var userRoles = await userService.GetUserRolesAsync(userId);
 
             if (userRoles.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage(Error.CannotFurtherDemote, "Users", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.CANNOT_FURTHER_DEMOTE, "Users", "Index");
             }
 
             await userService.DemoteAsync(userId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.UserSuccessfullyDemoted, "Users", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.USER_DEMOTED, "Users", "Index");
         }
     }
 }

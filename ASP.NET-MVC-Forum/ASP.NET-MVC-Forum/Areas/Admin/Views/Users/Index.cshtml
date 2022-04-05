@@ -15,16 +15,16 @@
 </script>
 <div>
 
-    @if (TempData.ContainsKey(SuccessMessage))
+    @if (TempData.ContainsKey(SUCCESS_MESSAGE))
     {
         <div class="alert alert-success pb-2 mb-0 text-center" role="alert">
-            @TempData[SuccessMessage]
+            @TempData[SUCCESS_MESSAGE]
         </div>
     }
-    else if (TempData.ContainsKey(ErrorMessage))
+    else if (TempData.ContainsKey(ERROR_MESSAGE))
     {
         <div class="alert alert-danger pb-2 mb-0 text-center" role="alert">
-            @TempData[ErrorMessage]
+            @TempData[ERROR_MESSAGE]
         </div>
     }
 

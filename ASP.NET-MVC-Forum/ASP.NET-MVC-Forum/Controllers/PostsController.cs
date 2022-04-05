@@ -38,7 +38,7 @@
 
             if (post == null)
             {
-                return this.RedirectToActionWithErrorMessage(Error.SuchAPostDoesNotExist, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.POST_DOES_NOT_EXIST, "Home", "Index");
             }
 
             if (signInManager.IsSignedIn(this.User))
@@ -73,7 +73,7 @@
             if (!ModelState.IsValid)
             {
                 TempData["Title"] = data.Title;
-                return this.RedirectToActionWithErrorMessage(Error.PostLengthTooSmall, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(Error.POST_LENGTH_TOO_SMALL, "Posts", "Add");
             }
 
             if (await postService.PostExistsAsync(data.Title))
@@ -81,7 +81,7 @@
                 TempData["Title"] = data.Title;
                 TempData["HtmlContent"] = data.HtmlContent;
 
-                return this.RedirectToActionWithErrorMessage(Error.DuplicatePostName, "Posts", "Add");
+                return this.RedirectToActionWithErrorMessage(Error.DUPLICATE_POST_NAME, "Posts", "Add");
             }
 
             var newlyCreatedPost = await postService.CreateNewAsync(data);
@@ -94,7 +94,7 @@
         {
             if (!await postService.IsUserPrivileged(postId, this.User))
             {
-                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
             }
 
             var vm = await postService.GenerateEditPostFormModelAsync(postId);
@@ -108,7 +108,7 @@
         {
             if (!await postService.IsUserPrivileged(data.PostId, this.User))
             {
-                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
             }
 
             var postChanges = await postService
@@ -116,7 +116,7 @@
 
             if (postChanges.Count == 0)
             {
-                return this.RedirectToActionWithErrorMessage(Error.PostRemainsUnchanged, "Posts", "Edit", new { postId = data.PostId });
+                return this.RedirectToActionWithErrorMessage(Error.POST_IS_UNCHANGED, "Posts", "Edit", new { postId = data.PostId });
             }
 
             await postService.Edit(data);
@@ -130,7 +130,7 @@
         {
             if (!await postService.IsUserPrivileged(postId, this.User))
             {
-                return this.RedirectToActionWithErrorMessage(Error.YouAreNotTheAuthor, "Home", "Index");
+                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
             }
 
             if (!await postService.PostExistsAsync(postId))
@@ -140,7 +140,7 @@
 
             await postService.Delete(postId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.PostSuccessfullyDeleted, "Home", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.POST_DELETED, "Home", "Index");
         }
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
@@ -152,7 +152,7 @@
 
             await postReportService.ReportAsync(postId, content);
 
-            return this.RedirectToActionWithSuccessMessage(Success.ReportThankYouMessage, "Home", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.REPORT_THANK_YOU_MESSAGE, "Home", "Index");
         }
     }
 }

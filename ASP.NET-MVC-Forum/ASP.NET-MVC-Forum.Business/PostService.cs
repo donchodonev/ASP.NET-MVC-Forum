@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Entities;
@@ -24,28 +25,28 @@
     public class PostService : IPostService
     {
         private readonly IPostRepository postRepo;
-        private readonly IPostReportService postReportBusinessService;
+        private readonly IPostReportService postReportService;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly IUserRepository userRepo;
         private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
+        private readonly IPostValidationService postValidationService;
 
         public PostService(IPostRepository postRepo,
-            IPostReportService postReportBusinessService,
+            IPostReportService postReportService,
             IHtmlManipulator htmlManipulator,
-            IUserRepository userRepo,
             IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IPostValidationService postValidationService)
         {
             this.postRepo = postRepo;
-            this.postReportBusinessService = postReportBusinessService;
+            this.postReportService = postReportService;
             this.htmlManipulator = htmlManipulator;
-            this.userRepo = userRepo;
             this.voteRepo = voteRepo;
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
+            this.postValidationService = postValidationService;
         }
 
         public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost)
@@ -66,7 +67,7 @@
 
             await postRepo.AddPostAsync(post);
 
-            await postReportBusinessService
+            await postReportService
                 .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
 
             return mapper.Map<NewlyCreatedPostServiceModel>(post);
@@ -140,7 +141,7 @@
 
             await postRepo.UpdateAsync(originalPost);
 
-            await postReportBusinessService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
+            await postReportService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
 
             return originalPost;
         }
@@ -207,6 +208,8 @@
                 .Include(x => x.Votes)
                 .Include(x => x.User)
                 .ThenInclude(x => x.Posts);
+
+            
 
             return mapper
                 .ProjectTo<ViewPostViewModel>(post)

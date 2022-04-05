@@ -7,7 +7,7 @@
     {
         public static ActionResult ViewWithErrorMessage(this Controller controller, string errorMessage)
         {
-            controller.TempData[ErrorMessage] = errorMessage;
+            controller.TempData[ERROR_MESSAGE] = errorMessage;
             return controller.View();
         }
 
@@ -16,7 +16,7 @@
             string controllerName,
             string actionName)
         {
-            controller.TempData[ErrorMessage] = errorMessage;
+            controller.TempData[ERROR_MESSAGE] = errorMessage;
             return controller.RedirectToAction(actionName, controllerName);
         }
 
@@ -26,7 +26,7 @@
             string actionName,
             object routeValues)
         {
-            controller.TempData[ErrorMessage] = errorMessage;
+            controller.TempData[ERROR_MESSAGE] = errorMessage;
             return controller.RedirectToAction(actionName, controllerName, routeValues);
         }
 
@@ -35,7 +35,7 @@
             string controllerName, 
             string actionName)
         {
-            controller.TempData[GenericMessage] = genericMessage;
+            controller.TempData[GENERIC_MESSAGE] = genericMessage;
             return controller.RedirectToAction(actionName, controllerName);
         }
 
@@ -44,7 +44,7 @@
             string controllerName,
             string actionName)
         {
-            controller.TempData[SuccessMessage] = successMessage;
+            controller.TempData[SUCCESS_MESSAGE] = successMessage;
             return controller.RedirectToAction(actionName, controllerName);
         }
 
@@ -54,7 +54,7 @@
             string actionName,
             object routeValues)
         {
-            controller.TempData[SuccessMessage] = successMessage;
+            controller.TempData[SUCCESS_MESSAGE] = successMessage;
             return controller.RedirectToAction(actionName, controllerName, routeValues);
         }
     }

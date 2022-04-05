@@ -34,20 +34,20 @@
             {
                 await commentReportService.DeleteAsync(reportId);
 
-                return this.RedirectToActionWithSuccessMessage(Success.ReportResolved,"CommentReports","Index", new { reportStatus = "Deleted" });
+                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED,"CommentReports","Index", new { reportStatus = "Deleted" });
             }
 
-            return this.RedirectToActionWithErrorMessage(Error.ReportDoesNotExist, "CommentReports", "Index", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithErrorMessage(Error.REPORT_DOES_NOT_EXIST, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
 
         public async Task<IActionResult> Restore(int reportId)
         {
             if (await commentReportService.RestoreAsync(reportId))
             {
-                return this.RedirectToActionWithSuccessMessage(Success.ReportRestored, "CommentReports", "Index", new { reportStatus = "Active" });
+                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "CommentReports", "Index", new { reportStatus = "Active" });
             }
 
-            return this.RedirectToActionWithSuccessMessage(Error.ReportDoesNotExist, "CommentReports", "Index", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Error.REPORT_DOES_NOT_EXIST, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Censor(int commentId, bool withRegex)
@@ -61,14 +61,14 @@
                 await commentReportService.CensorCommentAsync(commentId);
             }
 
-            return this.RedirectToActionWithSuccessMessage(Success.CommentReportCensored, "CommentReports", "Index", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Success.COMMENT_REPORT_CENSORED, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> DeleteAndResolve(int reportId)
         {
             await commentReportService.DeleteAndResolveAsync(reportId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.CommentReportCensoredAndResolved, "CommentReports", "Index", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(Success.COMMENT_REPORT_CENSORED_AND_RESOLVED, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
     }
 }
