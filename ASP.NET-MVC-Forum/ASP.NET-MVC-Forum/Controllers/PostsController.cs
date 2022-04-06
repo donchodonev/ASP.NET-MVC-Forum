@@ -19,19 +19,19 @@
     {
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostService postService;
+        private readonly IUserValidationService controllerValidationService;
         private readonly IPostReportService postReportService;
-        private readonly IPostValidationService postValidationService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
             IPostService postService,
-            IPostReportService postReportService,
-            IPostValidationService postValidationService)
+            IUserValidationService controllerValidationService,
+            IPostReportService postReportService)
         {
             this.signInManager = signInManager;
             this.postService = postService;
+            this.controllerValidationService = controllerValidationService;
             this.postReportService = postReportService;
-            this.postValidationService = postValidationService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
@@ -90,7 +90,7 @@
                     });
             }
 
-            var newlyCreatedPost = await postService.CreateNewAsync(data);
+            var newlyCreatedPost = await postService.CreateNewAsync(data,this.User.Id());
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
@@ -98,12 +98,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            if (!await postService.IsUserPrivileged(postId, this.User))
-            {
-                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
-            }
-
-            var vm = await postService.GenerateEditPostFormModelAsync(postId);
+            var vm = await postService.GenerateEditPostFormModelAsync(postId, this.User);
 
             return View(vm);
         }
@@ -112,12 +107,7 @@
         [HttpPost]
         public async Task<ActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            if (!await postService.IsUserPrivileged(data.PostId, this.User))
-            {
-                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
-            }
-
-            await postService.Edit(data);
+            await postService.Edit(data,this.User);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
@@ -126,17 +116,7 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId, string postTitle)
         {
-            if (!await postService.IsUserPrivileged(postId, this.User))
-            {
-                return this.RedirectToActionWithErrorMessage(Error.YOU_ARE_NOT_THE_AUTHER, "Home", "Index");
-            }
-
-            if (!await postService.PostExistsAsync(postId))
-            {
-                BadRequest();
-            }
-
-            await postService.Delete(postId);
+            await postService.Delete(postId, this.User);
 
             return this.RedirectToActionWithSuccessMessage(Success.POST_DELETED, "Home", "Index");
         }

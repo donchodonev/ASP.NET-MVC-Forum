@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Enums;
@@ -21,22 +22,28 @@
         private readonly IPostRepository postRepo;
         private readonly ICensorService censorService;
         private readonly IMapper mapper;
+        private readonly IPostValidationService postValidationService;
 
         public PostReportService(
             IPostReportRepository postReportRepo, 
             IPostRepository postRepo,
             ICensorService censorService, 
-            IMapper mapper)
+            IMapper mapper,
+            IPostValidationService postValidationService)
         {
             this.postReportRepo = postReportRepo;
             this.postRepo = postRepo;
             this.censorService = censorService;
             this.mapper = mapper;
+            this.postValidationService = postValidationService;
         }
 
         public async Task ReportAsync(int postId, string reason)
         {
+            await postValidationService.ValidatePostExistsAsync(postId);
+
             var report = new PostReport() { PostId = postId, Reason = reason };
+
             await postReportRepo.AddReport(report);
         }
 

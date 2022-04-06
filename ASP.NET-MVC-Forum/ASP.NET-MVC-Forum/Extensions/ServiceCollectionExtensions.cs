@@ -101,6 +101,8 @@
 
             services.AddTransient<IPostValidationService, PostValidationService>();
 
+            services.AddTransient<IUserValidationService, UserValidationService>();
+
             services.AddSingleton(configuration);
 
             services.AddAutoMapper(

@@ -7,5 +7,7 @@
         public void ValidatePostModelNotNull<T>(T post);
 
         public Task ValidatePostChangedAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId);
+
+        public Task ValidatePostExistsAsync(int postId);
     }
 }

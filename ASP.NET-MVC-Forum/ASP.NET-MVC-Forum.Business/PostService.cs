@@ -29,6 +29,7 @@
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
         private readonly IPostValidationService postValidationService;
+        private readonly IUserValidationService userValidationService;
 
         public PostService(IPostRepository postRepo,
             IPostReportService postReportService,
@@ -36,7 +37,8 @@
             IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
             IMapper mapper,
-            IPostValidationService postValidationService)
+            IPostValidationService postValidationService,
+            IUserValidationService userValidationService)
         {
             this.postRepo = postRepo;
             this.postReportService = postReportService;
@@ -45,9 +47,10 @@
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
             this.postValidationService = postValidationService;
+            this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string userId)
         {
             formModelPost.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
@@ -62,6 +65,8 @@
             post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
 
             post.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
+
+            post.UserId = userId;
 
             await postRepo.AddPostAsync(post);
 
@@ -86,14 +91,18 @@
         /// </summary>
         /// <param name="postId">Post's Id</param>
         /// <returns>Task</returns>
-        public async Task Delete(int postId)
+        public async Task Delete(int postId, ClaimsPrincipal user)
         {
+            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+
             var currentTime = DateTime.UtcNow;
 
             var postToMarkAsDeleted = await postRepo
                 .GetById(postId)
                 .Include(x => x.Reports)
                 .FirstOrDefaultAsync();
+
+            postValidationService.ValidatePostModelNotNull(postToMarkAsDeleted);
 
             postToMarkAsDeleted.IsDeleted = true;
 
@@ -108,8 +117,10 @@
             await postRepo.UpdateAsync(postToMarkAsDeleted);
         }
 
-        public async Task<Post> Edit(EditPostFormModel viewModelData)
+        public async Task<Post> Edit(EditPostFormModel viewModelData, ClaimsPrincipal user)
         {
+            await userValidationService.ValidateUserIsPrivilegedAsync(viewModelData.PostId, user);
+
             var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
             await postValidationService.ValidatePostChangedAsync(
@@ -139,14 +150,6 @@
             await postReportService.AutoGeneratePostReportAsync(originalPost.Title, originalPost.HtmlContent, originalPost.Id);
 
             return originalPost;
-        }
-
-        public Task<bool> IsAuthor(string userId, int postId)
-        {
-            return postRepo
-                .All()
-                .AsNoTracking()
-                .AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
         public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(
@@ -209,8 +212,10 @@
             }
         }
 
-        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId)
+        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId, ClaimsPrincipal user)
         {
+            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+
             var post = postRepo
                         .GetById(postId)
                         .Include(x => x.Category);
@@ -232,11 +237,6 @@
         public async Task<bool> PostExistsAsync(int postId)
         {
             return await postRepo.ExistsAsync(postId);
-        }
-
-        public async Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal)
-        {
-            return await IsAuthor(currentPrincipal.Id(), postId) || currentPrincipal.IsAdminOrModerator();
         }
 
         private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)

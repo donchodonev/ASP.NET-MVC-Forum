@@ -3,24 +3,20 @@
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
-    using System.Collections.Generic;
+
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IPostService
     {
-        public Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal);
-
         public Task<AddPostFormModel> GeneratedAddPostFormModelAsync();
 
-        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post);
+        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string userId);
 
-        public Task<Post> Edit(EditPostFormModel viewModelData);
+        public Task<Post> Edit(EditPostFormModel viewModelData, ClaimsPrincipal user);
 
-        public Task<bool> IsAuthor(string userId, int postId);
-
-        public Task Delete(int postId);
+        public Task Delete(int postId, ClaimsPrincipal user);
 
         public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(int sortType, int sortOrder, string searchTerm, string category);
 
@@ -30,7 +26,7 @@
 
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
 
-        public Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId);
+        public Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId, ClaimsPrincipal user);
 
         public Task<bool> PostExistsAsync(string postTitle);
 
