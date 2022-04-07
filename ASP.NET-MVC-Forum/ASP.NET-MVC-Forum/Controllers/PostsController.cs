@@ -1,7 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Controllers
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
@@ -19,18 +18,15 @@
     {
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostService postService;
-        private readonly IUserValidationService controllerValidationService;
         private readonly IPostReportService postReportService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
             IPostService postService,
-            IUserValidationService controllerValidationService,
             IPostReportService postReportService)
         {
             this.signInManager = signInManager;
             this.postService = postService;
-            this.controllerValidationService = controllerValidationService;
             this.postReportService = postReportService;
         }
 
@@ -76,20 +72,6 @@
                     });
             }
 
-            if (await postService.PostExistsAsync(data.Title))
-            {
-                return this.RedirectToActionWithErrorMessage(
-                    Error.DUPLICATE_POST_NAME,
-                    "Posts",
-                    "Add",
-                    new
-                    {
-                        title = data.Title,
-                        htmlContent = data.HtmlContent,
-                        categoryId = data.CategoryId
-                    });
-            }
-
             var newlyCreatedPost = await postService.CreateNewAsync(data,this.User.Id());
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
@@ -123,11 +105,6 @@
 
         public async Task<IActionResult> Report([FromForm] string content, int postId)
         {
-            if (!await postService.PostExistsAsync(postId))
-            {
-                return BadRequest();
-            }
-
             await postReportService.ReportAsync(postId, content);
 
             return this.RedirectToActionWithSuccessMessage(Success.REPORT_THANK_YOU_MESSAGE, "Home", "Index");

@@ -75,5 +75,13 @@
                 throw new EntityDoesNotExistException(POST_DOES_NOT_EXIST);
             }
         }
+
+        public async Task ValidateTitleNotDuplicateAsync(string title)
+        {
+            if(await postRepo.ExistsAsync(title))
+            {
+                throw new DuplicatePostTitleException(DUPLICATE_POST_NAME);
+            }
+        }
     }
 }

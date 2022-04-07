@@ -52,6 +52,8 @@
 
         public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string userId)
         {
+            await postValidationService.ValidateTitleNotDuplicateAsync(formModelPost.Title);
+
             formModelPost.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
             var post = mapper.Map<Post>(formModelPost);
