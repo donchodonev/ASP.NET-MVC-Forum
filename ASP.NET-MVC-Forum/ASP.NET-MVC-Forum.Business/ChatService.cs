@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Chat;
@@ -18,26 +19,31 @@
         private readonly IMapper mapper;
         private readonly IUserRepository userRepo;
         private readonly IChatRepository chatRepo;
+        private readonly IUserValidationService userValidationService;
 
         public ChatService(
             IMapper mapper,
             IUserRepository userRepo,
-            IChatRepository chatRepo)
+            IChatRepository chatRepo,
+            IUserValidationService userValidationService)
         {
             this.mapper = mapper;
             this.userRepo = userRepo;
             this.chatRepo = chatRepo;
+            this.userValidationService = userValidationService;
         }
 
         public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(
             string recipientUsername,
-            string currentIdentityUserId, 
+            string currentIdentityUserId,
             string currentIdentityUserUsername)
         {
-            var identityUser = userRepo.GetByUsername(recipientUsername);
+            await userValidationService.ValidateUserExistsAsync(recipientUsername);
+
+            var user = userRepo.GetByUsername(recipientUsername);
 
             var vm = await mapper
-                .ProjectTo<ChatSelectUserViewModel>(identityUser)
+                .ProjectTo<ChatSelectUserViewModel>(user)
                 .FirstAsync();
 
             vm.SenderUsername = currentIdentityUserUsername;
@@ -49,10 +55,7 @@
 
         public async Task<T> GenerateChatConversationViewModel<T>(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
-            if (!await chatRepo.ChatExistsAsync(senderIdentityUserId, recipientIdentityUserId))
-            {
-                await chatRepo.CreateChatAsync(senderIdentityUserId, recipientIdentityUserId);
-            }
+            await chatRepo.CreateChatAsync(senderIdentityUserId, recipientIdentityUserId);
 
             var chatId = await chatRepo.GetChatIdAsync(senderIdentityUserId, recipientIdentityUserId);
 

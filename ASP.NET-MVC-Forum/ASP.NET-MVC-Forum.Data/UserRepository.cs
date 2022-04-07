@@ -121,7 +121,7 @@
 
             db.Update(user);
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         public bool IsAvatarDefault(string userId)

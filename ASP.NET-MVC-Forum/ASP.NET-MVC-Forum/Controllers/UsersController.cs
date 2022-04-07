@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    using System;
     using System.Threading.Tasks;
 
     [Authorize]
@@ -24,15 +23,7 @@
         {
             string identityUserId = this.User.Id();
 
-            try
-            {
-                await userService.AvatarUpdateAsync(identityUserId, file);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                TempData["Message"] = ex.ParamName;
-                return LocalRedirect("/Identity/Account/Manage#message");
-            }
+            await userService.AvatarUpdateAsync(identityUserId, file);
 
             TempData["Message"] = $"Your image has been successfully uploaded";
 

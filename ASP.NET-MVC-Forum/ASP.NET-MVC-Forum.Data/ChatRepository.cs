@@ -67,19 +67,22 @@
             return db
                 .Chats
                 .FirstOrDefaultAsync(x =>
-                (x.UserA == identityUserA && x.UserB == identityUserB) 
+                (x.UserA == identityUserA && x.UserB == identityUserB)
                 ||
                 (x.UserA == identityUserB && x.UserB == identityUserA))
                 .Id;
         }
 
-        public Task CreateChatAsync(string identityUserA, string identityUserB)
+        public async Task CreateChatAsync(string identityUserA, string identityUserB)
         {
-            Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
+            if (!await ChatExistsAsync(identityUserA, identityUserB))
+            {
+                Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
 
-            db.Chats.Add(chat);
+                db.Chats.Add(chat);
 
-            return db.SaveChangesAsync();
+                await db.SaveChangesAsync();
+            }
         }
 
         public IQueryable<Message> GetLastMessagesAsNoTracking(long chatId, int count = 100)

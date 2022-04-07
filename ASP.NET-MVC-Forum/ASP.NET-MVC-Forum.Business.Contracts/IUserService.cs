@@ -4,13 +4,13 @@
     using ASP.NET_MVC_Forum.Domain.Models.User;
 
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
 
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IUserService
     {
+        public Task<ExtendedIdentityUser> GetByUsernameAsync(string username);
         public Task AvatarUpdateAsync(string identityUserId, IFormFile image);
 
         public Task<List<UserViewModel>> GenerateUserViewModelAsync();

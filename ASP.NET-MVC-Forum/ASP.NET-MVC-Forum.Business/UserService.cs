@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.User;
@@ -22,22 +23,35 @@
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepo;
-        private readonly UserManager<ExtendedIdentityUser> userManager;
+        private readonly IUserValidationService userValidationService;
         private readonly IMapper mapper;
+        private readonly UserManager<ExtendedIdentityUser> userManager;
 
+        public UserService(
+            IUserRepository userRepo,
+            IUserValidationService userValidationService,
+            IMapper mapper,
+            UserManager<ExtendedIdentityUser> userManager)
+        {
+            this.userRepo = userRepo;
+            this.userValidationService = userValidationService;
+            this.mapper = mapper;
+            this.userManager = userManager;
+        }
         public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
         {
             await userRepo.AvatarUpdateAsync(identityUserId, image);
         }
 
-        public UserService(
-            IUserRepository userRepo,
-            UserManager<ExtendedIdentityUser> userManager, 
-            IMapper mapper)
+        public async Task<ExtendedIdentityUser> GetByUsernameAsync(string username)
         {
-            this.userRepo = userRepo;
-            this.userManager = userManager;
-            this.mapper = mapper;
+            userValidationService.ValidateUsername(username);
+
+            var user = await userRepo.GetByUsernameAsync(username);
+
+            userValidationService.ValidateNotNull(user);
+
+            return user;
         }
 
         public async Task<List<UserViewModel>> GenerateUserViewModelAsync()

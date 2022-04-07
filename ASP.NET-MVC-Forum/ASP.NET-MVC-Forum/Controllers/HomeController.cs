@@ -2,7 +2,6 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Domain.Models;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
 
@@ -56,7 +55,9 @@
 
             ViewBag.SortOrderOptions = new SelectList(GetOrderType(), "Key", "Value", sortOrder);
 
-            ViewBag.CategoryNames = new SelectList((await categoryRepository.GetCategoryNamesAsync()).Prepend("All"), category);
+            var categories = (await categoryRepository.GetCategoryNamesAsync()).Prepend("All");
+
+            ViewBag.CategoryNames = new SelectList(categories, category);
 
             ViewBag.ViewCountOptions = new SelectList(GetViewCountOptions(), viewCount);
 
