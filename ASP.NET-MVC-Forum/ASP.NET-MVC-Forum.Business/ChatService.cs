@@ -3,15 +3,16 @@
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Chat;
 
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
 
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class ChatService : IChatService
@@ -60,6 +61,46 @@
             var chatId = await chatRepo.GetChatIdAsync(senderIdentityUserId, recipientIdentityUserId);
 
             return (T)Activator.CreateInstance(typeof(T), chatId, senderIdentityUserId, recipientIdentityUserId, senderUsername);
+        }
+
+        public async Task SendMessageToClientsAsync(
+            string senderIdentityId,
+            string receiverIdentityId,
+            string message,
+            long chatId,
+            string senderUsername,
+            IHubCallerClients clients)
+        {
+            var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
+
+            var time = persistedMessage
+                .CreatedOn
+                .AddHours(2) // FOR GMT+2
+                .ToString("HH:mm:ss");
+
+            var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
+
+            await clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
+
+            await clients.Group(receiverIdentityId + senderIdentityId).SendAsync("ReceiveMessage", response);
+        }
+
+        public Task<List<ChatMessageResponseData>> GetHistoryAsync(long chatId)
+        {
+            return chatRepo
+                    .GetLastMessagesAsNoTracking(chatId)
+                    .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
+                    .ToListAsync();
+        }
+
+        public async Task SendHistoryAsync(long chatId,
+            string sender,
+            string receiver,
+            IHubCallerClients clients)
+        {
+            var messages = await GetHistoryAsync(chatId);
+
+            await clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
         }
     }
 }
