@@ -6,7 +6,7 @@
     using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
     [Area("Admin")]
-    [Authorize(Roles = AdminOrModerator)]
+    [Authorize(Roles = ADMIN_OR_MODERATOR)]
     public class HomeController : Controller
     {
         private readonly List<(string chartName,string url)> chartNameAndURL;

@@ -13,7 +13,7 @@
 
 
     [Area("Admin")]
-    [Authorize(Roles = AdminOrModerator)]
+    [Authorize(Roles = ADMIN_OR_MODERATOR)]
     public class PostReportsController : Controller
     {
         private readonly IPostReportService postReportService;

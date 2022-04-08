@@ -144,33 +144,37 @@
         {
             var userManager = services.GetRequiredService<UserManager<ExtendedIdentityUser>>();
 
-            await userManager.CreateAsync(new ExtendedIdentityUser()
+            var user = new ExtendedIdentityUser()
             {
                 FirstName = "Doncho",
                 LastName = "Donev",
                 Email = "donevdoncho92@gmail.com",
                 UserName = "admin",
                 EmailConfirmed = true
-            }, "d123456789D@");
+            };
+
+            await userManager.CreateAsync(user, "d123456789D@");
+
+            await userManager.AddToRoleAsync(user, ADMIN_ROLE);
         }
 
         private static async Task SeedRolesAsync(IServiceProvider services)
         {
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            if (await roleManager.RoleExistsAsync(AdminRoleName))
+            if (await roleManager.RoleExistsAsync(ADMIN_ROLE))
             {
                 return;
             }
 
-            if (await roleManager.RoleExistsAsync(ModeratorRoleName))
+            if (await roleManager.RoleExistsAsync(MODERATOR_ROLE))
             {
                 return;
             }
 
-            var adminRole = new IdentityRole() { Name = AdminRoleName };
+            var adminRole = new IdentityRole() { Name = ADMIN_ROLE };
 
-            var moderatorRole = new IdentityRole() { Name = ModeratorRoleName };
+            var moderatorRole = new IdentityRole() { Name = MODERATOR_ROLE };
 
             await roleManager.CreateAsync(adminRole);
 

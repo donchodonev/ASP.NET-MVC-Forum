@@ -11,7 +11,7 @@
     using static ASP.NET_MVC_Forum.Web.Extensions.ControllerExtensions;
 
     [Area("Admin")]
-    [Authorize(Roles = AdminOrModerator)]
+    [Authorize(Roles = ADMIN_OR_MODERATOR)]
     public class CommentReportsController : Controller
     {
         private readonly ICommentReportService commentReportService;

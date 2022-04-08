@@ -64,7 +64,7 @@
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="Promote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Promote</a>
                                                     }
 
-                                                    if (user.Roles.Contains(ModeratorRoleName))
+                                                    if (user.Roles.Contains(MODERATOR_ROLE))
                                                     {
                                                         <a asp-area="Admin" asp-controller="Users" asp-action="Demote" asp-route-userId="@user.Id" type="button" class="btn btn-primary text-light">Demote</a>
                                                     }
@@ -75,7 +75,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (!user.Roles.Contains(AdminRoleName))
+                                                        if (!user.Roles.Contains(ADMIN_ROLE))
                                                         {
                                                             <a asp-area="Admin" asp-controller="Users" asp-action="Ban" asp-route-userId="@user.Id" type="button" class="btn btn-danger text-light">Ban</a>
                                                         }

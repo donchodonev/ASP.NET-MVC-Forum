@@ -20,7 +20,7 @@
             </a>
 
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                @if (User.IsInRole(AdminRoleName) || User.IsInRole(ModeratorRoleName))
+                @if (User.IsInRole(ADMIN_ROLE) || User.IsInRole(MODERATOR_ROLE))
                 {
                     <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin Dashboard</a>
                 }

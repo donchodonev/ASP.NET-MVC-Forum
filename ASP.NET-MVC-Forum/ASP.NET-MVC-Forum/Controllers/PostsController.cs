@@ -96,7 +96,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Delete(int postId, string postTitle)
+        public async Task<IActionResult> Delete(int postId)
         {
             await postService.Delete(postId, this.User);
 
