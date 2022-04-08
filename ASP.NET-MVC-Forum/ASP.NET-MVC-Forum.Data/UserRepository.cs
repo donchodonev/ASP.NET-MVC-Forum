@@ -56,11 +56,14 @@
             return userManager.UpdateAsync(user);
         }
 
-        public async Task<bool> ExistsAsync(string userId)
+        public async Task<bool> ExistsByIdAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            return (await userManager.FindByIdAsync(userId)) == null;
+        }
 
-            return user == null;
+        public async Task<bool> ExistsByUsernameAsync(string username)
+        {
+            return (await userManager.FindByNameAsync(username)) == null;
         }
 
         public IQueryable<ExtendedIdentityUser> GetAll()
@@ -76,6 +79,14 @@
         public IQueryable<ExtendedIdentityUser> GetById(string userId)
         {
             return db.Users.Where(x => x.Id == userId);
+        }
+
+        public Task<bool> IsBannedAsync(string userId)
+        {
+            return
+                GetById(userId)
+                .Select(x => x.IsBanned)
+                .FirstOrDefaultAsync();
         }
 
         public Task<ExtendedIdentityUser> GetByIdAsync(string userId)
@@ -161,6 +172,11 @@
             var identityUser = await GetByIdAsync(userId);
 
             await userManager.AddToRoleAsync(identityUser, roleName);
+        }
+
+        public Task<bool> IsInRoleAsync(ExtendedIdentityUser user, string role)
+        {
+            return userManager.IsInRoleAsync(user, role);
         }
 
         public string GetImageExtension(IFormFile image)

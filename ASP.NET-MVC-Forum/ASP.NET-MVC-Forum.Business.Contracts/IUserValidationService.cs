@@ -11,8 +11,18 @@
 
         public void ValidateUsername(string username);
 
-        public void ValidateNotNull(ExtendedIdentityUser user);
+        public void ValidateUserNotNull(ExtendedIdentityUser user);
 
-        public Task ValidateUserExistsAsync(string username);
+        public Task ValidateUserExistsByUsernameAsync(string username);
+
+        public Task ValidateUserExistsByIdAsync(string userId);
+
+        public Task ValidateUserIsNotBannedAsync(string userId);
+
+        public Task ValidateUserIsBannedAsync(string userId);
+
+        public Task ValidateUserIsNotModerator(ExtendedIdentityUser user);
+
+        public Task ValidateUserIsModerator(string userId);
     }
 }

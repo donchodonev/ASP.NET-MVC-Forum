@@ -14,6 +14,7 @@
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.Error;
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants;
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
     public class UserValidationService : IUserValidationService
     {
@@ -60,16 +61,58 @@
             }
         }
 
-        public void ValidateNotNull(ExtendedIdentityUser user)
+        public void ValidateUserNotNull(ExtendedIdentityUser user)
         {
             throw new NullUserException(USER_DOES_NOT_EXIST);
         }
 
-        public async Task ValidateUserExistsAsync(string username)
+        public async Task ValidateUserExistsByUsernameAsync(string username)
         {
-            if (!await userRepo.ExistsAsync(username))
+            if (!await userRepo.ExistsByUsernameAsync(username))
             {
                 throw new NullUserException(USER_DOES_NOT_EXIST);
+            }
+        }
+
+        public async Task ValidateUserExistsByIdAsync(string userId)
+        {
+            if (!await userRepo.ExistsByIdAsync(userId))
+            {
+                throw new NullUserException(USER_DOES_NOT_EXIST);
+            }
+        }
+
+        public async Task ValidateUserIsNotBannedAsync(string userId)
+        {
+            if (await userRepo.IsBannedAsync(userId))
+            {
+                throw new UserIsBannedException(USER_ALREADY_BANNED);
+            }
+        }
+
+        public async Task ValidateUserIsBannedAsync(string userId)
+        {
+            if (!await userRepo.IsBannedAsync(userId))
+            {
+                throw new UserIsBannedException(USER_NOT_YET_BANNED);
+            }
+        }
+
+        public async Task ValidateUserIsNotModerator(ExtendedIdentityUser user)
+        {
+            if (await userRepo.IsInRoleAsync(user, MODERATOR_ROLE))
+            {
+                throw new InvalidRoleException(USER_IS_MODERATOR_ALREADY);
+            }
+        }
+
+        public async Task ValidateUserIsModerator(string userId)
+        {
+            var user = await userRepo.GetByIdAsync(userId);
+
+            if (!await userRepo.IsInRoleAsync(user, MODERATOR_ROLE))
+            {
+                throw new InvalidRoleException(CANNOT_FURTHER_DEMOTE);
             }
         }
     }

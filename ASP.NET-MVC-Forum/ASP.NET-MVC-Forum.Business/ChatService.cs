@@ -39,7 +39,7 @@
             string currentIdentityUserId,
             string currentIdentityUserUsername)
         {
-            await userValidationService.ValidateUserExistsAsync(recipientUsername);
+            await userValidationService.ValidateUserExistsByUsernameAsync(recipientUsername);
 
             var user = userRepo.GetByUsername(recipientUsername);
 

@@ -49,7 +49,7 @@
 
             var user = await userRepo.GetByUsernameAsync(username);
 
-            userValidationService.ValidateNotNull(user);
+            userValidationService.ValidateUserNotNull(user);
 
             return user;
         }
@@ -66,6 +66,10 @@
 
         public async Task BanAsync(string userId)
         {
+            await userValidationService.ValidateUserExistsByIdAsync(userId);
+
+            await userValidationService.ValidateUserIsNotBannedAsync(userId);
+
             var currentDateAndTime = DateTime.UtcNow;
 
             var user = await userRepo.GetByIdAsync(userId);
@@ -90,6 +94,10 @@
         /// <param name="userId">BaseUser's Id</param>
         public async Task UnbanAsync(string userId)
         {
+            await userValidationService.ValidateUserExistsByIdAsync(userId);
+
+            await userValidationService.ValidateUserIsBannedAsync(userId);
+
             var user = await userRepo.GetByIdAsync(userId);
 
             user.IsBanned = false;
@@ -108,7 +116,7 @@
         /// <returns>Bool - True if it exists and False if otherwise</returns>
         public Task<bool> ExistsAsync(string userId)
         {
-            return userRepo.ExistsAsync(userId);
+            return userRepo.ExistsByIdAsync(userId);
         }
 
         /// <summary>
@@ -136,14 +144,24 @@
             return userRepo.GetRolesAsync(user);
         }
 
-        public Task DemoteAsync(string userId)
+        public async Task DemoteAsync(string userId)
         {
-            return userRepo.RemoveRoleAsync(userId, ModeratorRoleName);
+            await userValidationService.ValidateUserExistsByIdAsync(userId);
+
+            await userValidationService.ValidateUserIsModerator(userId);
+
+            await userRepo.RemoveRoleAsync(userId, MODERATOR_ROLE);
         }
 
-        public Task PromoteAsync(string userId)
+        public async Task PromoteAsync(string userId)
         {
-            return userRepo.AddRoleAsync(userId, ModeratorRoleName);
+            var user = await userRepo.GetByIdAsync(userId);
+
+            userValidationService.ValidateUserNotNull(user);
+
+            await userValidationService.ValidateUserIsNotModerator(user);
+
+            await userRepo.AddRoleAsync(userId, MODERATOR_ROLE);
         }
 
         public Task<int> UserPostsCountAsync(string userId)
@@ -158,7 +176,7 @@
 
         public Task<bool> IsUserInRoleAsync(ExtendedIdentityUser user, string role)
         {
-            return userManager.IsInRoleAsync(user, role);
+            return userRepo.IsInRoleAsync(user, role);
         }
 
         private async Task<List<UserViewModel>> ReturnUsersWithRolesAsync(List<UserViewModel> users)

@@ -20,7 +20,11 @@
 
         public Task UpdateAsync(ExtendedIdentityUser user);
 
-        public Task<bool> ExistsAsync(string userId);
+        public Task<bool> ExistsByIdAsync(string userId);
+
+        public Task<bool> ExistsByUsernameAsync(string username);
+
+        public Task<bool> IsBannedAsync(string userId);
 
         public IQueryable<ExtendedIdentityUser> GetAll();
 
@@ -47,6 +51,8 @@
         public Task RemoveRoleAsync(string userId, string roleName);
 
         public Task AddRoleAsync(string userId, string roleName);
+
+        public Task<bool> IsInRoleAsync(ExtendedIdentityUser user, string role);
 
         public Task<IList<string>> GetRolesAsync(ExtendedIdentityUser user);
 

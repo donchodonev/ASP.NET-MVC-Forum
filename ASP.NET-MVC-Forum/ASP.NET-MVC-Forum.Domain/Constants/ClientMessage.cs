@@ -14,6 +14,7 @@
             public const string CANNOT_FURTHER_DEMOTE = "User cannot be further demoted";
             public const string USER_IS_MODERATOR_ALREADY = "User is already a moderator";
             public const string USER_ALREADY_BANNED = "User is already a banned";
+            public const string USER_NOT_YET_BANNED = "User is not yet a banned";
             public const string USERNAME_TOO_SHORT = "Username must be at least 4 symbols long";
             public const string REPORT_DOES_NOT_EXIST = "A report with such an ID does not exist";
             public const string POST_DOES_NOT_EXIST = "The post doesn't exist";
@@ -26,7 +27,7 @@
             public const string USER_BANNED = "The user has been successfully banned indefinitely";
             public const string USER_UNBANNED = "The user has been successfully unbanned";
             public const string USER_DEMOTED = "The user has been successfully demoted";
-            public const string USER_PROMOTED = "The user has been successfully promoted to " + ModeratorRoleName;
+            public const string USER_PROMOTED = "The user has been successfully promoted to " + MODERATOR_ROLE;
             public const string REPORT_RESOLVED = "Report has been marked as resolved !";
             public const string REPORT_RESTORED = "Report has been successfully restored !";
             public const string COMMENT_REPORT_CENSORED = "Comment has been successfully censored !";
