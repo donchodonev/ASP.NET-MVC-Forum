@@ -46,8 +46,8 @@
         {
             [Required]
             [Display(Name = "Username")]
-            [MinLength(UsernameMinLength)]
-            [MaxLength(UsernameMaxLength)]
+            [MinLength(USERNAME_MIN_LENGTH)]
+            [MaxLength(USERNAME_MAX_LENGTH)]
             public string Username { get; set; }
 
             [Required]

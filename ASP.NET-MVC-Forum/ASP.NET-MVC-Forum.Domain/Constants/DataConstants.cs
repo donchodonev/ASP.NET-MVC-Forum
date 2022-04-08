@@ -4,55 +4,55 @@
     {
         public class UserConstants
         {
-            public const int FirstNameMaxLength = 15;
+            public const int FIRST_NAME_MAX_LENGTH = 15;
 
-            public const int LastNameMaxLength = 15;
+            public const int LAST_NAME_MAX_LENGTH = 15;
 
-            public const int FirstNameMinLength = 2;
+            public const int FIRST_NAME_MIN_LENGTH = 2;
 
-            public const int LastNameMinLength = 2;
+            public const int LAST_NAME_MIN_LENGTH = 2;
 
-            public const int AgeFloor = 0;
+            public const int AGE_FLOOR = 0;
 
-            public const int AgeCeiling = 120;
+            public const int AGE_CEILING = 120;
 
-            public const int UsernameMaxLength = 20;
+            public const int USERNAME_MAX_LENGTH = 20;
 
-            public const int UsernameMinLength = 4;
+            public const int USERNAME_MIN_LENGTH = 4;
         }
 
         public class CategoryConstants
         {
-            public const int NameMaxLength = 100;
+            public const int NAME_MAX_LENGTH = 100;
         }
 
         public class PostConstants
         {
-            public const int TitleMaxLength = 100;
+            public const int TITLE_MAX_LENGTH = 100;
 
-            public const int TitleMinLength = 10;
+            public const int TITLE_MIN_LENGTH = 10;
 
-            public const int HtmlContentMinLength = 100;
+            public const int HTML_CONTENT_MIN_LENGTH = 100;
         }
 
         public class ReportConstants
         {
-            public const int ReportReasonMinLength = 10;
+            public const int REPORT_REASON_MIN_LENGTH = 10;
 
-            public const int ReportReasonMaxLength = 10000;
+            public const int REPORT_REASON_MAX_LENGTH = 10000;
         }
 
         public class CommentConstants
         {
-            public const int ContentMaxLength = 500;
+            public const int CONTENT_MAX_LENGTH = 500;
 
-            public const int ContentMinLength = 1;
+            public const int CONTENT_MIN_LENGTH = 1;
         }
 
         public class ChatConstants
         {
-            public const int ChatMessageMinLength = 1;
-            public const int ChatMessageMaxLength = 10000;
+            public const int CHAT_MESSAGE_MIN_LENGTH = 1;
+            public const int CHAT_MESSAGE_MAX_LENGTH = 10000;
         }
     }
 }

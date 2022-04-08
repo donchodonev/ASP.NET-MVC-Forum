@@ -19,7 +19,7 @@
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(NameMaxLength)]
+        [MaxLength(NAME_MAX_LENGTH)]
         public string Name { get; set; }
 
         public string ImageUrl { get; set; }

@@ -13,7 +13,7 @@
             CreateMap<Domain.Entities.Message, ChatMessageResponseData>()
             .ForMember(x => x.SenderUsername, y => y.MapFrom(y => y.SenderUsername))
             .ForMember(x => x.Time, y => y.MapFrom(y => y.CreatedOn.AddHours(2) // FOR GMT+2
-            .ToString(DateAndTimeFormat)));
+            .ToString(DATE_AND_TIME_FORMAT)));
         }
     }
 }

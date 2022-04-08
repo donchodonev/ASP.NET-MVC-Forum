@@ -45,7 +45,7 @@
                 UserName = userName,
                 Age = age,
                 Email = email,
-                ImageUrl = AvatarURL
+                ImageUrl = AVATAR_URL
             };
 
             return userManager.CreateAsync(user, password);
@@ -115,7 +115,7 @@
         {
             var user = await GetByIdAsync(identityUserId);
 
-            user.ImageUrl = AvatarURL;
+            user.ImageUrl = AVATAR_URL;
 
             db.Update(user);
 
@@ -128,7 +128,7 @@
 
             var user = await GetByIdAsync(identityUserId);
 
-            user.ImageUrl = $"{AvatarWebPath}{fileName}";
+            user.ImageUrl = $"{AVATAR_WEB_PATH}{fileName}";
 
             db.Update(user);
 
@@ -143,7 +143,7 @@
                 .Select(x => x.ImageUrl)
                 .First();
 
-            return userAvatarPath == AvatarURL;
+            return userAvatarPath == AVATAR_URL;
         }
 
         public Task<string> GetAvatarAsync(string identityUserId)

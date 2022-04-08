@@ -21,16 +21,16 @@
         }
 
         [Required]
-        [MaxLength(FirstNameMaxLength)]
-        [MinLength(FirstNameMinLength)]
+        [MaxLength(FIRST_NAME_MAX_LENGTH)]
+        [MinLength(FIRST_NAME_MIN_LENGTH)]
         public string FirstName { get; set; }
 
         [Required]
-        [MaxLength(LastNameMaxLength)]
-        [MinLength(LastNameMinLength)]
+        [MaxLength(LAST_NAME_MAX_LENGTH)]
+        [MinLength(LAST_NAME_MIN_LENGTH)]
         public string LastName { get; set; }
 
-        [Range(AgeFloor, AgeCeiling)]
+        [Range(AGE_FLOOR, AGE_CEILING)]
         public int? Age { get; set; }
 
         public bool IsBanned { get; set; }

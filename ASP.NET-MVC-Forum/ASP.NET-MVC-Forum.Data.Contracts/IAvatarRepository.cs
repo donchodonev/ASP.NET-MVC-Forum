@@ -25,7 +25,7 @@
         /// <returns></returns>
         public Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50);
 
-        public bool IsImageSizeValid(long imageSize, long maxImageSize = ImageMaxSize)
+        public bool IsImageSizeValid(long imageSize, long maxImageSize = IMAGE_MAX_SIZE)
         {
             return imageSize <= maxImageSize;
         }

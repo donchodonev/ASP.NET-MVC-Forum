@@ -55,7 +55,7 @@
             {
                 throw new InvalidUsernameException(USERNAME_TOO_SHORT);
             }
-            else if (username.Length < UserConstants.UsernameMinLength)
+            else if (username.Length < UserConstants.USERNAME_MIN_LENGTH)
             {
                 throw new InvalidUsernameException(USERNAME_TOO_SHORT);
             }

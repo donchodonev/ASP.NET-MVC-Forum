@@ -1,8 +1,10 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Entities
 {
     using ASP.NET_MVC_Forum.Domain.Interfaces;
+
     using System;
     using System.ComponentModel.DataAnnotations;
+
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.ChatConstants;
 
     public class Message : ICreatedOn
@@ -15,8 +17,8 @@
         [Required]
         public long Id { get; set; }
 
-        [MinLength(ChatMessageMinLength)]
-        [MaxLength(ChatMessageMaxLength)]
+        [MinLength(CHAT_MESSAGE_MIN_LENGTH)]
+        [MaxLength(CHAT_MESSAGE_MAX_LENGTH)]
         [Required]
         public string Text { get; set; }
 

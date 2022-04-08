@@ -18,8 +18,8 @@
         public int Id { get; set; }
 
         [Required]
-        [MinLength(ReportReasonMinLength)]
-        [MaxLength(ReportReasonMaxLength)]
+        [MinLength(REPORT_REASON_MIN_LENGTH)]
+        [MaxLength(REPORT_REASON_MAX_LENGTH)]
         public string Reason { get; set; }
 
         [NotMapped]

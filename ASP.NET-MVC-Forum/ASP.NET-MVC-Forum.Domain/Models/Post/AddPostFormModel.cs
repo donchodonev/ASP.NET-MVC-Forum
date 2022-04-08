@@ -9,13 +9,13 @@
         public CategoryIdAndNameViewModel[] Categories { get; set; }
 
         [Required]
-        [MinLength(TitleMinLength)]
-        [MaxLength(TitleMaxLength)]
+        [MinLength(TITLE_MIN_LENGTH)]
+        [MaxLength(TITLE_MAX_LENGTH)]
         [DataType(DataType.Text)]
         public string Title { get; set; }
 
         [Required]
-        [MinLength(HtmlContentMinLength)]
+        [MinLength(HTML_CONTENT_MIN_LENGTH)]
         public string HtmlContent { get; set; }
 
         [Required]

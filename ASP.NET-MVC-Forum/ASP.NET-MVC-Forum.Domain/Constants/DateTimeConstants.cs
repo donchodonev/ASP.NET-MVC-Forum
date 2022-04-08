@@ -2,8 +2,8 @@
 {
     public class DateTimeConstants
     {
-        public const string DateFormat = "MM/dd/yyyy";
+        public const string DATE_FORMAT = "MM/dd/yyyy";
 
-        public const string DateAndTimeFormat = "MM/dd/yyyy HH:mm";
+        public const string DATE_AND_TIME_FORMAT = "MM/dd/yyyy HH:mm";
     }
 }

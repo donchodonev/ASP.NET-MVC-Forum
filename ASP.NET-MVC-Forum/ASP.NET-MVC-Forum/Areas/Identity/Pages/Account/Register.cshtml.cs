@@ -53,20 +53,20 @@
         {
             [Required]
             [Display(Name = "Username*")]
-            [MinLength(UsernameMinLength)]
-            [MaxLength(UsernameMaxLength)]
+            [MinLength(USERNAME_MIN_LENGTH)]
+            [MaxLength(USERNAME_MAX_LENGTH)]
             public string Username { get; set; }
 
             [Display(Name = "First name*")]
             [Required]
-            [MaxLength(FirstNameMaxLength)]
-            [MinLength(FirstNameMinLength)]
+            [MaxLength(FIRST_NAME_MAX_LENGTH)]
+            [MinLength(FIRST_NAME_MIN_LENGTH)]
             public string FirstName { get; set; }
 
             [Display(Name = "Last name*")]
             [Required]
-            [MaxLength(LastNameMaxLength)]
-            [MinLength(LastNameMinLength)]
+            [MaxLength(LAST_NAME_MAX_LENGTH)]
+            [MinLength(LAST_NAME_MIN_LENGTH)]
             public string LastName { get; set; }
 
             [Required]
@@ -85,7 +85,7 @@
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Range(AgeFloor, AgeCeiling)]
+            [Range(AGE_FLOOR, AGE_CEILING)]
             [Display(Name = "Age")]
             public int? Age { get; set; }
         }

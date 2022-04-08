@@ -21,12 +21,12 @@
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(TitleMaxLength)]
-        [MinLength(TitleMinLength)]
+        [MaxLength(TITLE_MAX_LENGTH)]
+        [MinLength(TITLE_MIN_LENGTH)]
         public string Title { get; set; }
 
         [Required]
-        [MinLength(HtmlContentMinLength)]
+        [MinLength(HTML_CONTENT_MIN_LENGTH)]
         public string HtmlContent { get; set; }
 
         public bool IsVisible { get; set; }

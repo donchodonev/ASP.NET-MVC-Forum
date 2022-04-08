@@ -66,7 +66,7 @@
 
             string root = enviroment.ContentRootPath;
 
-            string fullPath = $"{root}{AvatarDirectoryPath}{fileName}";
+            string fullPath = $"{root}{AVATAR_DIRECTORY_PATH}{fileName}";
 
             using (Image image = Image.Load(file.OpenReadStream()))
             {
@@ -77,7 +77,7 @@
             return fileName;
         }
 
-        public bool IsImageSizeValid(long imageSize, long maxImageSize = ImageMaxSize)
+        public bool IsImageSizeValid(long imageSize, long maxImageSize = IMAGE_MAX_SIZE)
         {
             return imageSize <= maxImageSize;
         }

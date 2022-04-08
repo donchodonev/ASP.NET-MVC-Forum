@@ -3,6 +3,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.CommentConstants;
+
     public class Comment : BaseModel
     {
         public Comment() 
@@ -15,8 +16,8 @@
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(ContentMaxLength)]
-        [MinLength(ContentMinLength)]
+        [MaxLength(CONTENT_MAX_LENGTH)]
+        [MinLength(CONTENT_MIN_LENGTH)]
         public string Content { get; set; }
 
         public string UserId { get; set; }
