@@ -19,9 +19,9 @@
 
         public AuthMessageSenderOptions Options { get; } 
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            return Execute(Options.SendGridKey, subject, message, email);
+            return Execute(Options.SendGridKey, subject, htmlMessage, email);
         }
 
         public Task Execute(string apiKey, string subject, string message, string email)

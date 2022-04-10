@@ -9,6 +9,7 @@
     using SixLabors.ImageSharp.Processing;
 
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ImageConstants;
@@ -17,7 +18,7 @@
     public class AvatarRepository : IAvatarRepository
     {
         private readonly IWebHostEnvironment enviroment;
-        private string[] validFileExtensions;
+        private readonly string[] validFileExtensions;
 
         public AvatarRepository(IWebHostEnvironment enviroment)
         {
@@ -27,18 +28,7 @@
 
         public string GetImageExtension(IFormFile image)
         {
-            string imageExtensionName = null;
-
-            foreach (var currentFileExtension in validFileExtensions)
-            {
-                if (image.FileName.EndsWith(currentFileExtension))
-                {
-                    imageExtensionName = currentFileExtension;
-                    break;
-                }
-            }
-
-            return imageExtensionName;
+            return validFileExtensions.FirstOrDefault(x => image.FileName.EndsWith(x));
         }
 
         public async Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50)

@@ -102,14 +102,12 @@
             };
         }
 
-        private List<T> AddColor<T>(List<T> posts) where T : IStatsResponseModel
+        private void AddColor<T>(List<T> posts) where T : IStatsResponseModel
         {
             for (int i = 0; i < posts.Count; i++)
             {
                 posts[i].Color = Colors[i];
             }
-
-            return posts;
         }
     }
 }

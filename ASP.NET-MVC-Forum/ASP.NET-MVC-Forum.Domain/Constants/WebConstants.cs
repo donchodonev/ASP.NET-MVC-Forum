@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Constants
 {
-    public class WebConstants
+    public static class WebConstants
     {
         public const string AVATAR_WEB_PATH = "/avatar/";
         public const string AVATAR_DIRECTORY_PATH = "\\wwwroot\\avatar\\";

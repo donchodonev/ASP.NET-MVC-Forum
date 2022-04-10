@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Constants
 {
-    public class ImageConstants
+    public static class ImageConstants
     {
         /// <summary>
         /// Image maximum size in bytes

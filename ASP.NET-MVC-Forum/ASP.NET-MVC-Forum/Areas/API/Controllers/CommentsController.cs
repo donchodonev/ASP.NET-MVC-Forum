@@ -30,11 +30,6 @@
         [HttpPost]
         public async Task<ActionResult<CommentPostRequestModel>> AddComment(CommentPostRequestModel commentData)
         {
-            if (!ModelState.IsValid)
-            {
-                BadRequest();
-            }
-
             var rawCommentData = await commentService.GenerateRawCommentServiceModel(commentData, this.User);
 
             return Ok(rawCommentData);
@@ -44,17 +39,7 @@
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCommentAsync(int id)
         {
-            if (!await commentService.CommentExistsAsync(id))
-            {
-                return this.BadRequest();
-            }
-
-            if (!await commentService.IsUserPrivileged(id, this.User))
-            {
-                return StatusCode(401, "Only the comment author or site administrator can delete this comment");
-            }
-
-            await commentService.DeleteAsync(id);
+            await commentService.DeleteAsync(id, this.User);
 
             return Ok();
         }

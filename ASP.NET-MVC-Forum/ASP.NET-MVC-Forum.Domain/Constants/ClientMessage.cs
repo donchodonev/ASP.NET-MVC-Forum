@@ -2,9 +2,9 @@
 {
     using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
-    public class ClientMessage
+    public static class ClientMessage
     {
-        public class Error
+        public static class Error
         {
             public const string POST_LENGTH_TOO_SMALL = "The length of the post must be longer than 100 symbols";
             public const string USER_DOES_NOT_EXIST = "User does NOT exist !";
@@ -19,8 +19,10 @@
             public const string REPORT_DOES_NOT_EXIST = "A report with such an ID does not exist";
             public const string POST_DOES_NOT_EXIST = "The post doesn't exist";
             public const string POST_DID_NOT_CHANGE = "There were no changes made";
+            public const string CANNOT_DELETE_COMMENT = "Only the comment author or site administrator can delete this comment";
+            public const string ENTITY_IS_NULL = "The entity is null";
         }
-        public class Success
+        public static class Success
         {
             public const string REPORT_THANK_YOU_MESSAGE = "Thank you for your report, our moderators will review it as quickly as possible !";
             public const string POST_DELETED = "Your post has been successfully deleted";
@@ -35,7 +37,7 @@
             public const string POST_CENSORED = "The post has been successfully censored";
             public const string POST_CENSORED_AND_RESOLVED = "The post has been successfully censored and all of it's reports were marked as resolved";
         }
-        public class MessageType
+        public static class MessageType
         {
             public const string ERROR_MESSAGE = "ErrorMessage";
             public const string SUCCESS_MESSAGE = "SuccessMessage";

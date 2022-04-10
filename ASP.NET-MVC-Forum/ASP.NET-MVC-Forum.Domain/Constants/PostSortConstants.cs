@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class PostSortConstants
+    public static class PostSortConstants
     {
         public static IReadOnlyDictionary<int, string> GetSortOptions()
         {

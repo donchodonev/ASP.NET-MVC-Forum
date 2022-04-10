@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class PostViewCountOptions
+    public static class PostViewCountOptions
     {
         public static IReadOnlyCollection<int> GetViewCountOptions()
         {

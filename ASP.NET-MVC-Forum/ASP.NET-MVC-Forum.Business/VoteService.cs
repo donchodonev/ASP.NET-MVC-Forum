@@ -21,7 +21,7 @@
             this.mapper = mapper;
         }
 
-        public async Task RegisterVote(VoteRequestModel incomingVote, string userId)
+        public async Task RegisterVoteAsync(VoteRequestModel incomingVote, string userId)
         {
             Vote vote = await voteRepo.GetUserVoteAsync(userId, incomingVote.PostId);
 
@@ -40,7 +40,7 @@
             await voteRepo.UpdateVoteAsync(vote);
         }
 
-        public async Task<int> GetPostVoteSum(int postId)
+        public async Task<int> GetPostVoteSumAsync(int postId)
         {
             var votes = await voteRepo.GetPostVotesAsync(postId);
 

@@ -5,8 +5,8 @@
 
     public interface IVoteService
     {
-        public Task RegisterVote(VoteRequestModel incomingVote, string userId);
+        public Task RegisterVoteAsync(VoteRequestModel incomingVote, string userId);
 
-        public Task<int> GetPostVoteSum(int postId);
+        public Task<int> GetPostVoteSumAsync(int postId);
     }
 }

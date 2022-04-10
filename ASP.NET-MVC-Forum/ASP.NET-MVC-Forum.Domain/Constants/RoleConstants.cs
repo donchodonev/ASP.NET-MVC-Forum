@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Constants
 {
-    public class RoleConstants
+    public static class RoleConstants
     {
         public const string ADMIN_ROLE = "Administrator";
 

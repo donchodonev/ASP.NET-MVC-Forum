@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Constants
 {
-    public class DateTimeConstants
+    public static class DateTimeConstants
     {
         public const string DATE_FORMAT = "MM/dd/yyyy";
 

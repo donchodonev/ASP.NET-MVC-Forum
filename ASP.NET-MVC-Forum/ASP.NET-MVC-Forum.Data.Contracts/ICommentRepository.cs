@@ -14,7 +14,7 @@
 
         public IQueryable GetAllByPostId(int postId);
 
-        public IQueryable<Comment> GetAllById(int id);
+        public IQueryable<Comment> GetById(int id);
 
         public Task UpdateAsync(Comment entity);
     }

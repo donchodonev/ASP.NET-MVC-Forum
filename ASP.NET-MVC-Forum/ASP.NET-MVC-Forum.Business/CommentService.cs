@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
@@ -20,19 +21,28 @@
     {
         private readonly ICommentRepository commentRepo;
         private readonly IMapper mapper;
-        private readonly IUserRepository userRepo;
+        private readonly IPostValidationService postValidationService;
         private readonly ICommentReportService commentReportService;
+        private readonly ICommentValidationService commentValidationService;
 
-        public CommentService(ICommentRepository commentRepo, IMapper mapper, IUserRepository userRepo, ICommentReportService commentReportService)
+        public CommentService(
+            ICommentRepository commentRepo,
+            IMapper mapper,
+            IPostValidationService postValidationService, 
+            ICommentReportService commentReportService,
+            ICommentValidationService commentValidationService)
         {
             this.commentRepo = commentRepo;
             this.mapper = mapper;
-            this.userRepo = userRepo;
+            this.postValidationService = postValidationService;
             this.commentReportService = commentReportService;
+            this.commentValidationService = commentValidationService;
         }
 
         public async Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId)
         {
+            await postValidationService.ValidatePostExistsAsync(postId);
+
             var commentById = commentRepo
                 .All()
                 .Where(x => x.PostId == postId)
@@ -74,11 +84,15 @@
                 (x.UserId == userId || user.IsAdminOrModerator()));
         }
 
-        public async Task DeleteAsync(int commentId)
+        public async Task DeleteAsync(int commentId, ClaimsPrincipal user)
         {
             var comment = await commentRepo
-                .GetAllById(commentId)
+                .GetById(commentId)
                 .FirstAsync();
+
+            commentValidationService.ValidateCommentNotNull(comment);
+
+            await commentValidationService.ValidateUserCanDeleteCommentAsync(commentId, user);
 
             comment.IsDeleted = true;
 

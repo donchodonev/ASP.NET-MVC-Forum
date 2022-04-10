@@ -16,6 +16,6 @@
 
         public Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user);
 
-        public Task DeleteAsync(int commentId);
+        public Task DeleteAsync(int commentId, ClaimsPrincipal user);
     }
 }

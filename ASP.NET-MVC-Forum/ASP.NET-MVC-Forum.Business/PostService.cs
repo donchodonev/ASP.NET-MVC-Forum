@@ -7,7 +7,6 @@
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure;
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
 
     using AutoMapper;
@@ -50,13 +49,13 @@
             this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel formModelPost, string userId)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string userId)
         {
-            await postValidationService.ValidateTitleNotDuplicateAsync(formModelPost.Title);
+            await postValidationService.ValidateTitleNotDuplicateAsync(post.Title);
 
-            formModelPost.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
+            post.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
-            var post = mapper.Map<Post>(formModelPost);
+            var postEntity = mapper.Map<Post>(post);
 
             var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
 
@@ -66,14 +65,14 @@
 
             post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
 
-            post.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
+            postEntity.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
 
-            post.UserId = userId;
+            postEntity.UserId = userId;
 
-            await postRepo.AddPostAsync(post);
+            await postRepo.AddPostAsync(postEntity);
 
             await postReportService
-                .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, post.Id);
+                .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, postEntity.Id);
 
             return mapper.Map<NewlyCreatedPostServiceModel>(post);
         }
@@ -170,7 +169,7 @@
                 .Order(sortType, sortOrder)
                 .BuildQuery();
 
-            return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider); ;
+            return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
         }
 
         public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)

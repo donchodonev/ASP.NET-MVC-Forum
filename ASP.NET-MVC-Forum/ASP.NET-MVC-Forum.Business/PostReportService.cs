@@ -216,15 +216,13 @@
             await postRepo.UpdateAsync(post);
         }
 
-        private ICollection<PostReport> DeleteAllPostReports(ICollection<PostReport> reports)
+        private void DeleteAllPostReports(ICollection<PostReport> reports)
         {
             foreach (var report in reports)
             {
                 report.IsDeleted = true;
                 report.ModifiedOn = DateTime.UtcNow;
             }
-
-            return reports;
         }
     }
 }

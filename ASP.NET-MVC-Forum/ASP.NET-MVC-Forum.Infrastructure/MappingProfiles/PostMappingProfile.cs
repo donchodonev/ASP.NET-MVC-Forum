@@ -34,7 +34,7 @@
                 .ReverseMap();
 
             CreateMap<Post, PostPreviewViewModel>()
-                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Where(x => !x.IsDeleted).Count()))
+                .ForMember(x => x.UserPostsCount, y => y.MapFrom(z => z.User.Posts.Count(x => !x.IsDeleted)))
                 .ForMember(x => x.UserIdentityUserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.User.ImageUrl))
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DATE_FORMAT)))
@@ -49,7 +49,7 @@
                 .ForMember(x => x.UserMemberSince, y => y.MapFrom(z => z.User.CreatedOn.ToString(DATE_FORMAT)))
                 .ForMember(x => x.UserUsername, y => y.MapFrom(z => z.User.UserName))
                 .ForMember(x => x.PostCreationDate, y => y.MapFrom(z => z.CreatedOn.ToString(DATE_AND_TIME_FORMAT) + " UTC"))
-                .ForMember(x => x.CommentsCount, y => y.MapFrom(z => z.Comments.Where(x => x.IsDeleted == false).Count()))
+                .ForMember(x => x.CommentsCount, y => y.MapFrom(z => z.Comments.Count(x => !x.IsDeleted)))
                 .ForMember(x => x.PostId, y => y.MapFrom(z => z.Id))
                 .ForMember(x => x.VoteSum, y => y.MapFrom(z => z.Votes.Sum(x => (int)x.VoteType)));
         }

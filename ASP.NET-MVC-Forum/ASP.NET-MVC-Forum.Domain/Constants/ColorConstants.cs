@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Domain.Constants
 {
-    public class ColorConstants
+    public static class ColorConstants
     {
         /// <summary>
         /// Color RGB Values

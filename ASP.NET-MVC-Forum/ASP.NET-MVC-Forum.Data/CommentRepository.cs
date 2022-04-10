@@ -43,7 +43,7 @@
             return query;
         }
 
-        public IQueryable<Comment> GetAllById(int id)
+        public IQueryable<Comment> GetById(int id)
         {
             return db.Comments.Where(x => x.Id == id);
         }

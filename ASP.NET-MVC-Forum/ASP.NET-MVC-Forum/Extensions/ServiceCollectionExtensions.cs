@@ -105,6 +105,8 @@
 
             services.AddTransient<IPostReportValidationService, PostReportValidationService>();
 
+            services.AddTransient<ICommentValidationService, CommentValidationService>();
+
             services.AddSingleton(configuration);
 
             services.AddAutoMapper(
