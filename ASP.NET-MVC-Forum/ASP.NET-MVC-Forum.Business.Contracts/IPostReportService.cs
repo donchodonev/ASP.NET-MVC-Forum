@@ -10,15 +10,21 @@
 
         public Task DeleteAsync(int id);
 
-        public Task DeletePostAndResolveReportsAsync(int id);
-
         public Task RestoreAsync(int id);
 
         public Task AutoGeneratePostReportAsync(string title, string content, int postId);
 
+        public Task DeletePostAndResolveReportsAsync(int postId);
+
         public Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus);
 
         public Task<bool> ReportExistsAsync(int reportId);
+
+        public List<string> FindPostProfanities(string title, string content);
+
+        public List<string> FindPostProfanities(string title, string content, string shortDescription);
+
+        public bool ContainsProfanity(string term);
 
         public Task CensorAsync(bool withRegex, int postId);
     }
