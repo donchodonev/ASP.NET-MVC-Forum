@@ -39,6 +39,8 @@
             string currentIdentityUserId,
             string currentIdentityUserUsername)
         {
+            await userValidationService.ValidateUserExistsByUsernameAsync(currentIdentityUserUsername);
+
             await userValidationService.ValidateUserExistsByUsernameAsync(recipientUsername);
 
             var user = userRepo.GetByUsername(recipientUsername);
@@ -53,6 +55,7 @@
 
             return vm;
         }
+
 
         public async Task<T> GenerateChatConversationViewModel<T>(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
         {
@@ -71,18 +74,28 @@
             string senderUsername,
             IHubCallerClients clients)
         {
-            var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
+            try
+            {
+                var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
 
-            var time = persistedMessage
-                .CreatedOn
-                .AddHours(2) // FOR GMT+2
-                .ToString("HH:mm:ss");
+                var time = persistedMessage
+                    .CreatedOn
+                    .AddHours(2) // FOR GMT+2
+                    .ToString("HH:mm:ss");
 
-            var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
+                var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
 
-            await clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
+                await clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
 
-            await clients.Group(receiverIdentityId + senderIdentityId).SendAsync("ReceiveMessage", response);
+                await clients.Group(receiverIdentityId + senderIdentityId).SendAsync("ReceiveMessage", response);
+            }
+            catch (Exception ex)
+            {
+                var messageasdf = ex.Message;
+                var messageasdf2 = ex.Message;
+
+                throw;
+            }
         }
 
         public Task<List<ChatMessageResponseData>> GetHistoryAsync(long chatId)

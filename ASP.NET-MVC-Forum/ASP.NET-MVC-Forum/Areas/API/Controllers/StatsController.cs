@@ -25,7 +25,7 @@
         }
 
         [Route("most-commented-posts/{count:int?}")]
-        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostCommentedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostCommentedPosts(int resultCount = 7)
         {
             var chartData = await chartService
                 .GetMostCommentedPostsChartDataAsync(resultCount);
@@ -34,7 +34,7 @@
         }
 
         [Route("most-liked-posts/{count:int?}")]
-        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostLikedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetMostLikedPosts(int resultCount = 7)
         {
             var chartData = await chartService
                 .GetMostLikedPostsChartDataAsync(resultCount);
@@ -43,7 +43,7 @@
         }
 
         [Route("most-reported-posts/{count:int?}")]
-        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetReportedPosts(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostCommentedPostsResponeModel>>> GetReportedPosts(int resultCount = 7)
         {
             var chartData = await chartService
                 .GetMostReportedPostsChartDataAsync(resultCount);
@@ -52,7 +52,7 @@
         }
 
         [Route("most-posts-by-category/{count:int?}")]
-        public async Task<ActionResult<List<MostPostsPerCategoryResponseModel>>> GetMostPostsPerCategory(int resultCount = 7) // count can be changed in the future
+        public async Task<ActionResult<List<MostPostsPerCategoryResponseModel>>> GetMostPostsPerCategory(int resultCount = 7)
         {
             var chartData = await chartService.GetMostPostsPerCategoryAsync(resultCount);
 

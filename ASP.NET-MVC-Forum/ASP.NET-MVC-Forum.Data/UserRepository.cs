@@ -58,12 +58,12 @@
 
         public async Task<bool> ExistsByIdAsync(string userId)
         {
-            return (await userManager.FindByIdAsync(userId)) == null;
+            return (await userManager.FindByIdAsync(userId)) != null;
         }
 
         public async Task<bool> ExistsByUsernameAsync(string username)
         {
-            return (await userManager.FindByNameAsync(username)) == null;
+            return (await userManager.FindByNameAsync(username)) != null;
         }
 
         public IQueryable<ExtendedIdentityUser> GetAll()
@@ -103,7 +103,7 @@
         {
             return db
                 .Users
-                .Where(x => x.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+                .Where(x => x.UserName == username);
         }
 
         public Task<ExtendedIdentityUser> GetByUsernameAsync(string username)

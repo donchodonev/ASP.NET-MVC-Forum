@@ -15,15 +15,12 @@
     public class ChatRepository : IChatRepository
     {
         private readonly ApplicationDbContext db;
-        private readonly IUserRepository userRepo;
         private readonly IHtmlManipulator htmlManipulator;
 
         public ChatRepository(ApplicationDbContext db,
-            IUserRepository userRepo,
             IHtmlManipulator htmlManipulator)
         {
             this.db = db;
-            this.userRepo = userRepo;
             this.htmlManipulator = htmlManipulator;
         }
 
@@ -39,9 +36,17 @@
                 SenderUsername = senderUsername
             };
 
-            db.Messages.Add(chatMessage);
+            try
+            {
+                db.Messages.Add(chatMessage);
 
-            await db.SaveChangesAsync();
+                await db.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                string msg = ex.Message;
+                throw;
+            }
 
             return chatMessage;
         }
@@ -64,13 +69,14 @@
                 throw new AppException(CHAT_DOES_NOT_EXIST);
             }
 
-            return db
+            return await db
                 .Chats
-                .FirstOrDefaultAsync(x =>
-                (x.UserA == identityUserA && x.UserB == identityUserB)
-                ||
-                (x.UserA == identityUserB && x.UserB == identityUserA))
-                .Id;
+                 .Where(x =>
+                     (x.UserA == identityUserA && x.UserB == identityUserB)
+                     ||
+                     (x.UserA == identityUserB && x.UserB == identityUserA))
+                 .Select(x => x.Id)
+                 .FirstOrDefaultAsync();
         }
 
         public async Task CreateChatAsync(string identityUserA, string identityUserB)
@@ -79,9 +85,16 @@
             {
                 Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
 
-                db.Chats.Add(chat);
+                try
+                {
+                    db.Chats.Add(chat);
 
-                await db.SaveChangesAsync();
+                    await db.SaveChangesAsync();
+                }
+                catch (System.Exception ex)
+                {
+                    throw;
+                }
             }
         }
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_MVC_Forum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220403154543_Removed-Base-User-Extended-Identity-User")]
-    partial class RemovedBaseUserExtendedIdentityUser
+    [Migration("20220410144136_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,9 +60,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ExtendedIdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserA")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -72,8 +69,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExtendedIdentityUserId");
 
                     b.ToTable("Chats");
                 });
@@ -517,13 +512,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Chat", b =>
-                {
-                    b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.ExtendedIdentityUser", null)
-                        .WithMany("Chats")
-                        .HasForeignKey("ExtendedIdentityUserId");
-                });
-
             modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.Comment", b =>
                 {
                     b.HasOne("ASP.NET_MVC_Forum.Domain.Entities.Post", "Post")
@@ -671,8 +659,6 @@ namespace ASP.NET_MVC_Forum.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_MVC_Forum.Domain.Entities.ExtendedIdentityUser", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("Posts");
                 });
 

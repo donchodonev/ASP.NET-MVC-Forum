@@ -16,7 +16,6 @@
             : base()
         {
             Posts = new HashSet<Post>();
-            Chats = new HashSet<Chat>();
             CreatedOn = DateTime.UtcNow;
         }
 
@@ -40,8 +39,6 @@
         public DateTime? BannedUntil { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
-
-        public virtual ICollection<Chat> Chats { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
