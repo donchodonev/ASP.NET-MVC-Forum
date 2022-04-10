@@ -17,12 +17,10 @@
     public class PostReportsController : Controller
     {
         private readonly IPostReportService postReportService;
-        private readonly ICensorService censorService;
 
-        public PostReportsController(IPostReportService postReportService, ICensorService censorService)
+        public PostReportsController(IPostReportService postReportService)
         {
             this.postReportService = postReportService;
-            this.censorService = censorService;
         }
 
         public async Task<IActionResult> Index(string reportStatus)
@@ -34,38 +32,21 @@
 
         public async Task<IActionResult> Delete(int reportId)
         {
-            if (await postReportService.ReportExistsAsync(reportId))
-            {
-                await postReportService.DeleteAsync(reportId);
+            await postReportService.DeleteAsync(reportId);
 
-                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED, "PostReports", "Index");
-            }
-
-            return this.RedirectToActionWithErrorMessage(Error.REPORT_DOES_NOT_EXIST, "PostReports", "Index");
+            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED, "PostReports", "Index");
         }
 
         public async Task<IActionResult> Restore(int reportId)
         {
-            if (await postReportService.ReportExistsAsync(reportId))
-            {
-                await postReportService.RestoreAsync(reportId);
+            await postReportService.RestoreAsync(reportId);
 
-                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "PostReports", "Index");
-            }
-
-            return this.RedirectToActionWithErrorMessage(Error.REPORT_DOES_NOT_EXIST, "PostReports", "Index", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "PostReports", "Index");
         }
 
         public async Task<IActionResult> Censor(int postId, bool withRegex)
         {
-            if (withRegex)
-            {
-                await censorService.CensorPostWithRegexAsync(postId);
-            }
-            else
-            {
-                await censorService.CensorPostAsync(postId);
-            }
+            await postReportService.CensorAsync(withRegex, postId);
 
             return this.RedirectToActionWithSuccessMessage(Success.POST_CENSORED, "PostReports", "Index");
         }

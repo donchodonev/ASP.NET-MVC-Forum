@@ -19,5 +19,7 @@
         public Task<PostReport> GetByIdAsync(int reportId);
 
         public IQueryable<PostReport> GetById(int reportId);
+
+        public Task<bool> ExistsAsync(int reportId);
     }
 }

@@ -19,5 +19,7 @@
         public Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus);
 
         public Task<bool> ReportExistsAsync(int reportId);
+
+        public Task CensorAsync(bool withRegex, int postId);
     }
 }

@@ -2,6 +2,7 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
 
     using System.Threading.Tasks;
@@ -19,7 +20,15 @@
 
         public async Task ValidateCommentReportExistsAsync(int reportId)
         {
-            if(!await commentReportRepo.ExistsAsync(reportId))
+            if (!await commentReportRepo.ExistsAsync(reportId))
+            {
+                throw new CommentReportDoesNotExistException(REPORT_DOES_NOT_EXIST);
+            }
+        }
+
+        public void ValidateCommentReportNotNull(CommentReport report)
+        {
+            if (report == null)
             {
                 throw new CommentReportDoesNotExistException(REPORT_DOES_NOT_EXIST);
             }

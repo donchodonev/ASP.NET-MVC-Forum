@@ -62,16 +62,6 @@
                 .ToListAsync();
         }
 
-        private async Task SoftCensorCommentAsync(int commentId)
-        {
-            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
-
-            var censoredContent = filter.CensorString(comment.Content, '*');
-
-            comment.Content = censoredContent;
-
-            await commentRepo.UpdateAsync(comment);
-        }
 
         public Task CensorCommentAsync(bool withRegex, int commentId)
         {
@@ -111,9 +101,9 @@
 
         public async Task DeleteAsync(int reportId)
         {
-            await commentReportValidationService.ValidateCommentReportExistsAsync(reportId);
-
             var report = await commentReportRepo.GetByIdAsync(reportId);
+
+            commentReportValidationService.ValidateCommentReportNotNull(report);
 
             report.IsDeleted = true;
 
@@ -124,13 +114,13 @@
 
         public async Task RestoreAsync(int reportId)
         {
-            await commentReportValidationService.ValidateCommentReportExistsAsync(reportId);
-
             var report = await commentReportRepo
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
                 .FirstAsync();
+
+            commentReportValidationService.ValidateCommentReportNotNull(report);
 
             report.IsDeleted = false;
 
@@ -176,6 +166,16 @@
             {
                 censoredContent = Regex.Replace(censoredContent, $"\\w*{profanity}\\w*", "*****");
             }
+
+            comment.Content = censoredContent;
+
+            await commentRepo.UpdateAsync(comment);
+        }
+        private async Task SoftCensorCommentAsync(int commentId)
+        {
+            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
+
+            var censoredContent = filter.CensorString(comment.Content, '*');
 
             comment.Content = censoredContent;
 

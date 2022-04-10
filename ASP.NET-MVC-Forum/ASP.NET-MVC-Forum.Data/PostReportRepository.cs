@@ -59,5 +59,10 @@
                 .PostReports
                 .FirstOrDefaultAsync(x => x.Id == reportId);
         }
+
+        public Task<bool> ExistsAsync(int reportId)
+        {
+            return db.PostReports.AnyAsync(x => x.Id == reportId);
+        }
     }
 }

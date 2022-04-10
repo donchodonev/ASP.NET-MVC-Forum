@@ -67,8 +67,6 @@
 
             services.AddTransient<IPostReportService, PostReportService>();
 
-            services.AddTransient<ICensorService, CensorService>();
-
             services.AddTransient<ICommentReportRepository, CommentReportRepository>();
 
             services.AddTransient<IProfanityFilter, ProfanityFilter>();
@@ -102,6 +100,10 @@
             services.AddTransient<IPostValidationService, PostValidationService>();
 
             services.AddTransient<IUserValidationService, UserValidationService>();
+
+            services.AddTransient<ICommentReportValidationService, CommentReportValidationService>();
+
+            services.AddTransient<IPostReportValidationService, PostReportValidationService>();
 
             services.AddSingleton(configuration);
 

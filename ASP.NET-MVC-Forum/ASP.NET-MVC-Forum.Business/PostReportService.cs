@@ -4,38 +4,43 @@
     using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.PostReport;
 
     using AutoMapper;
 
     using Microsoft.EntityFrameworkCore;
 
+    using ProfanityFilter.Interfaces;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class PostReportService : IPostReportService
     {
         private readonly IPostReportRepository postReportRepo;
         private readonly IPostRepository postRepo;
-        private readonly ICensorService censorService;
         private readonly IMapper mapper;
         private readonly IPostValidationService postValidationService;
+        private readonly IPostReportValidationService postReportValidationService;
+        private readonly IProfanityFilter filter;
 
         public PostReportService(
             IPostReportRepository postReportRepo, 
             IPostRepository postRepo,
-            ICensorService censorService, 
             IMapper mapper,
-            IPostValidationService postValidationService)
+            IPostValidationService postValidationService,
+            IPostReportValidationService postReportValidationService,
+            IProfanityFilter filter)
         {
             this.postReportRepo = postReportRepo;
             this.postRepo = postRepo;
-            this.censorService = censorService;
             this.mapper = mapper;
             this.postValidationService = postValidationService;
+            this.postReportValidationService = postReportValidationService;
+            this.filter = filter;
         }
 
         public async Task ReportAsync(int postId, string reason)
@@ -51,6 +56,8 @@
         {
             var report = await postReportRepo.GetByIdAsync(id);
 
+            postReportValidationService.ValidateReportNotNull(report);
+
             report.IsDeleted = true;
 
             report.ModifiedOn = DateTime.UtcNow;
@@ -65,6 +72,8 @@
                 .Include(x => x.Post)
                 .FirstOrDefaultAsync();
 
+            postReportValidationService.ValidateReportNotNull(report);
+
             report.IsDeleted = false;
 
             report.ModifiedOn = DateTime.UtcNow;
@@ -78,9 +87,9 @@
 
         public async Task AutoGeneratePostReportAsync(string title, string content, int postId)
         {
-            if (censorService.ContainsProfanity(content))
+            if (ContainsProfanity(content))
             {
-                List<string> profaneWordsFound = censorService.FindPostProfanities(title, content);
+                List<string> profaneWordsFound = FindPostProfanities(title, content);
 
                 string reason = $"Profane words found in post title and content: {string.Join(", ", profaneWordsFound)}";
 
@@ -124,11 +133,87 @@
                 .ToListAsync();
         }
 
-        public async Task<bool> ReportExistsAsync(int reportId)
+        public Task<bool> ReportExistsAsync(int reportId)
         {
-            return await postReportRepo
-                .All()
-                .AnyAsync(x => x.Id == reportId && !x.IsDeleted);
+            return postReportRepo.ExistsAsync(reportId);
+        }
+
+        public List<string> FindPostProfanities(string title, string content)
+        {
+            List<string> profaneWordsFound = filter
+                .DetectAllProfanities(content)
+                .ToList();
+
+            profaneWordsFound
+                .AddRange(filter.DetectAllProfanities(title));
+
+            return profaneWordsFound;
+        }
+
+        public List<string> FindPostProfanities(string title, string content, string shortDescription)
+        {
+            List<string> profaneWordsFound = filter
+                .DetectAllProfanities(content.Substring(3, content.Length - 3))
+                .ToList();
+
+            profaneWordsFound.AddRange(filter.DetectAllProfanities(title));
+            profaneWordsFound.AddRange(filter.DetectAllProfanities(shortDescription));
+
+            return profaneWordsFound;
+        }
+
+        public bool ContainsProfanity(string term)
+        {
+            return filter.ContainsProfanity(term);
+        }
+
+        public Task CensorAsync(bool withRegex, int postId)
+        {
+            if (withRegex)
+            {
+                return HardCensorAsync(postId);
+            }
+
+            return SoftCensorAsync(postId);
+        }
+
+        private async Task SoftCensorAsync(int postId)
+        {
+            var post = await postRepo.GetByIdAsync(postId);
+
+            var title = filter.CensorString(post.Title, '*');
+            var htmlContent = filter.CensorString(post.HtmlContent, '*');
+            var shortDescription = filter.CensorString(post.ShortDescription, '*');
+
+            post.Title = title;
+            post.HtmlContent = htmlContent;
+            post.ShortDescription = shortDescription;
+
+            await postRepo.UpdateAsync(post);
+        }
+
+        private async Task HardCensorAsync(int postId)
+        {
+            var post = await postRepo.GetByIdAsync(postId);
+
+            var profanities = FindPostProfanities(post.Title, post.HtmlContent, post.ShortDescription);
+
+            var title = post.Title;
+            var htmlContent = post.HtmlContent;
+            var shortDescription = post.ShortDescription;
+
+            foreach (var profanity in profanities)
+            {
+                title = Regex.Replace(title, $"\\w*{profanity}\\w*", "*****");
+                htmlContent = Regex.Replace(htmlContent, $"\\w*{profanity}\\w*", "*****");
+                shortDescription = Regex.Replace(shortDescription, $"\\w*{profanity}\\w*", "*****");
+            }
+
+            post.Title = title;
+            post.HtmlContent = htmlContent;
+            post.ShortDescription = shortDescription;
+
+            await postRepo.UpdateAsync(post);
         }
 
         private ICollection<PostReport> DeleteAllPostReports(ICollection<PostReport> reports)
