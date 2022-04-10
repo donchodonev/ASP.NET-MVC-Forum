@@ -22,6 +22,11 @@
             return db.CommentReports;
         }
 
+        public Task<bool> ExistsAsync(int reportId)
+        {
+            return db.CommentReports.AnyAsync(x => x.Id == reportId);
+        }
+
         public Task<CommentReport> GetByIdAsync(int reportId)
         {
             var query = db.

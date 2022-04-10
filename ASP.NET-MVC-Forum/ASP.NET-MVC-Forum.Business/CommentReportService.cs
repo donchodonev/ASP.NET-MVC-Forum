@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.CommentReport;
 
@@ -24,17 +24,20 @@
         private readonly ICommentReportRepository commentReportRepo;
         private readonly IProfanityFilter filter;
         private readonly ICommentRepository commentRepo;
+        private readonly ICommentReportValidationService commentReportValidationService;
 
         public CommentReportService(
             IMapper mapper,
             ICommentReportRepository commentReportRepo,
             IProfanityFilter filter,
-            ICommentRepository commentRepo)
+            ICommentRepository commentRepo,
+            ICommentReportValidationService commentReportValidationService)
         {
             this.mapper = mapper;
             this.commentReportRepo = commentReportRepo;
             this.filter = filter;
             this.commentRepo = commentRepo;
+            this.commentReportValidationService = commentReportValidationService;
         }
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
@@ -59,7 +62,7 @@
                 .ToListAsync();
         }
 
-        public async Task CensorCommentAsync(int commentId)
+        private async Task SoftCensorCommentAsync(int commentId)
         {
             var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
 
@@ -68,6 +71,18 @@
             comment.Content = censoredContent;
 
             await commentRepo.UpdateAsync(comment);
+        }
+
+        public Task CensorCommentAsync(bool withRegex, int commentId)
+        {
+            if (withRegex)
+            {
+                return HardCensorCommentAsync(commentId);
+            }
+            else
+            {
+                return SoftCensorCommentAsync(commentId);
+            }
         }
 
         public async Task ReportCommentAsync(int commentId, string reasons)
@@ -89,60 +104,43 @@
             }
         }
 
-        public async Task<bool> ReportExistsAsync(int reportId)
+        public Task<bool> ReportExistsAsync(int reportId)
         {
-            return await commentReportRepo
+            return commentReportRepo.ExistsAsync(reportId);
+        }
+
+        public async Task DeleteAsync(int reportId)
+        {
+            await commentReportValidationService.ValidateCommentReportExistsAsync(reportId);
+
+            var report = await commentReportRepo.GetByIdAsync(reportId);
+
+            report.IsDeleted = true;
+
+            report.ModifiedOn = DateTime.UtcNow;
+
+            await commentReportRepo.UpdateAsync(report);
+        }
+
+        public async Task RestoreAsync(int reportId)
+        {
+            await commentReportValidationService.ValidateCommentReportExistsAsync(reportId);
+
+            var report = await commentReportRepo
                 .All()
-                .Where(x => !x.IsDeleted)
-                .AnyAsync(x => x.Id == reportId);
-        }
+                .Where(x => x.Id == reportId)
+                .Include(x => x.Comment)
+                .FirstAsync();
 
-        public async Task<bool> DeleteAsync(int reportId)
-        {
-            if (await ReportExistsAsync(reportId))
-            {
-                var report = await commentReportRepo.GetByIdAsync(reportId);
+            report.IsDeleted = false;
 
-                report.IsDeleted = true;
+            report.ModifiedOn = DateTime.UtcNow;
 
-                report.ModifiedOn = DateTime.UtcNow;
+            report.Comment.IsDeleted = false;
 
-                await commentReportRepo.UpdateAsync(report);
+            report.Comment.ModifiedOn = DateTime.UtcNow;
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> RestoreAsync(int reportId)
-        {
-            if (await ReportExistsAsync(reportId))
-            {
-                var report = await commentReportRepo
-                    .All()
-                    .Where(x => x.Id == reportId)
-                    .Include(x => x.Comment)
-                    .FirstAsync();
-
-                report.IsDeleted = false;
-
-                report.ModifiedOn = DateTime.UtcNow;
-
-                report.Comment.IsDeleted = false;
-
-                report.Comment.ModifiedOn = DateTime.UtcNow;
-
-                await commentReportRepo.UpdateAsync(report);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            await commentReportRepo.UpdateAsync(report);
         }
 
         public async Task DeleteAndResolveAsync(int reportId)
@@ -166,7 +164,7 @@
             await commentReportRepo.UpdateAsync(report);
         }
 
-        public async Task HardCensorCommentAsync(int commentId)
+        private async Task HardCensorCommentAsync(int commentId)
         {
             var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
 

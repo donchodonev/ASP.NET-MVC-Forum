@@ -91,6 +91,17 @@
             return chartData;
         }
 
+        public List<(string chartName, string url)> GenerateChartNamesAndUrls()
+        {
+            return new List<(string, string)>()
+            {
+                ( "Most commented posts", "/api/stats/most-commented-posts"),
+                ( "Most liked posts", "/api/stats/most-liked-posts"),
+                ( "Most reported posts", "/api/stats/most-reported-posts"),
+                ( "Most posts by category", "/api/stats/most-posts-by-category")
+            };
+        }
+
         private List<T> AddColor<T>(List<T> posts) where T : IStatsResponseModel
         {
             for (int i = 0; i < posts.Count; i++)

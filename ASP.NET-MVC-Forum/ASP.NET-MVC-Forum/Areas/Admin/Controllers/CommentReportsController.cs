@@ -1,9 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Areas.Admin.Controllers
 {
-    using ASP.NET_MVC_Forum.Web.Extensions;
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Web.Extensions;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage;
@@ -30,36 +32,21 @@
 
         public async Task<IActionResult> Resolve(int reportId)
         {
-            if (await commentReportService.ReportExistsAsync(reportId))
-            {
-                await commentReportService.DeleteAsync(reportId);
+            await commentReportService.DeleteAsync(reportId);
 
-                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED,"CommentReports","Index", new { reportStatus = "Deleted" });
-            }
-
-            return this.RedirectToActionWithErrorMessage(Error.REPORT_DOES_NOT_EXIST, "CommentReports", "Index", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED, "CommentReports", "Index", new { reportStatus = "Deleted" });
         }
 
         public async Task<IActionResult> Restore(int reportId)
         {
-            if (await commentReportService.RestoreAsync(reportId))
-            {
-                return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "CommentReports", "Index", new { reportStatus = "Active" });
-            }
+            await commentReportService.RestoreAsync(reportId);
 
-            return this.RedirectToActionWithSuccessMessage(Error.REPORT_DOES_NOT_EXIST, "CommentReports", "Index", new { reportStatus = "Active" });
+            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "CommentReports", "Index", new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Censor(int commentId, bool withRegex)
         {
-            if (withRegex)
-            {
-                await commentReportService.HardCensorCommentAsync(commentId);
-            }
-            else
-            {
-                await commentReportService.CensorCommentAsync(commentId);
-            }
+            await commentReportService.CensorCommentAsync(withRegex, commentId);
 
             return this.RedirectToActionWithSuccessMessage(Success.COMMENT_REPORT_CENSORED, "CommentReports", "Index", new { reportStatus = "Active" });
         }

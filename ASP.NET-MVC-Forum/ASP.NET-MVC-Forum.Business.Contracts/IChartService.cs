@@ -14,5 +14,7 @@
         public Task<List<MostReportedPostsResponeModel>> GetMostReportedPostsChartDataAsync(int count);
 
         public Task<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategoryAsync(int count);
+
+        public List<(string chartName, string url)> GenerateChartNamesAndUrls();
     }
 }

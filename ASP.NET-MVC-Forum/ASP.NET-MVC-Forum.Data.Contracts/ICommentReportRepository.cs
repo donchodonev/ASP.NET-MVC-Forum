@@ -9,6 +9,8 @@
     {
         public IQueryable<CommentReport> All();
 
+        public Task<bool> ExistsAsync(int reportId);
+
         public Task<CommentReport> GetByIdAsync(int reportId);
 
         public Task<Comment> GetByCommentIdAsync(int commentId);
