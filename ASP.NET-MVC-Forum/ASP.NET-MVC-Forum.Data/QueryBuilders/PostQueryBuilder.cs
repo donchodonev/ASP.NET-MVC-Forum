@@ -94,7 +94,7 @@
 
             query = orderType switch
             {
-                0 => entities.OrderBy(x => x.CreatedOn),
+                0 => entities.OrderBy(x => x.CreatedOn).ThenBy(x => x.ModifiedOn),
                 1 => entities.OrderBy(x => x.Title),
                 _ => entities
             };
@@ -108,7 +108,7 @@
 
             query = orderType switch
             {
-                0 => entities.OrderByDescending(x => x.CreatedOn),
+                0 => entities.OrderByDescending(x => x.CreatedOn).ThenByDescending(x => x.ModifiedOn),
                 1 => entities.OrderByDescending(x => x.Title),
                 _ => entities
             };

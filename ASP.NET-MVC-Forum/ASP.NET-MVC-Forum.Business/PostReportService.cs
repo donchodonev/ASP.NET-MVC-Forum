@@ -28,7 +28,7 @@
         private readonly IProfanityFilter filter;
 
         public PostReportService(
-            IPostReportRepository postReportRepo, 
+            IPostReportRepository postReportRepo,
             IPostRepository postRepo,
             IMapper mapper,
             IPostValidationService postValidationService,
@@ -87,11 +87,11 @@
 
         public async Task AutoGeneratePostReportAsync(string title, string content, int postId)
         {
-            if (ContainsProfanity(content))
-            {
-                List<string> profaneWordsFound = FindPostProfanities(title, content);
+            List<string> badWords = FindPostProfanities(title, content);
 
-                string reason = $"Profane words found in post title and content: {string.Join(", ", profaneWordsFound)}";
+            if (badWords.Count > 0)
+            {
+                string reason = $"Profane words found in post title and content: {string.Join(", ", badWords)}";
 
                 await ReportAsync(postId, reason);
             }
@@ -104,7 +104,7 @@
                 .Include(x => x.Reports)
                 .FirstOrDefaultAsync();
 
-            await postRepo.DeleteAsync(postWithAllReports); 
+            await postRepo.DeleteAsync(postWithAllReports);
 
             DeleteAllPostReports(postWithAllReports.Reports);
 
@@ -140,26 +140,30 @@
 
         public List<string> FindPostProfanities(string title, string content)
         {
-            List<string> profaneWordsFound = filter
-                .DetectAllProfanities(content)
-                .ToList();
+            string[] titleWords = title.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            profaneWordsFound
-                .AddRange(filter.DetectAllProfanities(title));
+            string[] contentWords = content.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            return profaneWordsFound;
+            List<string> badWords = new List<string>();
+
+            badWords.AddRange(titleWords.Where(x => ContainsProfanity(x)));
+            badWords.AddRange(contentWords.Where(x => ContainsProfanity(x)));
+
+            return badWords;
         }
 
         public List<string> FindPostProfanities(string title, string content, string shortDescription)
         {
-            List<string> profaneWordsFound = filter
-                .DetectAllProfanities(content.Substring(3, content.Length - 3))
-                .ToList();
+            string[] shortDescriptionWords = shortDescription.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            profaneWordsFound.AddRange(filter.DetectAllProfanities(title));
-            profaneWordsFound.AddRange(filter.DetectAllProfanities(shortDescription));
+            List<string> badWords = new List<string>();
 
-            return profaneWordsFound;
+            List<string> titleAndContentBadWords = FindPostProfanities(title, content);
+
+            badWords.AddRange(titleAndContentBadWords);
+            badWords.AddRange(shortDescriptionWords.Where(x => ContainsProfanity(x)));
+
+            return badWords;
         }
 
         public bool ContainsProfanity(string term)
