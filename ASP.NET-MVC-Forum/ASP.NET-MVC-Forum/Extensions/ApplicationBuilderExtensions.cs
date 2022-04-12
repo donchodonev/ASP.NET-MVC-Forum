@@ -1,8 +1,11 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.Extensions
 {
+    using ASP.NET_MVC_Forum.Business;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Web.Hubs;
 
     using Microsoft.AspNetCore.Builder;
@@ -142,20 +145,9 @@
 
         private static async Task SeedAdministratorAsync(IServiceProvider services)
         {
-            var userManager = services.GetRequiredService<UserManager<ExtendedIdentityUser>>();
+            var userRepo = services.GetRequiredService<IUserRepository>();
 
-            var user = new ExtendedIdentityUser()
-            {
-                FirstName = "Doncho",
-                LastName = "Donev",
-                Email = "donevdoncho92@gmail.com",
-                UserName = "admin",
-                EmailConfirmed = true
-            };
-
-            await userManager.CreateAsync(user, "d123456789D@");
-
-            await userManager.AddToRoleAsync(user, ADMIN_ROLE);
+            await userRepo.AddАsync("Doncho", "Donev", "d123456789D@", "donevdoncho92@gmail.com", "admin", 29);
         }
 
         private static async Task SeedRolesAsync(IServiceProvider services)
@@ -187,6 +179,7 @@
 
             var userRepo = services.GetRequiredService<IUserRepository>();
 
+
             var adminId = await userRepo
                     .GetAll()
                     .Select(x => x.Id)
@@ -199,26 +192,34 @@
 
             var categories = await db.Categories.ToListAsync();
 
-            var posts = new List<Post>();
+            await AddPostsToDatabaseAsync(categories, adminId, services);
+            await AddPostsToDatabaseAsync(categories, adminId, services);
+            await AddPostsToDatabaseAsync(categories, adminId, services);
+        }
 
+        private static async Task AddPostsToDatabaseAsync(
+            List<Category> categories,
+            string adminId,
+            IServiceProvider services)
+        {
             for (int i = 0; i < categories.Count; i++)
             {
-                posts.Add(new Post()
+                var random = new Random();
+
+                var postService = services.GetRequiredService<IPostService>();
+
+                var post = new AddPostFormModel()
                 {
-                    Title = $"{i}",
                     CategoryId = categories[i].Id,
-                    Category = categories[i],
-                    UserId = adminId,
+                    Title = $"Title number {random.Next()}",
                     HtmlContent = @"
                     Lorem ipsum dolor sit amet,
                     consectetur adipiscing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                });
+                };
+
+                await postService.CreateNewAsync(post, adminId);
             }
-
-            db.Posts.AddRange(posts);
-
-            await db.SaveChangesAsync();
         }
     }
 }

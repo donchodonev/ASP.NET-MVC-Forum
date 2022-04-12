@@ -30,19 +30,13 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
         <div class="text-center mt-3">
-            <span class="text-center text-danger " asp-validation-for="Title"></span>
-            @if (TempData.ContainsKey(ERROR_MESSAGE))
-            {
-                <div class="text-center mt-3">
-                    <span class="text-center text-danger ">@TempData[ERROR_MESSAGE]</span>
-                </div>
-            }
+            <span class="text-danger" asp-validation-for="Title"></span>
+            <span class="text-danger" asp-validation-for="HtmlContent"></span>
         </div>
     </form>
 </div>
 
 @section Scripts {
-
     <partial name="_ValidationScriptsPartial" />
 }
 

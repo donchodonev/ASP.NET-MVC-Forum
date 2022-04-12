@@ -73,7 +73,7 @@
                     });
             }
 
-            var newlyCreatedPost = await postService.CreateNewAsync(data,this.User.Id());
+            var newlyCreatedPost = await postService.CreateNewAsync(data, this.User.Id());
 
             return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
         }
@@ -90,7 +90,12 @@
         [HttpPost]
         public async Task<ActionResult> Edit([FromForm] EditPostFormModel data)
         {
-            await postService.Edit(data,this.User);
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Edit", new { postId = data.PostId });
+            }
+
+            await postService.Edit(data, this.User);
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }

@@ -74,7 +74,7 @@
             await postReportService
                 .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, postEntity.Id);
 
-            return mapper.Map<NewlyCreatedPostServiceModel>(post);
+            return mapper.Map<NewlyCreatedPostServiceModel>(postEntity);
         }
 
         public string GenerateShortDescription(string escapedHtml)

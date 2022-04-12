@@ -10,6 +10,7 @@
     using System.Linq;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.DateTimeConstants;
+
     public class PostMappingProfile : Profile
     {
         public PostMappingProfile()
