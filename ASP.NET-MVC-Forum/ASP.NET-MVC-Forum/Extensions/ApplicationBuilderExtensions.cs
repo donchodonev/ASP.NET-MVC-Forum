@@ -32,6 +32,7 @@
             await SeedCategoriesAsync(services);
             await SeedRolesAsync(services);
             await SeedAdministratorAsync(services);
+            await SeedModeratorAsync(services);
             await SeedPostsAsync(services);
 
             return app;
@@ -147,7 +148,34 @@
         {
             var userRepo = services.GetRequiredService<IUserRepository>();
 
+            var userManager = services.GetRequiredService<UserManager<ExtendedIdentityUser>>();
+
             await userRepo.AddАsync("Doncho", "Donev", "d123456789D@", "donevdoncho92@gmail.com", "admin", 29);
+
+            var user = await userManager.FindByNameAsync("admin");
+
+            var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            await userManager.ConfirmEmailAsync(user, confirmationToken);
+
+            await userManager.AddToRoleAsync(user, ADMIN_ROLE);
+        }
+
+        private static async Task SeedModeratorAsync(IServiceProvider services)
+        {
+            var userRepo = services.GetRequiredService<IUserRepository>();
+
+            var userManager = services.GetRequiredService<UserManager<ExtendedIdentityUser>>();
+
+            await userRepo.AddАsync("Doncho", "Donev", "d123456789D@", "doniodonef@gmail.com", "moderator", 29);
+
+            var user = await userManager.FindByNameAsync("moderator");
+
+            var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            await userManager.ConfirmEmailAsync(user, confirmationToken);
+
+            await userManager.AddToRoleAsync(user, MODERATOR_ROLE);
         }
 
         private static async Task SeedRolesAsync(IServiceProvider services)

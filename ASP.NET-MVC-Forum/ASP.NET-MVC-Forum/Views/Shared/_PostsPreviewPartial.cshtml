@@ -92,12 +92,12 @@
                             <a type="button" class="btn btn-warning m-4" asp-action="Edit" asp-controller="Posts" asp-route-postId="@post.PostId">Edit</a>
                         }
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenterReport-@post.PostId">
+                    <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#exampleModalCenterReport-@post.PostId">
                             Report
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenterReport-@post.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal fade" id="exampleModalCenterReport-@post.PostId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -128,12 +128,24 @@
 <div class="form-row text-center">
     <div class="col-12">
         <a asp-action="Index"
-           asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @previousDisabled w-50">
+           asp-route-category="@(ViewBag.CategoryNames.SelectedValue)"
+           asp-route-searchTerm="@(ViewBag.SearchTerm)"
+           asp-route-sortType="@(ViewBag.SortTypeLibrary.SelectedValue)"
+           asp-route-sortOrder="@(ViewBag.SortOrderOptions.SelectedValue)"
+           asp-route-viewCount="@(ViewBag.ViewCountOptions.SelectedValue)"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           class="btn btn-default @previousDisabled w-50">
             <i class="bi bi-arrow-left"></i> Previous
         </a>
         <div class="col-12 mt-4">
             <a asp-action="Index"
-               asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled w-50">
+               asp-route-category="@(ViewBag.CategoryNames.SelectedValue)"
+               asp-route-searchTerm="@(ViewBag.SearchTerm)"
+               asp-route-sortType="@(ViewBag.SortTypeLibrary.SelectedValue)"
+               asp-route-sortOrder="@(ViewBag.SortOrderOptions.SelectedValue)"
+               asp-route-viewCount="@(ViewBag.ViewCountOptions.SelectedValue)"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               class="btn btn-default @nextDisabled w-50">
                 Next <i class="bi bi-arrow-right"></i>
             </a>
         </div>

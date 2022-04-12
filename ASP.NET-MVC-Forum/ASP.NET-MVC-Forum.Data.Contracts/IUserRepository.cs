@@ -57,5 +57,7 @@
         public Task<IList<string>> GetRolesAsync(ExtendedIdentityUser user);
 
         public string GetImageExtension(IFormFile image);
+
+        public ValueTask DisposeAsync();
     }
 }

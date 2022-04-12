@@ -30,7 +30,7 @@
 
         public async Task ValidateUserIsPrivilegedAsync(int postId, ClaimsPrincipal user)
         {
-            if (!await IsAuthor(user.Id(), postId) || !user.IsAdminOrModerator())
+            if (!await IsAuthor(user.Id(), postId) && !user.IsAdminOrModerator())
             {
                 throw new InsufficientPrivilegeException(YOU_ARE_NOT_THE_AUTHER);
             }

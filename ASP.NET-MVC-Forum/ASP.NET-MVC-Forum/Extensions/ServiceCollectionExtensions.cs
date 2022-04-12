@@ -53,8 +53,6 @@
 
         public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<ApplicationDbContext>();
-
             services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<ICategoryRepository, CategoryRepository>();

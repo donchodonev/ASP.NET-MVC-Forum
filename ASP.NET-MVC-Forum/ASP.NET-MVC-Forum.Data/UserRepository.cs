@@ -183,5 +183,10 @@
         {
             return avatarService.GetImageExtension(image);
         }
+
+        public ValueTask DisposeAsync()
+        {
+            return db.DisposeAsync();
+        }
     }
 }
