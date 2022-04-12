@@ -7,9 +7,9 @@
 
     public class UserViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public string Username => IdentityUser.UserName;
+        public string Username { get; set; }
 
         public List<string> Roles { get; set; }
 

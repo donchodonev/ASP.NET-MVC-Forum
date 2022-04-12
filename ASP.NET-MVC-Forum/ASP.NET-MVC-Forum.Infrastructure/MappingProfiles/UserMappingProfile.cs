@@ -10,7 +10,8 @@
     {
         public UserMappingProfile()
         {
-            CreateMap<ExtendedIdentityUser, UserViewModel>();
+            CreateMap<ExtendedIdentityUser, UserViewModel>()
+                .ForMember(x => x.IdentityUser, cfg => cfg.MapFrom(y => y));
 
             CreateMap<ExtendedIdentityUser, ChatSelectUserViewModel>()
             .ForMember(x => x.RecipientUsername, cfg => cfg.MapFrom(y => y.UserName))

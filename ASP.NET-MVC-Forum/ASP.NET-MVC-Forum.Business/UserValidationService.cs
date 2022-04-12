@@ -63,7 +63,10 @@
 
         public void ValidateUserNotNull(ExtendedIdentityUser user)
         {
-            throw new NullUserException(USER_DOES_NOT_EXIST);
+            if (user == null)
+            {
+                throw new NullUserException(USER_DOES_NOT_EXIST);
+            }
         }
 
         public async Task ValidateUserExistsByUsernameAsync(string username)
