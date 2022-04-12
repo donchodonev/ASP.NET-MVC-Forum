@@ -35,18 +35,14 @@
             return View(vm);
         }
 
-        public async Task<IActionResult> SelectUser(string username)
+        public async Task<IActionResult> SelectUser(SelectUserInputModel userInput)
         {
-            if (string.IsNullOrWhiteSpace(username))
+            if (!ModelState.IsValid)
             {
                 return View();
             }
-            else if (username.Length < UserConstants.USERNAME_MIN_LENGTH)
-            {
-                return this.ViewWithErrorMessage(Error.USERNAME_TOO_SHORT);
-            }
 
-            var vm = await chatService.GenerateChatSelectUserViewModel(username, this.User.Id(), this.User.Identity.Name);
+            var vm = await chatService.GenerateChatSelectUserViewModel(userInput.Username, this.User.Id(), this.User.Identity.Name);
 
             return View(vm);
         }

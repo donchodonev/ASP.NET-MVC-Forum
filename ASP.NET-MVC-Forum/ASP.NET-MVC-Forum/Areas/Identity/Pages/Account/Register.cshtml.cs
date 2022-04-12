@@ -19,7 +19,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.DataConstants.UserConstants;
-
+    using static ASP.NET_MVC_Forum.Domain.Constants.WebConstants;
 
     [AllowAnonymous]
     public class RegisterModel : PageModel
@@ -102,7 +102,7 @@
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ExtendedIdentityUser { UserName = Input.Username, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Age = Input.Age };
+                var user = new ExtendedIdentityUser { UserName = Input.Username, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Age = Input.Age, ImageUrl = AVATAR_URL};
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

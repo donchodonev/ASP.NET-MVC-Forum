@@ -85,16 +85,9 @@
             {
                 Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
 
-                try
-                {
-                    db.Chats.Add(chat);
+                db.Chats.Add(chat);
 
-                    await db.SaveChangesAsync();
-                }
-                catch (System.Exception ex)
-                {
-                    throw;
-                }
+                await db.SaveChangesAsync();
             }
         }
 
