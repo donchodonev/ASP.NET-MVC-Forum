@@ -70,7 +70,7 @@
 
         public async Task ValidatePostExistsAsync(int postId)
         {
-            if(await db.Posts.AnyAsync(x => x.Id == postId))
+            if(!await db.Posts.AnyAsync(x => x.Id == postId))
             {
                 throw new EntityDoesNotExistException(POST_DOES_NOT_EXIST);
             }
