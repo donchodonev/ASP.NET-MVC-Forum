@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.Error;
+    using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
 
     public class CommentReportValidationService : ICommentReportValidationService
     {
@@ -31,6 +32,14 @@
             if (report == null)
             {
                 throw new CommentReportDoesNotExistException(REPORT_DOES_NOT_EXIST);
+            }
+        }
+
+        public void ValidateCommentReportStatus(string status)
+        {
+            if(status != REPORT_ACTIVE_STATUS && status != REPORT_DELETED_STATUS)
+            {
+                throw new InvalidReportStatusException(INVALID_REPORT_STATUS);
             }
         }
     }

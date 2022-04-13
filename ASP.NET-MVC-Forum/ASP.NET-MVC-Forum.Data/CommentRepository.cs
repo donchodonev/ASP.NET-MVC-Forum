@@ -6,6 +6,8 @@
 
     using AutoMapper;
 
+    using Microsoft.EntityFrameworkCore;
+
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -53,6 +55,11 @@
             db.Update(entity);
 
             return db.SaveChangesAsync();
+        }
+
+        public Task<bool> ExistsAsync(int commentId)
+        {
+            return db.Comments.AnyAsync(x => x.Id == commentId);
         }
     }
 }

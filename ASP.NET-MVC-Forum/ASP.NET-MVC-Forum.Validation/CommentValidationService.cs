@@ -44,5 +44,13 @@
                 throw new InsufficientPrivilegeException(CANNOT_DELETE_COMMENT);
             }
         }
+
+        public async Task ValidateCommentExistsAsync(int commentId)
+        {
+            if(! await commentRepo.ExistsAsync(commentId))
+            {
+                throw new EntityDoesNotExistException(ENTITY_DOES_NOT_EXIST);
+            }
+        }
     }
 }

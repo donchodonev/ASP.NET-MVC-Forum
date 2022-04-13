@@ -25,22 +25,27 @@
         private readonly IProfanityFilter filter;
         private readonly ICommentRepository commentRepo;
         private readonly ICommentReportValidationService commentReportValidationService;
+        private readonly ICommentValidationService commentValidationService;
 
         public CommentReportService(
             IMapper mapper,
             ICommentReportRepository commentReportRepo,
             IProfanityFilter filter,
             ICommentRepository commentRepo,
-            ICommentReportValidationService commentReportValidationService)
+            ICommentReportValidationService commentReportValidationService,
+            ICommentValidationService commentValidationService)
         {
             this.mapper = mapper;
             this.commentReportRepo = commentReportRepo;
             this.filter = filter;
             this.commentRepo = commentRepo;
             this.commentReportValidationService = commentReportValidationService;
+            this.commentValidationService = commentValidationService;
         }
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
+            commentReportValidationService.ValidateCommentReportStatus(reportStatus);
+
             var allCommentReports = commentReportRepo
                 .All();
 
@@ -63,20 +68,28 @@
         }
 
 
-        public Task CensorCommentAsync(bool withRegex, int commentId)
+        public async Task CensorCommentAsync(bool withRegex, int commentId)
         {
+            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
+
+            commentValidationService.ValidateCommentNotNull(comment);
+
             if (withRegex)
             {
-                return HardCensorCommentAsync(commentId);
+                HardCensorComment(comment);
             }
             else
             {
-                return SoftCensorCommentAsync(commentId);
+                SoftCensorComment(comment);
             }
+
+            await commentRepo.UpdateAsync(comment);
         }
 
         public async Task ReportCommentAsync(int commentId, string reasons)
         {
+            await commentValidationService.ValidateCommentExistsAsync(commentId);
+
             var commentReport = new CommentReport { CommentId = commentId, Reason = reasons };
 
             await commentReportRepo.AddAsync(commentReport);
@@ -84,6 +97,8 @@
 
         public async Task AutoGenerateCommentReportAsync(string content, int commentId)
         {
+            await commentValidationService.ValidateCommentExistsAsync(commentId);
+
             if (filter.ContainsProfanity(content))
             {
                 List<string> profaneWordsFound = GetProfanities(content);
@@ -92,11 +107,6 @@
 
                 await ReportCommentAsync(commentId, reason);
             }
-        }
-
-        public Task<bool> ReportExistsAsync(int reportId)
-        {
-            return commentReportRepo.ExistsAsync(reportId);
         }
 
         public async Task DeleteAsync(int reportId)
@@ -135,13 +145,15 @@
 
         public async Task DeleteAndResolveAsync(int reportId)
         {
-            var timeOfResolution = DateTime.UtcNow;
-
             var report = await commentReportRepo
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
                 .FirstAsync();
+
+            commentReportValidationService.ValidateCommentReportNotNull(report);
+
+            var timeOfResolution = DateTime.UtcNow;
 
             report.IsDeleted = true;
 
@@ -154,10 +166,8 @@
             await commentReportRepo.UpdateAsync(report);
         }
 
-        private async Task HardCensorCommentAsync(int commentId)
+        private void HardCensorComment(Comment comment)
         {
-            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
-
             var profanities = GetProfanities(comment.Content);
 
             var censoredContent = comment.Content;
@@ -168,18 +178,13 @@
             }
 
             comment.Content = censoredContent;
-
-            await commentRepo.UpdateAsync(comment);
         }
-        private async Task SoftCensorCommentAsync(int commentId)
-        {
-            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
 
+        private void SoftCensorComment(Comment comment)
+        {
             var censoredContent = filter.CensorString(comment.Content, '*');
 
             comment.Content = censoredContent;
-
-            await commentRepo.UpdateAsync(comment);
         }
 
         private List<string> GetProfanities(string content)

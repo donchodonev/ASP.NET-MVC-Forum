@@ -13,8 +13,6 @@
 
         public Task AutoGenerateCommentReportAsync(string content, int commentId);
 
-        public Task<bool> ReportExistsAsync(int reportId);
-
         public Task DeleteAsync(int reportId);
 
         public Task RestoreAsync(int reportId);

@@ -2,15 +2,12 @@
 {
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Infrastructure;
 
     using Microsoft.EntityFrameworkCore;
 
     using System.Linq;
     using System.Threading.Tasks;
-
-    using static ASP.NET_MVC_Forum.Domain.Constants.ChatConstants.Errors;
 
     public class ChatRepository : IChatRepository
     {
@@ -54,7 +51,7 @@
                 (x.UserA == identityUserB && x.UserB == identityUserA));
         }
 
-        public Task<bool> ExistsAsync(int chatId)
+        public Task<bool> ExistsAsync(long chatId)
         {
             return db
                 .Chats

@@ -9,5 +9,7 @@
         public Task ValidateCommentReportExistsAsync(int reportId);
 
         public void ValidateCommentReportNotNull(CommentReport report);
+
+        public void ValidateCommentReportStatus(string status);
     }
 }

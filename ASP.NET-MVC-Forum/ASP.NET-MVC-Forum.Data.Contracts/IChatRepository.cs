@@ -10,7 +10,7 @@
 
         public Task<bool> ExistsAsync(string identityUserA, string identityUserB);
 
-        public Task<bool> ExistsAsync(int chatId);
+        public Task<bool> ExistsAsync(long chatId);
 
         public Task<long> GetChatIdAsync(string identityUserA, string identityUserB);
 
