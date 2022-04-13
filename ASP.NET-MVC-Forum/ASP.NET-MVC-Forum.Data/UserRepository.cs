@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -130,11 +129,9 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
+        public async Task AvatarUpdateAsync(ExtendedIdentityUser user, IFormFile image)
         {
             string fileName = await avatarService.UploadAvatarAsync(image);
-
-            var user = await GetByIdAsync(identityUserId);
 
             user.ImageUrl = $"{AVATAR_WEB_PATH}{fileName}";
 

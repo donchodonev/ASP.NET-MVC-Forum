@@ -44,7 +44,7 @@
 
         public Task ResetAvatarAsync(string identityUserId);
 
-        public Task AvatarUpdateAsync(string identityUserId, IFormFile image);
+        public Task AvatarUpdateAsync(ExtendedIdentityUser user, IFormFile image);
 
         public bool IsAvatarDefault(string userId);
 
