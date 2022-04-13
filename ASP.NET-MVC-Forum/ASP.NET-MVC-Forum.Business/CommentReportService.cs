@@ -18,6 +18,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
     public class CommentReportService : ICommentReportService
     {
         private readonly IMapper mapper;
@@ -42,31 +43,23 @@
             this.commentReportValidationService = commentReportValidationService;
             this.commentValidationService = commentValidationService;
         }
+
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
             commentReportValidationService.ValidateStatus(reportStatus);
 
-            var allCommentReports = commentReportRepo
-                .All();
+            var allCommentReports = commentReportRepo.All();
 
-            var activeCommentReports = allCommentReports.Where(x => !x.IsDeleted);
-
-            if (reportStatus == "Active")
+            IQueryable<CommentReport> reports = reportStatus switch
             {
-                return await mapper
-                    .ProjectTo<CommentReportViewModel>(activeCommentReports)
-                    .ToListAsync();
-            }
-
-            var inactiveCommentReports = commentReportRepo
-                .All()
-                .Where(x => x.IsDeleted);
+                ACTIVE_STATUS => allCommentReports.Where(x => !x.IsDeleted),
+                _ => allCommentReports.Where(x => x.IsDeleted)
+            };
 
             return await mapper
-                .ProjectTo<CommentReportViewModel>(inactiveCommentReports)
+                .ProjectTo<CommentReportViewModel>(reports)
                 .ToListAsync();
         }
-
 
         public async Task CensorCommentAsync(bool withRegex, int commentId)
         {
