@@ -24,7 +24,7 @@
             this.htmlManipulator = htmlManipulator;
         }
 
-        public void ValidatePostModelNotNull<T>(T post)
+        public void ValidateNotNull<T>(T post)
         {
             if (post == null)
             {

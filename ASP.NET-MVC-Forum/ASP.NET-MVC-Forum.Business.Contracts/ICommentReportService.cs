@@ -9,7 +9,7 @@
     {
         public Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus);
 
-        public Task ReportCommentAsync(int commentId, string reasons);
+        public Task ReportAsync(int commentId, string reasons);
 
         public Task AutoGenerateCommentReportAsync(string content, int commentId);
 

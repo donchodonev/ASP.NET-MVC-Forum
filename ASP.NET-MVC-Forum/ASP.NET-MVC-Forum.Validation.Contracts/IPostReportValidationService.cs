@@ -9,5 +9,7 @@
         public Task ValidateReportExistsAsync(int reportId);
 
         public void ValidateReportNotNull(PostReport report);
+
+        public void ValidateStatus(string status);
     }
 }

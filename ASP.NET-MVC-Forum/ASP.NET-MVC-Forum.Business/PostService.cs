@@ -103,7 +103,7 @@
                 .Include(x => x.Reports)
                 .FirstOrDefaultAsync();
 
-            postValidationService.ValidatePostModelNotNull(postToMarkAsDeleted);
+            postValidationService.ValidateNotNull(postToMarkAsDeleted);
 
             postToMarkAsDeleted.IsDeleted = true;
 
@@ -185,7 +185,7 @@
                 .ProjectTo<ViewPostViewModel>(posts)
                 .FirstOrDefaultAsync();
 
-            postValidationService.ValidatePostModelNotNull(post);
+            postValidationService.ValidateNotNull(post);
 
             return post;
         }

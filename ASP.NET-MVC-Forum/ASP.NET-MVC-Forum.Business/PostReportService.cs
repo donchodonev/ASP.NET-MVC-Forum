@@ -18,6 +18,9 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
+
+
     public class PostReportService : IPostReportService
     {
         private readonly IPostReportRepository postReportRepo;
@@ -87,6 +90,8 @@
 
         public async Task AutoGeneratePostReportAsync(string title, string content, int postId)
         {
+            //validation done in ReportAsync method
+
             List<string> badWords = FindPostProfanities(title, content);
 
             if (badWords.Count > 0)
@@ -99,10 +104,12 @@
 
         public async Task DeletePostAndResolveReportsAsync(int postId)
         {
-            var postWithAllReports = await postRepo
+            Post postWithAllReports = await postRepo
                 .GetById(postId)
                 .Include(x => x.Reports)
                 .FirstOrDefaultAsync();
+
+            postValidationService.ValidateNotNull(postWithAllReports);
 
             await postRepo.DeleteAsync(postWithAllReports);
 
@@ -111,31 +118,24 @@
             await postReportRepo.UpdateAll(postWithAllReports.Reports);
         }
 
-        public async Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus)
+        public Task<List<PostReportViewModel>> GeneratePostReportViewModelListAsync(string reportStatus)
         {
-            var postReports = postReportRepo
-                .All()
-                .Where(x => !x.IsDeleted);
+            postReportValidationService.ValidateStatus(reportStatus);
 
-            if (reportStatus == "Active")
+            IQueryable<PostReport> query = reportStatus switch
             {
-                return await mapper
-                    .ProjectTo<PostReportViewModel>(postReports)
-                    .ToListAsync();
-            }
+                ACTIVE_STATUS => postReportRepo
+                                    .All()
+                                    .Where(x => !x.IsDeleted),
 
-            var inactivePostReports = postReportRepo
-                .All()
-                .Where(x => x.IsDeleted);
+                DELETED_STATUS => postReportRepo
+                                    .All()
+                                    .Where(x => !x.IsDeleted)
+            };
 
-            return await mapper
-                .ProjectTo<PostReportViewModel>(inactivePostReports)
+            return mapper
+                .ProjectTo<PostReportViewModel>(query)
                 .ToListAsync();
-        }
-
-        public Task<bool> ReportExistsAsync(int reportId)
-        {
-            return postReportRepo.ExistsAsync(reportId);
         }
 
         public List<string> FindPostProfanities(string title, string content)
@@ -147,6 +147,7 @@
             List<string> badWords = new List<string>();
 
             badWords.AddRange(titleWords.Where(x => ContainsProfanity(x)));
+
             badWords.AddRange(contentWords.Where(x => ContainsProfanity(x)));
 
             return badWords;
@@ -161,9 +162,28 @@
             List<string> titleAndContentBadWords = FindPostProfanities(title, content);
 
             badWords.AddRange(titleAndContentBadWords);
+
             badWords.AddRange(shortDescriptionWords.Where(x => ContainsProfanity(x)));
 
             return badWords;
+        }
+
+        public async Task CensorAsync(bool withRegex, int postId)
+        {
+            var post = await postRepo.GetByIdAsync(postId);
+
+            postValidationService.ValidateNotNull(post);
+
+            if (withRegex)
+            {
+                 HardCensor(post);
+            }
+            else
+            {
+             SoftCensor(post);
+            }
+
+            await postRepo.UpdateAsync(post);
         }
 
         public bool ContainsProfanity(string term)
@@ -171,20 +191,8 @@
             return filter.ContainsProfanity(term);
         }
 
-        public Task CensorAsync(bool withRegex, int postId)
+        private void SoftCensor(Post post)
         {
-            if (withRegex)
-            {
-                return HardCensorAsync(postId);
-            }
-
-            return SoftCensorAsync(postId);
-        }
-
-        private async Task SoftCensorAsync(int postId)
-        {
-            var post = await postRepo.GetByIdAsync(postId);
-
             var title = filter.CensorString(post.Title, '*');
             var htmlContent = filter.CensorString(post.HtmlContent, '*');
             var shortDescription = filter.CensorString(post.ShortDescription, '*');
@@ -192,14 +200,10 @@
             post.Title = title;
             post.HtmlContent = htmlContent;
             post.ShortDescription = shortDescription;
-
-            await postRepo.UpdateAsync(post);
         }
 
-        private async Task HardCensorAsync(int postId)
+        private void HardCensor(Post post)
         {
-            var post = await postRepo.GetByIdAsync(postId);
-
             var profanities = FindPostProfanities(post.Title, post.HtmlContent, post.ShortDescription);
 
             var title = post.Title;
@@ -216,8 +220,6 @@
             post.Title = title;
             post.HtmlContent = htmlContent;
             post.ShortDescription = shortDescription;
-
-            await postRepo.UpdateAsync(post);
         }
 
         private void DeleteAllPostReports(ICollection<PostReport> reports)

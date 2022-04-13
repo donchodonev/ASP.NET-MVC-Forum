@@ -44,7 +44,7 @@
         }
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
-            commentReportValidationService.ValidateCommentReportStatus(reportStatus);
+            commentReportValidationService.ValidateStatus(reportStatus);
 
             var allCommentReports = commentReportRepo
                 .All();
@@ -86,7 +86,7 @@
             await commentRepo.UpdateAsync(comment);
         }
 
-        public async Task ReportCommentAsync(int commentId, string reasons)
+        public async Task ReportAsync(int commentId, string reasons)
         {
             await commentValidationService.ValidateCommentExistsAsync(commentId);
 
@@ -97,7 +97,7 @@
 
         public async Task AutoGenerateCommentReportAsync(string content, int commentId)
         {
-            await commentValidationService.ValidateCommentExistsAsync(commentId);
+            //validation done in ReportAsync method
 
             if (filter.ContainsProfanity(content))
             {
@@ -105,7 +105,7 @@
 
                 string reason = string.Join(", ", profaneWordsFound);
 
-                await ReportCommentAsync(commentId, reason);
+                await ReportAsync(commentId, reason);
             }
         }
 
@@ -113,7 +113,7 @@
         {
             var report = await commentReportRepo.GetByIdAsync(reportId);
 
-            commentReportValidationService.ValidateCommentReportNotNull(report);
+            commentReportValidationService.ValidateNotNull(report);
 
             report.IsDeleted = true;
 
@@ -130,7 +130,7 @@
                 .Include(x => x.Comment)
                 .FirstAsync();
 
-            commentReportValidationService.ValidateCommentReportNotNull(report);
+            commentReportValidationService.ValidateNotNull(report);
 
             report.IsDeleted = false;
 
@@ -151,7 +151,7 @@
                 .Include(x => x.Comment)
                 .FirstAsync();
 
-            commentReportValidationService.ValidateCommentReportNotNull(report);
+            commentReportValidationService.ValidateNotNull(report);
 
             var timeOfResolution = DateTime.UtcNow;
 

@@ -2,7 +2,7 @@
 {
     public static class CommonConstants
     {
-        public const string REPORT_ACTIVE_STATUS = "Active";
-        public const string REPORT_DELETED_STATUS = "Deleted";
+        public const string ACTIVE_STATUS = "Active";
+        public const string DELETED_STATUS = "Deleted";
     }
 }

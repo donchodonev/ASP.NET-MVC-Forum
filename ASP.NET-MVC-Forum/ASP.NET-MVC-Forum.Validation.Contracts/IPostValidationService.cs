@@ -4,7 +4,7 @@
 
     public interface IPostValidationService
     {
-        public void ValidatePostModelNotNull<T>(T post);
+        public void ValidateNotNull<T>(T post);
 
         public Task ValidatePostChangedAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId);
 

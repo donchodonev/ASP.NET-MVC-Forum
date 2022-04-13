@@ -25,7 +25,7 @@
 
         public async Task<IActionResult> Index(string reportStatus)
         {
-            var vm = await postReportService.GeneratePostReportViewModelList(reportStatus);
+            var vm = await postReportService.GeneratePostReportViewModelListAsync(reportStatus);
 
             return View(vm);
         }

@@ -19,7 +19,7 @@
             this.commentReportRepo = commentReportRepo;
         }
 
-        public async Task ValidateCommentReportExistsAsync(int reportId)
+        public async Task ValidateExistsAsync(int reportId)
         {
             if (!await commentReportRepo.ExistsAsync(reportId))
             {
@@ -27,7 +27,7 @@
             }
         }
 
-        public void ValidateCommentReportNotNull(CommentReport report)
+        public void ValidateNotNull(CommentReport report)
         {
             if (report == null)
             {
@@ -35,9 +35,9 @@
             }
         }
 
-        public void ValidateCommentReportStatus(string status)
+        public void ValidateStatus(string status)
         {
-            if(status != REPORT_ACTIVE_STATUS && status != REPORT_DELETED_STATUS)
+            if(status != ACTIVE_STATUS && status != DELETED_STATUS)
             {
                 throw new InvalidReportStatusException(INVALID_REPORT_STATUS);
             }

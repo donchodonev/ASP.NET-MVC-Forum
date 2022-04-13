@@ -6,10 +6,10 @@
 
     public interface ICommentReportValidationService
     {
-        public Task ValidateCommentReportExistsAsync(int reportId);
+        public Task ValidateExistsAsync(int reportId);
 
-        public void ValidateCommentReportNotNull(CommentReport report);
+        public void ValidateNotNull(CommentReport report);
 
-        public void ValidateCommentReportStatus(string status);
+        public void ValidateStatus(string status);
     }
 }
