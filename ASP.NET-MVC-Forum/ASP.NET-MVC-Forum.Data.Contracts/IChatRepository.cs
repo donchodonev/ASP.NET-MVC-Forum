@@ -8,11 +8,13 @@
     {
         public Task<Message> AddMessageAsync(long chatId, string message, string senderUsername);
 
-        public Task<bool> ChatExistsAsync(string identityUserA, string identityUserB);
+        public Task<bool> ExistsAsync(string identityUserA, string identityUserB);
+
+        public Task<bool> ExistsAsync(int chatId);
 
         public Task<long> GetChatIdAsync(string identityUserA, string identityUserB);
 
-        public Task CreateChatAsync(string identityUserA, string identityUserB);
+        public Task EnsureChatExistsAsync(string identityUserA, string identityUserB);
 
         public IQueryable<Message> GetLastMessagesAsNoTracking(long chatId, int count = 100);
     }

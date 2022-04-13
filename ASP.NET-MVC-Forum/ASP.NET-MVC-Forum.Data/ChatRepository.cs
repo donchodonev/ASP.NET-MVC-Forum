@@ -43,7 +43,7 @@
             return chatMessage;
         }
 
-        public Task<bool> ChatExistsAsync(string identityUserA, string identityUserB)
+        public Task<bool> ExistsAsync(string identityUserA, string identityUserB)
         {
             return db
                 .Chats
@@ -54,13 +54,16 @@
                 (x.UserA == identityUserB && x.UserB == identityUserA));
         }
 
+        public Task<bool> ExistsAsync(int chatId)
+        {
+            return db
+                .Chats
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == chatId);
+        }
+
         public async Task<long> GetChatIdAsync(string identityUserA, string identityUserB)
         {
-            if (!await ChatExistsAsync(identityUserA, identityUserB))
-            {
-                throw new AppException(CHAT_DOES_NOT_EXIST);
-            }
-
             return await db
                 .Chats
                  .Where(x =>
@@ -71,9 +74,9 @@
                  .FirstOrDefaultAsync();
         }
 
-        public async Task CreateChatAsync(string identityUserA, string identityUserB)
+        public async Task EnsureChatExistsAsync(string identityUserA, string identityUserB)
         {
-            if (!await ChatExistsAsync(identityUserA, identityUserB))
+            if (!await ExistsAsync(identityUserA, identityUserB))
             {
                 Chat chat = new Chat() { UserA = identityUserA, UserB = identityUserB };
 

@@ -4,7 +4,7 @@
     {
         public static class Errors
         {
-            public const string CHAT_DOES_NOT_EXIST = "There is no existing chat between the two users";
+            public const string CHAT_DOES_NOT_EXIST = "The chat does not exist";
         }
     }
 }

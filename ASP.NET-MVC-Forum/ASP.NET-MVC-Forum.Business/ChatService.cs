@@ -20,17 +20,20 @@
         private readonly IUserRepository userRepo;
         private readonly IChatRepository chatRepo;
         private readonly IUserValidationService userValidationService;
+        private readonly IChatValidationService chatValidationService;
 
         public ChatService(
             IMapper mapper,
             IUserRepository userRepo,
             IChatRepository chatRepo,
-            IUserValidationService userValidationService)
+            IUserValidationService userValidationService,
+            IChatValidationService chatValidationService)
         {
             this.mapper = mapper;
             this.userRepo = userRepo;
             this.chatRepo = chatRepo;
             this.userValidationService = userValidationService;
+            this.chatValidationService = chatValidationService;
         }
 
         public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(
@@ -65,7 +68,7 @@
 
             await userValidationService.ValidateUserExistsByIdAsync(recipientId);
 
-            await chatRepo.CreateChatAsync(senderId, recipientId);
+            await chatRepo.EnsureChatExistsAsync(senderId, recipientId);
 
             var chatId = await chatRepo.GetChatIdAsync(senderId, recipientId);
 
@@ -111,6 +114,8 @@
             string receiver,
             IHubCallerClients clients)
         {
+            await chatValidationService.ValidateChatExistsAsync(chatId);
+
             var messages = await GetHistoryAsync(chatId);
 
             await clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);
