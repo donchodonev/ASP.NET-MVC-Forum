@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Data.Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET-MVC-Forum.Infrastructure", "ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj", "{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Validation", "ASP.NET-MVC-Forum.Validation\ASP.NET-MVC-Forum.Validation.csproj", "{4F4B3911-1D5F-42AF-B4B3-1AF0DC5A223D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NET-MVC-Forum.Validation.Contracts", "ASP.NET-MVC-Forum.Validation.Contracts\ASP.NET-MVC-Forum.Validation.Contracts.csproj", "{DFD6CB9D-95DC-4D2C-9D8D-9AF04A894A48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{358B5E98-7B0A-475B-A57A-5F9ADB8B2ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4B3911-1D5F-42AF-B4B3-1AF0DC5A223D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4B3911-1D5F-42AF-B4B3-1AF0DC5A223D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4B3911-1D5F-42AF-B4B3-1AF0DC5A223D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4B3911-1D5F-42AF-B4B3-1AF0DC5A223D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFD6CB9D-95DC-4D2C-9D8D-9AF04A894A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFD6CB9D-95DC-4D2C-9D8D-9AF04A894A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFD6CB9D-95DC-4D2C-9D8D-9AF04A894A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFD6CB9D-95DC-4D2C-9D8D-9AF04A894A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

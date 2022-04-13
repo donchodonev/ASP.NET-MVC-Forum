@@ -1,8 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Business.Contracts
 {
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
 
     using Microsoft.EntityFrameworkCore;
@@ -19,7 +17,9 @@
         private readonly IPostRepository postRepo;
         private readonly ICategoryRepository categoryRepo;
 
-        public ChartService(IChartRepository chartRepo, IPostRepository postRepo,
+        public ChartService(
+            IChartRepository chartRepo,
+            IPostRepository postRepo,
             ICategoryRepository categoryRepo)
         {
             this.chartRepo = chartRepo;

@@ -71,6 +71,14 @@
             return db.Users;
         }
 
+        public Task<bool> IsAuthor(string userId, int postId)
+        {
+            return db
+                .Posts
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == postId && x.UserId == userId);
+        }
+
         public IQueryable<ExtendedIdentityUser> GetAllAsNoTracking()
         {
             return GetAll().AsNoTracking();

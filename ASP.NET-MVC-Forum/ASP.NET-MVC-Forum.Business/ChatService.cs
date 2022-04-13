@@ -1,9 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Models.Chat;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

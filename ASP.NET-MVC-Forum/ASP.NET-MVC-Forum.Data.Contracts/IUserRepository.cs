@@ -22,6 +22,8 @@
 
         public Task<bool> ExistsByIdAsync(string userId);
 
+        public Task<bool> IsAuthor(string userId, int postId);
+
         public Task<bool> ExistsByUsernameAsync(string username);
 
         public Task<bool> IsBannedAsync(string userId);

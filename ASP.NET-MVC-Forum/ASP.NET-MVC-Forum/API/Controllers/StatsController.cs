@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
+    using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
 
     using Microsoft.AspNetCore.Authorization;
@@ -14,7 +14,6 @@
     [Route("api/[controller]")]
     public class StatsController : ControllerBase
     {
-
         private readonly IChartService chartService;
 
         public StatsController(IChartService chartService)

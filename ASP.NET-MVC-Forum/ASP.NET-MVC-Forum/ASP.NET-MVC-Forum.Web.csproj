@@ -21,6 +21,7 @@
     <ProjectReference Include="..\ASP.NET-MVC-Forum.Business\ASP.NET-MVC-Forum.Business.csproj" />
     <ProjectReference Include="..\ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj" />
     <ProjectReference Include="..\ASP.NET-MVC-Forum.Infrastructure\ASP.NET-MVC-Forum.Infrastructure.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Validation\ASP.NET-MVC-Forum.Validation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
