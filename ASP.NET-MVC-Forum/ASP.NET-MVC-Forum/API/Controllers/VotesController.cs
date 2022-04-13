@@ -26,7 +26,9 @@
         {
             await voteService.RegisterVoteAsync(vote, User.Id());
 
-            VoteResponseModel response = new VoteResponseModel() { VoteSum = await voteService.GetPostVoteSumAsync(vote.PostId) };
+            var voteSum = await voteService.GetPostVoteSumAsync(vote.PostId);
+
+            var response = new VoteResponseModel(voteSum);
 
             return Ok(response);
         }
