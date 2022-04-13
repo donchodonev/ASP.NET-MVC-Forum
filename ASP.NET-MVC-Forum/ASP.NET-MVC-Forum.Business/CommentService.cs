@@ -41,18 +41,20 @@
         {
             await postValidationService.ValidatePostExistsAsync(postId);
 
-            var commentById = commentRepo
+            var commentsById = commentRepo
                 .All()
                 .Where(x => x.PostId == postId)
                 .Include(x => x.User)
                 .OrderByDescending(x => x.CreatedOn);
 
             return await mapper
-                .ProjectTo<CommentGetRequestResponseModel>(commentById)
+                .ProjectTo<CommentGetRequestResponseModel>(commentsById)
                 .ToListAsync();
         }
 
-        public async Task<RawCommentServiceModel> GenerateRawCommentServiceModel(CommentPostRequestModel commentData, ClaimsPrincipal user)
+        public async Task<RawCommentServiceModel> GenerateRawCommentServiceModel(
+            CommentPostRequestModel commentData,
+            ClaimsPrincipal user)
         {
             var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
 
@@ -65,21 +67,6 @@
             await commentReportService.AutoGenerateCommentReportAsync(rawCommentData.CommentText, rawCommentData.Id);
 
             return rawCommentData;
-        }
-
-        public async Task<bool> CommentExistsAsync(int commentId)
-        {
-            return await commentRepo.All().AnyAsync(x => x.Id == commentId);
-        }
-
-        public Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user)
-        {
-            string userId = user.Id();
-
-            return commentRepo
-                .All()
-                .AnyAsync(x => x.Id == commentId &&
-                (x.UserId == userId || user.IsAdminOrModerator()));
         }
 
         public async Task DeleteAsync(int commentId, ClaimsPrincipal user)
