@@ -44,11 +44,6 @@
                 .AnyAsync(x => x.Id == postId && x.UserId == userId);
         }
 
-        public async Task<bool> IsUserPrivileged(int postId, ClaimsPrincipal currentPrincipal)
-        {
-            return await IsAuthor(currentPrincipal.Id(), postId) || currentPrincipal.IsAdminOrModerator();
-        }
-
         public void ValidateUsername(string username)
         {
             if (string.IsNullOrWhiteSpace(username))

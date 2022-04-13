@@ -14,14 +14,14 @@
             string currentIdentityUserId,
             string currentIdentityUserUsername);
 
-        public Task<T> GenerateChatConversationViewModel<T>(
-            string senderIdentityUserId,
-            string recipientIdentityUserId,
+        public Task<ChatConversationViewModel> GenerateChatConversationViewModel(
+            string senderId,
+            string recipientId,
             string senderUsername);
 
         public Task SendMessageToClientsAsync(
-            string senderIdentityId,
-            string receiverIdentityId,
+            string senderId,
+            string receiverId,
             string message,
             long chatId,
             string senderUsername,

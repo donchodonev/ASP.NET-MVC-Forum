@@ -57,45 +57,46 @@
         }
 
 
-        public async Task<T> GenerateChatConversationViewModel<T>(string senderIdentityUserId, string recipientIdentityUserId, string senderUsername)
+        public async Task<ChatConversationViewModel> GenerateChatConversationViewModel(
+            string senderId,
+            string recipientId,
+            string senderUsername)
         {
-            await chatRepo.CreateChatAsync(senderIdentityUserId, recipientIdentityUserId);
+            await userValidationService.ValidateUserExistsByIdAsync(senderId);
 
-            var chatId = await chatRepo.GetChatIdAsync(senderIdentityUserId, recipientIdentityUserId);
+            await userValidationService.ValidateUserExistsByIdAsync(recipientId);
 
-            return (T)Activator.CreateInstance(typeof(T), chatId, senderIdentityUserId, recipientIdentityUserId, senderUsername);
+            await chatRepo.CreateChatAsync(senderId, recipientId);
+
+            var chatId = await chatRepo.GetChatIdAsync(senderId, recipientId);
+
+            return new ChatConversationViewModel(chatId, senderId, recipientId, senderUsername);
         }
 
         public async Task SendMessageToClientsAsync(
-            string senderIdentityId,
-            string receiverIdentityId,
+            string senderId,
+            string receiverId,
             string message,
             long chatId,
             string senderUsername,
             IHubCallerClients clients)
         {
-            try
-            {
-                var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
+            await userValidationService.ValidateUserExistsByIdAsync(senderId);
 
-                var time = persistedMessage
-                    .CreatedOn
-                    .AddHours(2) // FOR GMT+2
-                    .ToString("HH:mm:ss");
+            await userValidationService.ValidateUserExistsByIdAsync(receiverId);
 
-                var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
+            var persistedMessage = await chatRepo.AddMessageAsync(chatId, message, senderUsername);
 
-                await clients.Group(senderIdentityId + receiverIdentityId).SendAsync("ReceiveMessage", response);
+            var time = persistedMessage
+                .CreatedOn
+                .AddHours(2) // FOR GMT+2
+                .ToString("HH:mm:ss");
 
-                await clients.Group(receiverIdentityId + senderIdentityId).SendAsync("ReceiveMessage", response);
-            }
-            catch (Exception ex)
-            {
-                var messageasdf = ex.Message;
-                var messageasdf2 = ex.Message;
+            var response = new ChatMessageResponseData(senderUsername, time, persistedMessage.Text);
 
-                throw;
-            }
+            await clients.Group(senderId + receiverId).SendAsync("ReceiveMessage", response);
+
+            await clients.Group(receiverId + senderId).SendAsync("ReceiveMessage", response);
         }
 
         public Task<List<ChatMessageResponseData>> GetHistoryAsync(long chatId)

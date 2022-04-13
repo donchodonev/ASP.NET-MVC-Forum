@@ -41,15 +41,16 @@
             await chatService.SendHistoryAsync(chatId, sender, receiver, Clients);
         }
 
-        public async Task ConnectUserGroups(string senderIdentityId, string recipientIdentityId)
+        public async Task ConnectUserGroups(string senderId, string recipientId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, senderIdentityId + recipientIdentityId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, senderId + recipientId);
         }
 
-        public async Task DisconnectUserGroups(string senderIdentityId, string recipientIdentityId)
+        public async Task DisconnectUserGroups(string senderId, string recipientId)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, senderIdentityId + recipientIdentityId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, senderId + recipientId);
         }
+
         public void Disconnect()
         {
             Dispose();

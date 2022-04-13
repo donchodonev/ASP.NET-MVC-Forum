@@ -36,17 +36,9 @@
                 SenderUsername = senderUsername
             };
 
-            try
-            {
-                db.Messages.Add(chatMessage);
+            db.Messages.Add(chatMessage);
 
-                await db.SaveChangesAsync();
-            }
-            catch (System.Exception ex)
-            {
-                string msg = ex.Message;
-                throw;
-            }
+            await db.SaveChangesAsync();
 
             return chatMessage;
         }

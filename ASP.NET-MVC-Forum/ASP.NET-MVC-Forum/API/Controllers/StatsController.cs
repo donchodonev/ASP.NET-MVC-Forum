@@ -1,8 +1,6 @@
-﻿namespace ASP.NET_MVC_Forum.Web.Areas.API.Controllers
+﻿namespace ASP.NET_MVC_Forum.Web.API.Controllers
 {
     using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
-    using ASP.NET_MVC_Forum.Data.Contracts;
-    using ASP.NET_MVC_Forum.Domain.Enums;
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
 
     using Microsoft.AspNetCore.Authorization;
