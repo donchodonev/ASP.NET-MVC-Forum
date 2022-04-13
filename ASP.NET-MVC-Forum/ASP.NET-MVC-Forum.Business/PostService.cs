@@ -1,12 +1,12 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Data.QueryBuilders;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
     using ASP.NET_MVC_Forum.Web.Services.Models.Post;
 
     using AutoMapper;
@@ -15,6 +15,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -49,73 +50,52 @@
             this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel post, string userId)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel postFormModel, string userId)
         {
-            await postValidationService.ValidateTitleNotDuplicateAsync(post.Title);
+            await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel.Title);
 
-            post.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
+            await userValidationService.ValidateUserExistsByIdAsync(userId);
 
-            var postEntity = mapper.Map<Post>(post);
+            postFormModel.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
-            var sanitizedhtml = htmlManipulator.Sanitize(post.HtmlContent);
+            var post = mapper.Map<Post>(postFormModel);
 
-            var santizedAndDecodedHtml = htmlManipulator.Decode(sanitizedhtml);
+            postFormModel.HtmlContent = ProcessHtml(postFormModel.HtmlContent);
 
-            var santizedAndDecodedHtmlAndEscapedHtml = htmlManipulator.Escape(santizedAndDecodedHtml);
+            post.ShortDescription = GenerateShortDescription(postFormModel.HtmlContent);
 
-            post.HtmlContent = santizedAndDecodedHtmlAndEscapedHtml;
+            post.UserId = userId;
 
-            postEntity.ShortDescription = GenerateShortDescription(santizedAndDecodedHtmlAndEscapedHtml);
+            await postRepo.AddPostAsync(post);
 
-            postEntity.UserId = userId;
+            await postReportService.AutoGeneratePostReportAsync(
+                postFormModel.Title,
+                postFormModel.HtmlContent,
+                post.Id);
 
-            await postRepo.AddPostAsync(postEntity);
-
-            await postReportService
-                .AutoGeneratePostReportAsync(post.Title, post.HtmlContent, postEntity.Id);
-
-            return mapper.Map<NewlyCreatedPostServiceModel>(postEntity);
+            return mapper.Map<NewlyCreatedPostServiceModel>(post);
         }
 
-        public string GenerateShortDescription(string escapedHtml)
-        {
-            if (escapedHtml.Length < 300)
-            {
-                return escapedHtml.Substring(0, escapedHtml.Length) + "...";
-            }
-
-            return escapedHtml.Substring(0, 300) + "...";
-        }
-
-        /// <summary>
-        /// Deletes post by post id
-        /// </summary>
-        /// <param name="postId">Post's Id</param>
-        /// <returns>Task</returns>
         public async Task Delete(int postId, ClaimsPrincipal user)
         {
-            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
-
-            var currentTime = DateTime.UtcNow;
-
-            var postToMarkAsDeleted = await postRepo
+            var post = await postRepo
                 .GetById(postId)
                 .Include(x => x.Reports)
                 .FirstOrDefaultAsync();
 
-            postValidationService.ValidatePostModelNotNull(postToMarkAsDeleted);
+            postValidationService.ValidateNotNull(post);
 
-            postToMarkAsDeleted.IsDeleted = true;
+            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
 
-            postToMarkAsDeleted.ModifiedOn = currentTime;
+            var currentTime = DateTime.UtcNow;
 
-            foreach (var report in postToMarkAsDeleted.Reports)
-            {
-                report.IsDeleted = true;
-                report.ModifiedOn = currentTime;
-            }
+            post.IsDeleted = true;
 
-            await postRepo.UpdateAsync(postToMarkAsDeleted);
+            post.ModifiedOn = currentTime;
+
+            MarkReportsDeleted(post.Reports, currentTime);
+
+            await postRepo.UpdateAsync(post);
         }
 
         public async Task<Post> Edit(EditPostFormModel viewModelData, ClaimsPrincipal user)
@@ -124,25 +104,21 @@
 
             var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
+            postValidationService.ValidateNotNull(originalPost);
+
             await postValidationService.ValidatePostChangedAsync(
                 viewModelData.PostId,
                 viewModelData.HtmlContent,
                 viewModelData.Title,
                 viewModelData.CategoryId);
 
-            var sanitizedHtml = htmlManipulator.Sanitize(originalPost.HtmlContent);
-
-            var decodedHtml = htmlManipulator.Decode(sanitizedHtml);
-
-            var postDescriptionWithoutHtmlTags = htmlManipulator.Escape(decodedHtml);
-
-            originalPost.HtmlContent = decodedHtml;
+            originalPost.HtmlContent = ProcessHtml(viewModelData.HtmlContent);
 
             originalPost.CategoryId = viewModelData.CategoryId;
 
             originalPost.Title = viewModelData.Title;
 
-            originalPost.ShortDescription = GeneratePostShortDescription(postDescriptionWithoutHtmlTags, 300);
+            originalPost.ShortDescription = GeneratePostShortDescription(originalPost.HtmlContent, 300);
 
             originalPost.ModifiedOn = DateTime.UtcNow;
 
@@ -153,7 +129,7 @@
             return originalPost;
         }
 
-        public IQueryable<PostPreviewViewModel> GetAllPostsSortedBy(
+        public IQueryable<PostPreviewViewModel> GeneratePostPreviewViewModel(
             int sortType,
             int sortOrder,
             string searchTerm,
@@ -172,25 +148,25 @@
             return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
         }
 
-        public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
+        public async Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
         {
-            var posts = postRepo
+            var post = postRepo
                 .GetById(postId)
                 .Include(x => x.Comments)
                 .Include(x => x.Votes)
                 .Include(x => x.User)
                 .ThenInclude(x => x.Posts);
 
-            var post = mapper
-                .ProjectTo<ViewPostViewModel>(posts)
+            var model = await mapper
+                .ProjectTo<ViewPostViewModel>(post)
                 .FirstOrDefaultAsync();
 
-            postValidationService.ValidatePostModelNotNull(post);
+            postValidationService.ValidateNotNull(model);
 
-            return post;
+            return model;
         }
 
-        public async Task<AddPostFormModel> GeneratedAddPostFormModelAsync()
+        public async Task<AddPostFormModel> GenerateAddPostFormModelAsync()
         {
             var vm = new AddPostFormModel();
 
@@ -201,16 +177,15 @@
 
         public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
         {
+            await userValidationService.ValidateUserExistsByIdAsync(identityUserId);
+
             var vote = await voteRepo.GetUserVoteAsync(identityUserId, viewModel.PostId);
 
-            if (vote == null)
+            viewModel.UserLastVoteChoice = vote switch
             {
-                viewModel.UserLastVoteChoice = 0;
-            }
-            else
-            {
-                viewModel.UserLastVoteChoice = (int)vote.VoteType;
-            }
+                null => 0,
+                _ => (int)vote.VoteType
+            };
         }
 
         public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId, ClaimsPrincipal user)
@@ -230,14 +205,23 @@
             return vm;
         }
 
-        public async Task<bool> PostExistsAsync(string postTitle)
+        private void MarkReportsDeleted(ICollection<PostReport> reports, DateTime currentTime)
         {
-            return await postRepo.ExistsAsync(postTitle);
+            foreach (var report in reports)
+            {
+                report.IsDeleted = true;
+                report.ModifiedOn = currentTime;
+            }
         }
 
-        public async Task<bool> PostExistsAsync(int postId)
+        private string GenerateShortDescription(string escapedHtml)
         {
-            return await postRepo.ExistsAsync(postId);
+            if (escapedHtml.Length < 300)
+            {
+                return escapedHtml.Substring(0, escapedHtml.Length) + "...";
+            }
+
+            return escapedHtml.Substring(0, 300) + "...";
         }
 
         private string GeneratePostShortDescription(string postDescriptionWithoutHtmlTags, int postDescriptionMaxLength)
@@ -248,6 +232,15 @@
             }
 
             return postDescriptionWithoutHtmlTags.Substring(0, postDescriptionMaxLength) + "...";
+        }
+
+        private string ProcessHtml(string html)
+        {
+            var sanitizedhtml = htmlManipulator.Sanitize(html);
+            var santizedAndDecodedHtml = htmlManipulator.Decode(sanitizedhtml);
+            var santizedAndDecodedHtmlAndEscapedHtml = htmlManipulator.Escape(santizedAndDecodedHtml);
+
+            return santizedAndDecodedHtmlAndEscapedHtml;
         }
     }
 }

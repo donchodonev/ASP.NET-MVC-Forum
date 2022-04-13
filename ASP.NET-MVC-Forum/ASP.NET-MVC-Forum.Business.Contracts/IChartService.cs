@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Business.Contracts.Contracts
+﻿namespace ASP.NET_MVC_Forum.Business.Contracts
 {
     using ASP.NET_MVC_Forum.Domain.Models.Stats;
 

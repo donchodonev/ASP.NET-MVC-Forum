@@ -1,10 +1,10 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.User;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -38,20 +38,14 @@
             this.mapper = mapper;
             this.userManager = userManager;
         }
+
         public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
         {
-            await userRepo.AvatarUpdateAsync(identityUserId, image);
-        }
-
-        public async Task<ExtendedIdentityUser> GetByUsernameAsync(string username)
-        {
-            userValidationService.ValidateUsername(username);
-
-            var user = await userRepo.GetByUsernameAsync(username);
+            var user = await userRepo.GetByIdAsync(identityUserId);
 
             userValidationService.ValidateUserNotNull(user);
 
-            return user;
+            await userRepo.AvatarUpdateAsync(user, image);
         }
 
         public async Task<List<UserViewModel>> GenerateUserViewModelAsync()
@@ -66,13 +60,13 @@
 
         public async Task BanAsync(string userId)
         {
-            await userValidationService.ValidateUserExistsByIdAsync(userId);
+            var user = await userRepo.GetByIdAsync(userId);
+
+            userValidationService.ValidateUserNotNull(user);
 
             await userValidationService.ValidateUserIsNotBannedAsync(userId);
 
             var currentDateAndTime = DateTime.UtcNow;
-
-            var user = await userRepo.GetByIdAsync(userId);
 
             user.IsBanned = true;
 
@@ -82,23 +76,18 @@
 
             user.ModifiedOn = currentDateAndTime;
 
-            await userManager
-                .UpdateSecurityStampAsync(user);
+            await userManager.UpdateSecurityStampAsync(user);
 
             await userRepo.UpdateAsync(user);
         }
 
-        /// <summary>
-        /// Ubans the user by setting it's IsBanned property to false and marking his linked IdentityUser's LockoutEnabled property to "false"
-        /// </summary>
-        /// <param name="userId">BaseUser's Id</param>
         public async Task UnbanAsync(string userId)
         {
-            await userValidationService.ValidateUserExistsByIdAsync(userId);
+            var user = await userRepo.GetByIdAsync(userId);
+
+            userValidationService.ValidateUserNotNull(user);
 
             await userValidationService.ValidateUserIsBannedAsync(userId);
-
-            var user = await userRepo.GetByIdAsync(userId);
 
             user.IsBanned = false;
 
@@ -107,36 +96,6 @@
             user.ModifiedOn = DateTime.UtcNow;
 
             await userRepo.UpdateAsync(user);
-        }
-
-        /// <summary>
-        /// Checks if a user with the given Id exists in the database
-        /// </summary>
-        /// <param name="userId">User's Id</param>
-        /// <returns>Bool - True if it exists and False if otherwise</returns>
-        public Task<bool> ExistsAsync(string userId)
-        {
-            return userRepo.ExistsByIdAsync(userId);
-        }
-
-        /// <summary>
-        /// Checks whether the user with the given Id is banned
-        /// </summary>
-        /// <param name="userId">User's Id</param>
-        /// <returns>Bool - True if the user is banned, False if otherwise</returns>
-        public Task<bool> IsBannedAsync(string userId)
-        {
-            return userRepo
-                .GetById(userId)
-                .Select(x => x.IsBanned)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<IList<string>> GetUserRolesAsync(string userId)
-        {
-            var user = await userRepo.GetByIdAsync(userId);
-
-            return await userRepo.GetRolesAsync(user);
         }
 
         public Task<IList<string>> GetUserRolesAsync(ExtendedIdentityUser user)
@@ -162,21 +121,6 @@
             await userValidationService.ValidateUserIsNotModerator(user);
 
             await userRepo.AddRoleAsync(userId, MODERATOR_ROLE);
-        }
-
-        public Task<int> UserPostsCountAsync(string userId)
-        {
-            return userRepo
-                .GetById(userId)
-                .Where(x => !x.IsDeleted)
-                .Include(x => x.Posts)
-                .Select(x => x.Posts.Count)
-                .FirstAsync();
-        }
-
-        public Task<bool> IsUserInRoleAsync(ExtendedIdentityUser user, string role)
-        {
-            return userRepo.IsInRoleAsync(user, role);
         }
 
         private async Task<List<UserViewModel>> ReturnUsersWithRolesAsync(List<UserViewModel> users)

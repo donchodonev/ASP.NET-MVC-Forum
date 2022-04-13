@@ -2,6 +2,11 @@
 {
     public class VoteResponseModel
     {
+        public VoteResponseModel(int voteSum)
+        {
+            VoteSum = voteSum;
+        }
+
         public int VoteSum { get; set; }
     }
 }

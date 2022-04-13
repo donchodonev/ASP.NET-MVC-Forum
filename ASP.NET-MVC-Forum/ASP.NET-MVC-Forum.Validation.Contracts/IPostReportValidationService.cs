@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Business.Contracts.Contracts
+﻿namespace ASP.NET_MVC_Forum.Validation.Contracts
 {
     using ASP.NET_MVC_Forum.Domain.Entities;
 
@@ -9,5 +9,7 @@
         public Task ValidateReportExistsAsync(int reportId);
 
         public void ValidateReportNotNull(PostReport report);
+
+        public void ValidateStatus(string status);
     }
 }

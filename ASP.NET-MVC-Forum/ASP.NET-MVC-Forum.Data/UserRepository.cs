@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -71,6 +70,14 @@
             return db.Users;
         }
 
+        public Task<bool> IsAuthor(string userId, int postId)
+        {
+            return db
+                .Posts
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == postId && x.UserId == userId);
+        }
+
         public IQueryable<ExtendedIdentityUser> GetAllAsNoTracking()
         {
             return GetAll().AsNoTracking();
@@ -122,11 +129,9 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task AvatarUpdateAsync(string identityUserId, IFormFile image)
+        public async Task AvatarUpdateAsync(ExtendedIdentityUser user, IFormFile image)
         {
             string fileName = await avatarService.UploadAvatarAsync(image);
-
-            var user = await GetByIdAsync(identityUserId);
 
             user.ImageUrl = $"{AVATAR_WEB_PATH}{fileName}";
 

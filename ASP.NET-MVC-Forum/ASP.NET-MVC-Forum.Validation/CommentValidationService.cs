@@ -1,10 +1,10 @@
-﻿namespace ASP.NET_MVC_Forum.Business.Contracts
+﻿namespace ASP.NET_MVC_Forum.Validation
 {
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +42,14 @@
             if (!canDelete)
             {
                 throw new InsufficientPrivilegeException(CANNOT_DELETE_COMMENT);
+            }
+        }
+
+        public async Task ValidateCommentExistsAsync(int commentId)
+        {
+            if(! await commentRepo.ExistsAsync(commentId))
+            {
+                throw new EntityDoesNotExistException(ENTITY_DOES_NOT_EXIST);
             }
         }
     }

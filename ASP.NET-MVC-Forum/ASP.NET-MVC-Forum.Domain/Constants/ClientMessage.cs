@@ -21,8 +21,10 @@
             public const string POST_DID_NOT_CHANGE = "There were no changes made";
             public const string CANNOT_DELETE_COMMENT = "Only the comment author or site administrator can delete this comment";
             public const string ENTITY_IS_NULL = "The entity is null";
+            public const string ENTITY_DOES_NOT_EXIST = "Entity does not exist";
             public const string TITLE_TOO_SHORT = "Title length must be at least 10 symbols long";
             public const string TITLE_TOO_LONG = "Title length must be no more than 100 symbols long";
+            public const string INVALID_REPORT_STATUS = "Invalid report status";
         }
         public static class Success
         {

@@ -10,7 +10,6 @@
 
     public interface IUserService
     {
-        public Task<ExtendedIdentityUser> GetByUsernameAsync(string username);
         public Task AvatarUpdateAsync(string identityUserId, IFormFile image);
 
         public Task<List<UserViewModel>> GenerateUserViewModelAsync();
@@ -19,18 +18,8 @@
 
         public Task UnbanAsync(string userId);
 
-        public Task<bool> IsBannedAsync(string userId);
-
-        public Task<IList<string>> GetUserRolesAsync(string userId);
-
         public Task DemoteAsync(string userId);
 
         public Task PromoteAsync(string userId);
-
-        public Task<int> UserPostsCountAsync(string userId);
-
-        public Task<bool> ExistsAsync(string userId);
-
-        public Task<bool> IsUserInRoleAsync(ExtendedIdentityUser user, string role);
     }
 }

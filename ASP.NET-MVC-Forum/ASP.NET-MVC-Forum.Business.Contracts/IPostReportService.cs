@@ -16,9 +16,7 @@
 
         public Task DeletePostAndResolveReportsAsync(int postId);
 
-        public Task<List<PostReportViewModel>> GeneratePostReportViewModelList(string reportStatus);
-
-        public Task<bool> ReportExistsAsync(int reportId);
+        public Task<List<PostReportViewModel>> GeneratePostReportViewModelListAsync(string reportStatus);
 
         public List<string> FindPostProfanities(string title, string content);
 

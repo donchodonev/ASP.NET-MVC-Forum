@@ -1,12 +1,9 @@
-﻿namespace ASP.NET_MVC_Forum.Business.Contracts
+﻿namespace ASP.NET_MVC_Forum.Validation
 {
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
-    using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Infrastructure;
-
-    using Microsoft.EntityFrameworkCore;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -17,20 +14,17 @@
     {
         private readonly IPostRepository postRepo;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly ApplicationDbContext db;
 
         public PostValidationService(
             IPostRepository postRepo,
-            IHtmlManipulator htmlManipulator,
-            ApplicationDbContext db
+            IHtmlManipulator htmlManipulator
 )
         {
             this.postRepo = postRepo;
             this.htmlManipulator = htmlManipulator;
-            this.db = db;
         }
 
-        public void ValidatePostModelNotNull<T>(T post)
+        public void ValidateNotNull<T>(T post)
         {
             if (post == null)
             {
@@ -70,7 +64,7 @@
 
         public async Task ValidatePostExistsAsync(int postId)
         {
-            if(!await db.Posts.AnyAsync(x => x.Id == postId))
+            if(!await postRepo.ExistsAsync(postId))
             {
                 throw new EntityDoesNotExistException(POST_DOES_NOT_EXIST);
             }

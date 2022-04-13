@@ -2,12 +2,14 @@
 {
     using ASP.NET_MVC_Forum.Business;
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Infrastructure;
+    using ASP.NET_MVC_Forum.Infrastructure.Helpers;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
+    using ASP.NET_MVC_Forum.Validation;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using Ganss.XSS;
 
@@ -106,6 +108,8 @@
             services.AddTransient<IPostReportValidationService, PostReportValidationService>();
 
             services.AddTransient<ICommentValidationService, CommentValidationService>();
+
+            services.AddTransient<IChatValidationService, ChatValidationService>();
 
             services.AddSingleton(configuration);
 

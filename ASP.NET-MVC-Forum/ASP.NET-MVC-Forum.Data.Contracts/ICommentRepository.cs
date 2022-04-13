@@ -17,5 +17,7 @@
         public IQueryable<Comment> GetById(int id);
 
         public Task UpdateAsync(Comment entity);
+
+        public Task<bool> ExistsAsync(int commentId);
     }
 }

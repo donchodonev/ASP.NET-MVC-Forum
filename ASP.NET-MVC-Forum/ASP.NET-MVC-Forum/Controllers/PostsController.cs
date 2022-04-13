@@ -46,7 +46,7 @@
         [Authorize]
         public async Task<IActionResult> Add(string title, string htmlContent, int categoryId)
         {
-            var addPostFormModel = await postService.GeneratedAddPostFormModelAsync();
+            var addPostFormModel = await postService.GenerateAddPostFormModelAsync();
 
             addPostFormModel.Title = title;
             addPostFormModel.HtmlContent = htmlContent;

@@ -1,9 +1,9 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Models.Chat;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -21,17 +20,20 @@
         private readonly IUserRepository userRepo;
         private readonly IChatRepository chatRepo;
         private readonly IUserValidationService userValidationService;
+        private readonly IChatValidationService chatValidationService;
 
         public ChatService(
             IMapper mapper,
             IUserRepository userRepo,
             IChatRepository chatRepo,
-            IUserValidationService userValidationService)
+            IUserValidationService userValidationService,
+            IChatValidationService chatValidationService)
         {
             this.mapper = mapper;
             this.userRepo = userRepo;
             this.chatRepo = chatRepo;
             this.userValidationService = userValidationService;
+            this.chatValidationService = chatValidationService;
         }
 
         public async Task<ChatSelectUserViewModel> GenerateChatSelectUserViewModel(
@@ -66,7 +68,7 @@
 
             await userValidationService.ValidateUserExistsByIdAsync(recipientId);
 
-            await chatRepo.CreateChatAsync(senderId, recipientId);
+            await chatRepo.EnsureChatExistsAsync(senderId, recipientId);
 
             var chatId = await chatRepo.GetChatIdAsync(senderId, recipientId);
 
@@ -112,6 +114,8 @@
             string receiver,
             IHubCallerClients clients)
         {
+            await chatValidationService.ValidateChatExistsAsync(chatId);
+
             var messages = await GetHistoryAsync(chatId);
 
             await clients.Group(sender + receiver).SendAsync("ReceiveHistory", messages);

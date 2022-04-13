@@ -12,10 +12,6 @@
 
         public Task<RawCommentServiceModel> GenerateRawCommentServiceModel(CommentPostRequestModel commentData, ClaimsPrincipal user);
 
-        public Task<bool> CommentExistsAsync(int commentId);
-
-        public Task<bool> IsUserPrivileged(int commentId, ClaimsPrincipal user);
-
         public Task DeleteAsync(int commentId, ClaimsPrincipal user);
     }
 }

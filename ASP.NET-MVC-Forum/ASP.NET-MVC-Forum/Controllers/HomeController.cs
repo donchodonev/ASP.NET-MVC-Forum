@@ -34,10 +34,18 @@
             string personalOnly,
             int pageNumber = 1)
         {
-            await UpdateViewBagAsync(sortType, sortOrder, category, viewCount, searchTerm, personalOnly);
+            await UpdateViewBagAsync(sortType,
+                sortOrder,
+                category,
+                viewCount, 
+                searchTerm,
+                personalOnly);
 
-            var sortedPosts = postService
-                .GetAllPostsSortedBy(sortType, sortOrder, searchTerm, category);
+            var sortedPosts = postService.GeneratePostPreviewViewModel(
+                sortType, 
+                sortOrder, 
+                searchTerm, 
+                category);
 
             var vm = await PaginatedList<PostPreviewViewModel>.CreateAsync(sortedPosts, pageNumber, viewCount);
 

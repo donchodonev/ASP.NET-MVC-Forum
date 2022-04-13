@@ -1,10 +1,10 @@
 ﻿namespace ASP.NET_MVC_Forum.Business
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
-    using ASP.NET_MVC_Forum.Business.Contracts.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Models.CommentReport;
+    using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
 
@@ -18,6 +18,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
     public class CommentReportService : ICommentReportService
     {
         private readonly IMapper mapper;
@@ -25,58 +26,63 @@
         private readonly IProfanityFilter filter;
         private readonly ICommentRepository commentRepo;
         private readonly ICommentReportValidationService commentReportValidationService;
+        private readonly ICommentValidationService commentValidationService;
 
         public CommentReportService(
             IMapper mapper,
             ICommentReportRepository commentReportRepo,
             IProfanityFilter filter,
             ICommentRepository commentRepo,
-            ICommentReportValidationService commentReportValidationService)
+            ICommentReportValidationService commentReportValidationService,
+            ICommentValidationService commentValidationService)
         {
             this.mapper = mapper;
             this.commentReportRepo = commentReportRepo;
             this.filter = filter;
             this.commentRepo = commentRepo;
             this.commentReportValidationService = commentReportValidationService;
+            this.commentValidationService = commentValidationService;
         }
+
         public async Task<List<CommentReportViewModel>> GenerateCommentReportViewModelListAsync(string reportStatus)
         {
-            var allCommentReports = commentReportRepo
-                .All();
+            commentReportValidationService.ValidateStatus(reportStatus);
 
-            var activeCommentReports = allCommentReports.Where(x => !x.IsDeleted);
+            var allCommentReports = commentReportRepo.All();
 
-            if (reportStatus == "Active")
+            IQueryable<CommentReport> reports = reportStatus switch
             {
-                return await mapper
-                    .ProjectTo<CommentReportViewModel>(activeCommentReports)
-                    .ToListAsync();
-            }
-
-            var inactiveCommentReports = commentReportRepo
-                .All()
-                .Where(x => x.IsDeleted);
+                ACTIVE_STATUS => allCommentReports.Where(x => !x.IsDeleted),
+                _ => allCommentReports.Where(x => x.IsDeleted)
+            };
 
             return await mapper
-                .ProjectTo<CommentReportViewModel>(inactiveCommentReports)
+                .ProjectTo<CommentReportViewModel>(reports)
                 .ToListAsync();
         }
 
-
-        public Task CensorCommentAsync(bool withRegex, int commentId)
+        public async Task CensorCommentAsync(bool withRegex, int commentId)
         {
+            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
+
+            commentValidationService.ValidateCommentNotNull(comment);
+
             if (withRegex)
             {
-                return HardCensorCommentAsync(commentId);
+                HardCensorComment(comment);
             }
             else
             {
-                return SoftCensorCommentAsync(commentId);
+                SoftCensorComment(comment);
             }
+
+            await commentRepo.UpdateAsync(comment);
         }
 
-        public async Task ReportCommentAsync(int commentId, string reasons)
+        public async Task ReportAsync(int commentId, string reasons)
         {
+            await commentValidationService.ValidateCommentExistsAsync(commentId);
+
             var commentReport = new CommentReport { CommentId = commentId, Reason = reasons };
 
             await commentReportRepo.AddAsync(commentReport);
@@ -84,26 +90,23 @@
 
         public async Task AutoGenerateCommentReportAsync(string content, int commentId)
         {
+            //validation done in ReportAsync method
+
             if (filter.ContainsProfanity(content))
             {
                 List<string> profaneWordsFound = GetProfanities(content);
 
                 string reason = string.Join(", ", profaneWordsFound);
 
-                await ReportCommentAsync(commentId, reason);
+                await ReportAsync(commentId, reason);
             }
-        }
-
-        public Task<bool> ReportExistsAsync(int reportId)
-        {
-            return commentReportRepo.ExistsAsync(reportId);
         }
 
         public async Task DeleteAsync(int reportId)
         {
             var report = await commentReportRepo.GetByIdAsync(reportId);
 
-            commentReportValidationService.ValidateCommentReportNotNull(report);
+            commentReportValidationService.ValidateNotNull(report);
 
             report.IsDeleted = true;
 
@@ -120,7 +123,7 @@
                 .Include(x => x.Comment)
                 .FirstAsync();
 
-            commentReportValidationService.ValidateCommentReportNotNull(report);
+            commentReportValidationService.ValidateNotNull(report);
 
             report.IsDeleted = false;
 
@@ -135,13 +138,15 @@
 
         public async Task DeleteAndResolveAsync(int reportId)
         {
-            var timeOfResolution = DateTime.UtcNow;
-
             var report = await commentReportRepo
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
                 .FirstAsync();
+
+            commentReportValidationService.ValidateNotNull(report);
+
+            var timeOfResolution = DateTime.UtcNow;
 
             report.IsDeleted = true;
 
@@ -154,10 +159,8 @@
             await commentReportRepo.UpdateAsync(report);
         }
 
-        private async Task HardCensorCommentAsync(int commentId)
+        private void HardCensorComment(Comment comment)
         {
-            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
-
             var profanities = GetProfanities(comment.Content);
 
             var censoredContent = comment.Content;
@@ -168,18 +171,13 @@
             }
 
             comment.Content = censoredContent;
-
-            await commentRepo.UpdateAsync(comment);
         }
-        private async Task SoftCensorCommentAsync(int commentId)
-        {
-            var comment = await commentReportRepo.GetByCommentIdAsync(commentId);
 
+        private void SoftCensorComment(Comment comment)
+        {
             var censoredContent = filter.CensorString(comment.Content, '*');
 
             comment.Content = censoredContent;
-
-            await commentRepo.UpdateAsync(comment);
         }
 
         private List<string> GetProfanities(string content)
