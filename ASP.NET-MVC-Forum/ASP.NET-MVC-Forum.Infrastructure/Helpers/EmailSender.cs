@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Business
+﻿namespace ASP.NET_MVC_Forum.Infrastructure.Helpers
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
 
@@ -27,6 +27,7 @@
         public Task Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
+
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress("admin@em3497.donchodonev.com", "ASP.NET Forum"),
@@ -34,6 +35,7 @@
                 PlainTextContent = message,
                 HtmlContent = message
             };
+
             msg.AddTo(new EmailAddress(email));
 
             msg.SetClickTracking(false, false);

@@ -6,6 +6,7 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Infrastructure;
+    using ASP.NET_MVC_Forum.Infrastructure.Helpers;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
     using ASP.NET_MVC_Forum.Validation;
     using ASP.NET_MVC_Forum.Validation.Contracts;
