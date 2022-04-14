@@ -58,7 +58,6 @@
             return vm;
         }
 
-
         public async Task<ChatConversationViewModel> GenerateChatConversationViewModel(
             string senderId,
             string recipientId,

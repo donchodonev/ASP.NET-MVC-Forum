@@ -44,7 +44,6 @@
         private string senderId;
         private string recipientId;
 
-
         [SetUp]
         public void SetUp()
         {
@@ -96,7 +95,7 @@
         {
             string imageUrl = "test url";
 
-            var dummyUser = new ExtendedIdentityUser() { UserName = recipientUsername,ImageUrl = imageUrl };
+            var dummyUser = new ExtendedIdentityUser() { UserName = recipientUsername, ImageUrl = imageUrl };
 
             await AddUserAsync(dummyUser);
 
@@ -117,10 +116,10 @@
         public void GenerateChatConversationViewModel_ShouldThrowException_WhenSenderOrRecipientDoesNotExist()
         {
             userValidationServiceMock
-                .Setup(x => x.ValidateUserExistsByUsernameAsync(It.IsAny<string>()))
+                .Setup(x => x.ValidateUserExistsByIdAsync(It.IsAny<string>()))
                 .ThrowsAsync(new NullUserException());
 
-            Assert.ThrowsAsync<NullUserException>(() => chatService.GenerateChatSelectUserViewModel("recipient username", "sender id", "sender username"));
+            Assert.ThrowsAsync<NullUserException>(() => chatService.GenerateChatConversationViewModel(senderId, recipientId, senderUsername));
         }
 
         [Test]
@@ -143,7 +142,6 @@
             Assert.AreEqual(result.SenderIdentityUserId, senderId);
             Assert.AreEqual(result.ChatId, chatId);
         }
-
 
         private async Task AddUserAsync(ExtendedIdentityUser user)
         {
