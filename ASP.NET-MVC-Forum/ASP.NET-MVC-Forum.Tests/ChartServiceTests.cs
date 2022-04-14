@@ -19,7 +19,8 @@
 
     public class ChartServiceTests
     {
-        private PostMappingProfile mappingProfile;
+        private PostMappingProfile postMappingProfile;
+        private CategoryMappingProfile categoryMappingProfile;
         private MapperConfiguration mapperConfiguration;
         private IMapper mapper;
         private DbContextOptions<ApplicationDbContext> dbContextOptions;
@@ -31,8 +32,9 @@
         [SetUp]
         public async Task SetUp()
         {
-            mappingProfile = new PostMappingProfile();
-            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(mappingProfile));
+            postMappingProfile = new PostMappingProfile();
+            categoryMappingProfile = new CategoryMappingProfile();
+            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[] { categoryMappingProfile, postMappingProfile }));
             mapper = new Mapper(mapperConfiguration);
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
@@ -45,8 +47,147 @@
 
 
         [Test]
-        public void Test()
+        public async Task GetMostCommentedPostsChartDataAsync_ShouldReturnRequestedCountOfModels_WhenGivenPositiveCount()
         {
+            var models = await chartService.GetMostCommentedPostsChartDataAsync(7);
+
+            int expectedModelsCount = 7;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostCommentedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenNegativeCount()
+        {
+            var models = await chartService.GetMostCommentedPostsChartDataAsync(-1);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostCommentedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenCountOfZero()
+        {
+            var models = await chartService.GetMostCommentedPostsChartDataAsync(0);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostLikedPostsChartDataAsync_ShouldReturnRequestedCountOfModels_WhenGivenPositiveCount()
+        {
+            var models = await chartService.GetMostLikedPostsChartDataAsync(7);
+
+            int expectedModelsCount = 7;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostLikedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenNegativeCount()
+        {
+            var models = await chartService.GetMostLikedPostsChartDataAsync(-1);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostLikedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenCountOfZero()
+        {
+            var models = await chartService.GetMostLikedPostsChartDataAsync(0);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostReportedPostsChartDataAsync_ShouldReturnRequestedCountOfModels_WhenGivenPositiveCount()
+        {
+            var models = await chartService.GetMostReportedPostsChartDataAsync(7);
+
+            int expectedModelsCount = 7;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostReportedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenNegativeCount()
+        {
+            var models = await chartService.GetMostReportedPostsChartDataAsync(-1);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostReportedPostsChartDataAsync_ShouldReturn_OneModel_WhenGivenCountOfZero()
+        {
+            var models = await chartService.GetMostReportedPostsChartDataAsync(0);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostPostsPerCategoryAsync_ShouldReturnRequestedCountOfModels_WhenGivenPositiveCount()
+        {
+            var models = await chartService.GetMostReportedPostsChartDataAsync(7);
+
+            int expectedModelsCount = 7;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostPostsPerCategoryAsync_ShouldReturn_OneModel_WhenGivenNegativeCount()
+        {
+            var models = await chartService.GetMostReportedPostsChartDataAsync(-1);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
+        }
+
+        [Test]
+        public async Task GetMostPostsPerCategoryAsync_ShouldReturn_OneModel_WhenGivenCountOfZero()
+        {
+            var models = await chartService.GetMostPostsPerCategoryAsync(0);
+
+            int expectedModelsCount = 1;
+
+            int actualModelsCount = models.Count;
+
+            Assert.AreEqual(expectedModelsCount, actualModelsCount);
         }
 
         private async Task AddCategoriesToDatabaseAsync()

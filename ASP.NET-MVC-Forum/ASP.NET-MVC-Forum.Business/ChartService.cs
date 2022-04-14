@@ -34,6 +34,11 @@
 
         public async Task<List<MostCommentedPostsResponeModel>> GetMostCommentedPostsChartDataAsync(int count)
         {
+            if (count <= 0)
+            {
+                count = 1;
+            }
+
             var posts = postRepo
                 .All()
                 .Where(x => !x.IsDeleted)
@@ -48,6 +53,11 @@
 
         public async Task<List<MostLikedPostsResponeModel>> GetMostLikedPostsChartDataAsync(int count)
         {
+            if (count <= 0)
+            {
+                count = 1;
+            }
+
             var posts = postRepo
                 .All()
                 .Where(x => !x.IsDeleted)
@@ -62,6 +72,11 @@
 
         public async Task<List<MostReportedPostsResponeModel>> GetMostReportedPostsChartDataAsync(int count)
         {
+            if (count <= 0)
+            {
+                count = 1;
+            }
+
             var posts = postRepo
                 .All()
                 .Where(x => !x.IsDeleted)
@@ -76,6 +91,11 @@
 
         public async Task<List<MostPostsPerCategoryResponseModel>> GetMostPostsPerCategoryAsync(int count)
         {
+            if (count <= 0)
+            {
+                count = 1;
+            }
+
             var categories = categoryRepo
                 .All()
                 .Where(x => !x.IsDeleted)
@@ -98,12 +118,6 @@
                 ( "Most reported posts", "/api/stats/most-reported-posts"),
                 ( "Most posts by category", "/api/stats/most-posts-by-category")
             };
-        }
-
-        public IQueryable<T> GetStatsAs<T>(int count, IQueryable<Post> posts)
-        {
-            return TakeValidCountOf<Post>(posts, count)
-                    .ProjectTo<T>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<T> GetStatsAs<T>(int count, IQueryable<Category> categories)
@@ -133,6 +147,12 @@
 
             return items
                     .Take(lowestCountBetweenTotalPostCountAndTheCountOfColorsAndRequestedPostsCount);
+        }
+
+        private IQueryable<T> GetStatsAs<T>(int count, IQueryable<Post> posts)
+        {
+            return TakeValidCountOf<Post>(posts, count)
+                    .ProjectTo<T>(mapper.ConfigurationProvider);
         }
 
         private void AddColor<T>(List<T> posts) where T : IStatsResponseModel
