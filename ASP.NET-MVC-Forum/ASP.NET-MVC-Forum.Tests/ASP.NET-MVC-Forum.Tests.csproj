@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>ASP.NET_MVC_Forum.Tests</RootNamespace>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.16" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Moq" Version="4.17.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="coverlet.collector" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Business\ASP.NET-MVC-Forum.Business.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum.Data\ASP.NET-MVC-Forum.Data.csproj" />
+    <ProjectReference Include="..\ASP.NET-MVC-Forum\ASP.NET-MVC-Forum.Web.csproj" />
+  </ItemGroup>
+
+</Project>
