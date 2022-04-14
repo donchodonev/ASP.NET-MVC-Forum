@@ -45,7 +45,6 @@
             await AddPostsToDatabaseAsync();
         }
 
-
         [Test]
         public async Task GetMostCommentedPostsChartDataAsync_ShouldReturnRequestedCountOfModels_WhenGivenPositiveCount()
         {

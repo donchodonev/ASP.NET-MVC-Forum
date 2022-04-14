@@ -17,16 +17,16 @@
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ExtendedIdentityUser> userManager;
-        private readonly IAvatarRepository avatarService;
+        private readonly IAvatarRepository avatarRepo;
 
         public UserRepository(
             ApplicationDbContext db,
             UserManager<ExtendedIdentityUser> userManager,
-            IAvatarRepository avatarService)
+            IAvatarRepository avatarRepo)
         {
             this.db = db;
             this.userManager = userManager;
-            this.avatarService = avatarService;
+            this.avatarRepo = avatarRepo;
         }
 
         public Task AddАsync(
@@ -131,7 +131,7 @@
 
         public async Task AvatarUpdateAsync(ExtendedIdentityUser user, IFormFile image)
         {
-            string fileName = await avatarService.UploadAvatarAsync(image);
+            string fileName = await avatarRepo.UploadAvatarAsync(image);
 
             user.ImageUrl = $"{AVATAR_WEB_PATH}{fileName}";
 
@@ -186,7 +186,7 @@
 
         public string GetImageExtension(IFormFile image)
         {
-            return avatarService.GetImageExtension(image);
+            return avatarRepo.GetImageExtension(image);
         }
 
         public ValueTask DisposeAsync()
