@@ -24,7 +24,9 @@
 
         public Task<bool> ExistsAsync(int reportId)
         {
-            return db.CommentReports.AnyAsync(x => x.Id == reportId);
+            return db
+                .CommentReports
+                .AnyAsync(x => x.Id == reportId && !x.IsDeleted);
         }
 
         public Task<CommentReport> GetByIdAsync(int reportId)

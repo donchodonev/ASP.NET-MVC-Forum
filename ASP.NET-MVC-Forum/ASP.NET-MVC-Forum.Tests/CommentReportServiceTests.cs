@@ -64,9 +64,13 @@
 
             var comments = await commentRepository.All().ToListAsync();
 
+            var commentReports = await commentReportRepository.All().ToListAsync();
+
             dbContext.CommentReports.RemoveRange(reports);
 
             dbContext.Comments.RemoveRange(comments);
+
+            dbContext.CommentReports.RemoveRange(commentReports);
 
             await dbContext.SaveChangesAsync();
         }
@@ -259,6 +263,40 @@
             int actualReportsCount = await commentReportRepository.All().CountAsync();
 
             Assert.AreEqual(expectedReportsCount, actualReportsCount);
+        }
+
+        [Test]
+        public void DeleteAsync_ShouldThrowException_WhenReportNotFound()
+        {
+            int reportId = 1;
+
+            commentReportValidationServiceMock
+                .Setup(x => x.ValidateNotNull(null))
+                .Throws(new CommentReportDoesNotExistException());
+
+            Assert.ThrowsAsync<CommentReportDoesNotExistException>(() => commentReportService.DeleteAsync(reportId));
+        }
+
+        [Test]
+        public async Task DeleteAsync_ShouldMarkReportAsDelete_WhenReportExists()
+        {
+            int reportId = 2;
+
+            int commentId = 1;
+
+            string reasonForReport = "some reason";
+
+            await commentReportService.ReportAsync(commentId, reasonForReport);
+
+            bool reportExists = await commentReportRepository.ExistsAsync(reportId);
+
+            Assert.IsTrue(reportExists);
+
+            await commentReportService.DeleteAsync(reportId);
+
+            reportExists = await commentReportRepository.ExistsAsync(reportId);
+
+            Assert.IsFalse(reportExists);
         }
 
         private async Task AddReportsAsync()
