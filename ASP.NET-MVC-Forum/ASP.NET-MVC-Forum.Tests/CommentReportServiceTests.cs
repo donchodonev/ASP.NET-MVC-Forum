@@ -6,9 +6,10 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
     using ASP.NET_MVC_Forum.Validation.Contracts;
-
+    using ProfanityFilter;
     using AutoMapper;
 
     using Microsoft.EntityFrameworkCore;
@@ -29,12 +30,13 @@
         private MapperConfiguration mapperConfiguration;
         private IMapper mapper;
         private CommentReportMappingProfile commentReportMapperProfile;
+        private CommentMappingProfile commentMapperProfile;
         private ICommentReportService commentReportService;
         private DbContextOptions<ApplicationDbContext> dbContextOptions;
         private ApplicationDbContext dbContext;
         private ICommentReportRepository commentReportRepository;
         private ICommentRepository commentRepository;
-        private Mock<IProfanityFilter> profanityFilterMock;
+        private IProfanityFilter profanityFilter;
         private Mock<ICommentValidationService> commentValidationServiceMock;
         private Mock<ICommentReportValidationService> commentReportValidationServiceMock;
 
@@ -42,16 +44,17 @@
         public void SetUp()
         {
             commentReportMapperProfile = new CommentReportMappingProfile();
-            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(commentReportMapperProfile));
+            commentMapperProfile = new CommentMappingProfile();
+            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[] { commentReportMapperProfile, commentMapperProfile }));
             mapper = new Mapper(mapperConfiguration);
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
             commentReportRepository = new CommentReportRepository(dbContext);
             commentRepository = new CommentRepository(mapper, dbContext);
-            profanityFilterMock = new Mock<IProfanityFilter>();
+            profanityFilter = new ProfanityFilter();
             commentValidationServiceMock = new Mock<ICommentValidationService>();
             commentReportValidationServiceMock = new Mock<ICommentReportValidationService>();
-            commentReportService = new CommentReportService(mapper, commentReportRepository, profanityFilterMock.Object, commentRepository, commentReportValidationServiceMock.Object, commentValidationServiceMock.Object);
+            commentReportService = new CommentReportService(mapper, commentReportRepository, profanityFilter, commentRepository, commentReportValidationServiceMock.Object, commentValidationServiceMock.Object);
         }
 
         [TearDown]
@@ -59,7 +62,11 @@
         {
             var reports = await commentReportRepository.All().ToListAsync();
 
+            var comments = await commentRepository.All().ToListAsync();
+
             dbContext.CommentReports.RemoveRange(reports);
+
+            dbContext.Comments.RemoveRange(comments);
 
             await dbContext.SaveChangesAsync();
         }
@@ -107,6 +114,63 @@
                 .CountAsync();
 
             Assert.AreEqual(expectedCountOfReports, actualCountOfReports);
+        }
+
+        [Test]
+        public void CensorCommentAsync_ShouldThrowException_WhenCommentIdDoesntExist()
+        {
+            int commentId = 1;
+
+            commentValidationServiceMock.Setup(x => x.ValidateCommentNotNull((Comment)null))
+                .Throws(new NullCommentException());
+
+            Assert.ThrowsAsync<NullCommentException>(() => commentReportService.CensorCommentAsync(true, commentId));
+        }
+
+        [Test]
+        public async Task CensorCommentAsync_ShouldReplaceBadWordsWith5Asterix_WhenCensorWithRegexIsSelected()
+        {
+            string badWord = "shit";
+
+            bool withRegex = true;
+
+            int commentId = 1;
+
+            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = badWord });
+
+            await commentReportService.CensorCommentAsync(withRegex, commentId);
+
+            string expectedCommentContent = "*****";
+
+            string actualCommentContent = await commentRepository
+                .GetById(commentId)
+                .Select(x => x.Content)
+                .FirstOrDefaultAsync();
+
+            Assert.AreEqual(expectedCommentContent, actualCommentContent);
+        }
+
+        [Test]
+        public async Task CensorCommentAsync_ShouldReplaceBadWordsWithAsterixWhichMatchesBadWordLength_WhenCensorWithoutRegexIsSelected()
+        {
+            string badWord = "shit";
+
+            bool withRegex = false;
+
+            int commentId = 1;
+
+            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = badWord });
+
+            await commentReportService.CensorCommentAsync(withRegex, commentId);
+
+            string expectedCommentContent = "****";
+
+            string actualCommentContent = await commentRepository
+                .GetById(commentId)
+                .Select(x => x.Content)
+                .FirstOrDefaultAsync();
+
+            Assert.AreEqual(expectedCommentContent, actualCommentContent);
         }
 
         private async Task AddReportsAsync()
