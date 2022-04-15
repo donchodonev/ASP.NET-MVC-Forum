@@ -81,9 +81,11 @@
         {
             var users = dbContext.Users;
             var chats = dbContext.Chats;
+            var messages = dbContext.Messages;
 
             dbContext.Users.RemoveRange(users);
             dbContext.Chats.RemoveRange(chats);
+            dbContext.Messages.RemoveRange(messages);
 
             await dbContext.SaveChangesAsync();
         }
