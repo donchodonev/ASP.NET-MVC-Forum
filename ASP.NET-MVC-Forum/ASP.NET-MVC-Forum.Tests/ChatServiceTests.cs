@@ -171,6 +171,33 @@
         }
 
         [Test]
+        public async Task SendMessageToClientsAsync_ShouldPersistMessage_WhenDataIsValid()
+        {
+            long chatId = 1;
+            string messageToSend = "message to send";
+
+            userValidationServiceMock
+              .Setup(x => x.ValidateUserExistsByIdAsync(It.IsAny<string>()))
+              .Returns(Task.CompletedTask);
+
+            int expectedMessageCount = 1;
+
+            try
+            {
+                await chatService.SendMessageToClientsAsync(senderId, recipientId, messageToSend, chatId, senderUsername, hubCallerClientsMock.Object);
+            }
+            catch (System.Exception)
+            {
+                //exception thrown by third-party library SignalR
+            }
+
+            int actualMessageCount = dbContext.Messages.Count();
+
+            Assert.AreEqual(expectedMessageCount, actualMessageCount);
+        }
+
+
+        [Test]
         public void GetHistoryAsync_ShouldThrowException_WhenChatDoesntExist()
         {
             int chatId = 1;
@@ -201,6 +228,18 @@
             int actualMessageCount = dbContext.Messages.Count();
 
             Assert.AreEqual(expectedMessageCount, actualMessageCount);
+        }
+
+        [Test]
+        public void SendHistoryAsync_ShouldThrowException_WhenChatDoesntExist()
+        {
+            long chatId = 1;
+
+            chatValidationServiceMock
+                .Setup(x => x.ValidateChatExistsAsync(chatId))
+                .Throws(new EntityDoesNotExistException());
+
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => chatService.SendHistoryAsync(chatId, senderId, recipientId, hubCallerClientsMock.Object));
         }
 
         private async Task AddUserAsync(ExtendedIdentityUser user)
