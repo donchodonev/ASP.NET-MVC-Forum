@@ -13,6 +13,7 @@
     using AutoMapper;
 
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using Moq;
@@ -30,6 +31,7 @@
         private IMapper mapper;
         private IChatService chatService;
         private UserMappingProfile userMappingProfile;
+        private MessageMappingProfile messageMappingProfile;
         private IUserRepository userRepository;
         private IChatRepository chatRepository;
         private Mock<IUserValidationService> userValidationServiceMock;
@@ -38,6 +40,7 @@
         private Mock<IAvatarRepository> avatarRepositoryMock;
         private UserManager<ExtendedIdentityUser> userManager;
         private Mock<IHtmlManipulator> htmlManipulatorMock;
+        private Mock<IHubCallerClients> hubCallerClientsMock;
 
         private string recipientUsername;
         private string senderUsername;
@@ -52,7 +55,11 @@
             userValidationServiceMock = new Mock<IUserValidationService>();
             chatValidationServiceMock = new Mock<IChatValidationService>();
             userMappingProfile = new UserMappingProfile();
-            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(userMappingProfile));
+            messageMappingProfile = new MessageMappingProfile();
+            mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[]
+            { userMappingProfile,
+              messageMappingProfile
+            }));
             mapper = new Mapper(mapperConfiguration);
             store = new Mock<IUserStore<ExtendedIdentityUser>>();
             avatarRepositoryMock = new Mock<IAvatarRepository>();
@@ -61,6 +68,7 @@
             htmlManipulatorMock = new Mock<IHtmlManipulator>();
             chatRepository = new ChatRepository(dbContext, htmlManipulatorMock.Object);
             chatService = new ChatService(mapper, userRepository, chatRepository, userValidationServiceMock.Object, chatValidationServiceMock.Object);
+            hubCallerClientsMock = new Mock<IHubCallerClients>();
 
             recipientUsername = "recipient username";
             recipientId = "recipient id";
@@ -141,6 +149,58 @@
             Assert.AreEqual(result.ReceiverIdentityUserId, recipientId);
             Assert.AreEqual(result.SenderIdentityUserId, senderId);
             Assert.AreEqual(result.ChatId, chatId);
+        }
+
+        [Test]
+        public void SendMessageToClientsAsync_ShouldThrowException_WhenSenderOrRecipientDoesNotExist()
+        {
+            long chatId = 12345;
+            string messageToSend = "message to send";
+
+            userValidationServiceMock
+              .Setup(x => x.ValidateUserExistsByIdAsync(It.IsAny<string>()))
+              .ThrowsAsync(new NullUserException());
+
+            Assert.ThrowsAsync<NullUserException>(() => chatService.SendMessageToClientsAsync(
+                senderId,
+                recipientId,
+                messageToSend,
+                chatId,
+                senderUsername,
+                hubCallerClientsMock.Object));
+        }
+
+        [Test]
+        public void GetHistoryAsync_ShouldThrowException_WhenChatDoesntExist()
+        {
+            int chatId = 1;
+
+            chatValidationServiceMock
+                .Setup(x => x.ValidateChatExistsAsync(1))
+                .Throws(new EntityDoesNotExistException());
+
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => chatService.GetHistoryAsync(chatId));
+        }
+
+        [Test]
+        public void GetHistoryAsync_ShouldReturnListOfChatMessageResponseData_WhenChatExists()
+        {
+            int chatId = 1;
+            Message message = new Message() { ChatId = chatId };
+
+            dbContext.Messages.Add(message);
+            dbContext.SaveChanges();
+
+            chatValidationServiceMock
+                .Setup(x => x.ValidateChatExistsAsync(chatId))
+                .Returns(Task.CompletedTask);
+
+            chatService.GetHistoryAsync(1);
+
+            int expectedMessageCount = 1;
+            int actualMessageCount = dbContext.Messages.Count();
+
+            Assert.AreEqual(expectedMessageCount, actualMessageCount);
         }
 
         private async Task AddUserAsync(ExtendedIdentityUser user)
