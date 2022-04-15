@@ -173,6 +173,40 @@
             Assert.AreEqual(expectedCommentContent, actualCommentContent);
         }
 
+        [Test]
+        public void ReportAsync_ShouldThrowException_WhenCommentDoesntExist()
+        {
+            int commentId = 1;
+
+            string reason = "some reason";
+
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .ThrowsAsync(new EntityDoesNotExistException());
+
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => commentReportService.ReportAsync(commentId, reason));
+        }
+
+        [Test]
+        public async Task ReportAsync_ShouldCreateCommentReportInDatabase_WithGivenCommentIdAndReason()
+        {
+            int commentId = 1;
+
+            string reason = "some reason";
+
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .Returns(Task.CompletedTask);
+
+            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = "some text" });
+
+            await commentReportService.ReportAsync(commentId, reason);
+
+            bool reportExists = (await commentReportRepository.GetByCommentIdAsync(commentId)) != null;
+
+            Assert.True(reportExists);
+        }
+
         private async Task AddReportsAsync()
         {
             await commentReportRepository.AddAsync(new CommentReport() { CommentId = 1, IsDeleted = true });
