@@ -207,6 +207,60 @@
             Assert.True(reportExists);
         }
 
+        [Test]
+        public void AutoGenerateCommentReportAsync_ShouldThrowException_WhenCommentDoesntExist()
+        {
+            int commentId = 1;
+
+            string badWord = "shit";
+
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .ThrowsAsync(new EntityDoesNotExistException());
+
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => commentReportService.AutoGenerateCommentReportAsync(badWord, commentId));
+        }
+
+        [Test]
+        public async Task AutoGenerateCommentReportAsync_ShouldNotGenerateReport_WhenNoBadWordsAreFoundInContent()
+        {
+            int commentId = 1;
+
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .Returns(Task.CompletedTask);
+
+            string badWord = string.Empty;
+
+            await commentReportService.AutoGenerateCommentReportAsync(badWord, commentId);
+
+            int expectedReportsCount = 0;
+
+            int actualReportsCount = await commentReportRepository.All().CountAsync();
+
+            Assert.AreEqual(expectedReportsCount, actualReportsCount);
+        }
+
+        [Test]
+        public async Task AutoGenerateCommentReportAsync_ShouldGenerateReport_WhenBadWordsAreFoundInContent()
+        {
+            int commentId = 1;
+
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .Returns(Task.CompletedTask);
+
+            string badWord = "shit";
+
+            await commentReportService.AutoGenerateCommentReportAsync(badWord, commentId);
+
+            int expectedReportsCount = 1;
+
+            int actualReportsCount = await commentReportRepository.All().CountAsync();
+
+            Assert.AreEqual(expectedReportsCount, actualReportsCount);
+        }
+
         private async Task AddReportsAsync()
         {
             await commentReportRepository.AddAsync(new CommentReport() { CommentId = 1, IsDeleted = true });
