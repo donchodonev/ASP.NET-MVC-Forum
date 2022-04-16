@@ -19,6 +19,7 @@
         {
             this.chatService = chatService;
         }
+
         public async Task<IActionResult> ChatConversation(
             string senderIdentityUserId,
             string recipientIdentityUserId,
@@ -40,7 +41,10 @@
                 return View();
             }
 
-            var vm = await chatService.GenerateChatSelectUserViewModel(userInput.Username, this.User.Id(), this.User.Identity.Name);
+            var userId = this.User.Id();
+            var userName = this.User.Identity.Name;
+
+            var vm = await chatService.GenerateChatSelectUserViewModel(userInput.Username, userId, userName);
 
             return View(vm);
         }
