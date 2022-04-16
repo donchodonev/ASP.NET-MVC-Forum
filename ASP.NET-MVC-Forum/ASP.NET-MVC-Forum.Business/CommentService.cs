@@ -37,7 +37,7 @@
             this.commentValidationService = commentValidationService;
         }
 
-        public async Task<List<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModelAsync(int postId)
+        public async Task<List<CommentGetRequestResponseModel>> GenerateCommentGetResponseModelAsync(int postId)
         {
             await postValidationService.ValidatePostExistsAsync(postId);
 
@@ -52,16 +52,17 @@
                 .ToListAsync();
         }
 
-        public async Task<CommentPostResponseModel> GenerateCommentResponseModelAsync(
+        public async Task<CommentPostResponseModel> GenerateCommentPostResponseModelAsync(
             CommentPostRequestModel commentData,
-            ClaimsPrincipal user,
+            string userId,
+            string userUsername,
             int commentId)
         {
             var rawCommentData = mapper.Map<CommentPostResponseModel>(commentData);
 
-            rawCommentData.UserId = user.Id();
+            rawCommentData.UserId = userId;
 
-            rawCommentData.Username = user.Identity.Name;
+            rawCommentData.Username = userUsername;
 
             rawCommentData.Id = commentId;
 

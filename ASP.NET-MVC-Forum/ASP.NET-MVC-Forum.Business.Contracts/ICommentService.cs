@@ -8,12 +8,13 @@
 
     public interface ICommentService
     {
-        public Task<List<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModelAsync(int postId);
+        public Task<List<CommentGetRequestResponseModel>> GenerateCommentGetResponseModelAsync(int postId);
 
-        public Task<CommentPostResponseModel> GenerateCommentResponseModelAsync(
-            CommentPostRequestModel commentData,
-            ClaimsPrincipal user, 
-            int commentId);
+        public Task<CommentPostResponseModel> GenerateCommentPostResponseModelAsync(
+               CommentPostRequestModel commentData,
+               string userId,
+               string userUsername,
+               int commentId);
 
         public Task DeleteAsync(int commentId, ClaimsPrincipal user);
     }

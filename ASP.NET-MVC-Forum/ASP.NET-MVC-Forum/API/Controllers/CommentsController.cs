@@ -19,7 +19,7 @@
         private readonly ICommentService commentService;
         private readonly ICommentRepository commentRepo;
 
-        public CommentsController(ICommentService commentService,ICommentRepository commentRepo)
+        public CommentsController(ICommentService commentService, ICommentRepository commentRepo)
         {
             this.commentService = commentService;
             this.commentRepo = commentRepo;
@@ -28,7 +28,7 @@
         [HttpGet]
         public async Task<List<CommentGetRequestResponseModel>> GetComments(int postId)
         {
-            return await commentService.GenerateCommentGetRequestResponseModelAsync(postId);
+            return await commentService.GenerateCommentGetResponseModelAsync(postId);
         }
 
         [Authorize]
@@ -37,7 +37,11 @@
         {
             var commentId = await commentRepo.AddCommentAsync(commentData, this.User.Id());
 
-            var rawCommentData = await commentService.GenerateCommentResponseModelAsync(commentData, this.User, commentId);
+            var rawCommentData = await commentService.GenerateCommentPostResponseModelAsync(
+                commentData,
+                this.User.Id(),
+                this.User.Identity.Name,
+                commentId);
 
             return Ok(rawCommentData);
         }

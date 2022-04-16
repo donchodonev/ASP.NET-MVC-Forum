@@ -33,6 +33,13 @@
         private Mock<ICommentValidationService> commentValidationServiceMock;
         private ICommentService commentService;
 
+        string userId;
+        string username;
+        string commentText;
+        int postId;
+        int commentId = 1;
+
+
         [SetUp]
         public async Task SetUpAsync()
         {
@@ -61,58 +68,63 @@
                 commentReportServiceMock.Object,
                 commentValidationServiceMock.Object);
 
-            await SeedTestData();
+            userId = "some id";
+
+            username = "some username";
+
+            commentText = "Test text";
+
+            postId = 1;
+
+            commentId = 1;
+
+            await SeedTestData(userId, commentText, postId);
         }
 
-        [TearDown]
-        public async Task Teardown()
-        {
-            var posts = await dbContext.Posts.ToListAsync();
-            var users = await dbContext.Users.ToListAsync();
-            var comments = await dbContext.Comments.ToListAsync();
-
-            dbContext.Posts.RemoveRange(posts);
-            dbContext.Users.RemoveRange(users);
-            dbContext.Comments.RemoveRange(comments);
-
-            await dbContext.SaveChangesAsync();
-        }
 
         [Test]
-        public async Task GenerateCommentGetRequestResponseModel_ShouldThrowException_When_PostDoes_NOT_Exist()
+        public async Task GenerateCommentGetResponseModel_ShouldThrowException_When_PostDoes_NOT_Exist()
         {
-            int postId = 1;
-
             postValidationServiceMock
                 .Setup(x => x.ValidatePostExistsAsync(postId))
                 .ThrowsAsync(new EntityDoesNotExistException());
 
-            Assert.ThrowsAsync<EntityDoesNotExistException>(() => commentService.GenerateCommentGetRequestResponseModelAsync(postId));
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => commentService.GenerateCommentGetResponseModelAsync(postId));
         }
 
         [Test]
         public async Task GenerateCommentGetRequestResponseModel_ShouldReturn_ListOf_CommentGetRequestResponseModel()
         {
-            int postId = 1;
-
             postValidationServiceMock
                 .Setup(x => x.ValidatePostExistsAsync(postId)).Returns(Task.CompletedTask);
 
             int expectedCountOfModelsReturned = 1;
-            List<CommentGetRequestResponseModel> models = await commentService.GenerateCommentGetRequestResponseModelAsync(postId);
+            List<CommentGetRequestResponseModel> models = await commentService.GenerateCommentGetResponseModelAsync(postId);
             var actualCountOfModelsReturn = models.Count;
 
             Assert.AreEqual(expectedCountOfModelsReturned, actualCountOfModelsReturn);
             Assert.NotNull(models);
         }
 
-        private async Task SeedTestData()
+        [Test]
+        public async Task GenerateCommentPostResponseModelAsync_ShouldCreateCommentPostRequestResponseModel()
         {
-            string userId = "some id";
+            var commentData = new CommentPostRequestModel() { CommentText = commentText, PostId = postId };
 
-            string commentText = "Test text";
+            var model = await commentService.GenerateCommentPostResponseModelAsync(commentData, userId, username, commentId);
 
-            int postId = 1;
+            Assert.NotNull(model);
+            Assert.AreEqual(model.CommentText, commentText);
+            Assert.AreEqual(model.Username, username);
+            Assert.AreEqual(model.Id, commentId);
+            Assert.AreEqual(model.Username, username);
+            Assert.AreEqual(model.UserId, userId);
+            Assert.AreEqual(model.PostId, postId);
+        }
+
+        private async Task SeedTestData(string userId, string commentText, int postId)
+        {
+            await TeardownAsync();
 
             await SeedUser(userId);
             await SeedPost(postId);
@@ -128,7 +140,7 @@
 
         private Task SeedUser(string userId)
         {
-            dbContext.Users.Add(new ExtendedIdentityUser() { Id = userId });
+            dbContext.Users.Add(new ExtendedIdentityUser() { Id = userId, UserName = username });
 
             return dbContext.SaveChangesAsync();
         }
@@ -137,6 +149,19 @@
         {
             dbContext.Posts.Add(new Post() { Id = postId });
             return dbContext.SaveChangesAsync();
+        }
+
+        private async Task TeardownAsync()
+        {
+            var posts = await dbContext.Posts.ToListAsync();
+            var users = await dbContext.Users.ToListAsync();
+            var comments = await dbContext.Comments.ToListAsync();
+
+            dbContext.Posts.RemoveRange(posts);
+            dbContext.Users.RemoveRange(users);
+            dbContext.Comments.RemoveRange(comments);
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }
