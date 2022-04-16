@@ -25,11 +25,11 @@
             this.db = db;
         }
 
-        public async Task<int> AddCommentAsync(CommentPostRequestModel commentData, ClaimsPrincipal user)
+        public async Task<int> AddCommentAsync(CommentPostRequestModel commentData, string userId)
         {
             var comment = mapper.Map<Comment>(commentData);
 
-            comment.UserId = user.Id();
+            comment.UserId = userId;
 
             db.Comments.Add(comment);
 

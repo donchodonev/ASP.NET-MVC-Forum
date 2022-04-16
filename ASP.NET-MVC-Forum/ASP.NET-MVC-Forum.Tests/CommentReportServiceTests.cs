@@ -134,9 +134,11 @@
 
             bool withRegex = true;
 
+            int postId = 1;
+
             int commentId = 1;
 
-            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = badWord });
+            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord },"user Id");
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -157,9 +159,11 @@
 
             bool withRegex = false;
 
+            int postId = 1;
+
             int commentId = 1;
 
-            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = badWord });
+            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -192,13 +196,17 @@
         {
             int commentId = 1;
 
+            int postId = 1;
+
             string reason = "some reason";
+
+            string badWord = "shit";
 
             commentValidationServiceMock
                 .Setup(x => x.ValidateCommentExistsAsync(commentId))
                 .Returns(Task.CompletedTask);
 
-            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = "some text" });
+            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
 
             await commentReportService.ReportAsync(commentId, reason);
 

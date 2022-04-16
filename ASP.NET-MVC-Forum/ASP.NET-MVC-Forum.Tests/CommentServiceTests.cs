@@ -4,6 +4,8 @@
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data;
     using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
@@ -15,6 +17,7 @@
 
     using NUnit.Framework;
 
+    using System;
     using System.Threading.Tasks;
 
     public class CommentServiceTests
@@ -30,13 +33,13 @@
         private ICommentService commentService;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUpAsync()
         {
             mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(new CommentMappingProfile()));
             mapper = new Mapper(mapperConfiguration);
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
-            commentRepository = new CommentRepository(mapper,dbContext);
+            commentRepository = new CommentRepository(mapper, dbContext);
             postValidationServiceMock = new Mock<IPostValidationService>();
             commentReportServiceMock = new Mock<ICommentReportService>();
             commentValidationServiceMock = new Mock<ICommentValidationService>();
@@ -46,11 +49,45 @@
                 postValidationServiceMock.Object,
                 commentReportServiceMock.Object,
                 commentValidationServiceMock.Object);
+            await SeedTestData();
+        }
+
+        [Test]
+        public async Task Test()
+        {
         }
 
         private async Task SeedTestData()
         {
-            commentService.
+            string userId = "some id";
+
+            string commentText = "Test text";
+
+            int postId = 1;
+
+            await SeedUser(userId);
+            await SeedPost(postId);
+            await SeedComment(userId, commentText, postId);
+        }
+
+        private Task SeedComment(string userId, string commentText, int postId)
+        {
+            var model = new CommentPostRequestModel() { CommentText = commentText, PostId = postId };
+
+            return commentRepository.AddCommentAsync(model, userId);
+        }
+
+        private Task SeedUser(string userId)
+        {
+            dbContext.Users.Add(new ExtendedIdentityUser() { Id = userId });
+
+            return dbContext.SaveChangesAsync();
+        }
+
+        private Task SeedPost(int postId)
+        {
+            dbContext.Posts.Add(new Post() { Id = postId });
+            return dbContext.SaveChangesAsync();
         }
     }
 }

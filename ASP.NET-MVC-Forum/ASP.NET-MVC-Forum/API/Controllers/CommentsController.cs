@@ -1,14 +1,16 @@
 ﻿namespace ASP.NET_MVC_Forum.Web.API.Controllers
 {
-    using ASP.NET_MVC_Forum.Domain.Models.Comment;
     using ASP.NET_MVC_Forum.Business.Contracts;
+    using ASP.NET_MVC_Forum.Data.Contracts;
+    using ASP.NET_MVC_Forum.Domain.Models.Comment;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ASP.NET_MVC_Forum.Data.Contracts;
+
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -33,7 +35,7 @@
         [HttpPost]
         public async Task<ActionResult<CommentPostRequestModel>> AddComment(CommentPostRequestModel commentData)
         {
-            var commentId = await commentRepo.AddCommentAsync(commentData, this.User);
+            var commentId = await commentRepo.AddCommentAsync(commentData, this.User.Id());
 
             var rawCommentData = await commentService.GenerateCommentResponseModel(commentData, this.User, commentId);
 

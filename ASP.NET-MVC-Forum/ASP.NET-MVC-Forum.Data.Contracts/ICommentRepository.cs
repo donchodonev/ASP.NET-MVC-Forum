@@ -5,11 +5,12 @@
 
     using System.Linq;
     using System.Security.Claims;
+    using System.Security.Principal;
     using System.Threading.Tasks;
 
     public interface ICommentRepository
     {
-        public Task<int> AddCommentAsync(CommentPostRequestModel commentData, ClaimsPrincipal user);
+        public Task<int> AddCommentAsync(CommentPostRequestModel commentData, string userId);
 
         public IQueryable<Comment> All();
 
