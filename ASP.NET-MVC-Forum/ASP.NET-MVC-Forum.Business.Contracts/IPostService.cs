@@ -11,7 +11,7 @@
     {
         public Task<AddPostFormModel> GenerateAddPostFormModelAsync();
 
-        public Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel postFormModel, string userId);
+        public Task<AddPostResponseModel> CreateNewAsync(AddPostFormModel postFormModel, string userId);
 
         public Task<Post> Edit(
             EditPostFormModel viewModelData,

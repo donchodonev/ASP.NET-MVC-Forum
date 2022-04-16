@@ -130,10 +130,8 @@
         [Test]
         public async Task DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
         {
-            await TeardownAsync();
-
             commentValidationServiceMock
-                .Setup(x => x.ValidateCommentNotNull(null))
+                .Setup(x => x.ValidateCommentNotNull(It.IsAny<Comment>()))
                 .Throws<NullCommentException>();
 
             Assert.ThrowsAsync<NullCommentException>(() => 

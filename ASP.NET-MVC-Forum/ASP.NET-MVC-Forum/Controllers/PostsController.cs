@@ -74,7 +74,8 @@
 
             var newlyCreatedPost = await postService.CreateNewAsync(data, this.User.Id());
 
-            return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
+            return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id,
+                postTitle = newlyCreatedPost.Title });
         }
 
         [Authorize]

@@ -49,11 +49,11 @@
             this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(
+        public async Task<AddPostResponseModel> CreateNewAsync(
             AddPostFormModel postFormModel,
             string userId)
         {
-            await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel.Title);
+            await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel?.Title);
 
             await userValidationService.ValidateUserExistsByIdAsync(userId);
 
@@ -74,7 +74,7 @@
                 postFormModel.HtmlContent,
                 post.Id);
 
-            return mapper.Map<NewlyCreatedPostServiceModel>(post);
+            return mapper.Map<AddPostResponseModel>(post);
         }
 
         public async Task Delete(

@@ -116,10 +116,8 @@
         [Test]
         public async Task DeleteAsync_ShouldThrowException_When_PostReport_NotFound_ById()
         {
-            await TeardownAsync();
-
             postReportValidationService
-                .Setup(x => x.ValidateReportNotNull(null))
+                .Setup(x => x.ValidateReportNotNull(It.IsAny<PostReport>()))
                 .Throws<PostReportDoesNotExistException>();
 
             Assert.ThrowsAsync<PostReportDoesNotExistException>(() => postReportService.DeleteAsync(reportId));
@@ -138,10 +136,8 @@
         [Test]
         public async Task RestoreAsync_ShouldThrowException_When_PostReport_IsNotFound_ById()
         {
-            await TeardownAsync();
-
             postReportValidationService
-                .Setup(x => x.ValidateReportNotNull(null))
+                .Setup(x => x.ValidateReportNotNull(It.IsAny<PostReport>()))
                 .Throws<PostReportDoesNotExistException>();
 
             Assert.ThrowsAsync<PostReportDoesNotExistException>(() => postReportService.RestoreAsync(reportId));
@@ -191,11 +187,9 @@
         }
 
         [Test]
-        public async Task DeletePostAndResolveReportsAsync_Should_ThrowException_When_PostIsNotFound_ById()
+        public void DeletePostAndResolveReportsAsync_Should_ThrowException_When_PostIsNotFound_ById()
         {
-            await TeardownAsync();
-
-            postValidationService.Setup(x => x.ValidateNotNull((Post)null))
+            postValidationService.Setup(x => x.ValidateNotNull(It.IsAny<Post>()))
                 .Throws<PostNullReferenceException>();
 
             Assert.ThrowsAsync<PostNullReferenceException>(() => postReportService.DeletePostAndResolveReportsAsync(postId));
@@ -255,11 +249,9 @@
         [Test]
         public async Task CensorAsync_ShouldThrowException_When_PostNotFound_ById()
         {
-            await TeardownAsync();
-
             bool withRegex = true;
 
-            postValidationService.Setup(x => x.ValidateNotNull((Post)null))
+            postValidationService.Setup(x => x.ValidateNotNull(It.IsAny<Post>()))
                 .Throws<PostNullReferenceException>();
 
             Assert.ThrowsAsync<PostNullReferenceException>(() => postReportService.CensorAsync(withRegex, postId));
@@ -303,7 +295,7 @@
             reportContent = await GetFirstReportContentAsync();
 
             //notice count of asterix, library replaces each word with *, while regex replaces entire word with EXACTLY 5 asterixes
-            bool isContentCensoredWithRegex = reportContent == "****"; 
+            bool isContentCensoredWithRegex = reportContent == "****";
 
             Assert.True(isContentProfane);
             Assert.True(isContentCensoredWithRegex);
