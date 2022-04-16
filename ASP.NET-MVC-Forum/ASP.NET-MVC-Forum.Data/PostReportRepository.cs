@@ -62,7 +62,7 @@
 
         public Task<bool> ExistsAsync(int reportId)
         {
-            return db.PostReports.AnyAsync(x => x.Id == reportId);
+            return db.PostReports.AnyAsync(x => x.Id == reportId && !x.IsDeleted);
         }
     }
 }

@@ -110,7 +110,8 @@
             await AddUserAsync(dummyUser);
 
             userValidationServiceMock
-                .Setup(x => x.ValidateUserExistsByUsernameAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
+                .Setup(x => x.ValidateUserExistsByUsernameAsync(It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
 
             var result = await chatService.GenerateChatSelectUserViewModel(recipientUsername, senderId, senderUsername);
 

@@ -74,11 +74,13 @@
             string userId, 
             bool isInAdminOrModeratorRole)
         {
-            await commentValidationService.ValidateCommentExistsAsync(commentId);
+            //await commentValidationService.ValidateCommentExistsAsync(commentId);
 
             var comment = await commentRepo
                 .GetById(commentId)
                 .FirstOrDefaultAsync();
+
+            commentValidationService.ValidateCommentNotNull(comment);
 
             await commentValidationService.ValidateUserCanDeleteCommentAsync(
                 commentId, 

@@ -98,7 +98,7 @@
         public async Task GenerateCommentGetRequestResponseModel_ShouldReturn_ListOf_CommentGetRequestResponseModel()
         {
             postValidationServiceMock
-                .Setup(x => x.ValidatePostExistsAsync(postId)).Returns(Task.CompletedTask);
+                .Setup(x => x.ValidateNotNull(postId));
 
             int expectedCountOfModelsReturned = 1;
 
@@ -128,10 +128,12 @@
         }
 
         [Test]
-        public void DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
+        public async Task DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
         {
+            await TeardownAsync();
+
             commentValidationServiceMock
-                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .Setup(x => x.ValidateCommentNotNull(null))
                 .Throws<NullCommentException>();
 
             Assert.ThrowsAsync<NullCommentException>(() => 

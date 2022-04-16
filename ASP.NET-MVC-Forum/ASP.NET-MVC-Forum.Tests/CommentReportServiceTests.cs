@@ -159,7 +159,9 @@
 
             int postId = 1;
 
-            int commentId = await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
+            var commentReportRequestModel = new CommentPostRequestModel() { PostId = postId, CommentText = badWord };
+
+            int commentId = await commentRepository.AddCommentAsync(commentReportRequestModel, "user Id");
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -201,6 +203,7 @@
                 .Returns(Task.CompletedTask);
 
             dbContext.Comments.Add(new Comment() { Id = commentId, Content = badWord });
+
             await dbContext.SaveChangesAsync();
 
             await commentReportService.ReportAsync(commentId, reason);
@@ -340,7 +343,7 @@
             int reportId = 1;
 
             commentReportValidationServiceMock
-                .Setup(x => x.ValidateExistsAsync(reportId))
+                .Setup(x => x.ValidateNotNull(null))
                 .Throws(new CommentReportDoesNotExistException());
 
             Assert.ThrowsAsync<CommentReportDoesNotExistException>(() => commentReportService.DeleteAndResolveAsync(reportId));
@@ -356,8 +359,7 @@
             int commentId = 3;
 
             commentReportValidationServiceMock
-                .Setup(x => x.ValidateExistsAsync(reportId))
-                .Returns(Task.CompletedTask);
+                .Setup(x => x.ValidateNotNull(null));
 
             bool reportIsActive = await commentReportRepository.ExistsAsync(reportId);
             bool commentIsActive = await commentRepository.ExistsAsync(commentId);

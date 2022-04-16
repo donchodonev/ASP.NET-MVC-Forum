@@ -138,13 +138,13 @@
 
         public async Task DeleteAndResolveAsync(int reportId)
         {
-            await commentReportValidationService.ValidateExistsAsync(reportId);
-
             var report = await commentReportRepo
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            commentReportValidationService.ValidateNotNull(report);
 
             var timeOfResolution = DateTime.UtcNow;
 

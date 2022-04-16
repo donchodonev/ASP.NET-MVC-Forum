@@ -37,6 +37,7 @@
 
         private int postId;
         private string reason;
+        private int reportId;
 
         [SetUp]
         public async Task SetUpAsync()
@@ -73,6 +74,7 @@
 
             postId = 1;
             reason = "some reason";
+            reportId = 1;
 
             await SeedDataAsync();
         }
@@ -84,12 +86,14 @@
                 .Setup(x => x.ValidatePostExistsAsync(postId))
                 .Throws(new EntityDoesNotExistException());
 
-            Assert.ThrowsAsync<EntityDoesNotExistException>(() => postReportService.ReportAsync(postId,reason));
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => postReportService.ReportAsync(postId, reason));
         }
 
         [Test]
         public async Task ReportAsync_ShouldCreate_PostReport_WhenPostExists()
         {
+            await TeardownAsync();
+
             postValidationService
                 .Setup(x => x.ValidatePostExistsAsync(postId))
                 .Returns(Task.CompletedTask);
@@ -101,14 +105,45 @@
             int actualReportsCount = await postReportRepo.All().CountAsync();
 
             Assert.AreEqual(expectedReportsCount, actualReportsCount);
-
         }
+
+
+        [Test]
+        public async Task DeleteAsync_ShouldThrowException_When_PostReport_NotFound_ById()
+        {
+            await TeardownAsync();
+
+            postReportValidationService
+                .Setup(x => x.ValidateReportNotNull(null))
+                .Throws<PostReportDoesNotExistException>();
+
+            Assert.ThrowsAsync<PostReportDoesNotExistException>(() => postReportService.DeleteAsync(reportId));
+        }
+
+        [Test]
+        public async Task DeleteAsync_ShouldMarkPostReportAsDeleted_When_PostReportExists()
+        {
+            postReportValidationService
+                .Setup(x => x.ValidateReportNotNull(null));
+
+            bool postReportExists = await postReportRepo.ExistsAsync(reportId);
+
+            Assert.True(postReportExists);
+
+            await postReportService.DeleteAsync(reportId);
+
+            postReportExists = await postReportRepo.ExistsAsync(reportId);
+
+            Assert.False(postReportExists);
+        }
+
 
         private async Task SeedDataAsync()
         {
             await TeardownAsync();
 
             await SeedPost();
+            await SeedPostReport();
         }
 
         private Task SeedPost()
@@ -116,6 +151,15 @@
             var post = new Post() { Id = postId };
 
             dbContext.Posts.Add(post);
+
+            return dbContext.SaveChangesAsync();
+        }
+
+        private Task SeedPostReport()
+        {
+            var postReport = new PostReport() { Id = reportId, PostId = postId };
+
+            dbContext.PostReports.Add(postReport);
 
             return dbContext.SaveChangesAsync();
         }
