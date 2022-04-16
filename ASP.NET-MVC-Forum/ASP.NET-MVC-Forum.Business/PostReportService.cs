@@ -138,36 +138,6 @@
                 .ToListAsync();
         }
 
-        public List<string> FindPostProfanities(string title, string content)
-        {
-            string[] titleWords = title.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            string[] contentWords = content.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            List<string> badWords = new List<string>();
-
-            badWords.AddRange(titleWords.Where(x => ContainsProfanity(x)));
-
-            badWords.AddRange(contentWords.Where(x => ContainsProfanity(x)));
-
-            return badWords;
-        }
-
-        public List<string> FindPostProfanities(string title, string content, string shortDescription)
-        {
-            string[] shortDescriptionWords = shortDescription.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            List<string> badWords = new List<string>();
-
-            List<string> titleAndContentBadWords = FindPostProfanities(title, content);
-
-            badWords.AddRange(titleAndContentBadWords);
-
-            badWords.AddRange(shortDescriptionWords.Where(x => ContainsProfanity(x)));
-
-            return badWords;
-        }
-
         public async Task CensorAsync(bool withRegex, int postId)
         {
             var post = await postRepo.GetByIdAsync(postId);
@@ -184,6 +154,36 @@
             }
 
             await postRepo.UpdateAsync(post);
+        }
+
+        private List<string> FindPostProfanities(string title, string content)
+        {
+            string[] titleWords = title.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            string[] contentWords = content.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> badWords = new List<string>();
+
+            badWords.AddRange(titleWords.Where(x => ContainsProfanity(x)));
+
+            badWords.AddRange(contentWords.Where(x => ContainsProfanity(x)));
+
+            return badWords;
+        }
+
+        private List<string> FindPostProfanities(string title, string content, string shortDescription)
+        {
+            string[] shortDescriptionWords = shortDescription.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> badWords = new List<string>();
+
+            List<string> titleAndContentBadWords = FindPostProfanities(title, content);
+
+            badWords.AddRange(titleAndContentBadWords);
+
+            badWords.AddRange(shortDescriptionWords.Where(x => ContainsProfanity(x)));
+
+            return badWords;
         }
 
         private bool ContainsProfanity(string term)

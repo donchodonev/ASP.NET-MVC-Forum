@@ -19,6 +19,7 @@
 
     using ProfanityFilter;
 
+    using System.Linq;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
@@ -40,6 +41,9 @@
         private int postId;
         private string reason;
         private int reportId;
+        private string profaneContent;
+        private string postDescription;
+        private string postTitle;
 
         [SetUp]
         public async Task SetUpAsync()
@@ -77,6 +81,9 @@
             postId = 1;
             reason = "some reason";
             reportId = 1;
+            profaneContent = "shit";
+            postDescription = "some description";
+            postTitle = "some title";
 
             await SeedDataAsync();
         }
@@ -245,6 +252,67 @@
             Assert.AreEqual(expectedDeletedReportsCount, actualDeletedReportsCount);
         }
 
+        [Test]
+        public async Task CensorAsync_ShouldThrowException_When_PostNotFound_ById()
+        {
+            await TeardownAsync();
+
+            bool withRegex = true;
+
+            postValidationService.Setup(x => x.ValidateNotNull((Post)null))
+                .Throws<PostNullReferenceException>();
+
+            Assert.ThrowsAsync<PostNullReferenceException>(() => postReportService.CensorAsync(withRegex, postId));
+        }
+
+        [Test]
+        public async Task CensorAsync_ShouldCensorPost_WithRegex_When_Method_FirstParameterIs_True()
+        {
+            bool withRegex = true;
+
+            var reportContent = await GetFirstReportContentAsync();
+
+            bool isContentProfane = reportContent == "shit";
+
+            await postReportService.CensorAsync(withRegex, postId);
+
+            reportContent = await GetFirstReportContentAsync();
+
+            //notice count of asterix, library replaces each word with *, while regex replaces entire word with EXACTLY 5 asterixes
+            bool isContentCensoredWithRegex = reportContent == "*****";
+
+            Assert.True(isContentProfane);
+            Assert.True(isContentCensoredWithRegex);
+
+            isContentProfane = reportContent == "shit";
+
+            Assert.False(isContentProfane);
+        }
+
+        [Test]
+        public async Task CensorAsync_ShouldCensorPost_WithCensoringLibrary_When_Method_FirstParameterIs_False()
+        {
+            bool withRegex = false;
+
+            var reportContent = await GetFirstReportContentAsync();
+
+            bool isContentProfane = reportContent == "shit";
+
+            await postReportService.CensorAsync(withRegex, postId);
+
+            reportContent = await GetFirstReportContentAsync();
+
+            //notice count of asterix, library replaces each word with *, while regex replaces entire word with EXACTLY 5 asterixes
+            bool isContentCensoredWithRegex = reportContent == "****"; 
+
+            Assert.True(isContentProfane);
+            Assert.True(isContentCensoredWithRegex);
+
+            isContentProfane = reportContent == "shit";
+
+            Assert.False(isContentProfane);
+        }
+
         private async Task SeedDataAsync()
         {
             await TeardownAsync();
@@ -255,7 +323,13 @@
 
         private Task SeedPost()
         {
-            var post = new Post() { Id = postId };
+            var post = new Post()
+            {
+                Id = postId,
+                HtmlContent = profaneContent,
+                ShortDescription = postDescription,
+                Title = postTitle
+            };
 
             dbContext.Posts.Add(post);
 
@@ -280,6 +354,14 @@
             dbContext.RemoveRange(postReports);
 
             await dbContext.SaveChangesAsync();
+        }
+
+        private Task<string> GetFirstReportContentAsync()
+        {
+            return postRepo
+                    .All()
+                    .Select(x => x.HtmlContent)
+                    .FirstOrDefaultAsync();
         }
     }
 }

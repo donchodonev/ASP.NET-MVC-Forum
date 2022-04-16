@@ -18,10 +18,6 @@
 
         public Task<List<PostReportViewModel>> GeneratePostReportViewModelListAsync(string reportStatus);
 
-        public List<string> FindPostProfanities(string title, string content);
-
-        public List<string> FindPostProfanities(string title, string content, string shortDescription);
-
         public Task CensorAsync(bool withRegex, int postId);
     }
 }
