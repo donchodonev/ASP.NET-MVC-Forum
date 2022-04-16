@@ -154,19 +154,11 @@
         [Test]
         public async Task DeleteAsync_ShouldMarkCommentAsDeleted_When_CommentExists_And_User_HasPrivilegeToDelete ()
         {
-            commentValidationServiceMock
-                .Setup(x => x.ValidateUserCanDeleteCommentAsync(commentId, userId, isInAdminOrModeratorRole))
-                .Returns(Task.CompletedTask);
-
-            bool commentExists = await commentRepository.ExistsAsync(commentId);
-
-            Assert.True(commentExists);
+            Assert.True(await commentRepository.ExistsAsync(commentId));
 
             await commentService.DeleteAsync(commentId, userId, isInAdminOrModeratorRole);
 
-            commentExists = await commentRepository.ExistsAsync(commentId);
-
-            Assert.False(commentExists);
+            Assert.False(await commentRepository.ExistsAsync(commentId));
         }
 
         private async Task SeedTestDataAsync()

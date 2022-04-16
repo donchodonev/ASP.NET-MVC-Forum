@@ -198,10 +198,6 @@
 
             string badWord = "shit";
 
-            commentValidationServiceMock
-                .Setup(x => x.ValidateCommentExistsAsync(commentId))
-                .Returns(Task.CompletedTask);
-
             dbContext.Comments.Add(new Comment() { Id = commentId, Content = badWord });
 
             await dbContext.SaveChangesAsync();
@@ -232,10 +228,6 @@
         {
             int commentId = 1;
 
-            commentValidationServiceMock
-                .Setup(x => x.ValidateCommentExistsAsync(commentId))
-                .Returns(Task.CompletedTask);
-
             string badWord = string.Empty;
 
             await commentReportService.AutoGenerateCommentReportAsync(badWord, commentId);
@@ -251,10 +243,6 @@
         public async Task AutoGenerateCommentReportAsync_ShouldGenerateReport_WhenBadWordsAreFoundInContent()
         {
             int commentId = 1;
-
-            commentValidationServiceMock
-                .Setup(x => x.ValidateCommentExistsAsync(commentId))
-                .Returns(Task.CompletedTask);
 
             string badWord = "shit";
 
@@ -322,19 +310,11 @@
 
             int reportId = 1;
 
-            commentReportValidationServiceMock
-                .Setup(x => x.ValidateExistsAsync(reportId))
-                .Returns(Task.CompletedTask);
-
-            bool reportIsNotActive = !await commentReportRepository.ExistsAsync(reportId);
-
-            Assert.IsTrue(reportIsNotActive);
+            Assert.IsTrue(!await commentReportRepository.ExistsAsync(reportId));
 
             await commentReportService.RestoreAsync(reportId);
 
-            reportIsNotActive = !await commentReportRepository.ExistsAsync(reportId);
-
-            Assert.IsFalse(reportIsNotActive);
+            Assert.IsFalse(!await commentReportRepository.ExistsAsync(reportId));
         }
 
         [Test]

@@ -94,10 +94,6 @@
         {
             await TeardownAsync();
 
-            postValidationService
-                .Setup(x => x.ValidatePostExistsAsync(postId))
-                .Returns(Task.CompletedTask);
-
             int expectedReportsCount = 1;
 
             await postReportService.ReportAsync(postId, reason);
@@ -123,20 +119,36 @@
         [Test]
         public async Task DeleteAsync_ShouldMarkPostReportAsDeleted_When_PostReportExists()
         {
-            postReportValidationService
-                .Setup(x => x.ValidateReportNotNull(null));
-
-            bool postReportExists = await postReportRepo.ExistsAsync(reportId);
-
-            Assert.True(postReportExists);
+            Assert.True(await postReportRepo.ExistsAsync(reportId));
 
             await postReportService.DeleteAsync(reportId);
 
-            postReportExists = await postReportRepo.ExistsAsync(reportId);
-
-            Assert.False(postReportExists);
+            Assert.False(await postReportRepo.ExistsAsync(reportId));
         }
 
+        [Test]
+        public async Task RestoreAsync_ShouldThrowException_When_PostReport_IsNotFound_ById()
+        {
+            await TeardownAsync();
+
+            postReportValidationService
+                .Setup(x => x.ValidateReportNotNull(null))
+                .Throws<PostReportDoesNotExistException>();
+
+            Assert.ThrowsAsync<PostReportDoesNotExistException>(() => postReportService.RestoreAsync(reportId));
+        }
+
+        [Test]
+        public async Task RestoreAsync_MarkPostReport_As_UnDeleted()
+        {
+            await postReportService.DeleteAsync(reportId);
+
+            Assert.False(await postReportRepo.ExistsAsync(reportId));
+
+            await postReportService.RestoreAsync(reportId);
+
+            Assert.True(await postReportRepo.ExistsAsync(reportId));
+        }
 
         private async Task SeedDataAsync()
         {

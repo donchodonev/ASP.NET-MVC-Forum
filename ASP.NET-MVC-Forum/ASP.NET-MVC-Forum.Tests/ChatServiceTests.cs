@@ -109,10 +109,6 @@
 
             await AddUserAsync(dummyUser);
 
-            userValidationServiceMock
-                .Setup(x => x.ValidateUserExistsByUsernameAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-
             var result = await chatService.GenerateChatSelectUserViewModel(recipientUsername, senderId, senderUsername);
 
             Assert.NotNull(result);
@@ -139,9 +135,6 @@
             var dummyUser = new ExtendedIdentityUser() { UserName = recipientUsername };
 
             await AddUserAsync(dummyUser);
-
-            userValidationServiceMock
-                .Setup(x => x.ValidateUserExistsByUsernameAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
 
             var result = await chatService.GenerateChatConversationViewModel(senderId, recipientId, senderUsername);
 
@@ -177,11 +170,8 @@
         public async Task SendMessageToClientsAsync_ShouldPersistMessage_WhenDataIsValid()
         {
             long chatId = 1;
-            string messageToSend = "message to send";
 
-            userValidationServiceMock
-              .Setup(x => x.ValidateUserExistsByIdAsync(It.IsAny<string>()))
-              .Returns(Task.CompletedTask);
+            string messageToSend = "message to send";
 
             int expectedMessageCount = 1;
 
@@ -219,11 +209,8 @@
             Message message = new Message() { ChatId = chatId };
 
             dbContext.Messages.Add(message);
-            dbContext.SaveChanges();
 
-            chatValidationServiceMock
-                .Setup(x => x.ValidateChatExistsAsync(chatId))
-                .Returns(Task.CompletedTask);
+            dbContext.SaveChanges();
 
             chatService.GetHistoryAsync(1);
 
