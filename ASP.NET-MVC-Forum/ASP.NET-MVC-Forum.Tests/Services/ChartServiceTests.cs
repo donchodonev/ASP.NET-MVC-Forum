@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_MVC_Forum.Tests
+﻿namespace ASP.NET_MVC_Forum.Tests.Services
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data;

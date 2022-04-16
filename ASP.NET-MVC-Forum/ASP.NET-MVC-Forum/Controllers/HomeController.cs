@@ -60,7 +60,13 @@
             return View();
         }
 
-        private async Task UpdateViewBagAsync(int sortType, int sortOrder, string category, int viewCount, string searchTerm, string personalOnly)
+        private async Task UpdateViewBagAsync(
+            int sortType,
+            int sortOrder, 
+            string category,
+            int viewCount, 
+            string searchTerm, 
+            string personalOnly)
         {
             ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
 
