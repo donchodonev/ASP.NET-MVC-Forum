@@ -3,7 +3,6 @@
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
 
     using System.Collections.Generic;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface ICommentService
@@ -16,6 +15,8 @@
                string userUsername,
                int commentId);
 
-        public Task DeleteAsync(int commentId, ClaimsPrincipal user);
+        public Task DeleteAsync(int commentId,
+            string userId,
+            bool isInAdminOrModeratorRole);
     }
 }

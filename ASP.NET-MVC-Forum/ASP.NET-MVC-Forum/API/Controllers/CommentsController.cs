@@ -50,7 +50,9 @@
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCommentAsync(int id)
         {
-            await commentService.DeleteAsync(id, this.User);
+            await commentService.DeleteAsync(id,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return Ok();
         }

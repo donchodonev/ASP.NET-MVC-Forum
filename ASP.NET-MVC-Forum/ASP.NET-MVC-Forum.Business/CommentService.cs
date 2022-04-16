@@ -3,7 +3,6 @@
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
@@ -12,7 +11,6 @@
 
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public class CommentService : ICommentService
@@ -71,7 +69,7 @@
             return rawCommentData;
         }
 
-        public async Task DeleteAsync(int commentId, ClaimsPrincipal user)
+        public async Task DeleteAsync(int commentId, string userId, bool isInAdminOrModeratorRole)
         {
             var comment = await commentRepo
                 .GetById(commentId)
@@ -79,7 +77,10 @@
 
             commentValidationService.ValidateCommentNotNull(comment);
 
-            await commentValidationService.ValidateUserCanDeleteCommentAsync(commentId, user);
+            await commentValidationService.ValidateUserCanDeleteCommentAsync(
+                commentId, 
+                userId,
+                isInAdminOrModeratorRole);
 
             comment.IsDeleted = true;
 

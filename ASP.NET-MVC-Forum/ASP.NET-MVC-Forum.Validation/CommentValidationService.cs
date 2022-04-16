@@ -3,12 +3,10 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using Microsoft.EntityFrameworkCore;
 
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.Error;
@@ -30,14 +28,14 @@
             }
         }
 
-        public async Task ValidateUserCanDeleteCommentAsync(int commentId, ClaimsPrincipal user)
+        public async Task ValidateUserCanDeleteCommentAsync(int commentId, 
+            string userId,
+            bool isInAdminOrModeratorRole)
         {
-            string userId = user.Id();
-
             bool canDelete = await commentRepo
                 .All()
                 .AnyAsync(x => x.Id == commentId 
-                && (x.UserId == userId || user.IsAdminOrModerator()));
+                && (x.UserId == userId || isInAdminOrModeratorRole));
 
             if (!canDelete)
             {

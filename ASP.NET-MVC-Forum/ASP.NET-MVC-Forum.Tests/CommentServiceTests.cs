@@ -78,12 +78,12 @@
 
             commentId = 1;
 
-            await SeedTestData(userId, commentText, postId);
+            await SeedTestData();
         }
 
 
         [Test]
-        public async Task GenerateCommentGetResponseModel_ShouldThrowException_When_PostDoes_NOT_Exist()
+        public void GenerateCommentGetResponseModel_ShouldThrowException_When_PostDoes_NOT_Exist()
         {
             postValidationServiceMock
                 .Setup(x => x.ValidatePostExistsAsync(postId))
@@ -122,7 +122,7 @@
             Assert.AreEqual(model.PostId, postId);
         }
 
-        private async Task SeedTestData(string userId, string commentText, int postId)
+        private async Task SeedTestData()
         {
             await TeardownAsync();
 
