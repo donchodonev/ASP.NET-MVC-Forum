@@ -51,7 +51,7 @@
         private const string description = "some description";
 
         [SetUp]
-        public async Task SetUpAsync()
+        public void SetUp()
         {
             postMapperProfile = new PostMappingProfile();
 

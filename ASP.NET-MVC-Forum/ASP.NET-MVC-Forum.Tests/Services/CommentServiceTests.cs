@@ -128,7 +128,7 @@
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
+        public void DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
         {
             commentValidationServiceMock
                 .Setup(x => x.ValidateCommentNotNull(It.IsAny<Comment>()))

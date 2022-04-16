@@ -74,8 +74,6 @@
             string userId, 
             bool isInAdminOrModeratorRole)
         {
-            //await commentValidationService.ValidateCommentExistsAsync(commentId);
-
             var comment = await commentRepo
                 .GetById(commentId)
                 .FirstOrDefaultAsync();

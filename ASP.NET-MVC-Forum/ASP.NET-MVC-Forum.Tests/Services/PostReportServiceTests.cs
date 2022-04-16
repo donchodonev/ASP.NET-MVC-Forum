@@ -114,7 +114,7 @@
 
 
         [Test]
-        public async Task DeleteAsync_ShouldThrowException_When_PostReport_NotFound_ById()
+        public void DeleteAsync_ShouldThrowException_When_PostReport_NotFound_ById()
         {
             postReportValidationService
                 .Setup(x => x.ValidateReportNotNull(It.IsAny<PostReport>()))
@@ -134,7 +134,7 @@
         }
 
         [Test]
-        public async Task RestoreAsync_ShouldThrowException_When_PostReport_IsNotFound_ById()
+        public void RestoreAsync_ShouldThrowException_When_PostReport_IsNotFound_ById()
         {
             postReportValidationService
                 .Setup(x => x.ValidateReportNotNull(It.IsAny<PostReport>()))
@@ -247,7 +247,7 @@
         }
 
         [Test]
-        public async Task CensorAsync_ShouldThrowException_When_PostNotFound_ById()
+        public void CensorAsync_ShouldThrowException_When_PostNotFound_ById()
         {
             bool withRegex = true;
 

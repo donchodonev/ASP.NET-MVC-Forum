@@ -38,9 +38,11 @@
             }
         }
 
-        public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+        public static PaginatedList<T> Create(
+            IQueryable<T> source,
+            int pageIndex,
+            int pageSize)
         {
-
             if (pageSize == 0)
             {
                 pageSize = GetViewCountOptions().First();
@@ -48,12 +50,12 @@
 
             int validPageIndex = GetValidPageIndex(pageIndex);
 
-            var count = await source.CountAsync();
+            var count = source.Count();
 
-            var items = await source
+            var items = source
                 .Skip((validPageIndex - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToList();
 
             return new PaginatedList<T>(items, count, validPageIndex, pageSize);
         }

@@ -47,7 +47,7 @@
                 searchTerm, 
                 category);
 
-            var vm = await PaginatedList<PostPreviewViewModel>.CreateAsync(
+            var vm = PaginatedList<PostPreviewViewModel>.Create(
                 sortedPosts, 
                 pageNumber, 
                 viewCount);

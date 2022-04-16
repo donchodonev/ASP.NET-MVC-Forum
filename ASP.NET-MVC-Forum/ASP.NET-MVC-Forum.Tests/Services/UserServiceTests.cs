@@ -62,7 +62,7 @@
 
         private const string EMAIL = "email@email.email";
 
-        private ExtendedIdentityUser DEFAULT_USER = new ExtendedIdentityUser()
+        private readonly ExtendedIdentityUser DEFAULT_USER = new ExtendedIdentityUser()
         {
             Id = USER_ID,
             UserName = USERNAME,
