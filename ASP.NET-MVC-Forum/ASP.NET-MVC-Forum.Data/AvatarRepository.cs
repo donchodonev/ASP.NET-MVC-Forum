@@ -28,7 +28,7 @@
 
         public string GetImageExtension(IFormFile image)
         {
-            return validFileExtensions.FirstOrDefault(x => image.FileName.EndsWith(x));
+            return validFileExtensions.FirstOrDefault(x => image.FileName.ToLower().EndsWith(x));
         }
 
         public async Task<string> UploadAvatarAsync(IFormFile file, int width = 50, int height = 50)
@@ -61,6 +61,7 @@
             using (Image image = Image.Load(file.OpenReadStream()))
             {
                 image.Mutate(x => x.Resize(width, height));
+
                 await image.SaveAsync(fullPath);
             }
 

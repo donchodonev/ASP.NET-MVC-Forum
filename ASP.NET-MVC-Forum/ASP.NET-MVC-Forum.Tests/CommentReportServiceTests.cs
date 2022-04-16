@@ -47,7 +47,7 @@
             commentMapperProfile = new CommentMappingProfile();
             mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[] { commentReportMapperProfile, commentMapperProfile }));
             mapper = new Mapper(mapperConfiguration);
-            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
+            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb3").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
             commentReportRepository = new CommentReportRepository(dbContext);
             commentRepository = new CommentRepository(mapper, dbContext);

@@ -36,7 +36,7 @@
             categoryMappingProfile = new CategoryMappingProfile();
             mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[] { categoryMappingProfile, postMappingProfile }));
             mapper = new Mapper(mapperConfiguration);
-            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
+            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb1").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
             postRepository = new PostRepository(dbContext);
             categoryRepository = new CategoryRepository(dbContext, mapper);

@@ -48,7 +48,7 @@
             mapper = new Mapper(mapperConfiguration);
 
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("ForumDb")
+                .UseInMemoryDatabase("ForumDb4")
                 .Options;
 
             dbContext = new ApplicationDbContext(dbContextOptions);

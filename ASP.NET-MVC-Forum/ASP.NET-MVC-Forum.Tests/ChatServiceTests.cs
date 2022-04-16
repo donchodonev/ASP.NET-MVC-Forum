@@ -50,7 +50,7 @@
         [SetUp]
         public void SetUp()
         {
-            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb").Options;
+            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb2").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
             userValidationServiceMock = new Mock<IUserValidationService>();
             chatValidationServiceMock = new Mock<IChatValidationService>();

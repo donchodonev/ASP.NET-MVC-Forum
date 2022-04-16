@@ -55,7 +55,7 @@
             mapper = new Mapper(mapperConfiguration);
 
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("ForumDb")
+                .UseInMemoryDatabase("ForumDb5")
                 .Options;
 
             dbContext = new ApplicationDbContext(dbContextOptions);
