@@ -61,6 +61,13 @@
                 It.IsAny<string>());
 
             Assert.IsAssignableFrom<ViewResult>(viewResult);
+            Assert.IsAssignableFrom<PaginatedList<PostPreviewViewModel>>(homeController.ViewData.Model);
+        }
+
+        [Test]
+        public async Task HomeController_PrivacyRoute_ShouldReturn_PrivacyView()
+        {
+            Assert.IsAssignableFrom<ViewResult>(homeController.Privacy());
         }
     }
 }
