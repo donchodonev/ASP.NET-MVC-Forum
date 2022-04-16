@@ -60,17 +60,13 @@
         [TearDown]
         public async Task TeardownAsync()
         {
-            var reports = await commentReportRepository.All().ToListAsync();
-
             var comments = await commentRepository.All().ToListAsync();
 
             var commentReports = await commentReportRepository.All().ToListAsync();
 
-            dbContext.CommentReports.RemoveRange(reports);
+            dbContext.CommentReports.RemoveRange(commentReports);
 
             dbContext.Comments.RemoveRange(comments);
-
-            dbContext.CommentReports.RemoveRange(commentReports);
 
             await dbContext.SaveChangesAsync();
         }
@@ -299,13 +295,83 @@
             Assert.IsFalse(reportExists);
         }
 
+        [Test]
+        public void RestoreAsync_ShouldThrowException_When_ReportIsNotFoundById()
+        {
+            int reportId = 1;
+
+            commentReportValidationServiceMock
+                .Setup(x => x.ValidateExistsAsync(reportId))
+                .Throws(new CommentReportDoesNotExistException());
+
+            Assert.ThrowsAsync<CommentReportDoesNotExistException>(() => commentReportService.RestoreAsync(reportId));
+        }
+
+        [Test]
+        public async Task RestoreAsync_Should_NOT_ThrowException_When_ReportIsExists()
+        {
+            await AddReportsAsync();
+
+            int reportId = 1;
+
+            commentReportValidationServiceMock
+                .Setup(x => x.ValidateExistsAsync(reportId))
+                .Returns(Task.CompletedTask);
+
+            bool reportIsNotActive = !await commentReportRepository.ExistsAsync(reportId);
+
+            Assert.IsTrue(reportIsNotActive);
+
+            await commentReportService.RestoreAsync(reportId);
+
+            reportIsNotActive = !await commentReportRepository.ExistsAsync(reportId);
+
+            Assert.IsFalse(reportIsNotActive);
+        }
+
         private async Task AddReportsAsync()
         {
-            await commentReportRepository.AddAsync(new CommentReport() { CommentId = 1, IsDeleted = true });
-            await commentReportRepository.AddAsync(new CommentReport() { CommentId = 2, IsDeleted = true });
-            await commentReportRepository.AddAsync(new CommentReport() { CommentId = 3, IsDeleted = false });
-            await commentReportRepository.AddAsync(new CommentReport() { CommentId = 4, IsDeleted = false });
-            await commentReportRepository.AddAsync(new CommentReport() { CommentId = 5, IsDeleted = false });
+            await commentReportRepository.AddAsync(new CommentReport()
+            {
+                Id = 1,
+                CommentId = 1,
+                IsDeleted = true,
+                Comment = new Comment(),
+                Reason = "test"
+            });
+            await commentReportRepository.AddAsync(new CommentReport()
+            {
+                Id = 2,
+                CommentId = 2,
+                IsDeleted = true,
+                Comment = new Comment(),
+                Reason = "test"
+            });
+            await commentReportRepository.AddAsync(new CommentReport()
+            {
+                Id = 3,
+                CommentId = 3,
+                IsDeleted = false,
+                Comment = new Comment(),
+                Reason = "test"
+            });
+            await commentReportRepository.AddAsync(new CommentReport()
+            {
+                Id = 4,
+                CommentId = 4,
+                IsDeleted = false,
+                Comment = new Comment(),
+                Reason = "test"
+
+            });
+            await commentReportRepository.AddAsync(new CommentReport()
+            {
+                Id = 5,
+                CommentId = 5,
+                IsDeleted = false,
+                Comment = new Comment(),
+                Reason = "test"
+            }) ;
         }
     }
 }
