@@ -105,7 +105,7 @@
             await postRepo.UpdateAsync(post);
         }
 
-        public async Task<Post> Edit(
+        public async Task<Post> EditAsync(
             EditPostFormModel viewModelData,
             string userId,
             bool isAdminOrModerator)

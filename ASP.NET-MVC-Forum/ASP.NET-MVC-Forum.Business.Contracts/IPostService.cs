@@ -13,7 +13,7 @@
 
         public Task<AddPostResponseModel> CreateNewAsync(AddPostFormModel postFormModel, string userId);
 
-        public Task<Post> Edit(
+        public Task<Post> EditAsync(
             EditPostFormModel viewModelData,
             string userId,
             bool isAdminOrModerator);

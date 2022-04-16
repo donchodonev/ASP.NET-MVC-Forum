@@ -32,7 +32,11 @@
             }
         }
 
-        public async Task ValidatePostChangedAsync(int originalPostId, string newHtmlContent, string newTitle, int newCategoryId)
+        public async Task ValidatePostChangedAsync(
+            int originalPostId, 
+            string newHtmlContent, 
+            string newTitle, 
+            int newCategoryId)
         {
             var originalPost = await postRepo.GetByIdAsync(originalPostId);
 

@@ -98,7 +98,7 @@
                 return RedirectToAction("Edit", new { postId = data.PostId });
             }
 
-            await postService.Edit(
+            await postService.EditAsync(
                 data,
                 this.User.Id(),
                 this.User.IsAdminOrModerator());

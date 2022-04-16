@@ -22,6 +22,7 @@
 
     using NUnit.Framework;
 
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class PostServiceTests
@@ -44,6 +45,12 @@
         private const string userId = "some id";
         private const int postId = 1;
         private const int categoryId = 1;
+        private const string htmlContent = "some html content";
+        private const string changedHtmlContent = "some html content changed";
+        private const string title = "some title";
+        private const string changedTitle = "some title changed";
+        private const string description = "some description";
+        private const string changedDescription = "some description changed";
 
         [SetUp]
         public async Task SetUpAsync()
@@ -127,11 +134,13 @@
         [Test]
         public async Task CreateNewAsync_Creates_A_New_Post()
         {
+            await TeardownAsync();
+
             var addPostFormModel = new AddPostFormModel()
             {
                 CategoryId = categoryId,
-                HtmlContent = "html content",
-                Title = "some title"
+                HtmlContent = htmlContent,
+                Title = title
             };
 
             await postService.CreateNewAsync(addPostFormModel, userId);
@@ -145,25 +154,22 @@
         [Test]
         public async Task CreateNewAsync_Returns_AddPostResponseModel()
         {
-            int responseModelId = 2; // one is already seeded in SetUpAsync method
-
-            string title = "some title";
-
-            string htmlContent = "html content";
-
             var addPostFormModel = new AddPostFormModel()
             {
                 CategoryId = categoryId,
                 HtmlContent = htmlContent,
-                Title = "some title"
+                Title = title
             };
-
-            var expectedResponseModel = new AddPostResponseModel() { Title = title, Id = responseModelId };
 
             var actualResponseModel = await postService.CreateNewAsync(addPostFormModel, userId);
 
-            Assert.AreEqual(expectedResponseModel.Id, actualResponseModel.Id);
-            Assert.AreEqual(expectedResponseModel.Title, actualResponseModel.Title);
+            var expectedResponseModelId = await dbContext
+                .Posts
+                .Select(x => x.Id)
+                .LastOrDefaultAsync();
+
+            Assert.AreEqual(expectedResponseModelId, actualResponseModel.Id);
+            Assert.AreEqual(title, actualResponseModel.Title);
         }
 
         [Test]
@@ -209,6 +215,84 @@
             Assert.IsFalse(await postRepo.ExistsAsync(postId));
         }
 
+        [Test]
+        public void EditAsync_ShouldThrowException_When_UserIsNotPrivileged()
+        {
+            var editPostFormModel = new EditPostFormModel() { PostId = postId };
+
+            postValidationServiceMock
+                .Setup(x => x.ValidateNotNull(It.IsAny<Post>()))
+                .Throws<InsufficientPrivilegeException>();
+
+            Assert.ThrowsAsync<InsufficientPrivilegeException>(() =>
+            postService.EditAsync(
+                editPostFormModel,
+                It.IsAny<string>(),
+                It.IsAny<bool>()));
+        }
+
+        [Test]
+        public void EditAsync_ShouldThrowException_WhenPostNotFound_ById()
+        {
+            var editPostFormModel = new EditPostFormModel() { PostId = postId };
+
+            postValidationServiceMock
+                .Setup(x => x.ValidateNotNull(It.IsAny<Post>()))
+                .Throws<PostNullReferenceException>();
+
+            Assert.ThrowsAsync<PostNullReferenceException>(() =>
+            postService.EditAsync(
+                editPostFormModel,
+                It.IsAny<string>(),
+                It.IsAny<bool>()));
+        }
+
+        [Test]
+        public void EditAsync_ShouldThrowException_WhenPost_HasNotChanged()
+        {
+            var editPostFormModel = new EditPostFormModel() { PostId = postId };
+
+            postValidationServiceMock
+                .Setup(x => x.ValidatePostChangedAsync(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Throws<NoUpdatesMadeException>();
+
+            Assert.ThrowsAsync<NoUpdatesMadeException>(() =>
+            postService.EditAsync(
+                editPostFormModel,
+                It.IsAny<string>(),
+                It.IsAny<bool>()));
+        }
+
+        [Test]
+        public async Task EditAsync_ShouldEditPost()
+        {
+            await SeedPostAsync();
+
+            var originalPost = await postRepo
+                .All()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == 1);
+
+            bool isAdminOrModerator = true;
+
+            var editPostFormModel = new EditPostFormModel()
+            {
+                PostId = postId,
+                CategoryId = 2,
+                HtmlContent = changedHtmlContent,
+                Title = changedTitle
+            };
+
+            await postService.EditAsync(editPostFormModel, userId, isAdminOrModerator);
+
+            var editedPost = await postRepo.GetByIdAsync(postId);
+
+            Assert.AreNotEqual(originalPost.CategoryId, editedPost.CategoryId);
+            Assert.AreNotEqual(originalPost.HtmlContent, editedPost.HtmlContent);
+            Assert.AreNotEqual(originalPost.Title, editedPost.Title);
+            Assert.AreNotEqual(originalPost.ShortDescription, editedPost.ShortDescription);
+        }
+
         protected async Task SeedDataAsync()
         {
             await SeedPostAsync();
@@ -222,6 +306,8 @@
                 Id = postId,
                 UserId = userId,
                 CategoryId = categoryId,
+                HtmlContent = htmlContent,
+                ShortDescription = description
             };
 
             return postRepo.AddPostAsync(post);
