@@ -26,9 +26,9 @@
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CommentGetRequestResponseModel>> GetComments(int postId)
+        public async Task<List<CommentGetRequestResponseModel>> GetComments(int postId)
         {
-            return await commentService.GenerateCommentGetRequestResponseModel(postId);
+            return await commentService.GenerateCommentGetRequestResponseModelAsync(postId);
         }
 
         [Authorize]
@@ -37,7 +37,7 @@
         {
             var commentId = await commentRepo.AddCommentAsync(commentData, this.User.Id());
 
-            var rawCommentData = await commentService.GenerateCommentResponseModel(commentData, this.User, commentId);
+            var rawCommentData = await commentService.GenerateCommentResponseModelAsync(commentData, this.User, commentId);
 
             return Ok(rawCommentData);
         }

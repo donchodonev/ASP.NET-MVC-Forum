@@ -8,9 +8,9 @@
 
     public interface ICommentService
     {
-        public Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId);
+        public Task<List<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModelAsync(int postId);
 
-        public Task<CommentPostResponseModel> GenerateCommentResponseModel(
+        public Task<CommentPostResponseModel> GenerateCommentResponseModelAsync(
             CommentPostRequestModel commentData,
             ClaimsPrincipal user, 
             int commentId);

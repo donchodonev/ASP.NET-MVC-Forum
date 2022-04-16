@@ -136,9 +136,7 @@
 
             int postId = 1;
 
-            int commentId = 1;
-
-            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord },"user Id");
+            int commentId = await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -161,9 +159,7 @@
 
             int postId = 1;
 
-            int commentId = 1;
-
-            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
+            int commentId = await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -196,8 +192,6 @@
         {
             int commentId = 1;
 
-            int postId = 1;
-
             string reason = "some reason";
 
             string badWord = "shit";
@@ -206,7 +200,8 @@
                 .Setup(x => x.ValidateCommentExistsAsync(commentId))
                 .Returns(Task.CompletedTask);
 
-            await commentRepository.AddCommentAsync(new CommentPostRequestModel() { PostId = postId, CommentText = badWord }, "user Id");
+            dbContext.Comments.Add(new Comment() { Id = commentId, Content = badWord });
+            await dbContext.SaveChangesAsync();
 
             await commentReportService.ReportAsync(commentId, reason);
 
@@ -354,6 +349,7 @@
         [Test]
         public async Task DeleteAndResolveAsync_Should_Mark_Both_Comment_And_Report_As_Deleted()
         {
+            await TeardownAsync();
             await AddReportsAsync();
 
             int reportId = 3;
@@ -385,7 +381,7 @@
                 Id = 1,
                 CommentId = 1,
                 IsDeleted = true,
-                Comment = new Comment(),
+                Comment = new Comment() { Id = 1},
                 Reason = "test"
             });
             await commentReportRepository.AddAsync(new CommentReport()
@@ -393,7 +389,7 @@
                 Id = 2,
                 CommentId = 2,
                 IsDeleted = true,
-                Comment = new Comment(),
+                Comment = new Comment() { Id = 2 },
                 Reason = "test"
             });
             await commentReportRepository.AddAsync(new CommentReport()
@@ -401,7 +397,7 @@
                 Id = 3,
                 CommentId = 3,
                 IsDeleted = false,
-                Comment = new Comment(),
+                Comment = new Comment() { Id = 3 },
                 Reason = "test"
             });
             await commentReportRepository.AddAsync(new CommentReport()
@@ -409,7 +405,7 @@
                 Id = 4,
                 CommentId = 4,
                 IsDeleted = false,
-                Comment = new Comment(),
+                Comment = new Comment() { Id = 4 },
                 Reason = "test"
 
             });
@@ -418,7 +414,7 @@
                 Id = 5,
                 CommentId = 5,
                 IsDeleted = false,
-                Comment = new Comment(),
+                Comment = new Comment() { Id = 5 },
                 Reason = "test"
             });
         }

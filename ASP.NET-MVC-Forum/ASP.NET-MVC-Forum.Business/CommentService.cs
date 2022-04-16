@@ -37,7 +37,7 @@
             this.commentValidationService = commentValidationService;
         }
 
-        public async Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId)
+        public async Task<List<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModelAsync(int postId)
         {
             await postValidationService.ValidatePostExistsAsync(postId);
 
@@ -52,7 +52,7 @@
                 .ToListAsync();
         }
 
-        public async Task<CommentPostResponseModel> GenerateCommentResponseModel(
+        public async Task<CommentPostResponseModel> GenerateCommentResponseModelAsync(
             CommentPostRequestModel commentData,
             ClaimsPrincipal user,
             int commentId)
