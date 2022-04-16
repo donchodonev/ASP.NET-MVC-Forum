@@ -21,11 +21,8 @@
 
     using NUnit.Framework;
 
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
     public class UserServiceTests
     {
@@ -64,8 +61,6 @@
         private const string USER_ID = "some id";
 
         private const string EMAIL = "email@email.email";
-
-        private const string ROLE_ID = "some role id";
 
         private ExtendedIdentityUser DEFAULT_USER = new ExtendedIdentityUser()
         {
@@ -332,25 +327,6 @@
             dbContext
                 .Users
                 .Add(DEFAULT_USER);
-
-            return dbContext.SaveChangesAsync();
-        }
-
-        private Task SeedUserRoleAsync()
-        {
-            dbContext.Roles.Add(new IdentityRole()
-            {
-                Id = ROLE_ID,
-                Name = MODERATOR_ROLE,
-                NormalizedName = MODERATOR_ROLE.ToUpper()
-            });
-
-            return dbContext.SaveChangesAsync();
-        }
-
-        private Task AddUserToModeratorRoleAsync()
-        {
-            dbContext.UserRoles.Add(new IdentityUserRole<string>() { RoleId = ROLE_ID, UserId = USER_ID });
 
             return dbContext.SaveChangesAsync();
         }

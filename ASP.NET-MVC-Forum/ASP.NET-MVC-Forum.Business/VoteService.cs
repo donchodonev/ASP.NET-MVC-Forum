@@ -44,6 +44,7 @@
             else
             {
                 vote = mapper.Map<Vote>(incomingVote);
+
                 vote.UserId = userId;
             }
 
@@ -74,12 +75,7 @@
 
         private VoteType GetRequestModelVoteType(VoteRequestModel incomingVote)
         {
-            if (incomingVote.IsPositiveVote)
-            {
-                return VoteType.Like;
-            }
-
-            return VoteType.Dislike;
+            return incomingVote.IsPositiveVote ? VoteType.Like : VoteType.Dislike;
         }
     }
 }
