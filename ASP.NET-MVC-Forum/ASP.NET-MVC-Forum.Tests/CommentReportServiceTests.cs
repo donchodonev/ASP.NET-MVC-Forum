@@ -276,7 +276,9 @@
         [Test]
         public async Task DeleteAsync_ShouldMarkReportAsDelete_WhenReportExists()
         {
-            int reportId = 2;
+            await AddReportsAsync();
+
+            int reportId = 3;
 
             int commentId = 1;
 
@@ -329,6 +331,45 @@
             Assert.IsFalse(reportIsNotActive);
         }
 
+        [Test]
+        public void DeleteAndResolveAsync_ShouldThrowException_When_ReportIsNotFoundById()
+        {
+            int reportId = 1;
+
+            commentReportValidationServiceMock
+                .Setup(x => x.ValidateExistsAsync(reportId))
+                .Throws(new CommentReportDoesNotExistException());
+
+            Assert.ThrowsAsync<CommentReportDoesNotExistException>(() => commentReportService.DeleteAndResolveAsync(reportId));
+        }
+
+        [Test]
+        public async Task DeleteAndResolveAsync_Should_Mark_Both_Comment_And_Report_As_Deleted()
+        {
+            await AddReportsAsync();
+
+            int reportId = 3;
+            int commentId = 3;
+
+            commentReportValidationServiceMock
+                .Setup(x => x.ValidateExistsAsync(reportId))
+                .Returns(Task.CompletedTask);
+
+            bool reportIsActive = await commentReportRepository.ExistsAsync(reportId);
+            bool commentIsActive = await commentRepository.ExistsAsync(commentId);
+
+            Assert.IsTrue(reportIsActive);
+            Assert.IsTrue(commentIsActive);
+
+            await commentReportService.DeleteAndResolveAsync(reportId);
+
+            reportIsActive = await commentReportRepository.ExistsAsync(reportId);
+            commentIsActive = await commentRepository.ExistsAsync(commentId);
+
+            Assert.IsFalse(reportIsActive);
+            Assert.IsFalse(commentIsActive);
+        }
+
         private async Task AddReportsAsync()
         {
             await commentReportRepository.AddAsync(new CommentReport()
@@ -371,7 +412,7 @@
                 IsDeleted = false,
                 Comment = new Comment(),
                 Reason = "test"
-            }) ;
+            });
         }
     }
 }

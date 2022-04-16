@@ -59,7 +59,11 @@
 
         public Task<bool> ExistsAsync(int commentId)
         {
-            return db.Comments.AnyAsync(x => x.Id == commentId);
+            return db
+                .Comments
+                .AnyAsync(x => x.Id == commentId
+                && !x.IsDeleted 
+                && x.IsVisible);
         }
     }
 }
