@@ -9,12 +9,15 @@
     {
         public CommentMappingProfile()
         {
-            CreateMap<CommentPostRequestModel, RawCommentServiceModel>();
+            CreateMap<CommentPostRequestModel, CommentPostResponseModel>();
+
+            CreateMap<CommentPostRequestModel, Comment>()
+                .ForMember(x => x.Content, y => y.MapFrom(z => z.CommentText));
 
             CreateMap<Comment, CommentGetRequestResponseModel>()
             .ForMember(x => x.CommentAuthor, y => y.MapFrom(z => z.User.UserName));
 
-            CreateMap<RawCommentServiceModel, Comment>()
+            CreateMap<CommentPostResponseModel, Comment>()
             .ForMember(x => x.UserId, y => y.MapFrom(z => z.UserId))
             .ForMember(x => x.PostId, y => y.MapFrom(z => z.PostId))
             .ForMember(x => x.Content, y => y.MapFrom(z => z.CommentText));

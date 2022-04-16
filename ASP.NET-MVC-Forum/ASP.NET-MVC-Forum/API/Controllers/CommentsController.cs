@@ -8,16 +8,19 @@
 
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using ASP.NET_MVC_Forum.Data.Contracts;
 
     [ApiController]
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService commentService;
+        private readonly ICommentRepository commentRepo;
 
-        public CommentsController(ICommentService commentService)
+        public CommentsController(ICommentService commentService,ICommentRepository commentRepo)
         {
             this.commentService = commentService;
+            this.commentRepo = commentRepo;
         }
 
         [HttpGet]
@@ -30,7 +33,9 @@
         [HttpPost]
         public async Task<ActionResult<CommentPostRequestModel>> AddComment(CommentPostRequestModel commentData)
         {
-            var rawCommentData = await commentService.GenerateRawCommentServiceModel(commentData, this.User);
+            var commentId = await commentRepo.AddCommentAsync(commentData, this.User);
+
+            var rawCommentData = await commentService.GenerateCommentResponseModel(commentData, this.User, commentId);
 
             return Ok(rawCommentData);
         }

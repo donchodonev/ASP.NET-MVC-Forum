@@ -52,17 +52,18 @@
                 .ToListAsync();
         }
 
-        public async Task<RawCommentServiceModel> GenerateRawCommentServiceModel(
+        public async Task<CommentPostResponseModel> GenerateCommentResponseModel(
             CommentPostRequestModel commentData,
-            ClaimsPrincipal user)
+            ClaimsPrincipal user,
+            int commentId)
         {
-            var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
+            var rawCommentData = mapper.Map<CommentPostResponseModel>(commentData);
 
             rawCommentData.UserId = user.Id();
 
             rawCommentData.Username = user.Identity.Name;
 
-            rawCommentData.Id = await commentRepo.AddCommentAsync(rawCommentData);
+            rawCommentData.Id = commentId;
 
             await commentReportService.AutoGenerateCommentReportAsync(rawCommentData.CommentText, rawCommentData.Id);
 

@@ -10,7 +10,10 @@
     {
         public Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId);
 
-        public Task<RawCommentServiceModel> GenerateRawCommentServiceModel(CommentPostRequestModel commentData, ClaimsPrincipal user);
+        public Task<CommentPostResponseModel> GenerateCommentResponseModel(
+            CommentPostRequestModel commentData,
+            ClaimsPrincipal user, 
+            int commentId);
 
         public Task DeleteAsync(int commentId, ClaimsPrincipal user);
     }

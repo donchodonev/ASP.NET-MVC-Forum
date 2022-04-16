@@ -136,7 +136,7 @@
 
             int commentId = 1;
 
-            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = badWord });
+            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = badWord });
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -159,7 +159,7 @@
 
             int commentId = 1;
 
-            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = badWord });
+            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = badWord });
 
             await commentReportService.CensorCommentAsync(withRegex, commentId);
 
@@ -198,7 +198,7 @@
                 .Setup(x => x.ValidateCommentExistsAsync(commentId))
                 .Returns(Task.CompletedTask);
 
-            await commentRepository.AddCommentAsync(new RawCommentServiceModel() { Id = commentId, CommentText = "some text" });
+            await commentRepository.AddCommentAsync(new CommentPostResponseModel() { Id = commentId, CommentText = "some text" });
 
             await commentReportService.ReportAsync(commentId, reason);
 
