@@ -31,8 +31,6 @@
 
         public Task<T> GetPostByIdAs<T>(int postId);
 
-        public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
-
         public Task<EditPostFormModel> GenerateEditPostFormModelAsync(
             int postId,
             string userId,

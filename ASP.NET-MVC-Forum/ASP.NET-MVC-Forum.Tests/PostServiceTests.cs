@@ -36,7 +36,6 @@
         private Mock<IPostValidationService> postValidationServiceMock;
         private Mock<IUserValidationService> userValidationServiceMock;
         private Mock<IPostReportService> postReportServiceMock;
-        private Mock<IVoteRepository> voteRepositoryMock;
         private Mock<ICategoryRepository> categoryRepositoryMock;
         private IPostService postService;
         private IHtmlManipulator htmlManipulator;
@@ -76,8 +75,6 @@
 
             postValidationServiceMock = new Mock<IPostValidationService>();
 
-            voteRepositoryMock = new Mock<IVoteRepository>();
-
             categoryRepositoryMock = new Mock<ICategoryRepository>();
 
             userValidationServiceMock = new Mock<IUserValidationService>();
@@ -86,7 +83,6 @@
                 postRepo,
                 postReportServiceMock.Object,
                 htmlManipulator,
-                voteRepositoryMock.Object,
                 categoryRepositoryMock.Object,
                 mapper,
                 postValidationServiceMock.Object,
@@ -307,8 +303,47 @@
 
             Assert.NotNull(model);
             Assert.IsTrue(model.Categories.Count() == 1);
+            Assert.IsInstanceOf(typeof(AddPostFormModel), model);
         }
 
+        [Test]
+        public void GenerateEditPostFormModelAsync_ThrowsException_When_UserIs_NOT_Privileged()
+        {
+            userValidationServiceMock
+            .Setup(x => x.ValidateUserIsPrivilegedAsync(
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                It.IsAny<bool>()))
+            .Throws<InsufficientPrivilegeException>();
+
+            Assert.ThrowsAsync<InsufficientPrivilegeException>(() =>
+            postService.GenerateEditPostFormModelAsync(
+            It.IsAny<int>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>()));
+        }
+
+        [Test]
+        public async Task GenerateEditPostFormModelAsync_Returns_EditPostFormModel()
+        {
+            await SeedCategoryAsync();
+            await SeedPostAsync();
+
+            var categoryIdAndNameModelArray = new CategoryIdAndNameViewModel[] { new CategoryIdAndNameViewModel()};
+
+            categoryRepositoryMock.Setup(x =>
+            x.GetCategoryIdAndNameCombinationsAsync())
+                .ReturnsAsync(categoryIdAndNameModelArray);
+
+            var model = await postService.GenerateEditPostFormModelAsync(
+                postId,
+                It.IsAny<string>(),
+                It.IsAny<bool>());
+
+            Assert.NotNull(model);
+            Assert.IsTrue(model.Categories.Count() == 1);
+            Assert.IsInstanceOf(typeof(EditPostFormModel), model);
+        }
         protected async Task SeedDataAsync()
         {
             await SeedPostAsync();

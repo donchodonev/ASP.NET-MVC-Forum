@@ -19,15 +19,18 @@
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostService postService;
         private readonly IPostReportService postReportService;
+        private readonly IVoteService voteService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
             IPostService postService,
-            IPostReportService postReportService)
+            IPostReportService postReportService,
+            IVoteService voteService)
         {
             this.signInManager = signInManager;
             this.postService = postService;
             this.postReportService = postReportService;
+            this.voteService = voteService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
@@ -36,7 +39,7 @@
 
             if (signInManager.IsSignedIn(this.User))
             {
-                await postService.InjectUserLastVoteType(post, this.User.Id());
+                await voteService.InjectUserLastVoteType(post, this.User.Id());
             }
 
             return View(post);

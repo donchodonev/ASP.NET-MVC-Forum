@@ -24,7 +24,6 @@
         private readonly IPostRepository postRepo;
         private readonly IPostReportService postReportService;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
         private readonly IPostValidationService postValidationService;
@@ -33,7 +32,6 @@
         public PostService(IPostRepository postRepo,
             IPostReportService postReportService,
             IHtmlManipulator htmlManipulator,
-            IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
             IMapper mapper,
             IPostValidationService postValidationService,
@@ -42,7 +40,6 @@
             this.postRepo = postRepo;
             this.postReportService = postReportService;
             this.htmlManipulator = htmlManipulator;
-            this.voteRepo = voteRepo;
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
             this.postValidationService = postValidationService;
@@ -188,19 +185,6 @@
             return vm;
         }
 
-        public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
-        {
-            await userValidationService.ValidateUserExistsByIdAsync(identityUserId);
-
-            var vote = await voteRepo.GetUserVoteAsync(identityUserId, viewModel.PostId);
-
-            viewModel.UserLastVoteChoice = vote switch
-            {
-                null => 0,
-                _ => (int)vote.VoteType
-            };
-        }
-
         public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(
             int postId,
             string userId,
@@ -215,9 +199,9 @@
                         .GetById(postId)
                         .Include(x => x.Category);
 
-            var vm = mapper
-                    .ProjectTo<EditPostFormModel>(post)
-                    .First();
+            var vm = await mapper
+                        .ProjectTo<EditPostFormModel>(post)
+                        .FirstOrDefaultAsync();
 
             vm.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 
