@@ -188,11 +188,53 @@
             Assert.IsTrue(model.Count == await userRepo.GetAll().CountAsync());
         }
 
+        [Test]
+        public void BanAsync_ShouldThrowException_WhenUserNotFoundById()
+        {
+            MockValidateUserNotNullMethod();
+
+            Assert.ThrowsAsync<NullUserException>(() =>userService.BanAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public void BanAsync_ShouldThrowException_WhenUserIsBannedAlready()
+        {
+            userValidationServiceMock
+                .Setup(x => x.ValidateUserIsNotBannedAsync(It.IsAny<string>()))
+                .Throws<UserIsBannedException>();
+
+            Assert.ThrowsAsync<UserIsBannedException>(() => userService.BanAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task BanAsync_ShouldBanUser()
+        {
+            MockUserManagerFindByIdMethod();
+            MockUserManagerUpdateSecurityStampMethod();
+
+            var user = await userRepo.GetByIdAsync(ID);
+
+            Assert.False(user.IsBanned);
+            Assert.False(user.LockoutEnabled);
+
+            await userService.BanAsync(ID);
+
+            Assert.True(user.IsBanned);
+            Assert.True(user.LockoutEnabled);
+        }
+
         private void MockValidateUserNotNullMethod()
         {
             userValidationServiceMock
                 .Setup(x => x.ValidateUserNotNull(It.IsAny<ExtendedIdentityUser>()))
                 .Throws<NullUserException>();
+        }
+
+        private void MockUserManagerUpdateSecurityStampMethod()
+        {
+            userManagerMock
+                .Setup(x => x.UpdateSecurityStampAsync(It.IsAny<ExtendedIdentityUser>()))
+                .ReturnsAsync(new IdentityResult());
         }
 
         private void MockUserManagerFindByIdMethod()
