@@ -2,7 +2,6 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
 
@@ -20,24 +19,27 @@
         private readonly SignInManager<ExtendedIdentityUser> signInManager;
         private readonly IPostService postService;
         private readonly IPostReportService postReportService;
+        private readonly IVoteService voteService;
 
         public PostsController(
             SignInManager<ExtendedIdentityUser> signInManager,
             IPostService postService,
-            IPostReportService postReportService)
+            IPostReportService postReportService,
+            IVoteService voteService)
         {
             this.signInManager = signInManager;
             this.postService = postService;
             this.postReportService = postReportService;
+            this.voteService = voteService;
         }
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postService.GenerateViewPostModelAsync(postId);
+            var post = await postService.GetPostByIdAs<ViewPostViewModel>(postId);
 
             if (signInManager.IsSignedIn(this.User))
             {
-                await postService.InjectUserLastVoteType(post, this.User.Id());
+                await voteService.InjectUserLastVoteType(post, this.User.Id());
             }
 
             return View(post);
@@ -75,13 +77,17 @@
 
             var newlyCreatedPost = await postService.CreateNewAsync(data, this.User.Id());
 
-            return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id, postTitle = newlyCreatedPost.Title });
+            return RedirectToAction("ViewPost", new { postId = newlyCreatedPost.Id,
+                postTitle = newlyCreatedPost.Title });
         }
 
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            var vm = await postService.GenerateEditPostFormModelAsync(postId, this.User);
+            var vm = await postService.GenerateEditPostFormModelAsync(
+                postId,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return View(vm);
         }
@@ -95,7 +101,10 @@
                 return RedirectToAction("Edit", new { postId = data.PostId });
             }
 
-            await postService.Edit(data, this.User);
+            await postService.EditAsync(
+                data,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
@@ -104,7 +113,10 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId)
         {
-            await postService.Delete(postId, this.User);
+            await postService.DeleteAsync(
+                postId,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return this.RedirectToActionWithSuccessMessage(Success.POST_DELETED, "Home", "Index");
         }

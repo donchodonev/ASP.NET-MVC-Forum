@@ -41,13 +41,16 @@
                 searchTerm,
                 personalOnly);
 
-            var sortedPosts = postService.GeneratePostPreviewViewModel(
+            var sortedPosts = postService.GetFilteredAs<PostPreviewViewModel>(
                 sortType, 
                 sortOrder, 
                 searchTerm, 
                 category);
 
-            var vm = await PaginatedList<PostPreviewViewModel>.CreateAsync(sortedPosts, pageNumber, viewCount);
+            var vm = PaginatedList<PostPreviewViewModel>.Create(
+                sortedPosts, 
+                pageNumber, 
+                viewCount);
 
             return View(vm);
         }
@@ -57,7 +60,13 @@
             return View();
         }
 
-        private async Task UpdateViewBagAsync(int sortType, int sortOrder, string category, int viewCount, string searchTerm, string personalOnly)
+        private async Task UpdateViewBagAsync(
+            int sortType,
+            int sortOrder, 
+            string category,
+            int viewCount, 
+            string searchTerm, 
+            string personalOnly)
         {
             ViewBag.SortTypeLibrary = new SelectList(GetSortOptions(), "Key", "Value", sortType);
 

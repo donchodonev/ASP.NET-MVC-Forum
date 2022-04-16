@@ -58,7 +58,6 @@
             return vm;
         }
 
-
         public async Task<ChatConversationViewModel> GenerateChatConversationViewModel(
             string senderId,
             string recipientId,
@@ -74,6 +73,17 @@
 
             return new ChatConversationViewModel(chatId, senderId, recipientId, senderUsername);
         }
+
+        public async Task<List<ChatMessageResponseData>> GetHistoryAsync(long chatId)
+        {
+            await chatValidationService.ValidateChatExistsAsync(chatId);
+
+            return await chatRepo
+                        .GetLastMessagesAsNoTracking(chatId)
+                        .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
+                        .ToListAsync();
+        }
+
 
         public async Task SendMessageToClientsAsync(
             string senderId,
@@ -99,14 +109,6 @@
             await clients.Group(senderId + receiverId).SendAsync("ReceiveMessage", response);
 
             await clients.Group(receiverId + senderId).SendAsync("ReceiveMessage", response);
-        }
-
-        public Task<List<ChatMessageResponseData>> GetHistoryAsync(long chatId)
-        {
-            return chatRepo
-                    .GetLastMessagesAsNoTracking(chatId)
-                    .ProjectTo<ChatMessageResponseData>(mapper.ConfigurationProvider)
-                    .ToListAsync();
         }
 
         public async Task SendHistoryAsync(long chatId,

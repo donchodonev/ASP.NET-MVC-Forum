@@ -117,13 +117,13 @@
 
         public async Task RestoreAsync(int reportId)
         {
+            await commentReportValidationService.ValidateExistsAsync(reportId);
+
             var report = await commentReportRepo
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
                 .FirstAsync();
-
-            commentReportValidationService.ValidateNotNull(report);
 
             report.IsDeleted = false;
 
@@ -142,7 +142,7 @@
                 .All()
                 .Where(x => x.Id == reportId)
                 .Include(x => x.Comment)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
             commentReportValidationService.ValidateNotNull(report);
 

@@ -3,6 +3,7 @@
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
+    using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Domain.Models.Votes;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
@@ -43,6 +44,7 @@
             else
             {
                 vote = mapper.Map<Vote>(incomingVote);
+
                 vote.UserId = userId;
             }
 
@@ -58,14 +60,22 @@
             return votes.Sum(x => (int)x.VoteType);
         }
 
+        public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
+        {
+            await userValidationService.ValidateUserExistsByIdAsync(identityUserId);
+
+            var vote = await voteRepo.GetUserVoteAsync(identityUserId, viewModel.PostId);
+
+            viewModel.UserLastVoteChoice = vote switch
+            {
+                null => 0,
+                _ => (int)vote.VoteType
+            };
+        }
+
         private VoteType GetRequestModelVoteType(VoteRequestModel incomingVote)
         {
-            if (incomingVote.IsPositiveVote)
-            {
-                return VoteType.Like;
-            }
-
-            return VoteType.Dislike;
+            return incomingVote.IsPositiveVote ? VoteType.Like : VoteType.Dislike;
         }
     }
 }

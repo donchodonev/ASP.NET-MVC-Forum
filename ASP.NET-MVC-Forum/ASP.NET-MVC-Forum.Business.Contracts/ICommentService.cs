@@ -3,15 +3,20 @@
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
 
     using System.Collections.Generic;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface ICommentService
     {
-        public Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId);
+        public Task<List<CommentGetRequestResponseModel>> GenerateCommentGetResponseModelAsync(int postId);
 
-        public Task<RawCommentServiceModel> GenerateRawCommentServiceModel(CommentPostRequestModel commentData, ClaimsPrincipal user);
+        public Task<CommentPostResponseModel> GenerateCommentPostResponseModelAsync(
+               CommentPostRequestModel commentData,
+               string userId,
+               string userUsername,
+               int commentId);
 
-        public Task DeleteAsync(int commentId, ClaimsPrincipal user);
+        public Task DeleteAsync(int commentId,
+            string userId,
+            bool isInAdminOrModeratorRole);
     }
 }

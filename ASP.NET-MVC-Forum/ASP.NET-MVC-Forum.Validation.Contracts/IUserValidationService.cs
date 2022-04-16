@@ -2,12 +2,14 @@
 {
     using ASP.NET_MVC_Forum.Domain.Entities;
 
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IUserValidationService
     {
-        public Task ValidateUserIsPrivilegedAsync(int postId, ClaimsPrincipal user);
+        public Task ValidateUserIsPrivilegedAsync(
+            int postId,
+            string userId,
+            bool isUserAdminOrModerator);
 
         public void ValidateUsername(string username);
 

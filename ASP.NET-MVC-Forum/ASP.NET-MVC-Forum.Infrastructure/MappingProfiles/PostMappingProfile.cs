@@ -17,7 +17,7 @@
         {
             CreateMap<AddPostFormModel, Post>().ReverseMap();
 
-            CreateMap<Post, NewlyCreatedPostServiceModel>()
+            CreateMap<Post, AddPostResponseModel>()
                 .ForMember(x => x.Id, cfg => cfg.MapFrom(z => z.Id))
                 .ForMember(x => x.Title, cfg => cfg.MapFrom(z => z.Title));
 

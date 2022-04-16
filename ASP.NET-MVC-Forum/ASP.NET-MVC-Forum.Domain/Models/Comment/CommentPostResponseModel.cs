@@ -2,9 +2,9 @@
 {
     using System;
 
-    public class RawCommentServiceModel
+    public class CommentPostResponseModel
     {
-        public RawCommentServiceModel()
+        public CommentPostResponseModel()
         {
             CreatedOn = DateTime.UtcNow;
         }

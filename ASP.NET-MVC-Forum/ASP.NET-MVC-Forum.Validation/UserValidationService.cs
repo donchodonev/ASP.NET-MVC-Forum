@@ -3,10 +3,8 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using static ASP.NET_MVC_Forum.Domain.Constants.ClientMessage.Error;
@@ -22,9 +20,12 @@
             this.userRepo = userRepo;
         }
 
-        public async Task ValidateUserIsPrivilegedAsync(int postId, ClaimsPrincipal user)
+        public async Task ValidateUserIsPrivilegedAsync(
+            int postId,
+            string userId,
+            bool isUserAdminOrModerator)
         {
-            if (!await userRepo.IsAuthor(user.Id(), postId) && !user.IsAdminOrModerator())
+            if (!await userRepo.IsAuthor(userId, postId) && !isUserAdminOrModerator)
             {
                 throw new InsufficientPrivilegeException(YOU_ARE_NOT_THE_AUTHER);
             }

@@ -130,7 +130,10 @@
 
                 DELETED_STATUS => postReportRepo
                                     .All()
-                                    .Where(x => !x.IsDeleted)
+                                    .Where(x => x.IsDeleted),
+                _ => postReportRepo
+                .All()
+                .Where(x => !x.IsDeleted)
             };
 
             return mapper
@@ -138,7 +141,25 @@
                 .ToListAsync();
         }
 
-        public List<string> FindPostProfanities(string title, string content)
+        public async Task CensorAsync(bool withRegex, int postId)
+        {
+            var post = await postRepo.GetByIdAsync(postId);
+
+            postValidationService.ValidateNotNull(post);
+
+            if (withRegex)
+            {
+                HardCensor(post);
+            }
+            else
+            {
+                SoftCensor(post);
+            }
+
+            await postRepo.UpdateAsync(post);
+        }
+
+        private List<string> FindPostProfanities(string title, string content)
         {
             string[] titleWords = title.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
@@ -153,7 +174,7 @@
             return badWords;
         }
 
-        public List<string> FindPostProfanities(string title, string content, string shortDescription)
+        private List<string> FindPostProfanities(string title, string content, string shortDescription)
         {
             string[] shortDescriptionWords = shortDescription.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
@@ -168,25 +189,7 @@
             return badWords;
         }
 
-        public async Task CensorAsync(bool withRegex, int postId)
-        {
-            var post = await postRepo.GetByIdAsync(postId);
-
-            postValidationService.ValidateNotNull(post);
-
-            if (withRegex)
-            {
-                 HardCensor(post);
-            }
-            else
-            {
-             SoftCensor(post);
-            }
-
-            await postRepo.UpdateAsync(post);
-        }
-
-        public bool ContainsProfanity(string term)
+        private bool ContainsProfanity(string term)
         {
             return filter.ContainsProfanity(term);
         }

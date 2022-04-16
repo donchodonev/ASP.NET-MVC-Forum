@@ -3,7 +3,6 @@
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
-    using ASP.NET_MVC_Forum.Infrastructure.Extensions;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
     using AutoMapper;
@@ -12,7 +11,6 @@
 
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public class CommentService : ICommentService
@@ -37,7 +35,7 @@
             this.commentValidationService = commentValidationService;
         }
 
-        public async Task<IEnumerable<CommentGetRequestResponseModel>> GenerateCommentGetRequestResponseModel(int postId)
+        public async Task<List<CommentGetRequestResponseModel>> GenerateCommentGetResponseModelAsync(int postId)
         {
             await postValidationService.ValidatePostExistsAsync(postId);
 
@@ -52,32 +50,40 @@
                 .ToListAsync();
         }
 
-        public async Task<RawCommentServiceModel> GenerateRawCommentServiceModel(
+        public async Task<CommentPostResponseModel> GenerateCommentPostResponseModelAsync(
             CommentPostRequestModel commentData,
-            ClaimsPrincipal user)
+            string userId,
+            string userUsername,
+            int commentId)
         {
-            var rawCommentData = mapper.Map<RawCommentServiceModel>(commentData);
+            var rawCommentData = mapper.Map<CommentPostResponseModel>(commentData);
 
-            rawCommentData.UserId = user.Id();
+            rawCommentData.UserId = userId;
 
-            rawCommentData.Username = user.Identity.Name;
+            rawCommentData.Username = userUsername;
 
-            rawCommentData.Id = await commentRepo.AddCommentAsync(rawCommentData);
+            rawCommentData.Id = commentId;
 
             await commentReportService.AutoGenerateCommentReportAsync(rawCommentData.CommentText, rawCommentData.Id);
 
             return rawCommentData;
         }
 
-        public async Task DeleteAsync(int commentId, ClaimsPrincipal user)
+        public async Task DeleteAsync(
+            int commentId,
+            string userId, 
+            bool isInAdminOrModeratorRole)
         {
             var comment = await commentRepo
                 .GetById(commentId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
             commentValidationService.ValidateCommentNotNull(comment);
 
-            await commentValidationService.ValidateUserCanDeleteCommentAsync(commentId, user);
+            await commentValidationService.ValidateUserCanDeleteCommentAsync(
+                commentId, 
+                userId,
+                isInAdminOrModeratorRole);
 
             comment.IsDeleted = true;
 

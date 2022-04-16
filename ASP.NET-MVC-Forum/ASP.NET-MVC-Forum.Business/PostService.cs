@@ -17,7 +17,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public class PostService : IPostService
@@ -25,7 +24,6 @@
         private readonly IPostRepository postRepo;
         private readonly IPostReportService postReportService;
         private readonly IHtmlManipulator htmlManipulator;
-        private readonly IVoteRepository voteRepo;
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
         private readonly IPostValidationService postValidationService;
@@ -34,7 +32,6 @@
         public PostService(IPostRepository postRepo,
             IPostReportService postReportService,
             IHtmlManipulator htmlManipulator,
-            IVoteRepository voteRepo,
             ICategoryRepository categoryRepository,
             IMapper mapper,
             IPostValidationService postValidationService,
@@ -43,16 +40,17 @@
             this.postRepo = postRepo;
             this.postReportService = postReportService;
             this.htmlManipulator = htmlManipulator;
-            this.voteRepo = voteRepo;
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
             this.postValidationService = postValidationService;
             this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel postFormModel, string userId)
+        public async Task<AddPostResponseModel> CreateNewAsync(
+            AddPostFormModel postFormModel,
+            string userId)
         {
-            await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel.Title);
+            await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel?.Title);
 
             await userValidationService.ValidateUserExistsByIdAsync(userId);
 
@@ -73,10 +71,13 @@
                 postFormModel.HtmlContent,
                 post.Id);
 
-            return mapper.Map<NewlyCreatedPostServiceModel>(post);
+            return mapper.Map<AddPostResponseModel>(post);
         }
 
-        public async Task Delete(int postId, ClaimsPrincipal user)
+        public async Task DeleteAsync(
+            int postId,
+            string userId,
+            bool isUserAdminOrModerator)
         {
             var post = await postRepo
                 .GetById(postId)
@@ -85,7 +86,10 @@
 
             postValidationService.ValidateNotNull(post);
 
-            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                postId,
+                userId,
+                isUserAdminOrModerator);
 
             var currentTime = DateTime.UtcNow;
 
@@ -98,9 +102,15 @@
             await postRepo.UpdateAsync(post);
         }
 
-        public async Task<Post> Edit(EditPostFormModel viewModelData, ClaimsPrincipal user)
+        public async Task<Post> EditAsync(
+            EditPostFormModel viewModelData,
+            string userId,
+            bool isAdminOrModerator)
         {
-            await userValidationService.ValidateUserIsPrivilegedAsync(viewModelData.PostId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                viewModelData.PostId,
+                userId,
+                isAdminOrModerator);
 
             var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
@@ -129,7 +139,7 @@
             return originalPost;
         }
 
-        public IQueryable<PostPreviewViewModel> GeneratePostPreviewViewModel(
+        public IQueryable<T> GetFilteredAs<T>(
             int sortType,
             int sortOrder,
             string searchTerm,
@@ -145,10 +155,10 @@
                 .Order(sortType, sortOrder)
                 .BuildQuery();
 
-            return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
+            return posts.ProjectTo<T>(mapper.ConfigurationProvider);
         }
 
-        public async Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
+        public async Task<T> GetPostByIdAs<T>(int postId)
         {
             var post = postRepo
                 .GetById(postId)
@@ -158,7 +168,7 @@
                 .ThenInclude(x => x.Posts);
 
             var model = await mapper
-                .ProjectTo<ViewPostViewModel>(post)
+                .ProjectTo<T>(post)
                 .FirstOrDefaultAsync();
 
             postValidationService.ValidateNotNull(model);
@@ -175,30 +185,23 @@
             return vm;
         }
 
-        public async Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId)
+        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(
+            int postId,
+            string userId,
+            bool isAdminOrModerator)
         {
-            await userValidationService.ValidateUserExistsByIdAsync(identityUserId);
-
-            var vote = await voteRepo.GetUserVoteAsync(identityUserId, viewModel.PostId);
-
-            viewModel.UserLastVoteChoice = vote switch
-            {
-                null => 0,
-                _ => (int)vote.VoteType
-            };
-        }
-
-        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId, ClaimsPrincipal user)
-        {
-            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                postId,
+                userId,
+                isAdminOrModerator);
 
             var post = postRepo
                         .GetById(postId)
                         .Include(x => x.Category);
 
-            var vm = mapper
-                    .ProjectTo<EditPostFormModel>(post)
-                    .First();
+            var vm = await mapper
+                        .ProjectTo<EditPostFormModel>(post)
+                        .FirstOrDefaultAsync();
 
             vm.Categories = await categoryRepository.GetCategoryIdAndNameCombinationsAsync();
 

@@ -13,6 +13,5 @@
         public string RecipientUsername { get; set; }
 
         public string RecipientIdentityUserId { get; set; }
-
     }
 }

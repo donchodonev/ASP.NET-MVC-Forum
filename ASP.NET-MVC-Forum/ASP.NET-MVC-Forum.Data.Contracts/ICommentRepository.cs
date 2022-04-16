@@ -4,11 +4,13 @@
     using ASP.NET_MVC_Forum.Domain.Models.Comment;
 
     using System.Linq;
+    using System.Security.Claims;
+    using System.Security.Principal;
     using System.Threading.Tasks;
 
     public interface ICommentRepository
     {
-        public Task<int> AddCommentAsync(RawCommentServiceModel commentData);
+        public Task<int> AddCommentAsync(CommentPostRequestModel commentData, string userId);
 
         public IQueryable<Comment> All();
 

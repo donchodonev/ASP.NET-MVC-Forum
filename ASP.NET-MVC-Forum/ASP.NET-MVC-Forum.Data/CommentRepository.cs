@@ -9,7 +9,10 @@
     using Microsoft.EntityFrameworkCore;
 
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+
+    using static ASP.NET_MVC_Forum.Infrastructure.Extensions.ClaimsPrincipalExtensions;
 
     public class CommentRepository : ICommentRepository
     {
@@ -22,9 +25,11 @@
             this.db = db;
         }
 
-        public async Task<int> AddCommentAsync(RawCommentServiceModel commentData)
+        public async Task<int> AddCommentAsync(CommentPostRequestModel commentData, string userId)
         {
             var comment = mapper.Map<Comment>(commentData);
+
+            comment.UserId = userId;
 
             db.Comments.Add(comment);
 
@@ -59,7 +64,11 @@
 
         public Task<bool> ExistsAsync(int commentId)
         {
-            return db.Comments.AnyAsync(x => x.Id == commentId);
+            return db
+                .Comments
+                .AnyAsync(x => x.Id == commentId
+                && !x.IsDeleted 
+                && x.IsVisible);
         }
     }
 }

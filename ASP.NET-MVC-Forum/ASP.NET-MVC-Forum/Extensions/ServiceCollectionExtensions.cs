@@ -81,8 +81,6 @@
 
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddTransient<IChartRepository, ChartRespository>();
-
             services.AddTransient<IHtmlSanitizer>(s => new HtmlSanitizer());
 
             services.AddTransient<IChatRepository, ChatRepository>();
@@ -113,15 +111,7 @@
 
             services.AddSingleton(configuration);
 
-            services.AddAutoMapper(
-                typeof(CategoryMappingProfile).Assembly,
-                typeof(CommentMappingProfile).Assembly,
-                typeof(CommentReportMappingProfile).Assembly,
-                typeof(MessageMappingProfile).Assembly,
-                typeof(PostMappingProfile).Assembly,
-                typeof(PostReportMappingProfile).Assembly,
-                typeof(UserMappingProfile).Assembly,
-                typeof(VoteMappingProfile).Assembly);
+            services.AddAutoMapper(typeof(PostMappingProfile).Assembly);
 
             services.AddAntiforgery(options =>
             {
