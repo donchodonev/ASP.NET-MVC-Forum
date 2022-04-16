@@ -87,6 +87,20 @@
                 userValidationServiceMock.Object);
         }
 
+        [TearDown]
+        public async Task TeardownAsync()
+        {
+            var posts = await dbContext.Posts.ToListAsync();
+            var categories = await dbContext.Categories.ToListAsync();
+            var users = await dbContext.Users.ToListAsync();
+
+            dbContext.Posts.RemoveRange(posts);
+            dbContext.Categories.RemoveRange(categories);
+            dbContext.Users.RemoveRange(users);
+
+            await dbContext.SaveChangesAsync();
+        }
+
         [Test]
         public void CreateNewAsync_ShouldThrowExceptio_WhenPostTitle_IsDuplicate()
         {
@@ -131,8 +145,6 @@
         [Test]
         public async Task CreateNewAsync_Returns_AddPostResponseModel()
         {
-            await TeardownAsync();
-
             int responseModelId = 2; // one is already seeded in SetUpAsync method
 
             string title = "some title";
@@ -154,15 +166,56 @@
             Assert.AreEqual(expectedResponseModel.Title, actualResponseModel.Title);
         }
 
-        private async Task SeedDataAsync()
+        [Test]
+        public void DeleteAsync_ShouldThrowException_WhenPostNotFound_ById()
         {
-            await TeardownAsync();
+            postValidationServiceMock
+                .Setup(x => x.ValidateNotNull(It.IsAny<Post>()))
+                .Throws<PostNullReferenceException>();
 
-            await SeedPost();
+            Assert.ThrowsAsync<PostNullReferenceException>(() =>
+                postService.DeleteAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>()));
+        }
+
+        [Test]
+        public void DeleteAsync_ShouldThrowException_UserIsNotPrivileged()
+        {
+            userValidationServiceMock
+                .Setup(x => x.ValidateUserIsPrivilegedAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>()))
+                .Throws<InsufficientPrivilegeException>();
+
+            Assert.ThrowsAsync<InsufficientPrivilegeException>(() =>
+                postService.DeleteAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>()));
+        }
+
+        [Test]
+        public async Task DeleteAsync_ShouldDeletedPost()
+        {
+            await SeedPostAsync();
+
+            Assert.IsTrue(await postRepo.ExistsAsync(postId));
+
+            await postService.DeleteAsync(postId, userId, true);
+
+            Assert.IsFalse(await postRepo.ExistsAsync(postId));
+        }
+
+        protected async Task SeedDataAsync()
+        {
+            await SeedPostAsync();
             await SeedCategory();
         }
 
-        private Task SeedPost(int categoryId = categoryId)
+        protected Task SeedPostAsync(int categoryId = categoryId)
         {
             var post = new Post()
             {
@@ -174,27 +227,13 @@
             return postRepo.AddPostAsync(post);
         }
 
-        private Task SeedCategory(int id = categoryId, string categoryName = "some name")
+        protected Task SeedCategory(int id = categoryId, string categoryName = "some name")
         {
             var category = new Category() { Id = id, Name = categoryName };
 
             dbContext.Categories.Add(category);
 
             return dbContext.SaveChangesAsync();
-        }
-
-
-        private async Task TeardownAsync()
-        {
-            var posts = await dbContext.Posts.ToListAsync();
-            var categories = await dbContext.Categories.ToListAsync();
-            var users = await dbContext.Users.ToListAsync();
-
-            dbContext.Posts.RemoveRange(posts);
-            dbContext.Categories.RemoveRange(categories);
-            dbContext.Users.RemoveRange(users);
-
-            await dbContext.SaveChangesAsync();
         }
     }
 }

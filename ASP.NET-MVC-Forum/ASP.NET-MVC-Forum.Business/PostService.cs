@@ -77,7 +77,7 @@
             return mapper.Map<AddPostResponseModel>(post);
         }
 
-        public async Task Delete(
+        public async Task DeleteAsync(
             int postId,
             string userId,
             bool isUserAdminOrModerator)

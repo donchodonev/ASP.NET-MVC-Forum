@@ -110,7 +110,7 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId)
         {
-            await postService.Delete(
+            await postService.DeleteAsync(
                 postId,
                 this.User.Id(),
                 this.User.IsAdminOrModerator());

@@ -18,7 +18,7 @@
             string userId,
             bool isAdminOrModerator);
 
-        public Task Delete(
+        public Task DeleteAsync(
             int postId,
             string userId,
             bool isUserAdminOrModerator);
