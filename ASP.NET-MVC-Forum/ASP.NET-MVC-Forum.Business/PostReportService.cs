@@ -130,7 +130,7 @@
 
                 DELETED_STATUS => postReportRepo
                                     .All()
-                                    .Where(x => !x.IsDeleted)
+                                    .Where(x => x.IsDeleted)
             };
 
             return mapper

@@ -21,6 +21,8 @@
 
     using System.Threading.Tasks;
 
+    using static ASP.NET_MVC_Forum.Domain.Constants.CommonConstants;
+
     public class PostReportServiceTests
     {
         private MapperConfiguration mapperConfiguration;
@@ -197,11 +199,50 @@
         {
             Assert.True(await postRepo.ExistsAsync(postId));
             Assert.True(await postReportRepo.ExistsAsync(reportId));
-            
+
             await postReportService.DeletePostAndResolveReportsAsync(postId);
 
             Assert.False(await postRepo.ExistsAsync(postId));
             Assert.False(await postReportRepo.ExistsAsync(reportId));
+        }
+
+        [Test]
+        public void GeneratePostReportViewModelListAsync_Should_ThrowException_When_ReportStatus_Is_Invalid()
+        {
+            string reportStatus = "some status";
+
+            postReportValidationService
+                .Setup(x => x.ValidateStatus(reportStatus))
+                .Throws<InvalidReportStatusException>();
+
+            Assert.ThrowsAsync<InvalidReportStatusException>(() =>
+            postReportService.GeneratePostReportViewModelListAsync(reportStatus));
+        }
+
+        [Test]
+        public async Task GeneratePostReportViewModelListAsync_Should_Generate_ListOfPostReportViewModel_When_ReportStatus_Is_ACTIVE()
+        {
+            var activeReports = await postReportService.GeneratePostReportViewModelListAsync(ACTIVE_STATUS);
+
+            int expectedActiveReportsCount = 1;
+
+            int actualActiveReportsCount = activeReports.Count;
+
+            Assert.AreEqual(expectedActiveReportsCount, actualActiveReportsCount);
+        }
+
+        [Test]
+        public async Task GeneratePostReportViewModelListAsync_Should_Generate_ListOfPostReportViewModel_When_ReportStatus_Is_DELETED()
+        {
+            await postReportService.DeleteAsync(reportId);
+
+            var deletedReports = await postReportService.GeneratePostReportViewModelListAsync(DELETED_STATUS);
+
+            int expectedDeletedReportsCount = 1;
+
+            int actualDeletedReportsCount = deletedReports.Count;
+
+            Assert.AreEqual(expectedDeletedReportsCount, actualDeletedReportsCount);
         }
 
         private async Task SeedDataAsync()
@@ -223,7 +264,7 @@
 
         private Task SeedPostReport()
         {
-            var postReport = new PostReport() { Id = reportId, PostId = postId };
+            var postReport = new PostReport() { Id = reportId, PostId = postId, Reason = reason };
 
             dbContext.PostReports.Add(postReport);
 
