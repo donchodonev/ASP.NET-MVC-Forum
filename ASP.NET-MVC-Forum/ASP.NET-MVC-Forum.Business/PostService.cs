@@ -142,7 +142,7 @@
             return originalPost;
         }
 
-        public IQueryable<PostPreviewViewModel> GeneratePostPreviewViewModel(
+        public IQueryable<T> GetFilteredAs<T>(
             int sortType,
             int sortOrder,
             string searchTerm,
@@ -158,10 +158,10 @@
                 .Order(sortType, sortOrder)
                 .BuildQuery();
 
-            return posts.ProjectTo<PostPreviewViewModel>(mapper.ConfigurationProvider);
+            return posts.ProjectTo<T>(mapper.ConfigurationProvider);
         }
 
-        public async Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId)
+        public async Task<T> GetPostByIdAs<T>(int postId)
         {
             var post = postRepo
                 .GetById(postId)
@@ -171,7 +171,7 @@
                 .ThenInclude(x => x.Posts);
 
             var model = await mapper
-                .ProjectTo<ViewPostViewModel>(post)
+                .ProjectTo<T>(post)
                 .FirstOrDefaultAsync();
 
             postValidationService.ValidateNotNull(model);

@@ -41,13 +41,16 @@
                 searchTerm,
                 personalOnly);
 
-            var sortedPosts = postService.GeneratePostPreviewViewModel(
+            var sortedPosts = postService.GetFilteredAs<PostPreviewViewModel>(
                 sortType, 
                 sortOrder, 
                 searchTerm, 
                 category);
 
-            var vm = await PaginatedList<PostPreviewViewModel>.CreateAsync(sortedPosts, pageNumber, viewCount);
+            var vm = await PaginatedList<PostPreviewViewModel>.CreateAsync(
+                sortedPosts, 
+                pageNumber, 
+                viewCount);
 
             return View(vm);
         }

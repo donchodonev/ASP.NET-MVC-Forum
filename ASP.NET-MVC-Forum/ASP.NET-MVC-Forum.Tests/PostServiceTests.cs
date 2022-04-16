@@ -50,7 +50,6 @@
         private const string title = "some title";
         private const string changedTitle = "some title changed";
         private const string description = "some description";
-        private const string changedDescription = "some description changed";
 
         [SetUp]
         public async Task SetUpAsync()
@@ -253,7 +252,7 @@
             var editPostFormModel = new EditPostFormModel() { PostId = postId };
 
             postValidationServiceMock
-                .Setup(x => x.ValidatePostChangedAsync(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Setup(x => x.ValidatePostChangedAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Throws<NoUpdatesMadeException>();
 
             Assert.ThrowsAsync<NoUpdatesMadeException>(() =>
@@ -293,10 +292,27 @@
             Assert.AreNotEqual(originalPost.ShortDescription, editedPost.ShortDescription);
         }
 
+        [Test]
+        public async Task GenerateAddPostFormModelAsync_ShouldReturn_AddPostFormModel()
+        {
+            var categoryIdAndNameModelArray = new CategoryIdAndNameViewModel[] { new CategoryIdAndNameViewModel() };
+
+            categoryRepositoryMock.Setup(x =>
+            x.GetCategoryIdAndNameCombinationsAsync())
+                .ReturnsAsync(categoryIdAndNameModelArray);
+
+            await SeedCategoryAsync();
+
+            var model = await postService.GenerateAddPostFormModelAsync();
+
+            Assert.NotNull(model);
+            Assert.IsTrue(model.Categories.Count() == 1);
+        }
+
         protected async Task SeedDataAsync()
         {
             await SeedPostAsync();
-            await SeedCategory();
+            await SeedCategoryAsync();
         }
 
         protected Task SeedPostAsync(int categoryId = categoryId)
@@ -313,7 +329,7 @@
             return postRepo.AddPostAsync(post);
         }
 
-        protected Task SeedCategory(int id = categoryId, string categoryName = "some name")
+        protected Task SeedCategoryAsync(int id = categoryId, string categoryName = "some name")
         {
             var category = new Category() { Id = id, Name = categoryName };
 

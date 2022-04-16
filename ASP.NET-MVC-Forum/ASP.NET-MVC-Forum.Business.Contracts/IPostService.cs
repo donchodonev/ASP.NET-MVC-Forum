@@ -23,12 +23,13 @@
             string userId,
             bool isUserAdminOrModerator);
 
-        public IQueryable<PostPreviewViewModel> GeneratePostPreviewViewModel(int sortType,
-            int sortOrder, 
-            string searchTerm, 
+        public IQueryable<T> GetFilteredAs<T>(
+            int sortType,
+            int sortOrder,
+            string searchTerm,
             string category);
 
-        public Task<ViewPostViewModel> GenerateViewPostModelAsync(int postId);
+        public Task<T> GetPostByIdAs<T>(int postId);
 
         public Task InjectUserLastVoteType(ViewPostViewModel viewModel, string identityUserId);
 

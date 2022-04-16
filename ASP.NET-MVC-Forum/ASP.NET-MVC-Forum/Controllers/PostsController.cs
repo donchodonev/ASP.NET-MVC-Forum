@@ -32,7 +32,7 @@
 
         public async Task<IActionResult> ViewPost(int postId)
         {
-            var post = await postService.GenerateViewPostModelAsync(postId);
+            var post = await postService.GetPostByIdAs<ViewPostViewModel>(postId);
 
             if (signInManager.IsSignedIn(this.User))
             {
