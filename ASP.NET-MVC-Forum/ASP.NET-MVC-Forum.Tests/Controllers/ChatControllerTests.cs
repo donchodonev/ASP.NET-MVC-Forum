@@ -55,6 +55,25 @@
             Assert.IsAssignableFrom<ChatSelectUserViewModel>(chatController.ViewData.Model);
         }
 
+        [Test]
+        public async Task ChatController_ChatConversation_Should_Return_ChatConversationViewModel()
+        {
+            chatServiceMock
+                .Setup(x => x.GenerateChatConversationViewModel(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .ReturnsAsync(new ChatConversationViewModel());
+
+            var result = await chatController.ChatConversation(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(), 
+                    It.IsAny<string>());
+
+            Assert.IsAssignableFrom<ViewResult>(result);
+            Assert.IsAssignableFrom<ChatConversationViewModel>(chatController.ViewData.Model);
+        }
+
         private void SetupUserContext(ChatController chatController)
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
