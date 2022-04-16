@@ -150,6 +150,37 @@
             Assert.True(await postReportRepo.ExistsAsync(reportId));
         }
 
+        [Test]
+        public async Task AutoGeneratePostReportAsync_Should_TriggerReportAsyncMethod_WhenProfanitiesAreFound()
+        {
+            string profaneTitle = "shit";
+            string profaneDescription = "fuck";
+
+            int reportCountBefore = await postReportRepo.All().CountAsync();
+
+            await postReportService.AutoGeneratePostReportAsync(profaneTitle, profaneDescription, postId);
+
+            int reportCountAfter = await postReportRepo.All().CountAsync();
+
+            Assert.AreNotEqual(reportCountBefore, reportCountAfter);
+            Assert.True(reportCountBefore == (reportCountAfter - 1));
+        }
+
+        [Test]
+        public async Task AutoGeneratePostReportAsync_Should_NOT_TriggerReportAsyncMethod_WhenProfanitiesAre_NotFound()
+        {
+            string properTitle = "Hi";
+            string properDescription = "there";
+
+            int reportCountBefore = await postReportRepo.All().CountAsync();
+
+            await postReportService.AutoGeneratePostReportAsync(properTitle, properDescription, postId);
+
+            int reportCountAfter = await postReportRepo.All().CountAsync();
+
+            Assert.AreEqual(reportCountBefore, reportCountAfter);
+        }
+
         private async Task SeedDataAsync()
         {
             await TeardownAsync();
