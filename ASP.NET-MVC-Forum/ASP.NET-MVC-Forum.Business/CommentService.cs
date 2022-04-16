@@ -69,13 +69,16 @@
             return rawCommentData;
         }
 
-        public async Task DeleteAsync(int commentId, string userId, bool isInAdminOrModeratorRole)
+        public async Task DeleteAsync(
+            int commentId,
+            string userId, 
+            bool isInAdminOrModeratorRole)
         {
+            await commentValidationService.ValidateCommentExistsAsync(commentId);
+
             var comment = await commentRepo
                 .GetById(commentId)
-                .FirstAsync();
-
-            commentValidationService.ValidateCommentNotNull(comment);
+                .FirstOrDefaultAsync();
 
             await commentValidationService.ValidateUserCanDeleteCommentAsync(
                 commentId, 

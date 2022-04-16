@@ -38,7 +38,7 @@
         string commentText;
         int postId;
         int commentId = 1;
-
+        bool isInAdminOrModeratorRole;
 
         [SetUp]
         public async Task SetUpAsync()
@@ -78,7 +78,9 @@
 
             commentId = 1;
 
-            await SeedTestData();
+            isInAdminOrModeratorRole = true;
+
+            await SeedTestDataAsync();
         }
 
 
@@ -99,10 +101,13 @@
                 .Setup(x => x.ValidatePostExistsAsync(postId)).Returns(Task.CompletedTask);
 
             int expectedCountOfModelsReturned = 1;
+
             List<CommentGetRequestResponseModel> models = await commentService.GenerateCommentGetResponseModelAsync(postId);
+
             var actualCountOfModelsReturn = models.Count;
 
             Assert.AreEqual(expectedCountOfModelsReturned, actualCountOfModelsReturn);
+
             Assert.NotNull(models);
         }
 
@@ -122,30 +127,78 @@
             Assert.AreEqual(model.PostId, postId);
         }
 
-        private async Task SeedTestData()
+        [Test]
+        public void DeleteAsync_ShouldThrowException_When_Comment_IsNotFound_ById()
+        {
+            commentValidationServiceMock
+                .Setup(x => x.ValidateCommentExistsAsync(commentId))
+                .Throws<NullCommentException>();
+
+            Assert.ThrowsAsync<NullCommentException>(() => 
+            commentService.DeleteAsync(commentId, userId, isInAdminOrModeratorRole));
+        }
+
+        [Test]
+        public void DeleteAsync_ShouldThrowException_When_User_NOT_AllowedToDelete()
+        {
+            commentValidationServiceMock
+                .Setup(x => x.ValidateUserCanDeleteCommentAsync(commentId,userId,isInAdminOrModeratorRole))
+                .Throws<InsufficientPrivilegeException>();
+
+            Assert.ThrowsAsync<InsufficientPrivilegeException>(() =>
+            commentService.DeleteAsync(commentId, userId, isInAdminOrModeratorRole));
+        }
+
+        [Test]
+        public async Task DeleteAsync_ShouldMarkCommentAsDeleted_When_CommentExists_And_User_HasPrivilegeToDelete ()
+        {
+            commentValidationServiceMock
+                .Setup(x => x.ValidateUserCanDeleteCommentAsync(commentId, userId, isInAdminOrModeratorRole))
+                .Returns(Task.CompletedTask);
+
+            bool commentExists = await commentRepository.ExistsAsync(commentId);
+
+            Assert.True(commentExists);
+
+            await commentService.DeleteAsync(commentId, userId, isInAdminOrModeratorRole);
+
+            commentExists = await commentRepository.ExistsAsync(commentId);
+
+            Assert.False(commentExists);
+        }
+
+        private async Task SeedTestDataAsync()
         {
             await TeardownAsync();
 
-            await SeedUser(userId);
-            await SeedPost(postId);
-            await SeedComment(userId, commentText, postId);
+            await SeedUser();
+            await SeedPost();
+            await SeedComment();
         }
 
-        private Task SeedComment(string userId, string commentText, int postId)
+        private Task SeedComment()
         {
-            var model = new CommentPostRequestModel() { CommentText = commentText, PostId = postId };
+            var comment = new Comment() 
+            { 
+                Id = commentId,
+                UserId = userId,
+                Content = commentText,
+                PostId = postId 
+            };
 
-            return commentRepository.AddCommentAsync(model, userId);
+            dbContext.Comments.Add(comment);
+
+            return dbContext.SaveChangesAsync();
         }
 
-        private Task SeedUser(string userId)
+        private Task SeedUser()
         {
             dbContext.Users.Add(new ExtendedIdentityUser() { Id = userId, UserName = username });
 
             return dbContext.SaveChangesAsync();
         }
 
-        private Task SeedPost(int postId)
+        private Task SeedPost()
         {
             dbContext.Posts.Add(new Post() { Id = postId });
             return dbContext.SaveChangesAsync();
