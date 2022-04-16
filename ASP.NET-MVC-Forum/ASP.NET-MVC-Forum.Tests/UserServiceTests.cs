@@ -44,8 +44,6 @@
 
         private Mock<UserManager<ExtendedIdentityUser>> userManagerMock;
 
-        private IAvatarRepository avatarRepo;
-
         private Mock<IAvatarRepository> avatarRepoMock;
 
         private Mock<IWebHostEnvironment> webHostEnvironmentMock;
@@ -96,8 +94,6 @@
             webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
             avatarRepoMock = new Mock<IAvatarRepository>();
-
-            avatarRepo = new AvatarRepository(webHostEnvironmentMock.Object);
 
             userManagerMock = new Mock<UserManager<ExtendedIdentityUser>>(store.Object, null, null, null, null, null, null, null, null);
 
@@ -221,6 +217,44 @@
 
             Assert.True(user.IsBanned);
             Assert.True(user.LockoutEnabled);
+        }
+
+        [Test]
+        public void UnbanAsync_ShouldThrowException_WhenUserNotFoundById()
+        {
+            MockValidateUserNotNullMethod();
+
+            Assert.ThrowsAsync<NullUserException>(() => userService.UnbanAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public void UnbanAsync_ShouldThrowException_IsNotBanned()
+        {
+            userValidationServiceMock
+                .Setup(x => x.ValidateUserIsBannedAsync(It.IsAny<string>()))
+                .Throws<UserIsBannedException>();
+
+
+            Assert.ThrowsAsync<UserIsBannedException>(() => userService.UnbanAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task UnbanAsync_ShouldUnbanUser()
+        {
+            MockUserManagerFindByIdMethod();
+            MockUserManagerUpdateSecurityStampMethod();
+
+            await userService.BanAsync(ID);
+
+            var user = await userRepo.GetByIdAsync(ID);
+
+            Assert.True(user.IsBanned);
+            Assert.True(user.LockoutEnabled);
+
+            await userService.UnbanAsync(ID);
+
+            Assert.False(user.IsBanned);
+            Assert.False(user.LockoutEnabled);
         }
 
         private void MockValidateUserNotNullMethod()
