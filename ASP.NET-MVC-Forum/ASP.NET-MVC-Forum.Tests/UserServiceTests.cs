@@ -6,6 +6,7 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
+    using ASP.NET_MVC_Forum.Domain.Models.User;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
     using ASP.NET_MVC_Forum.Validation.Contracts;
 
@@ -20,6 +21,7 @@
 
     using NUnit.Framework;
 
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class UserServiceTests
@@ -172,6 +174,20 @@
             Assert.IsFalse(user.ImageUrl == "");
         }
 
+        [Test]
+        public async Task GenerateUserVoidModelAsync_ShouldReturnSameCountOfUsersAsUsersInDbTransformed_As_UserViewModel()
+        {
+            await SeedUserAsync();
+
+            MockUserManagerGetRolesMethod();
+
+            var model = await userService.GenerateUserViewModelAsync();
+
+            Assert.NotNull(model);
+            Assert.IsAssignableFrom<List<UserViewModel>>(model);
+            Assert.IsTrue(model.Count == await userRepo.GetAll().CountAsync());
+        }
+
         private void MockValidateUserNotNullMethod()
         {
             userValidationServiceMock
@@ -183,6 +199,12 @@
         {
             userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(DEFAULT_USER);
+        }
+
+        private void MockUserManagerGetRolesMethod()
+        {
+            userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<ExtendedIdentityUser>()))
+                .ReturnsAsync(new List<string>() { "Some role"});
         }
 
         private Task SeedUserAsync()
