@@ -2,7 +2,6 @@
 {
     using ASP.NET_MVC_Forum.Business.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
-    using ASP.NET_MVC_Forum.Domain.Exceptions;
     using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Infrastructure.Extensions;
 
@@ -81,7 +80,10 @@
         [Authorize]
         public async Task<IActionResult> Edit(int postId)
         {
-            var vm = await postService.GenerateEditPostFormModelAsync(postId, this.User);
+            var vm = await postService.GenerateEditPostFormModelAsync(
+                postId,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return View(vm);
         }
@@ -95,7 +97,10 @@
                 return RedirectToAction("Edit", new { postId = data.PostId });
             }
 
-            await postService.Edit(data, this.User);
+            await postService.Edit(
+                data,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return RedirectToAction("ViewPost", new { postId = data.PostId, postTitle = data.Title });
         }
@@ -104,7 +109,10 @@
         [HttpPost]
         public async Task<IActionResult> Delete(int postId)
         {
-            await postService.Delete(postId, this.User);
+            await postService.Delete(
+                postId,
+                this.User.Id(),
+                this.User.IsAdminOrModerator());
 
             return this.RedirectToActionWithSuccessMessage(Success.POST_DELETED, "Home", "Index");
         }

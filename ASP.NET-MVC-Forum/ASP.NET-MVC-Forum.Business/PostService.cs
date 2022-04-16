@@ -17,7 +17,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public class PostService : IPostService
@@ -50,7 +49,9 @@
             this.userValidationService = userValidationService;
         }
 
-        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(AddPostFormModel postFormModel, string userId)
+        public async Task<NewlyCreatedPostServiceModel> CreateNewAsync(
+            AddPostFormModel postFormModel,
+            string userId)
         {
             await postValidationService.ValidateTitleNotDuplicateAsync(postFormModel.Title);
 
@@ -76,7 +77,10 @@
             return mapper.Map<NewlyCreatedPostServiceModel>(post);
         }
 
-        public async Task Delete(int postId, ClaimsPrincipal user)
+        public async Task Delete(
+            int postId,
+            string userId,
+            bool isUserAdminOrModerator)
         {
             var post = await postRepo
                 .GetById(postId)
@@ -85,7 +89,10 @@
 
             postValidationService.ValidateNotNull(post);
 
-            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                postId,
+                userId,
+                isUserAdminOrModerator);
 
             var currentTime = DateTime.UtcNow;
 
@@ -98,9 +105,15 @@
             await postRepo.UpdateAsync(post);
         }
 
-        public async Task<Post> Edit(EditPostFormModel viewModelData, ClaimsPrincipal user)
+        public async Task<Post> Edit(
+            EditPostFormModel viewModelData,
+            string userId,
+            bool isAdminOrModerator)
         {
-            await userValidationService.ValidateUserIsPrivilegedAsync(viewModelData.PostId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                viewModelData.PostId,
+                userId,
+                isAdminOrModerator);
 
             var originalPost = await postRepo.GetByIdAsync(viewModelData.PostId);
 
@@ -188,9 +201,15 @@
             };
         }
 
-        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(int postId, ClaimsPrincipal user)
+        public async Task<EditPostFormModel> GenerateEditPostFormModelAsync(
+            int postId,
+            string userId,
+            bool isAdminOrModerator)
         {
-            await userValidationService.ValidateUserIsPrivilegedAsync(postId, user);
+            await userValidationService.ValidateUserIsPrivilegedAsync(
+                postId,
+                userId,
+                isAdminOrModerator);
 
             var post = postRepo
                         .GetById(postId)
