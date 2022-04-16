@@ -176,17 +176,17 @@
 
             if (withRegex)
             {
-                 HardCensor(post);
+                HardCensor(post);
             }
             else
             {
-             SoftCensor(post);
+                SoftCensor(post);
             }
 
             await postRepo.UpdateAsync(post);
         }
 
-        public bool ContainsProfanity(string term)
+        private bool ContainsProfanity(string term)
         {
             return filter.ContainsProfanity(term);
         }
