@@ -84,10 +84,7 @@
             }, "mock"));
 
 
-            chatController.ControllerContext = new ControllerContext()
-            {
-                HttpContext = new DefaultHttpContext() { User = user }
-            };
+            chatController.ControllerContext.HttpContext.User = user;
         }
     }
 }
