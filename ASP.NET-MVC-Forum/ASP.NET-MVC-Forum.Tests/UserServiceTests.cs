@@ -21,8 +21,11 @@
 
     using NUnit.Framework;
 
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using static ASP.NET_MVC_Forum.Domain.Constants.RoleConstants;
 
     public class UserServiceTests
     {
@@ -58,18 +61,20 @@
 
         private const string LASTNAME = "some LASTNAME";
 
-        private const string ID = "some id";
+        private const string USER_ID = "some id";
 
         private const string EMAIL = "email@email.email";
 
+        private const string ROLE_ID = "some role id";
+
         private ExtendedIdentityUser DEFAULT_USER = new ExtendedIdentityUser()
         {
-            Id = ID,
+            Id = USER_ID,
             UserName = USERNAME,
             FirstName = FIRSTNAME,
             LastName = LASTNAME,
             Email = EMAIL,
-            ImageUrl = ""
+            ImageUrl = "",
         };
 
         [SetUp]
@@ -189,7 +194,7 @@
         {
             MockValidateUserNotNullMethod();
 
-            Assert.ThrowsAsync<NullUserException>(() =>userService.BanAsync(It.IsAny<string>()));
+            Assert.ThrowsAsync<NullUserException>(() => userService.BanAsync(It.IsAny<string>()));
         }
 
         [Test]
@@ -208,12 +213,12 @@
             MockUserManagerFindByIdMethod();
             MockUserManagerUpdateSecurityStampMethod();
 
-            var user = await userRepo.GetByIdAsync(ID);
+            var user = await userRepo.GetByIdAsync(USER_ID);
 
             Assert.False(user.IsBanned);
             Assert.False(user.LockoutEnabled);
 
-            await userService.BanAsync(ID);
+            await userService.BanAsync(USER_ID);
 
             Assert.True(user.IsBanned);
             Assert.True(user.LockoutEnabled);
@@ -244,17 +249,56 @@
             MockUserManagerFindByIdMethod();
             MockUserManagerUpdateSecurityStampMethod();
 
-            await userService.BanAsync(ID);
+            await userService.BanAsync(USER_ID);
 
-            var user = await userRepo.GetByIdAsync(ID);
+            var user = await userRepo.GetByIdAsync(USER_ID);
 
             Assert.True(user.IsBanned);
             Assert.True(user.LockoutEnabled);
 
-            await userService.UnbanAsync(ID);
+            await userService.UnbanAsync(USER_ID);
 
             Assert.False(user.IsBanned);
             Assert.False(user.LockoutEnabled);
+        }
+
+        [Test]
+        public void DemoteAsync_ShouldThrowException_WhenUserIsNotFoundbyId()
+        {
+            userValidationServiceMock.
+                Setup(x => x.ValidateUserExistsByIdAsync(It.IsAny<string>()))
+                .Throws<NullUserException>();
+
+            Assert.ThrowsAsync<NullUserException>(() => userService.DemoteAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public void DemoteAsync_ShouldThrowException_WhenUserIsNotModerator()
+        {
+            userValidationServiceMock.
+                Setup(x => x.ValidateUserIsModerator(It.IsAny<string>()))
+                .Throws<InvalidRoleException>();
+
+            Assert.ThrowsAsync<InvalidRoleException>(() => userService.DemoteAsync(It.IsAny<string>()));
+        }
+
+        [Test]
+        public void PromoteAsync_ShouldThrowException_WhenUserIsNotFoundbyId()
+        {
+            MockValidateUserNotNullMethod();
+
+            Assert.ThrowsAsync<NullUserException>(() => userService.PromoteAsync(It.IsAny<string>()));
+        }
+
+
+        [Test]
+        public void PromoteAsync_ShouldThrowException_WhenUserIsModerator()
+        {
+            userValidationServiceMock.
+                Setup(x => x.ValidateUserIsNotModerator(It.IsAny<ExtendedIdentityUser>()))
+                .Throws<InvalidRoleException>();
+
+            Assert.ThrowsAsync<InvalidRoleException>(() => userService.PromoteAsync(It.IsAny<string>()));
         }
 
         private void MockValidateUserNotNullMethod()
@@ -280,7 +324,7 @@
         private void MockUserManagerGetRolesMethod()
         {
             userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<ExtendedIdentityUser>()))
-                .ReturnsAsync(new List<string>() { "Some role"});
+                .ReturnsAsync(new List<string>() { "Some role" });
         }
 
         private Task SeedUserAsync()
@@ -288,6 +332,25 @@
             dbContext
                 .Users
                 .Add(DEFAULT_USER);
+
+            return dbContext.SaveChangesAsync();
+        }
+
+        private Task SeedUserRoleAsync()
+        {
+            dbContext.Roles.Add(new IdentityRole()
+            {
+                Id = ROLE_ID,
+                Name = MODERATOR_ROLE,
+                NormalizedName = MODERATOR_ROLE.ToUpper()
+            });
+
+            return dbContext.SaveChangesAsync();
+        }
+
+        private Task AddUserToModeratorRoleAsync()
+        {
+            dbContext.UserRoles.Add(new IdentityUserRole<string>() { RoleId = ROLE_ID, UserId = USER_ID });
 
             return dbContext.SaveChangesAsync();
         }

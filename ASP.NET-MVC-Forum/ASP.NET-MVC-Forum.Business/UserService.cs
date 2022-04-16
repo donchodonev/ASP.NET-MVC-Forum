@@ -98,11 +98,6 @@
             await userRepo.UpdateAsync(user);
         }
 
-        public Task<IList<string>> GetUserRolesAsync(ExtendedIdentityUser user)
-        {
-            return userRepo.GetRolesAsync(user);
-        }
-
         public async Task DemoteAsync(string userId)
         {
             await userValidationService.ValidateUserExistsByIdAsync(userId);
