@@ -181,6 +181,29 @@
             Assert.AreEqual(reportCountBefore, reportCountAfter);
         }
 
+        [Test]
+        public async Task DeletePostAndResolveReportsAsync_Should_ThrowException_When_PostIsNotFound_ById()
+        {
+            await TeardownAsync();
+
+            postValidationService.Setup(x => x.ValidateNotNull((Post)null))
+                .Throws<PostNullReferenceException>();
+
+            Assert.ThrowsAsync<PostNullReferenceException>(() => postReportService.DeletePostAndResolveReportsAsync(postId));
+        }
+
+        [Test]
+        public async Task DeletePostAndResolveReportsAsync_Should_DeletePost_And_ResolvePostReports()
+        {
+            Assert.True(await postRepo.ExistsAsync(postId));
+            Assert.True(await postReportRepo.ExistsAsync(reportId));
+            
+            await postReportService.DeletePostAndResolveReportsAsync(postId);
+
+            Assert.False(await postRepo.ExistsAsync(postId));
+            Assert.False(await postReportRepo.ExistsAsync(reportId));
+        }
+
         private async Task SeedDataAsync()
         {
             await TeardownAsync();
