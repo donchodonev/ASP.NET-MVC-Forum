@@ -6,6 +6,7 @@
     using ASP.NET_MVC_Forum.Data.Contracts;
     using ASP.NET_MVC_Forum.Domain.Entities;
     using ASP.NET_MVC_Forum.Domain.Exceptions;
+    using ASP.NET_MVC_Forum.Domain.Models.Post;
     using ASP.NET_MVC_Forum.Domain.Models.Votes;
     using ASP.NET_MVC_Forum.Infrastructure.MappingProfiles;
     using ASP.NET_MVC_Forum.Validation.Contracts;
@@ -96,6 +97,7 @@
         public async Task RegisterVoteAsync_ShouldRegister_PositiveVote()
         {
             await SeedUserAsync();
+
             await SeedPostAsync();
 
             var vote = new VoteRequestModel() { PostId = POST_ID, IsPositiveVote = true };
@@ -128,6 +130,70 @@
             isPostDownvoted = await voteService.GetPostVoteSumAsync(POST_ID) < 0;
 
             Assert.IsTrue(isPostDownvoted);
+        }
+
+        [Test]
+        public void GetPostVoteSumAsync_ShouldThrowException_WhenPostIsNotFound_ById()
+        {
+            postValidationServiceMock
+                .Setup(x => x.ValidatePostExistsAsync(It.IsAny<int>()))
+                .Throws<EntityDoesNotExistException>();
+
+            Assert.ThrowsAsync<EntityDoesNotExistException>(() => voteService.GetPostVoteSumAsync(It.IsAny<int>()));
+        }
+
+        [Test]
+        public async Task GetPostVoteSumAsync_Should_GetPostVoteSum()
+        {
+            var negativeVote = new VoteRequestModel() { PostId = POST_ID, IsPositiveVote = false };
+
+            var positiveVote = new VoteRequestModel() { PostId = POST_ID, IsPositiveVote = true };
+
+            await SeedUserAsync();
+
+            await SeedPostAsync();
+
+            Assert.IsTrue(await voteService.GetPostVoteSumAsync(POST_ID) == 0);
+
+            await voteService.RegisterVoteAsync(negativeVote, USER_ID);
+
+            Assert.IsTrue(await voteService.GetPostVoteSumAsync(POST_ID) == -1);
+
+            await voteService.RegisterVoteAsync(positiveVote, USER_ID);
+            await voteService.RegisterVoteAsync(positiveVote, USER_ID);
+
+            Assert.IsTrue(await voteService.GetPostVoteSumAsync(POST_ID) == 1);
+        }
+
+        [Test]
+        public void InjectUserLastVoteType_ShouldThrowException_WhenUserIsNotFound_ById()
+        {
+            UserExistsByIdMethodMock();
+
+            Assert.ThrowsAsync<NullUserException>(() =>
+            voteService.InjectUserLastVoteType(It.IsAny<ViewPostViewModel>(), It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task InjectUserLastVoteType_ShouldUpdateViewPostViewModel_UserLastVoteChoiceProperty()
+        {
+            await SeedUserAsync();
+
+            await SeedPostAsync();
+
+            var model = new ViewPostViewModel() { PostId = POST_ID };
+
+            int initialVoteChoice = model.UserLastVoteChoice;
+
+            var positiveVote = new VoteRequestModel() { PostId = POST_ID, IsPositiveVote = true };
+
+            await voteService.RegisterVoteAsync(positiveVote, USER_ID);
+
+            await voteService.InjectUserLastVoteType(model, USER_ID);
+
+            int voteChoiceAfterInjection = model.UserLastVoteChoice;
+
+            Assert.AreNotEqual(initialVoteChoice, voteChoiceAfterInjection);
         }
 
         private void UserExistsByIdMethodMock()
