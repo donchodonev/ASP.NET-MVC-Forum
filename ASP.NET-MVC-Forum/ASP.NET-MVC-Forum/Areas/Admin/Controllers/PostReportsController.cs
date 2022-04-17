@@ -34,28 +34,44 @@
         {
             await postReportService.DeleteAsync(reportId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESOLVED, "PostReports", "Index");
+            return this.RedirectToActionWithSuccessMessage(
+                Success.REPORT_RESOLVED,
+                "PostReports",
+                "Index", 
+                new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Restore(int reportId)
         {
             await postReportService.RestoreAsync(reportId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.REPORT_RESTORED, "PostReports", "Index");
+            return this.RedirectToActionWithSuccessMessage(
+                Success.REPORT_RESTORED,
+                "PostReports",
+                "Index",
+                new { reportStatus = "Active" });
         }
 
         public async Task<IActionResult> Censor(int postId, bool withRegex)
         {
             await postReportService.CensorAsync(withRegex, postId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.POST_CENSORED, "PostReports", "Index");
+            return this.RedirectToActionWithSuccessMessage(
+                Success.POST_CENSORED,
+                "PostReports",
+                "Index",
+                new { reportStatus = "Deleted" });
         }
 
         public async Task<IActionResult> DeleteAndResolve(int postId)
         {
             await postReportService.DeletePostAndResolveReportsAsync(postId);
 
-            return this.RedirectToActionWithSuccessMessage(Success.POST_CENSORED_AND_RESOLVED, "PostReports", "Index", new { reportStatus = "Deleted" });
+            return this.RedirectToActionWithSuccessMessage(
+                Success.POST_CENSORED_AND_RESOLVED,
+                "PostReports",
+                "Index",
+                new { reportStatus = "Deleted" });
         }
     }
 }
