@@ -19,12 +19,10 @@
             CreatedOn = DateTime.UtcNow;
         }
 
-        [Required]
         [MaxLength(FIRST_NAME_MAX_LENGTH)]
         [MinLength(FIRST_NAME_MIN_LENGTH)]
         public string FirstName { get; set; }
 
-        [Required]
         [MaxLength(LAST_NAME_MAX_LENGTH)]
         [MinLength(LAST_NAME_MIN_LENGTH)]
         public string LastName { get; set; }

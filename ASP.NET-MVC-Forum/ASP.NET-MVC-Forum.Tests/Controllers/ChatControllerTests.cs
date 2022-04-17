@@ -83,6 +83,10 @@
                             new Claim("custom-claim", "example claim value"),
             }, "mock"));
 
+            chatController.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext(),
+            };
 
             chatController.ControllerContext.HttpContext.User = user;
         }

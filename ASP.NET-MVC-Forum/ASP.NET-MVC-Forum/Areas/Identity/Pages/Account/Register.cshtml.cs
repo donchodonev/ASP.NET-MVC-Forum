@@ -102,7 +102,15 @@
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ExtendedIdentityUser { UserName = Input.Username, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Age = Input.Age, ImageUrl = AVATAR_URL};
+                var user = new ExtendedIdentityUser
+                {
+                    UserName = Input.Username,
+                    Email = Input.Email,
+                    FirstName = Input.FirstName ??= "",
+                    LastName = Input.LastName ??= "",
+                    Age = Input.Age,
+                    ImageUrl = AVATAR_URL
+                };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
