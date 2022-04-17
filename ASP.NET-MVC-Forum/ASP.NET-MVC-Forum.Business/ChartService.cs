@@ -41,10 +41,12 @@
 
             var posts = postRepo
                 .All()
+                .Include(x => x.Comments)
                 .Where(x => !x.IsDeleted)
-                .Include(x => x.Comments);
+                .OrderByDescending(x => x.Comments.Count);
 
-            var chartData = await GetStatsAs<MostCommentedPostsResponeModel>(count, posts).ToListAsync();
+            var chartData = await GetStatsAs<MostCommentedPostsResponeModel>(count, posts)
+                .ToListAsync();
 
             AddColor(chartData);
 
@@ -61,7 +63,8 @@
             var posts = postRepo
                 .All()
                 .Where(x => !x.IsDeleted)
-                .Include(x => x.Votes);
+                .Include(x => x.Votes)
+                .OrderByDescending(x => x.Votes.Select(x => (int)x.VoteType).Sum());
 
             var chartData = await GetStatsAs<MostLikedPostsResponeModel>(count, posts).ToListAsync();
 
@@ -80,7 +83,8 @@
             var posts = postRepo
                 .All()
                 .Where(x => !x.IsDeleted)
-                .Include(x => x.Reports);
+                .Include(x => x.Reports)
+                .OrderByDescending(x => x.Reports.Count);
 
             var chartData = await GetStatsAs<MostReportedPostsResponeModel>(count, posts).ToListAsync();
 

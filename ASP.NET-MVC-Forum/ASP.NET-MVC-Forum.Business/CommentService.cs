@@ -41,7 +41,7 @@
 
             var commentsById = commentRepo
                 .All()
-                .Where(x => x.PostId == postId)
+                .Where(x => x.PostId == postId && !x.IsDeleted && x.IsVisible)
                 .Include(x => x.User)
                 .OrderByDescending(x => x.CreatedOn);
 
