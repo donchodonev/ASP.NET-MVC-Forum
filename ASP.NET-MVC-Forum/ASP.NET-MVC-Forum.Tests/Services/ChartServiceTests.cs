@@ -9,6 +9,9 @@
     using AutoMapper;
 
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Caching.Memory;
+
+    using Moq;
 
     using NUnit.Framework;
 
@@ -28,10 +31,12 @@
         private IPostRepository postRepository;
         private ICategoryRepository categoryRepository;
         private IChartService chartService;
+        private Mock<IMemoryCache> memoryCacheMock;
 
         [SetUp]
         public async Task SetUp()
         {
+            memoryCacheMock = new Mock<IMemoryCache>();
             postMappingProfile = new PostMappingProfile();
             categoryMappingProfile = new CategoryMappingProfile();
             mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfiles(new Profile[] { categoryMappingProfile, postMappingProfile }));
@@ -39,7 +44,7 @@
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("ForumDb1").Options;
             dbContext = new ApplicationDbContext(dbContextOptions);
             postRepository = new PostRepository(dbContext);
-            categoryRepository = new CategoryRepository(dbContext, mapper);
+            categoryRepository = new CategoryRepository(dbContext, mapper, memoryCacheMock.Object);
             chartService = new ChartService(postRepository, categoryRepository, mapper);
             await AddCategoriesToDatabaseAsync();
             await AddPostsToDatabaseAsync();

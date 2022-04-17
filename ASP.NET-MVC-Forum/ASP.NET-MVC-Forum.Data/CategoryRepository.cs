@@ -8,7 +8,9 @@
     using AutoMapper.QueryableExtensions;
 
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Caching.Memory;
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,11 +19,15 @@
     {
         private readonly ApplicationDbContext db;
         private readonly IMapper mapper;
+        private readonly IMemoryCache memoryCache;
+        private const string CATEGORY_ID_AND_NAME_CACHE_KEY = "category_id_and_names";
+        private const string CATEGORY_NAMES_CACHEKEY = "category_names";
 
-        public CategoryRepository(ApplicationDbContext db, IMapper mapper)
+        public CategoryRepository(ApplicationDbContext db, IMapper mapper, IMemoryCache memoryCache)
         {
             this.db = db;
             this.mapper = mapper;
+            this.memoryCache = memoryCache;
         }
 
         public IQueryable<T> AllAs<T>(bool includePosts = false)
@@ -52,17 +58,45 @@
             return query;
         }
 
-        public Task<List<string>> GetCategoryNamesAsync()
+        public async Task<List<string>> GetCategoryNamesAsync()
         {
-            return  db
-                    .Categories
-                    .Select(x => x.Name)
-                    .ToListAsync();
+            if (!memoryCache.TryGetValue<List<string>>(
+                CATEGORY_NAMES_CACHEKEY,
+                out List<string> names))
+            {
+                names = await db
+                            .Categories
+                            .Select(x => x.Name)
+                            .ToListAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.UtcNow.AddSeconds(300),
+                };
+
+                memoryCache.Set(CATEGORY_NAMES_CACHEKEY, names, cacheEntryOptions);
+            }
+
+            return names;
         }
 
-        public Task<CategoryIdAndNameViewModel[]> GetCategoryIdAndNameCombinationsAsync()
+        public async Task<CategoryIdAndNameViewModel[]> GetCategoryIdAndNameCombinationsAsync()
         {
-            return AllAs<CategoryIdAndNameViewModel>().ToArrayAsync();
+            if (!memoryCache.TryGetValue<CategoryIdAndNameViewModel[]>(
+                CATEGORY_ID_AND_NAME_CACHE_KEY,
+                out CategoryIdAndNameViewModel[] idAndNamesArray))
+            {
+                idAndNamesArray = await AllAs<CategoryIdAndNameViewModel>().ToArrayAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.UtcNow.AddSeconds(300),
+                };
+
+                memoryCache.Set(CATEGORY_ID_AND_NAME_CACHE_KEY, idAndNamesArray, cacheEntryOptions);
+            }
+
+            return idAndNamesArray;
         }
     }
 }
